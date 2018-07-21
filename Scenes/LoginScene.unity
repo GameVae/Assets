@@ -2769,6 +2769,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 526717751}
+  - component: {fileID: 526717752}
   m_Layer: 0
   m_Name: LoadingUI
   m_TagString: Untagged
@@ -2789,6 +2790,18 @@ Transform:
   m_Father: {fileID: 144338315}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &526717752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 526717750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cffc81397b5690244aeeac169f7ef4a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadingSlider: {fileID: 1923835017}
 --- !u!1 &536323197
 GameObject:
   m_ObjectHideFlags: 0
@@ -9782,7 +9795,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 107357780}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
   m_Value: 1
   m_OnValueChanged:
@@ -11709,7 +11722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.89047825, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
