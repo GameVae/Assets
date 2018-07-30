@@ -406,7 +406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 144338315}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &82552911
 MonoBehaviour:
@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a889121312607447aaa88d4aea64387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextLoginRegions: {fileID: 340589721}
+  TextLoginRegions: {fileID: 2124528239}
   langEnums: 0
 --- !u!1 &89660090
 GameObject:
@@ -534,7 +534,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -604,10 +604,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 92, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 452, y: -34.99997}
+  m_SizeDelta: {x: 92, y: 59.99994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &119098724
 MonoBehaviour:
@@ -942,9 +942,9 @@ Transform:
   m_LocalPosition: {x: 1163.3071, y: 667.7398, z: 1.612848}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2124528238}
   - {fileID: 82552910}
   - {fileID: 862484024}
-  - {fileID: 2124528238}
   - {fileID: 526717751}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1974,80 +1974,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 339691808}
---- !u!1 &340589719
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 340589720}
-  - component: {fileID: 340589721}
-  m_Layer: 0
-  m_Name: TextLoginRegions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &340589720
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 340589719}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2124528238}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &340589721
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 340589719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eae2b473096d8df478fe381b5bbe9016, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  User_FirstConnect: {fileID: 0}
-  Password_FirstConnect: {fileID: 0}
-  RememberAcc_FirstConnect: {fileID: 0}
-  LoginBtn_FirstConnect: {fileID: 0}
-  CreateAccount_FirstConnect: {fileID: 0}
-  ForgotPassBtn_FirstConnect: {fileID: 0}
-  LoginBtn_ConnectRegion: {fileID: 0}
-  SignOutBtn_ConnectRegion: {fileID: 0}
-  User_RegisterRegion: {fileID: 0}
-  Password_RegisterRegion: {fileID: 0}
-  PassConfirm_RegisterRegion: {fileID: 0}
-  Email_RegisterRegion: {fileID: 0}
-  RegisterBtn_RegisterRegion: {fileID: 0}
-  User_SendMail: {fileID: 0}
-  Email_SendMail: {fileID: 0}
-  SendBtn_SendMail: {fileID: 0}
-  Code_ChangePass: {fileID: 0}
-  Password_ChangePass: {fileID: 0}
-  PassConfirm_ChangePass: {fileID: 0}
-  ChangeBtn_ChangePass: {fileID: 0}
-  ResendBtn_ChangePass: {fileID: 0}
-  SupportBtn: {fileID: 0}
-  Username_SupportPanel: {fileID: 0}
-  InputContent_SupportPanel: {fileID: 0}
-  SendBtn_SupportPanel: {fileID: 0}
-  ThankSupportTxt_SuccessSendPanel: {fileID: 0}
-  TitleTxt_SuccessSendPanel: {fileID: 0}
-  CloseExplain_SuccessSendPanel: {fileID: 0}
-  ServerTimeOutTxt: {fileID: 0}
-  LoadingTxt_LoadingPanel: {fileID: 0}
-  ExitBtn_ExitPanel: {fileID: 0}
-  CancelBtn_ExitPanel: {fileID: 0}
-  Text_DisconnectPanel: {fileID: 0}
-  LanguageTxt: {fileID: 1811100653}
 --- !u!1 &350118077
 GameObject:
   m_ObjectHideFlags: 0
@@ -4501,7 +4427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &839079705
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4640,7 +4566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &853988900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4770,7 +4696,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 144338315}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &865134553
 GameObject:
@@ -6248,7 +6174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1221747763
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9233,10 +9159,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 296, y: -34.99997}
+  m_SizeDelta: {x: 160, y: 59.99994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811100653
 MonoBehaviour:
@@ -9732,7 +9658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1923835016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10024,10 +9950,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 92, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 574, y: -34.99997}
+  m_SizeDelta: {x: 92, y: 59.99994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1958919979
 MonoBehaviour:
@@ -11648,7 +11574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2087659781
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11706,7 +11632,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11829,6 +11755,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2124528238}
+  - component: {fileID: 2124528239}
   m_Layer: 0
   m_Name: LoginUIManager
   m_TagString: Untagged
@@ -11845,8 +11772,53 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 340589720}
+  m_Children: []
   m_Father: {fileID: 144338315}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2124528239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2124528237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eae2b473096d8df478fe381b5bbe9016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  User_FirstConnect: {fileID: 0}
+  Password_FirstConnect: {fileID: 0}
+  RememberAcc_FirstConnect: {fileID: 0}
+  LoginBtn_FirstConnect: {fileID: 0}
+  CreateAccount_FirstConnect: {fileID: 0}
+  ForgotPassBtn_FirstConnect: {fileID: 0}
+  LoginBtn_ConnectRegion: {fileID: 0}
+  SignOutBtn_ConnectRegion: {fileID: 0}
+  UserName_RegisterRegion: {fileID: 502953143}
+  Password_RegisterRegion: {fileID: 1349924302}
+  PassConfirm_RegisterRegion: {fileID: 669149424}
+  Email_RegisterRegion: {fileID: 1702884488}
+  RegisterBtn_RegisterRegion: {fileID: 254472468}
+  User_SendMail: {fileID: 0}
+  Email_SendMail: {fileID: 0}
+  SendBtn_SendMail: {fileID: 0}
+  Code_ChangePass: {fileID: 0}
+  Password_ChangePass: {fileID: 0}
+  PassConfirm_ChangePass: {fileID: 0}
+  ChangeBtn_ChangePass: {fileID: 0}
+  ResendBtn_ChangePass: {fileID: 0}
+  SupportBtn: {fileID: 0}
+  Username_SupportPanel: {fileID: 0}
+  InputContent_SupportPanel: {fileID: 0}
+  SendBtn_SupportPanel: {fileID: 0}
+  ThankSupportTxt_SuccessSendPanel: {fileID: 0}
+  TitleTxt_SuccessSendPanel: {fileID: 0}
+  CloseExplain_SuccessSendPanel: {fileID: 0}
+  ServerTimeOutTxt: {fileID: 0}
+  LoadingTxt_LoadingPanel: {fileID: 0}
+  ExitBtn_ExitPanel: {fileID: 0}
+  CancelBtn_ExitPanel: {fileID: 0}
+  Text_DisconnectPanel: {fileID: 0}
+  LanguageTxt: {fileID: 1811100653}
+  WarningTxt: {fileID: 0}

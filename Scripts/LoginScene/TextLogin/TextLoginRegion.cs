@@ -13,8 +13,8 @@ public class TextLoginRegion : MonoBehaviour {
     [Space]
     public Text LoginBtn_ConnectRegion;
     public Text SignOutBtn_ConnectRegion;
-    [Space]
-    public Text User_RegisterRegion;
+    [Header("Register")]
+    public Text UserName_RegisterRegion;
     public Text
         Password_RegisterRegion,
         PassConfirm_RegisterRegion,
@@ -51,4 +51,6 @@ public class TextLoginRegion : MonoBehaviour {
     public Text Text_DisconnectPanel;
     [Space]
     public Text LanguageTxt;
+    [Header("WarningTxt")]
+    public Text WarningTxt;
 }
