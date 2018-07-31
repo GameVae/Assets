@@ -8,24 +8,46 @@ using System;
 [Serializable]
 public class RegisterUI
 {
+    public GameObject RegisterPanel;
+    [Space]
     public InputField UserName;
     public InputField Password;
     public InputField PasswordConfirm;
     public InputField Email;
+    [Space]
     public Text WarningText;
     [Header("Warning")]
     public GameObject WarningUserName;
     public GameObject WarningPassword;
     public GameObject WarningPasswordConfirm;
     public GameObject WarningEmail;
+    [Header("Button")]
+    public Button RegisterBtn;
+    public Button CloseBtn;
+
+    public void ClearInfo()
+    {
+        UserName.text = "";
+        Password.text = "";
+        PasswordConfirm.text = "";
+        Email.text = "";
+        WarningText.text = "";
+
+        WarningUserName.SetActive(false);
+        WarningPassword.SetActive(false);
+        WarningPasswordConfirm.SetActive(false);
+        WarningEmail.SetActive(false);
+
+        RegisterPanel.SetActive(false);
+    }
 }
 
 public class Register : MonoBehaviour
 {
     public SocketIOComponent SocketIO;
     public TextLoginRegion TextLoginRegion;
+
     [SerializeField]
-    private Button RegisterBtn;
     private RegisterUI registerUI;
     [Space]
     private bool checkUserName = false;
@@ -33,21 +55,26 @@ public class Register : MonoBehaviour
     private bool checkEmail = false;
 
     private void Awake()
-    {
-        RegisterBtn.onClick.AddListener(() => setRegisterClick());
+    {      
         registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
-        registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordInput(registerUI.Password.text); });
+        registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
         registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
+        registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
+        registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
+
+        Debug.Log("Datatime: "+(DateTime.Now-DateTime.UtcNow));
     }
+
     private void Start()
-    {      
-        SocketIO.On("R_REGISTER_UNSUCCESS", R_REGISTER_UNSUCCESS);
+    {
         SocketIO.On("R_REGISTER_SUCCESS", R_REGISTER_SUCCESS);
+        SocketIO.On("R_REGISTER_UNSUCCESS", R_REGISTER_UNSUCCESS);    
     }
+
     private void R_REGISTER_UNSUCCESS(SocketIOEvent obj)
     {
-        Debug.Log("R_REGISTER_UNSUCCESS: "+obj.data);
+        Debug.Log("R_REGISTER_UNSUCCESS: " + obj.data);
 
     }
     private void R_REGISTER_SUCCESS(SocketIOEvent obj)
@@ -57,52 +84,57 @@ public class Register : MonoBehaviour
     }
     private void checkUserNameInput(string input)
     {
-        if (input.Length<=6||input.Length>50)
+        
+        if (input.Length <= 6 || input.Length > 50)
         {
             checkUserName = false;
-            registerUI.WarningUserName.SetActive(true);
         }
         else
         {
-            checkUserName = true;
-            registerUI.WarningUserName.SetActive(false);
+            checkUserName = true;       
         }
+        registerUI.WarningUserName.SetActive(!checkUserName);
     }
     private void checkEmailInput(string input)
     {
-        if (input.Length==0)
-        {
-            checkEmail = false;
-            registerUI.WarningEmail.SetActive(true);
-        }
-        else
+        checkEmail = false;
+        if (input.Length > 0 && input.Contains("@"))
         {
             checkEmail = true;
-            registerUI.WarningEmail.SetActive(false);
         }
+        registerUI.WarningEmail.SetActive(!checkEmail);
     }
     private void checkPasswordInput(string input)
     {
-        if (input.Length<=5)
+        if (registerUI.PasswordConfirm.text.Length > 5 && registerUI.PasswordConfirm.text.Equals(input))
         {
-            if (registerUI.PasswordConfirm.text.Equals(input))
+            checkPassword = true;
+        }
+        registerUI.WarningPassword.SetActive(!checkPassword);
+        if (registerUI.PasswordConfirm.text.Length==0)
+        {
+            registerUI.WarningPassword.SetActive(false);
+        }        
+    }
+    private void checkPasswordConfirmInput(string input)
+    {
+        if (input.Length >= 6)
+        {
+            if (registerUI.Password.text.Equals(input))
             {
                 checkPassword = true;
-                registerUI.WarningPassword.SetActive(false);
-                registerUI.WarningPasswordConfirm.SetActive(false);
             }
             else
             {
                 checkPassword = false;
-                registerUI.WarningPasswordConfirm.SetActive(true);
             }
         }
         else
         {
             checkPassword = false;
-            registerUI.WarningPassword.SetActive(true);
-
         }
+        registerUI.WarningPassword.SetActive(!checkPassword);
+        registerUI.WarningPasswordConfirm.SetActive(!checkPassword);
     }
     private void setRegisterClick()
     {
@@ -114,7 +146,7 @@ public class Register : MonoBehaviour
             data["Email"] = TextLoginRegion.Email_RegisterRegion.text;
             SocketIO.Emit("S_REGISTER", new JSONObject(data));
         }
-        RegisterBtn.interactable = false;
+        registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
     private bool checkUserAccount()
     {
@@ -123,14 +155,13 @@ public class Register : MonoBehaviour
         {
             checkBool = true;
         }
+        registerUI.WarningUserName.SetActive(!checkUserName);
+        registerUI.WarningPassword.SetActive(!checkPassword);
+        registerUI.WarningEmail.SetActive(!checkEmail);
+      
         return checkBool;
     }
-    private bool checkCondition()
-    {
-        bool checkBool = false;
-
-        return checkBool;
-    }
+   
     private string md5String(string strToEncrypt)
     {
         System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
@@ -379,5 +410,5 @@ public class Register : MonoBehaviour
     //       return regex.IsMatch(s);
     //   }
 
-   
+
 }
