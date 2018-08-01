@@ -63,7 +63,7 @@ public class Register : MonoBehaviour
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
 
-        Debug.Log("Datatime: "+(DateTime.Now-DateTime.UtcNow));
+        
     }
 
     private void Start()
