@@ -55,7 +55,7 @@ public class MultiLangManager : MonoBehaviour {
     }
 
 
-    private string getString(LoginLangEnum loginLangEnums)
+    public string GetString(LoginLangEnum loginLangEnums)
     {
         string stringRet = returnLangSelect(langEnums, loginLangEnums);
         return stringRet;
@@ -222,7 +222,7 @@ public class MultiLangManager : MonoBehaviour {
         //TextLoginRegions.ExitBtn_ExitPanel.text = getString(LoginLangEnum.Exit);
         //TextLoginRegions.CancelBtn_ExitPanel.text = getString(LoginLangEnum.Cancel);
         //TextLoginRegions.Text_DisconnectPanel.text = getString(LoginLangEnum.NotConnectServer);
-        TextLoginRegions.LanguageTxt.text = getString(LoginLangEnum.Language);
+        TextLoginRegions.LanguageTxt.text = GetString(LoginLangEnum.Language);
     }
 
 

@@ -49,13 +49,15 @@ public class Register : MonoBehaviour
 
     [SerializeField]
     private RegisterUI registerUI;
+    [SerializeField]
+    private MultiLangManager multiLangManager;
     [Space]
     private bool checkUserName = false;
     private bool checkPassword = false;
     private bool checkEmail = false;
 
     private void Awake()
-    {      
+    {
         registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
         registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
         registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
@@ -63,35 +65,44 @@ public class Register : MonoBehaviour
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
 
-        
+
     }
 
     private void Start()
     {
-        SocketIO.On("R_REGISTER_SUCCESS", R_REGISTER_SUCCESS);
-        SocketIO.On("R_REGISTER_UNSUCCESS", R_REGISTER_UNSUCCESS);    
+        SocketIO.On("R_REGISTER", R_REGISTER);
     }
-
-    private void R_REGISTER_UNSUCCESS(SocketIOEvent obj)
+    private void R_REGISTER(SocketIOEvent obj)
     {
-        Debug.Log("R_REGISTER_UNSUCCESS: " + obj.data);
-
+        Debug.Log("R_REGISTER: " + obj.data);
+        int successBool = int.Parse(obj.data["Message"].ToString());
+        Debug.Log("successBool: " + successBool);
+        switch (successBool)
+        {
+            case 0:
+                StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
+                break;
+            case 1:
+                Debug.Log("Load user data to map scene");
+                break;
+        }
     }
-    private void R_REGISTER_SUCCESS(SocketIOEvent obj)
+    private IEnumerator showWarningText(string stringContent)
     {
-        Debug.Log("R_REGISTER_UNSUCCESS: " + obj.data);
-
+        registerUI.WarningText.text = stringContent;
+        yield return new WaitForSeconds(3);
+        registerUI.WarningText.text = "";
     }
+
     private void checkUserNameInput(string input)
     {
-        
         if (input.Length <= 6 || input.Length > 50)
         {
             checkUserName = false;
         }
         else
         {
-            checkUserName = true;       
+            checkUserName = true;
         }
         registerUI.WarningUserName.SetActive(!checkUserName);
     }
@@ -111,10 +122,10 @@ public class Register : MonoBehaviour
             checkPassword = true;
         }
         registerUI.WarningPassword.SetActive(!checkPassword);
-        if (registerUI.PasswordConfirm.text.Length==0)
+        if (registerUI.PasswordConfirm.text.Length == 0)
         {
             registerUI.WarningPassword.SetActive(false);
-        }        
+        }
     }
     private void checkPasswordConfirmInput(string input)
     {
@@ -158,10 +169,10 @@ public class Register : MonoBehaviour
         registerUI.WarningUserName.SetActive(!checkUserName);
         registerUI.WarningPassword.SetActive(!checkPassword);
         registerUI.WarningEmail.SetActive(!checkEmail);
-      
+
         return checkBool;
     }
-   
+
     private string md5String(string strToEncrypt)
     {
         System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
