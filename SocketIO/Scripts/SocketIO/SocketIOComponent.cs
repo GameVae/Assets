@@ -96,6 +96,16 @@ namespace SocketIO
 
         public void Awake()
         {
+            
+            GetConnect();
+
+
+#if SOCKET_IO_DEBUG
+			if(debugMethod == null) { debugMethod = Debug.Log; };
+#endif
+        }
+        public void GetConnect()
+        {
             encoder = new Encoder();
             decoder = new Decoder();
             parser = new Parser();
@@ -103,7 +113,6 @@ namespace SocketIO
             ackList = new List<Ack>();
             sid = null;
             packetId = 0;
-            
             string wsUrl = "ws://" + Ip + ":" + PortConnect + "/socket.io/?EIO=4&transport=websocket";
             Debug.Log(wsUrl);
             //ws = new WebSocket(url);
@@ -122,12 +131,7 @@ namespace SocketIO
             ackQueue = new Queue<Packet>();
 
             connected = false;
-
-#if SOCKET_IO_DEBUG
-			if(debugMethod == null) { debugMethod = Debug.Log; };
-#endif
         }
-
         public void Start()
         {
             if (autoConnect) { Connect(); }
