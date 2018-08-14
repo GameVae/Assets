@@ -324,6 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58205748e323d0b42abe78e604c5d4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SocketIO: {fileID: 0}
 --- !u!114 &56121118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5097,7 +5098,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &853988900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7961,7 +7962,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Warning Text
+  m_Text: 
 --- !u!222 &1402753764
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9301,7 +9302,7 @@ MonoBehaviour:
     Password: {fileID: 609846447}
     PasswordConfirm: {fileID: 1113726804}
     Email: {fileID: 1347020671}
-    WarningText: {fileID: 0}
+    WarningText: {fileID: 1402753763}
     WarningUserName: {fileID: 2084828836}
     WarningPassword: {fileID: 1684505782}
     WarningPasswordConfirm: {fileID: 1034121240}
@@ -12846,7 +12847,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2087659781
 RectTransform:
   m_ObjectHideFlags: 0
