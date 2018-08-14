@@ -12,7 +12,6 @@ public class LoginTest : MonoBehaviour {
         
         StartCoroutine("doCheck");
         //checkVersion(data);
-        
     }
     IEnumerator doCheck()
     {

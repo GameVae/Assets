@@ -12,8 +12,6 @@ public class LoginUI
     public InputField InputPassword;
     public Toggle ToggleRememberAccount;
     public Button LoginBtn;
-    public Dropdown ListServerDropdown;
-
 }
 public class LoginScript : MonoBehaviour {
    [SerializeField]
@@ -28,8 +26,7 @@ public class LoginScript : MonoBehaviour {
     
     private void testLoginServer()
     {
-        int serverValue = loginUI.ListServerDropdown.value;
-        Debug.Log(serverValue);
+       
         //send login with user 
         //Dictionary<string, string> data = new Dictionary<string, string>();
 
@@ -50,7 +47,6 @@ public class LoginScript : MonoBehaviour {
         //Debug.Log(new JSONObject(datacheck));
         
       //  socketIO.Emit();
-
     }
    
 	

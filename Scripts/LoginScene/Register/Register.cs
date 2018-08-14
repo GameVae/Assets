@@ -49,6 +49,7 @@ public class Register : MonoBehaviour
 
     [SerializeField]
     private RegisterUI registerUI;
+    [Space]
     [SerializeField]
     private MultiLangManager multiLangManager;
     [Space]
@@ -64,8 +65,6 @@ public class Register : MonoBehaviour
 
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
-
-
     }
 
     private void Start()

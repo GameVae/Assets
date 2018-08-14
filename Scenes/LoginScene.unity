@@ -11923,7 +11923,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2008276688
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13114,5 +13114,4 @@ MonoBehaviour:
     InputPassword: {fileID: 0}
     ToggleRememberAccount: {fileID: 0}
     LoginBtn: {fileID: 803795251}
-    ListServerDropdown: {fileID: 2008276689}
-  socketIO: {fileID: 0}
+  socketIO: {fileID: 56121115}
