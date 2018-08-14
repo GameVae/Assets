@@ -89,6 +89,7 @@ public class Register : MonoBehaviour
     private IEnumerator showWarningText(string stringContent)
     {
         registerUI.WarningText.text = stringContent;
+        registerUI.RegisterBtn.interactable = true;
         yield return new WaitForSeconds(3);
         registerUI.WarningText.text = "";
     }

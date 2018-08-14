@@ -25,11 +25,9 @@ public class LoginScript : MonoBehaviour {
     }
     
     private void testLoginServer()
-    {
-       
+    {       
         //send login with user 
         //Dictionary<string, string> data = new Dictionary<string, string>();
-
 
         //datacheck["idUnitInLocationsOnline"] = idOnl;
         //datacheck["UserNameOnline"] = usernameOnl;
@@ -48,6 +46,5 @@ public class LoginScript : MonoBehaviour {
         
       //  socketIO.Emit();
     }
-   
-	
+
 }
