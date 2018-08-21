@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class BtnEffect : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {    
     [SerializeField]
     private float changeCalc = 1.1f;
