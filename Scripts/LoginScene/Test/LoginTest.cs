@@ -52,7 +52,7 @@ public class LoginTest : MonoBehaviour {
 
         //    Debug.Log(item.Value);
         //}
-        List<MonoClass> findClass = new List<MonoClass>();
+        //List<MonoClass> findClass = new List<MonoClass>();
        // Dictionary<int, MonoClass> thisTest2 =  thisTest.Where(x => x.Value.ID == 1).;
         var found = thisTest.Where(x => x.Value.ID == 1).ToList();
        
