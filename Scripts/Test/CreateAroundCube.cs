@@ -9,6 +9,8 @@ public class CreateAroundCube : MonoBehaviour
 
     public GameObject refabsObj;
 
+   
+
     void Start()
     {
         postionTest = GetComponent<PostionTest>();
