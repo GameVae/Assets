@@ -44,6 +44,7 @@ public class TileMapScripts : MonoBehaviour {
         }
         tilemap.SetTilesBlock(Area, tileBaseArray);
     }
+
     [ContextMenu("ClearMap")]
     public void ClearMap()
     {
