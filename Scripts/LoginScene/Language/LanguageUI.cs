@@ -20,21 +20,17 @@ public class LanguageUI : MonoBehaviour
     {
         EnglishBtn.onClick.AddListener(() => english());
         VietnameseBtn.onClick.AddListener(() => vietnamese());
-
     }
 
     private void english()
     {
         MultiLangManager.LangEnums = LangEnum.English;
         MultiLangManager.SetTextUI();
-
-
     }
     private void vietnamese()
     {
         MultiLangManager.LangEnums = LangEnum.Vietnamese;
         MultiLangManager.SetTextUI();
-
     }
 
 }

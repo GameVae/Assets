@@ -1,6 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+public class RegisterRegion
+{  
+    public InputField
+        UserName_RegisterRegion,
+        Password_RegisterRegion,
+        PassConfirm_RegisterRegion,
+        Email_RegisterRegion,
+        RegisterBtn_RegisterRegion;
+}
+
 public class TextLoginRegion : MonoBehaviour {
 
     public Text
@@ -14,6 +24,7 @@ public class TextLoginRegion : MonoBehaviour {
     public Text LoginBtn_ConnectRegion;
     public Text SignOutBtn_ConnectRegion;
     [Header("Register")]
+    //  public RegisterRegion RegisterRegion;
     public Text UserName_RegisterRegion;
     public Text
         Password_RegisterRegion,

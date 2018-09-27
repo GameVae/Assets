@@ -1,50 +1,79 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
+[System.Serializable]
+public class PositionCursor
+{
+    public Text KingdomTxt;
+    public Text PositionXTxt;
+    public Text PositionYTxt;
+
+    public void SetPosTxt(string cellX,string cellY)
+    {
+        PositionXTxt.text = "X: " +cellX;
+        PositionYTxt.text = "Y: "+cellY;
+    }
+    public void SetKingdomTxt(string kingdom)
+    {
+        KingdomTxt.text = kingdom; 
+    }
+}
 public class CursorPos : MonoBehaviour
 {
     [SerializeField]
     private Grid grid;
     [SerializeField]
     private Vector3Int cursorCellPosition;
-    public Vector3Int MapPosition;
 
-    
+    private Vector3 tempTransform;
+    [Space]
+    public Vector3Int MapPosition;
+    [Space]
+    public PositionCursor PositionCursor;
 
     void Awake()
     {
         grid = GetComponentInParent<Grid>();
     }
-   
+    Ray ray;
+    RaycastHit hit;
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 inputMouse = Input.mousePosition;
-            updateMousePos(inputMouse);
+            if (!(EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null))
+            {
+                //Vector3 inputMouse = Input.mousePosition;
+                //updateMousePos(inputMouse);
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit))
+                {
+                    updateCursor(hit.point);
+                }
+            }
         }
     }
-
-    private void updateMousePos(Vector3 pos)
+   
+    private void updateCursor(Vector3 hitPoint)
     {
-        Vector3 inputMouse = Input.mousePosition;
-        inputMouse.z = Camera.main.transform.transform.position.y;
-
-        Vector3 WorldPoint = Camera.main.ScreenToWorldPoint(inputMouse);
-        cursorCellPosition = grid.WorldToCell(WorldPoint);
-
-        Vector3 tempTransform = grid.CellToWorld(cursorCellPosition);
+        cursorCellPosition = grid.WorldToCell(hitPoint);
+        tempTransform = grid.CellToWorld(cursorCellPosition);
         tempTransform.y = 1;
 
-        transform.position = tempTransform;
         GetMapPosition(cursorCellPosition);
+        if ((MapPosition.x >= 0 && MapPosition.x <= 512) && (MapPosition.y >= 0 && MapPosition.y <= 512))
+        {
+            transform.position = tempTransform;
+        }
     }
 
     public void GetMapPosition(Vector3Int cursorCellPos)
     {
         MapPosition.x = cursorCellPos.x - 5;
         MapPosition.y = cursorCellPos.y - 5;
-       
+        PositionCursor.SetPosTxt(MapPosition.x+"", MapPosition.y+"");
     }
 }

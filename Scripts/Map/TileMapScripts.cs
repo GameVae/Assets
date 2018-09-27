@@ -17,12 +17,7 @@ public class TileMapScripts : MonoBehaviour {
     TileBase[] tileArrayBot;
     TileBase[] tileArrayRight;
 
-    [ContextMenu("CreateBoundMap")]
-    public void SetMap()
-    {
-        getComponent();
-        setMapBound();
-    }
+    
     private void getComponent()
     {
         grid = GetComponentInParent<Grid>();
@@ -45,6 +40,12 @@ public class TileMapScripts : MonoBehaviour {
         tilemap.SetTilesBlock(Area, tileBaseArray);
     }
 
+    [ContextMenu("CreateBoundMap")]
+    public void SetMap()
+    {
+        getComponent();
+        setMapBound();
+    }
     [ContextMenu("ClearMap")]
     public void ClearMap()
     {

@@ -70,8 +70,12 @@ public class WavySprite:MonoBehaviour{
 		orderInLayer=mr.sortingOrder;
         Update();
     }
-
-	void Update(){
+    //private void Start()
+    //{
+    //    staticSide = objSides.Top;
+    //    _staticSide = objSides.Top;
+    //}
+    void Update(){
 		if(
 			_texture!=texture || 
 			_tint!=tint ||

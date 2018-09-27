@@ -3,7 +3,7 @@
 		_MainTex("Texture",2D)="white"{}
 		_Color("Tint",Color)=(1,1,1,1)
 		_WaveDirection("Wave Direction",range(0,1))=0
-		_StaticSide("Static Side",range(0,4))=3
+		_StaticSide("Static Side",range(0,4))=1
 		_WaveFrequency("Wave Frequency",float)=10
 		_WaveForce("Wave Force",float)=0.1
 		_WaveSpeed("Wave Speed",float)=1
