@@ -10,7 +10,10 @@ public class SystemSocket : MonoBehaviour {
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
         SocketIO = gameObject.GetComponent<SocketIOComponent>();
     }
     void Start () {

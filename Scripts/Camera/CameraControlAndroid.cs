@@ -83,6 +83,41 @@ public class CameraControlAndroid : MonoBehaviour
         txtSwitchCamera.text = currentCameraType.ToString();
     }
 
+    private void moveCameraAndroid()
+    {
+        if (Input.touchCount == 1)
+        {
+            moveTouch();
+        }
+        else if (Input.touchCount == 2)
+        {
+            /* 
+             * Zoom: far range to zoom in, near range to zoom out;
+             * Rotate
+             * Panning: up/down for horizontal, left/right for vertical
+             */
+            switch (currentCameraType)
+            {
+                case EnumCameraType.Zoom:
+
+                    break;
+                case EnumCameraType.Rotate:
+
+                    break;
+                case EnumCameraType.Panning:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void resetCameraRotate()
+    {
+        transform.rotation = Quaternion.Euler(resetCamera);
+    }
+
     private void moveTouch()
     {
         touch = Input.GetTouch(0);
@@ -114,43 +149,6 @@ public class CameraControlAndroid : MonoBehaviour
         }
 
     }
-    private void moveCameraAndroid()
-    {
-        if (Input.touchCount == 1)
-        {
-            moveTouch();
-        }
-        else if (Input.touchCount == 2)
-        {
-            /* 
-             * Zoom: far range to zoom in, near range to zoom out;
-             * Rotate
-             * Panning: up/down for horizontal, left/right for vertical
-             */
-            switch (currentCameraType)
-            {
-                case EnumCameraType.Zoom:
 
-                    break;
-                case EnumCameraType.Rotate:
-
-                    break;
-                case EnumCameraType.Panning:
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-
-
-    private void resetCameraRotate()
-    {
-        transform.rotation = Quaternion.Euler(resetCamera);
-    }
-
-   
 #endif
 }
