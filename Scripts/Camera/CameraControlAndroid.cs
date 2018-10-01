@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using EnumCollect;
 
-public enum EnumCameraType
-{
-    Zoom,
-    Rotate,
-    Panning
-}
 
 public class CameraControlAndroid : MonoBehaviour
 {
 #if UNITY_ANDROID
-
+    #region Utils
+    private Debugger debugger = Debugger.debuger;
+    #endregion
     private Camera thisCamera;
     [SerializeField]
     private int terrainWidth;
@@ -28,7 +21,7 @@ public class CameraControlAndroid : MonoBehaviour
     private Vector3 dragOrigin;
     //private Vector3 pos, rotate, rotateR, posRightMouse, tempPos;
     private Touch touch;
-    
+
     private Text txtSwitchCamera;
     [SerializeField]
     private EnumCameraType currentCameraType = EnumCameraType.Zoom;
@@ -50,6 +43,12 @@ public class CameraControlAndroid : MonoBehaviour
     [Space]
     public Vector3 TopLeft, TopRight, BottomRight, BottomLeft;
 
+    [Header("Camera Offsets")]
+    public float ZoomSpeed;
+    public float MaxZoomIn = 10.0f;
+    public float MaxZoomOut = 60.0f;
+
+
     void Awake()
     {
         thisCamera = GetComponent<Camera>();
@@ -70,7 +69,7 @@ public class CameraControlAndroid : MonoBehaviour
         {
             case EnumCameraType.Zoom:
                 currentCameraType = EnumCameraType.Rotate;
-               break;
+                break;
             case EnumCameraType.Rotate:
                 currentCameraType = EnumCameraType.Panning;
                 break;
@@ -99,10 +98,10 @@ public class CameraControlAndroid : MonoBehaviour
             switch (currentCameraType)
             {
                 case EnumCameraType.Zoom:
-
+                    ZoomHandle();
                     break;
                 case EnumCameraType.Rotate:
-
+                    RotateHandle();
                     break;
                 case EnumCameraType.Panning:
 
@@ -150,5 +149,39 @@ public class CameraControlAndroid : MonoBehaviour
 
     }
 
+    #region Camera Gestures
+    private void ZoomHandle()
+    {
+        Touch one = Input.GetTouch(0);
+        Touch two = Input.GetTouch(1);
+
+        Vector2 preOnePos = one.position - one.deltaPosition;
+        Vector2 preTwoPos = two.position - two.deltaPosition;
+
+        float deltaPreMag = (preOnePos - preTwoPos).magnitude;
+        float deltaTouchMag = (one.position - two.position).magnitude;
+
+        float deltaMagDiff = deltaTouchMag - deltaPreMag;
+        if (deltaMagDiff != 0)
+        {
+            // apply zoom force
+            if (!thisCamera.orthographic)
+            {
+                thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
+            }
+        }
+    }
+    private void RotateHandle()
+    {
+        touch = Input.GetTouch(1);
+        Vector2 deltaPos = touch.deltaPosition;
+        if (deltaPos.sqrMagnitude > 0)
+        {
+            deltaPos *= Time.deltaTime * RotateSpeed;
+            thisCamera.transform.Rotate(deltaPos.y, deltaPos.x, 0.0f);
+            debugger.Log("Delta pos: " + deltaPos);
+        }
+    }
+    #endregion
 #endif
 }
