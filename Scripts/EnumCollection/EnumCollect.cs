@@ -5,4 +5,10 @@
         Vietnamese,
         English,
     }
+    public enum EnumCameraType
+    {
+        Zoom,
+        Rotate,
+        Panning
+    }
 }
