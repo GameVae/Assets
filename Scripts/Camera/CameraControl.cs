@@ -14,20 +14,20 @@ public class CameraControl : MonoBehaviour
     [SerializeField]
     private int terrainHeight;
 
-    
+
     private Vector3 dragOrigin;
     private Vector3 pos, move, rotate, rotateR, posRightMouse, tempPos;
     [SerializeField]
     private Vector3 resetCamera = new Vector3(90, 270, 0);
-    
+
     [Range(0.1f, 2f)]
     public float DragSpeed = 1f;
     [Range(2f, 20f)]
     public float RotateSpeed = 5f;
-    
+
     [Space]
     public Button BtnResetCamera;
-    
+
     [Header("Terrain Data")]
     public Terrain TerrainObj;
     [Space]
@@ -84,12 +84,19 @@ public class CameraControl : MonoBehaviour
 
             transform.Translate(move, Space.Self);
             transform.position = new Vector3(transform.position.x, 20, transform.position.z);
+
         }
 #endif
-        checkLeftTop();
-        checkRightTop();
-        checkRightBot();
-        checkLeftBot();
+#if UNITY_ANDROID
+        if (Input.touchCount > 0)
+        {
+#endif
+
+            checkLeftTop();
+            checkRightTop();
+            checkRightBot();
+            checkLeftBot();
+        }
 
     }
 
@@ -97,12 +104,13 @@ public class CameraControl : MonoBehaviour
     {
 #if UNITY_STANDALONE || UNITY_STANDALONE_WIN || UNITY_EDITOR
         transform.rotation = Quaternion.Euler(resetCamera);
-        transform.position = new Vector3(CursorPos.transform.position.x,20, CursorPos.transform.position.z);
+        transform.position = new Vector3(CursorPos.transform.position.x, 20, CursorPos.transform.position.z);
 #endif
     }
 
     private void checkLeftTop()
     {
+        Debug.Log("Check top left");
         tempPos.y = thisCamera.transform.position.y;
         //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)), 1);//left top
         if (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).x < 0)
@@ -133,11 +141,13 @@ public class CameraControl : MonoBehaviour
 
     private void checkRightTop()
     {
+        Debug.Log("Check top right");
+
         tempPos.y = thisCamera.transform.position.y;
         //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)), 1);// right top
         if (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x < 0)
         {
-            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x );
+            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x);
             tempPos.z = thisCamera.transform.position.z;
             thisCamera.transform.position = tempPos;
         }
@@ -163,6 +173,8 @@ public class CameraControl : MonoBehaviour
 
     private void checkRightBot()
     {
+        Debug.Log("Check bot left");
+
         tempPos.y = thisCamera.transform.position.y;
         //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)), 1);//right bot
         if (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).x < 0)
@@ -194,6 +206,8 @@ public class CameraControl : MonoBehaviour
 
     private void checkLeftBot()
     {
+        Debug.Log("Check bot right");
+
         tempPos.y = thisCamera.transform.position.y;
         //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)), 1);//left bot
         if (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).x < 0)

@@ -6,4 +6,9 @@
         Vietnamese,
         //  Français
     }
+    public enum EnumCameraType
+    {
+        Zoom,
+        Rotate,
+    }
 }

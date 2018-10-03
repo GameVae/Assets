@@ -16,13 +16,12 @@ public class CameraControlAndroid : MonoBehaviour
     private int terrainHeight;
 
     private bool directionChosen;
-    private Vector2 move;
-    private Vector2 startPos, direction;
+    private float deltaPreMag, deltaTouchMag, deltaMagDiff;
+    private Vector2 preOnePos, preTwoPos;
+    private Vector2 move, startPos, direction, rotate, startPos1, startPos2, direction1, direction2;
     private Vector3 dragOrigin;
-    //private Vector3 pos, rotate, rotateR, posRightMouse, tempPos;
-    private Touch touchOne;
-    private Touch touchTwo;
-    private Transform cameraObject;
+    private Touch touch, one, two;
+    private Vector3 tempPos;
 
     private Text txtSwitchCamera;
     [SerializeField]
@@ -30,22 +29,10 @@ public class CameraControlAndroid : MonoBehaviour
     [SerializeField]
     private Vector3 resetCamera = new Vector3(90, 270, 0);
 
-    // camera rotation fields
-    private float vRotation;
-    private float hRotation;
-
-    [Header("Range of rotation")]
-    public Vector2 WrapVertical;
-    public Vector2 WrapHorizontal;
-    public GameObject VerticalAxis;
-    public GameObject HorizontalAxis;
-
-    [Space]
-    [Range(0.01f, 2f)]
+    [Range(0.1f, 2f)]
     public float DragSpeed = 1f;
-    [Range(1f, 20f)]
+    [Range(2f, 20f)]
     public float RotateSpeed = 5f;
-
 
     [Space]
     public Button BtnResetCamera;
@@ -59,8 +46,7 @@ public class CameraControlAndroid : MonoBehaviour
     [Header("Camera Offsets")]
     public float ZoomSpeed;
     public float MaxZoomIn = 10.0f;
-    public float MaxZoomOut = 60.0f;
-
+    public float MaxZoomOut = 120.0f;
 
 
     void Awake()
@@ -70,19 +56,21 @@ public class CameraControlAndroid : MonoBehaviour
         BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
         txtSwitchCamera = BtnSwitchCamera.GetComponentInChildren<Text>();
         txtSwitchCamera.text = currentCameraType.ToString();
-
-        vRotation = 90.0f;
-        hRotation = 0.0f;
-        cameraObject = transform.root;
     }
     private void Start()
     {
         debugger = Debugger.instance;
     }
-
     private void Update()
     {
         moveCameraAndroid();
+        if (Input.touchCount > 0)
+        {
+            checkLeftBot();
+            checkRightBot();
+            checkLeftTop();
+            checkRightTop();
+        }
     }
 
     private void switchCameraType(EnumCameraType enumCamera)
@@ -105,9 +93,7 @@ public class CameraControlAndroid : MonoBehaviour
     {
         if (Input.touchCount == 1)
         {
-            Move();
-            //moveTouch();
-
+            moveTouch();
         }
         else if (Input.touchCount == 2)
         {
@@ -118,12 +104,11 @@ public class CameraControlAndroid : MonoBehaviour
              */
             switch (currentCameraType)
             {
-
                 case EnumCameraType.Zoom:
-                    ZoomHandle();
+                    zoomHandle();
                     break;
                 case EnumCameraType.Rotate:
-                    RotateHandle();
+                    rotateHandle();
                     break;
                 default:
                     break;
@@ -133,120 +118,263 @@ public class CameraControlAndroid : MonoBehaviour
 
     private void resetCameraRotate()
     {
-        // transform.rotation = Quaternion.Euler(resetCamera);
-        hRotation = 0.0f;
-        vRotation = 90.0f;
-        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
-        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotation, 0.0f);
+        transform.rotation = Quaternion.Euler(resetCamera);
     }
 
     private void moveTouch()
     {
-        touchOne = Input.GetTouch(0);
-        switch (touchOne.phase)
+        touch = Input.GetTouch(0);
+        move = Vector3.zero;
+        direction = Vector3.zero;
+        switch (touch.phase)
         {
             case TouchPhase.Began:
-                startPos = touchOne.position;
+                startPos = touch.position;
                 //directionChosen = false;
                 break;
             case TouchPhase.Moved:
-                direction = touchOne.position - startPos;
+                direction = touch.position - startPos;
                 if (!CameraStatus.instance.InvertBool)
                     move = new Vector3(-direction.x * DragSpeed, -direction.y * DragSpeed);
                 else
                     move = new Vector3(direction.x * DragSpeed, direction.y * DragSpeed);
-
-                cameraObject.Translate(move, Space.Self);
                 break;
 
             case TouchPhase.Stationary:
+                move = Vector3.zero;
                 break;
             case TouchPhase.Ended:
                 //  directionChosen = true;
+                direction = Vector3.zero;
+                move = Vector3.zero;
                 break;
             case TouchPhase.Canceled:
                 break;
             default:
                 break;
         }
+        transform.Translate(move, Space.Self);
+        transform.position = new Vector3(transform.position.x, 20, transform.position.z);
     }
 
     #region Camera Gestures
-    private void Move()
+    private void zoomHandle()
     {
-        touchOne = Input.GetTouch(0);
-        direction = touchOne.deltaPosition;
-        move = new Vector3(direction.x, 0.0f, direction.y);
-        cameraObject.Translate(move);
-        debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position);
-    }
+        one = Input.GetTouch(0);
+        two = Input.GetTouch(1);
 
-    private void ZoomHandle()
-    {
-        touchOne = Input.GetTouch(0);
-        touchTwo = Input.GetTouch(1);
+        preOnePos = one.position - one.deltaPosition;
+        preTwoPos = two.position - two.deltaPosition;
 
-        Vector2 preOnePos = touchOne.position - touchOne.deltaPosition;
-        Vector2 preTwoPos = touchTwo.position - touchTwo.deltaPosition;
+        deltaPreMag = (preOnePos - preTwoPos).magnitude;
+        deltaTouchMag = (one.position - two.position).magnitude;
 
-        float deltaPreMag = (preOnePos - preTwoPos).magnitude;
-        float deltaTouchMag = (touchOne.position - touchTwo.position).magnitude;
-
-        float deltaMagDiff = deltaTouchMag - deltaPreMag;
+        deltaMagDiff = deltaTouchMag - deltaPreMag;
         if (deltaMagDiff != 0)
         {
             // apply zoom force
-            if (!thisCamera.orthographic)
-            {
-                thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
-            }
+            thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
         }
     }
-    private void RotateHandle()
+
+    private void rotateHandle()
     {
-        touchOne = Input.GetTouch(0);
-        touchTwo = Input.GetTouch(1);
-        Vector2 deltaTouchPos = touchOne.deltaPosition.magnitude > touchTwo.deltaPosition.magnitude ?
-                                    touchOne.deltaPosition : touchTwo.deltaPosition;
-        float h, v;
-        h = deltaTouchPos.x;
-        v = deltaTouchPos.y;
 
-        if (Mathf.Abs(v) > Mathf.Abs(h))
+
+        //touch = Input.GetTouch(1);
+        //Vector2 deltaPos = touch.deltaPosition;
+        //if (deltaPos.sqrMagnitude > 0)
+        //{
+        //    deltaPos *= Time.deltaTime * RotateSpeed;
+        //    thisCamera.transform.Rotate(deltaPos.y, deltaPos.x, 0.0f);
+        //    debugger.Log("Delta pos: " + deltaPos);
+        //}
+        one = Input.GetTouch(0);
+        two = Input.GetTouch(1);
+
+        switch (one.phase)
         {
-            h = 0.0f;
+            case TouchPhase.Began:
+                startPos1 = one.position;
+                break;
+            case TouchPhase.Moved:
+                break;
+            case TouchPhase.Stationary:
+                if (two.phase == TouchPhase.Moved)
+                {
+                    rotate = new Vector3(0, direction2.y * Time.deltaTime, 0.0f);
+                }
+                break;
+            case TouchPhase.Ended:
+                direction1 = Vector3.zero;
+                rotate = Vector3.zero;
+                direction2 = Vector3.zero;
+                break;
+            case TouchPhase.Canceled:
+                break;
+            default:
+                break;
         }
-        else
+        switch (two.phase)
         {
-            v = 0.0f;
+            case TouchPhase.Began:
+                startPos2 = two.position;
+                break;
+            case TouchPhase.Moved:
+                //direction2 = two.position - startPos2;
+                direction2 = two.deltaPosition;
+                break;
+            case TouchPhase.Stationary:
+                if (one.phase == TouchPhase.Moved)
+                {
+                    rotate = new Vector3(0, direction1.y * Time.deltaTime, 0.0f);
+                }
+                break;
+            case TouchPhase.Ended:
+                direction1 = Vector3.zero;
+                direction2 = Vector3.zero;
+                rotate = Vector3.zero;
+                break;
+            case TouchPhase.Canceled:
+                move = Vector3.zero;
+                break;
+            default:
+                break;
         }
-        vRotation = Mathf.Clamp(vRotation - v * RotateSpeed, WrapVertical.x, WrapVertical.y);
-        hRotation = Mathf.Clamp(hRotation + h * RotateSpeed, WrapHorizontal.x, WrapHorizontal.y);
-
-        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
-        //HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -hRotation);
-        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotation, 0.0f);
-    }
-
-    Quaternion ClampRotationAroundXAxis(Quaternion q)
-    {
-        if (q.w != 1.0f)
+        debugger.Log("current rotation: " + thisCamera.transform.rotation.eulerAngles + " | plus rotate: " + rotate);
+        if (transform.rotation.eulerAngles.x > 80 && transform.rotation.eulerAngles.x < 100)
         {
-            Debug.Log(q.w);
+            transform.Rotate(rotate);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+            transform.position = new Vector3(transform.position.x, 20, transform.position.z);
         }
-        q.x /= q.w;
-        q.y /= q.w;
-        q.z /= q.w;
-        q.w = 1.0f;
 
-        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
-
-        angleX = Mathf.Clamp(angleX, WrapVertical.x, WrapVertical.y);
-
-        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
-
-        return q;
     }
     #endregion
+
+    private void checkLeftTop()
+    {
+        tempPos.y = thisCamera.transform.position.y;
+        //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)), 1);//left top
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).x < 0)
+        {
+            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).x);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).x > terrainWidth)
+        {
+            tempPos.x = thisCamera.transform.position.x - (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).x - terrainWidth);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).z < 0)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).z);
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).z > terrainHeight)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(0, 1, 2 * thisCamera.orthographicSize)).z - terrainHeight);
+            thisCamera.transform.position = tempPos;
+        }
+    }
+
+    private void checkRightTop()
+    {
+
+        tempPos.y = thisCamera.transform.position.y;
+        //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)), 1);// right top
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x < 0)
+        {
+            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x > terrainWidth)
+        {
+            tempPos.x = thisCamera.transform.position.x - (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).x - terrainWidth);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).z < 0)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).z);
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).z > terrainHeight)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(1, 1, 2 * thisCamera.orthographicSize)).z - terrainHeight);
+            thisCamera.transform.position = tempPos;
+        }
+    }
+
+    private void checkRightBot()
+    {
+
+        tempPos.y = thisCamera.transform.position.y;
+        //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)), 1);//right bot
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).x < 0)
+        {
+            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).x);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).x > terrainWidth)
+        {
+            tempPos.x = thisCamera.transform.position.x - (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).x - terrainWidth);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).z < 0)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).z);
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).z > terrainHeight)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(1, 0, 2 * thisCamera.orthographicSize)).z - terrainHeight);
+            thisCamera.transform.position = tempPos;
+        }
+
+    }
+
+    private void checkLeftBot()
+    {
+
+        tempPos.y = thisCamera.transform.position.y;
+        //Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)), 1);//left bot
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).x < 0)
+        {
+            tempPos.x = (thisCamera.transform.position.x - thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).x);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).x > terrainWidth)
+        {
+            tempPos.x = thisCamera.transform.position.x - (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).x - terrainWidth);
+            tempPos.z = thisCamera.transform.position.z;
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).z < 0)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).z);
+            thisCamera.transform.position = tempPos;
+        }
+        if (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).z > terrainHeight)
+        {
+            tempPos.x = thisCamera.transform.position.x;
+            tempPos.z = thisCamera.transform.position.z - (thisCamera.ViewportToWorldPoint(new Vector3(0, 0, 2 * thisCamera.orthographicSize)).z - terrainHeight);
+            thisCamera.transform.position = tempPos;
+        }
+
+    }
 #endif
 }
