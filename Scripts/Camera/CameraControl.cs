@@ -37,8 +37,10 @@ public class CameraControl : MonoBehaviour
 
     void Awake()
     {
+#if UNITY_STANDALONE || UNITY_STANDALONE_WIN || UNITY_EDITOR
         thisCamera = GetComponent<Camera>();
         BtnResetCamera.onClick.AddListener(() => { resetCameraRotate(); });
+#endif
     }
 
     private void Update()
@@ -75,8 +77,8 @@ public class CameraControl : MonoBehaviour
         }
         else
         {
-            if (!CameraStatus.instance.InvertBool)            
-                move = new Vector3(-pos.x * DragSpeed, -pos.y * DragSpeed, 0);           
+            if (!CameraStatus.instance.InvertBool)
+                move = new Vector3(-pos.x * DragSpeed, -pos.y * DragSpeed, 0);
             else
                 move = new Vector3(pos.x * DragSpeed, pos.y * DragSpeed, 0);
 
@@ -93,8 +95,10 @@ public class CameraControl : MonoBehaviour
 
     private void resetCameraRotate()
     {
+#if UNITY_STANDALONE || UNITY_STANDALONE_WIN || UNITY_EDITOR
         transform.rotation = Quaternion.Euler(resetCamera);
         transform.position = new Vector3(CursorPos.transform.position.x,20, CursorPos.transform.position.z);
+#endif
     }
 
     private void checkLeftTop()

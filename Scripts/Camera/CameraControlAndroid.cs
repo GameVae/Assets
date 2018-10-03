@@ -7,7 +7,7 @@ public class CameraControlAndroid : MonoBehaviour
 {
 #if UNITY_ANDROID
     #region Utils
-    private Debugger debugger = Debugger.debuger;
+    private Debugger debugger;
     #endregion
     private Camera thisCamera;
     [SerializeField]
@@ -20,7 +20,9 @@ public class CameraControlAndroid : MonoBehaviour
     private Vector2 startPos, direction;
     private Vector3 dragOrigin;
     //private Vector3 pos, rotate, rotateR, posRightMouse, tempPos;
-    private Touch touch;
+    private Touch touchOne;
+    private Touch touchTwo;
+    private Transform cameraObject;
 
     private Text txtSwitchCamera;
     [SerializeField]
@@ -28,9 +30,20 @@ public class CameraControlAndroid : MonoBehaviour
     [SerializeField]
     private Vector3 resetCamera = new Vector3(90, 270, 0);
 
-    [Range(0.1f, 2f)]
+    // camera rotation fields
+    private float vRotation;
+    private float hRotation;
+
+    [Header("Range of rotation")]
+    public Vector2 WrapVertical;
+    public Vector2 WrapHorizontal;
+    public GameObject VerticalAxis;
+    public GameObject HorizontalAxis;
+
+    [Space]
+    [Range(0.01f, 2f)]
     public float DragSpeed = 1f;
-    [Range(2f, 20f)]
+    [Range(1f, 20f)]
     public float RotateSpeed = 5f;
 
 
@@ -49,6 +62,7 @@ public class CameraControlAndroid : MonoBehaviour
     public float MaxZoomOut = 60.0f;
 
 
+
     void Awake()
     {
         thisCamera = GetComponent<Camera>();
@@ -56,6 +70,14 @@ public class CameraControlAndroid : MonoBehaviour
         BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
         txtSwitchCamera = BtnSwitchCamera.GetComponentInChildren<Text>();
         txtSwitchCamera.text = currentCameraType.ToString();
+
+        vRotation = 90.0f;
+        hRotation = 0.0f;
+        cameraObject = transform.root;
+    }
+    private void Start()
+    {
+        debugger = Debugger.instance;
     }
 
     private void Update()
@@ -71,9 +93,6 @@ public class CameraControlAndroid : MonoBehaviour
                 currentCameraType = EnumCameraType.Rotate;
                 break;
             case EnumCameraType.Rotate:
-                currentCameraType = EnumCameraType.Panning;
-                break;
-            case EnumCameraType.Panning:
                 currentCameraType = EnumCameraType.Zoom;
                 break;
             default:
@@ -86,7 +105,9 @@ public class CameraControlAndroid : MonoBehaviour
     {
         if (Input.touchCount == 1)
         {
-            moveTouch();
+            Move();
+            //moveTouch();
+
         }
         else if (Input.touchCount == 2)
         {
@@ -97,14 +118,12 @@ public class CameraControlAndroid : MonoBehaviour
              */
             switch (currentCameraType)
             {
+
                 case EnumCameraType.Zoom:
                     ZoomHandle();
                     break;
                 case EnumCameraType.Rotate:
                     RotateHandle();
-                    break;
-                case EnumCameraType.Panning:
-
                     break;
                 default:
                     break;
@@ -114,26 +133,30 @@ public class CameraControlAndroid : MonoBehaviour
 
     private void resetCameraRotate()
     {
-        transform.rotation = Quaternion.Euler(resetCamera);
+        // transform.rotation = Quaternion.Euler(resetCamera);
+        hRotation = 0.0f;
+        vRotation = 90.0f;
+        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
+        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotation, 0.0f);
     }
 
     private void moveTouch()
     {
-        touch = Input.GetTouch(0);
-        switch (touch.phase)
+        touchOne = Input.GetTouch(0);
+        switch (touchOne.phase)
         {
             case TouchPhase.Began:
-                startPos = touch.position;
+                startPos = touchOne.position;
                 //directionChosen = false;
                 break;
             case TouchPhase.Moved:
-                direction = touch.position - startPos;
+                direction = touchOne.position - startPos;
                 if (!CameraStatus.instance.InvertBool)
                     move = new Vector3(-direction.x * DragSpeed, -direction.y * DragSpeed);
                 else
                     move = new Vector3(direction.x * DragSpeed, direction.y * DragSpeed);
 
-                transform.Translate(move, Space.Self);
+                cameraObject.Translate(move, Space.Self);
                 break;
 
             case TouchPhase.Stationary:
@@ -146,20 +169,28 @@ public class CameraControlAndroid : MonoBehaviour
             default:
                 break;
         }
-
     }
 
     #region Camera Gestures
+    private void Move()
+    {
+        touchOne = Input.GetTouch(0);
+        direction = touchOne.deltaPosition;
+        move = new Vector3(direction.x, 0.0f, direction.y);
+        cameraObject.Translate(move);
+        debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position);
+    }
+
     private void ZoomHandle()
     {
-        Touch one = Input.GetTouch(0);
-        Touch two = Input.GetTouch(1);
+        touchOne = Input.GetTouch(0);
+        touchTwo = Input.GetTouch(1);
 
-        Vector2 preOnePos = one.position - one.deltaPosition;
-        Vector2 preTwoPos = two.position - two.deltaPosition;
+        Vector2 preOnePos = touchOne.position - touchOne.deltaPosition;
+        Vector2 preTwoPos = touchTwo.position - touchTwo.deltaPosition;
 
         float deltaPreMag = (preOnePos - preTwoPos).magnitude;
-        float deltaTouchMag = (one.position - two.position).magnitude;
+        float deltaTouchMag = (touchOne.position - touchTwo.position).magnitude;
 
         float deltaMagDiff = deltaTouchMag - deltaPreMag;
         if (deltaMagDiff != 0)
@@ -173,14 +204,48 @@ public class CameraControlAndroid : MonoBehaviour
     }
     private void RotateHandle()
     {
-        touch = Input.GetTouch(1);
-        Vector2 deltaPos = touch.deltaPosition;
-        if (deltaPos.sqrMagnitude > 0)
+        touchOne = Input.GetTouch(0);
+        touchTwo = Input.GetTouch(1);
+        Vector2 deltaTouchPos = touchOne.deltaPosition.magnitude > touchTwo.deltaPosition.magnitude ?
+                                    touchOne.deltaPosition : touchTwo.deltaPosition;
+        float h, v;
+        h = deltaTouchPos.x;
+        v = deltaTouchPos.y;
+
+        if (Mathf.Abs(v) > Mathf.Abs(h))
         {
-            deltaPos *= Time.deltaTime * RotateSpeed;
-            thisCamera.transform.Rotate(deltaPos.y, deltaPos.x, 0.0f);
-            debugger.Log("Delta pos: " + deltaPos);
+            h = 0.0f;
         }
+        else
+        {
+            v = 0.0f;
+        }
+        vRotation = Mathf.Clamp(vRotation - v * RotateSpeed, WrapVertical.x, WrapVertical.y);
+        hRotation = Mathf.Clamp(hRotation + h * RotateSpeed, WrapHorizontal.x, WrapHorizontal.y);
+
+        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
+        //HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -hRotation);
+        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotation, 0.0f);
+    }
+
+    Quaternion ClampRotationAroundXAxis(Quaternion q)
+    {
+        if (q.w != 1.0f)
+        {
+            Debug.Log(q.w);
+        }
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
+
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+
+        angleX = Mathf.Clamp(angleX, WrapVertical.x, WrapVertical.y);
+
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+
+        return q;
     }
     #endregion
 #endif

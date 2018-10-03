@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 public class Debugger : MonoBehaviour
 {
-    public static Debugger debuger;
+    public static Debugger instance;
     private GameObject content;
     private Text message;
     private Scrollbar verticleBar;
@@ -16,8 +16,8 @@ public class Debugger : MonoBehaviour
     private List<Text> logs;
 	private void Awake ()
     {
-        if (debuger == null) debuger = this;
-        else if (debuger != null) Destroy(debuger);
+        if (instance == null) instance = this;
+        else if (instance != null) Destroy(instance);
         logs = new List<Text>();
 
         message = GetComponentInChildren<Text>();
@@ -43,11 +43,22 @@ public class Debugger : MonoBehaviour
     {
 #if UNITY_ANDROID
 
+        if (logs.Count > 300)
+        {
+            for (int i = 0; i < 150; i++)
+            {
+                Destroy(logs[i].gameObject);
+            }
+            logs.RemoveRange(0, 150);
+            System.GC.Collect();
+        }
+        
         Text log = Instantiate(message, content.transform);
         log.text = DateTime.Now + " : " + obj.ToString();
         log.gameObject.SetActive(true);
         logs.Add(log);
         verticleBar.value = 0;
+        
 #endif
 #if UNITY_EDITOR
         Debug.Log(obj);

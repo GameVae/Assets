@@ -9,6 +9,5 @@
     {
         Zoom,
         Rotate,
-        Panning
     }
 }
