@@ -8572,6 +8572,8 @@ GameObject:
   - component: {fileID: 1416383424}
   - component: {fileID: 1416383426}
   - component: {fileID: 1416383425}
+  - component: {fileID: 1416383427}
+  - component: {fileID: 1416383428}
   m_Layer: 0
   m_Name: ToastTxt
   m_TagString: Untagged
@@ -8640,6 +8642,29 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1416383423}
   m_CullTransparentMesh: 0
+--- !u!114 &1416383427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1416383423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ffdcc5f16d16674c9427f7ea7651879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1416383428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1416383423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f561e0c65cfe24c88332e67f1f400b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toast: {fileID: 0}
 --- !u!1 &1421494282
 GameObject:
   m_ObjectHideFlags: 0
@@ -9876,7 +9901,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SocketIO: {fileID: 56121115}
-  TextLoginRegion: {fileID: 2124528239}
   registerUI:
     RegisterPanel: {fileID: 2087659780}
     UserName: {fileID: 1341078703}

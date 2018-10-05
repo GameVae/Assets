@@ -37,15 +37,13 @@ public class RegisterUI
         WarningPassword.SetActive(false);
         WarningPasswordConfirm.SetActive(false);
         WarningEmail.SetActive(false);
-
-        RegisterPanel.SetActive(false);
     }
 }
 
 public class Register : MonoBehaviour
 {
     public SocketIOComponent SocketIO;
-    public TextLoginRegion TextLoginRegion;
+   // public TextLoginRegion TextLoginRegion;
 
     [SerializeField]
     private RegisterUI registerUI;
@@ -147,18 +145,22 @@ public class Register : MonoBehaviour
         registerUI.WarningPassword.SetActive(!checkPassword);
         registerUI.WarningPasswordConfirm.SetActive(!checkPassword);
     }
+
+
     private void setRegisterClick()
     {
         if (checkUserAccount() == true)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
-            data["UserName"] = TextLoginRegion.UserName_RegisterRegion.text;
-            data["Password"] = md5String(TextLoginRegion.Password_RegisterRegion.text);
-            data["Email"] = TextLoginRegion.Email_RegisterRegion.text;
+            
+            data["UserName"] = registerUI.UserName.text;
+            data["Password"] = md5String(registerUI.Password.text);
+            data["Email"] = registerUI.Email.text;
             SocketIO.Emit("S_REGISTER", new JSONObject(data));
         }
         registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
+
     private bool checkUserAccount()
     {
         bool checkBool = false;
