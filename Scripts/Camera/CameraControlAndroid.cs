@@ -18,6 +18,7 @@ public class CameraControlAndroid : MonoBehaviour
     private bool directionChosen;
     private float deltaPreMag, deltaTouchMag, deltaMagDiff;
     private Vector2 preOnePos, preTwoPos;
+
     private Vector2 move, startPos, direction, rotate, startPos1, startPos2, direction1, direction2;
     private Vector3 dragOrigin;
     private Touch touch, one, two;
@@ -193,6 +194,7 @@ public class CameraControlAndroid : MonoBehaviour
         two = Input.GetTouch(1);
 
         switch (one.phase)
+<<<<<<< HEAD
         {
             case TouchPhase.Began:
                 startPos1 = one.position;
@@ -249,6 +251,46 @@ public class CameraControlAndroid : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 20, transform.position.z);
         }
 
+=======
+        {
+            case TouchPhase.Began:
+                startPos1 = one.position;
+                break;
+            case TouchPhase.Moved:
+                break;
+            case TouchPhase.Stationary:
+                if (two.phase==TouchPhase.Moved)
+                {
+                    rotate = new Vector3(0, direction2.y*Time.deltaTime);
+                }
+                break;
+            case TouchPhase.Ended:
+                break;
+            case TouchPhase.Canceled:
+                break;
+            default:
+                break;
+        }
+        switch (two.phase)
+        {
+            case TouchPhase.Began:
+                startPos2 = two.position;
+                break;
+            case TouchPhase.Moved:
+                direction2 = two.position - startPos2;
+                break;
+            case TouchPhase.Stationary:
+                break;
+            case TouchPhase.Ended:
+                break;
+            case TouchPhase.Canceled:
+                break;
+            default:
+                break;
+        }
+        transform.Rotate(rotate);
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+>>>>>>> 5959069f3297d7f1bdd8ef66894a489c22b09331
     }
     #endregion
 

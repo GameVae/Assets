@@ -73,6 +73,9 @@ public class CameraControl : MonoBehaviour
         {
             rotate = new Vector3(-pos.y * DragSpeed, pos.x * DragSpeed, 0);
             transform.Rotate(rotate);
+            /*
+             * 
+             */
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
         }
         else

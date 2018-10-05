@@ -9,7 +9,6 @@ public class AndroidCameraCtrl : MonoBehaviour
     #region Utils
     private Debugger debugger;
     #endregion
-
     private Camera thisCamera;
     [SerializeField]
     private int terrainWidth;
@@ -30,33 +29,43 @@ public class AndroidCameraCtrl : MonoBehaviour
     private EnumCameraType currentCameraType = EnumCameraType.Zoom;
 
     // camera fields
+    private bool isLockedAxis;
+    private float vRotTarget;
+    private float hRotTarget;
+
     private float vRotation;
     private float hRotation;
+
     private Vector2 moveForce;
     private Vector3 verticalDir;
     private Vector3 horizontalDir;
     private Vector3 move;
+
 
     [Header("Range of rotation")]
     public Transform VerticalAxis;
     public Transform HorizontalAxis;
     public Vector2 WrapRotationValue;
 
+    [Header("Camera Offsets")]
+    public float ZoomSpeed;
+    public float MaxZoomIn = 10.0f;
+    public float MaxZoomOut = 60.0f;
     [Space]
-    [Range(1f, 1000f)]
-    public float DragSpeed = 1f;
-    [Range(1f, 1000f)]
-    public float RotateSpeed = 5f;
-
+    [Range(1f, 100.0f)]
+    public float DragSpeed = 20f;
+    [Range(1f, 180.0f)]
+    public float VerticalRotSpeed = 70.0f;
+    [Range(1f, 360.0f)]
+    public float HorizontalRotSpeed = 360.0f * 0.55f;
+    [Range(0.0f, 360.0f)]
+    public float DegreePerInch = 360.0f;
 
     [Space]
     public Button BtnResetCamera;
     public Button BtnSwitchCamera;
 
-    [Header("Camera Offsets")]
-    public float ZoomSpeed;
-    public float MaxZoomIn = 10.0f;
-    public float MaxZoomOut = 60.0f;
+
 
 
     void Awake()
@@ -68,8 +77,8 @@ public class AndroidCameraCtrl : MonoBehaviour
         txtSwitchCamera = BtnSwitchCamera.GetComponentInChildren<Text>();
         txtSwitchCamera.text = currentCameraType.ToString();
 
-        vRotation = 0.0f;
-        hRotation = 0.0f;
+        vRotation = vRotTarget = 90.0f;
+        hRotation = hRotTarget = 0.0f;
         cameraObject = transform.root;
     }
     private void Start()
@@ -77,29 +86,52 @@ public class AndroidCameraCtrl : MonoBehaviour
         debugger = Debugger.instance;
     }
 
-    private void Update() // FixedUpdate
+    private void /*Update() // */FixedUpdate()
     {
+#if UNITY_ANDROID
         MoveCameraAndroid();
+        RotateCamera();
+        UnlockAxis();
+#endif
 #if UNITY_EDITOR
-        if (Input.GetKey(KeyCode.R))
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+
+        if (Mathf.Abs(v) > Mathf.Abs(h))
         {
-            hRotation = Mathf.Repeat(hRotation + RotateSpeed * Constants.PixelDependencyDevice * 1.0f, 360f);
-            HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, hRotation);
-
+            h = 0.0f;
         }
-        verticalDir = HorizontalAxis.up;
-        horizontalDir = VerticalAxis.right;
-        horizontalDir.y = 0; verticalDir.y = 0;
+        else
+        {
+            v = 0.0f;
+        }
+        if (!isLockedAxis)
+        {
+            hRotTarget = (hRotTarget + h * Constants.PixelDependencyDevice * DegreePerInch);
+        }
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Constants.PixelDependencyDevice * DegreePerInch,
+                                 WrapRotationValue.x,
+                                 WrapRotationValue.y);
 
-        move = (horizontalDir * Input.GetAxis("Horizontal") * Constants.PixelDependencyDevice * DragSpeed)
-            + (verticalDir * Input.GetAxis("Vertical") * Constants.PixelDependencyDevice * DragSpeed);
-        cameraObject.Translate(move);
+        RotateCamera();
+        // LockAxis();
+        UnlockAxis();
+        
+        #region MOVE ON EDITOR
+        //verticalDir = HorizontalAxis.up;
+        //horizontalDir = VerticalAxis.right;
+        //horizontalDir.y = 0; verticalDir.y = 0;
 
+        //move = (horizontalDir * Input.GetAxis("Horizontal") * Constants.PixelDependencyDevice * DragSpeed)
+        //    + (verticalDir * Input.GetAxis("Vertical") * Constants.PixelDependencyDevice * DragSpeed);
+        //cameraObject.Translate(move);
+        #endregion
+        // check out of range
         checkLeftBot();
         checkRightBot();
         checkLeftTop();
         checkRightTop();
-        Debug.Log(Constants.PixelDependencyDevice);
 #endif
     }
 
@@ -139,7 +171,7 @@ public class AndroidCameraCtrl : MonoBehaviour
                         ZoomHandle();
                         break;
                     case EnumCameraType.Rotate:
-                        RotateHandle();
+                        CalculateRotation();
                         break;
                     default:
                         break;
@@ -149,17 +181,17 @@ public class AndroidCameraCtrl : MonoBehaviour
             checkRightBot();
             checkLeftTop();
             checkRightTop();
-            cameraObject.position = new Vector3(transform.position.x, 12, transform.position.z);
+           // cameraObject.position = new Vector3(transform.position.x, 12, transform.position.z);
         }
     }
 
     private void ResetCameraRotate()
     {
         // transform.rotation = Quaternion.Euler(resetCamera);
-        hRotation = 0.0f;
-        vRotation = 90.0f;
-        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
-        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotation, 0.0f);
+        hRotation = hRotTarget = 0.0f;
+        vRotation = vRotTarget = 90.0f;
+        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotTarget, 0.0f, 0.0f);
+        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, hRotTarget, 0.0f);
         // cameraObject.position = defaultPosition;
     }
 
@@ -168,10 +200,8 @@ public class AndroidCameraCtrl : MonoBehaviour
     {
         touchOne = Input.GetTouch(0);
 
-        verticalDir = HorizontalAxis.up;
-        horizontalDir = VerticalAxis.right;
-        horizontalDir.y = 0;
-        verticalDir.y = 0;
+        verticalDir = Vector3.ProjectOnPlane(HorizontalAxis.up, Vector3.up);
+        horizontalDir = Vector3.ProjectOnPlane(VerticalAxis.right, Vector3.up);
 
         moveForce = -touchOne.deltaPosition;
 
@@ -179,8 +209,9 @@ public class AndroidCameraCtrl : MonoBehaviour
                 * DragSpeed
                 * Constants.PixelDependencyDevice;
 
+
         cameraObject.Translate(move);
-        debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position + " Dpi unit: " + Constants.PixelDependencyDevice);
+        // debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position + " Dpi unit: " + Constants.PixelDependencyDevice);
     }
 
     private void ZoomHandle()
@@ -206,7 +237,7 @@ public class AndroidCameraCtrl : MonoBehaviour
             }
         }
     }
-    private void RotateHandle()
+    private void CalculateRotation()
     {
         touchOne = Input.GetTouch(0);
         touchTwo = Input.GetTouch(1);
@@ -223,19 +254,66 @@ public class AndroidCameraCtrl : MonoBehaviour
         {
             v = 0.0f;
         }
-        //hRotation = (hRotation + RotateSpeed * h) % 360.0f;
-        hRotation = (hRotation + RotateSpeed * h * Constants.PixelDependencyDevice);
-        vRotation = Mathf.Clamp(vRotation - v * RotateSpeed * Constants.PixelDependencyDevice,
+        if (!isLockedAxis)
+        {
+            hRotTarget = (hRotTarget + h * Constants.PixelDependencyDevice * DegreePerInch);
+        }
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Constants.PixelDependencyDevice * DegreePerInch,
                                  WrapRotationValue.x,
                                  WrapRotationValue.y);
+        //LockAxis();
+    }
 
-        debugger.Log("H rotation: " + hRotation + " | V rotation: " + vRotation + "delta touch pos: " + deltaTouchPos);
+    private void RotateCamera()
+    {
+        if (vRotation != vRotTarget)
+        {
+            vRotation = Mathf.MoveTowards(vRotation, vRotTarget, Time.deltaTime * VerticalRotSpeed);
+            // debugger.Log("V rotatio target: " + vRotTarget + " | V rotation: " + vRotation + " Is locked axis: " + isLockedAxis);
 
-        VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
-        HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -hRotation);
+            // VerticalAxis.transform.localRotation = Quaternion.Euler(vRotation, 0.0f, 0.0f);
+            VerticalAxis.transform.Rotate(new Vector3(-vRotation * DragSpeed, 0, 0));
+            VerticalAxis.transform.eulerAngles = new Vector3(VerticalAxis.transform.eulerAngles.x, VerticalAxis.transform.eulerAngles.y, 0);
+
+        }
+        if (hRotation != hRotTarget)
+        {
+            hRotation = Mathf.MoveTowards(hRotation, hRotTarget, Time.deltaTime * HorizontalRotSpeed);
+            // debugger.Log("H rotation target: " + hRotTarget + " | H rotation: " + hRotation + "Is locked axis: " + isLockedAxis);
+
+            // HorizontalAxis.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -hRotation);
+
+            HorizontalAxis.transform.Rotate(new Vector3(0, -hRotation * DragSpeed, 0));
+            HorizontalAxis.transform.eulerAngles = new Vector3(HorizontalAxis.transform.eulerAngles.x, HorizontalAxis.transform.eulerAngles.y, 0);
+
+        }
+        //VerticalAxis.transform.Rotate(new Vector3(-vRotation * DragSpeed, 0, 0));
+        //HorizontalAxis.transform.Rotate(new Vector3(0, -hRotation * DragSpeed, 0));
+        //VerticalAxis.transform.eulerAngles = new Vector3(VerticalAxis.transform.eulerAngles.x, VerticalAxis.transform.eulerAngles.y, 0);
+        //HorizontalAxis.transform.eulerAngles = new Vector3(HorizontalAxis.transform.eulerAngles.x, HorizontalAxis.transform.eulerAngles.y, 0);
     }
     #endregion
 
+    private void UnlockAxis()
+    {
+        if (vRotation >= (WrapRotationValue.y - 2.0f) && isLockedAxis)
+        {
+            isLockedAxis = false;
+        }
+    }
+    private void LockAxis()
+    {
+
+        // 2.0f is deviation allowed
+        if (vRotTarget <= (WrapRotationValue.y - 2.0f) && !isLockedAxis)
+        {
+            hRotation %= 360.0f;
+
+            hRotTarget = 0.0f;
+
+            isLockedAxis = true;
+        }
+    }
     private void checkLeftTop()
     {
         //tempPos.y = thisCamera.transform.position.y;
@@ -418,4 +496,20 @@ public class AndroidCameraCtrl : MonoBehaviour
         Gizmos.DrawSphere(thisCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 2 * thisCamera.orthographicSize)), 1);// center
     }
 #endif
+
+#if UNITY_EDITOR
+    [ContextMenu("Get rotation properties")]
+    public void GetProperties()
+    {
+        if(thisCamera == null)
+        {
+            thisCamera = GetComponentInChildren<Camera>();
+        }
+        Debug.Log("Camera quaternion: " + thisCamera.transform.rotation);
+        Debug.Log("Camera Euler:      " + thisCamera.transform.rotation.eulerAngles);
+        Debug.Log("Camera Local Quaternion: " + thisCamera.transform.localRotation);
+        Debug.Log("Camera Local Euler: " + thisCamera.transform.localEulerAngles);
+    }
+#endif
 }
+
