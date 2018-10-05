@@ -16,11 +16,11 @@ public class CameraControlAndroid : MonoBehaviour
     private int terrainHeight;
 
     private bool directionChosen;
-    private Vector2 move;
-    private Vector2 startPos, direction;
+    private float deltaPreMag, deltaTouchMag, deltaMagDiff;
+    private Vector2 preOnePos, preTwoPos;
+    private Vector2 move, startPos, direction,rotate, startPos1,startPos2,direction1,direction2;
     private Vector3 dragOrigin;
-    //private Vector3 pos, rotate, rotateR, posRightMouse, tempPos;
-    private Touch touch;
+    private Touch touch, one, two;
 
     private Text txtSwitchCamera;
     [SerializeField]
@@ -32,7 +32,6 @@ public class CameraControlAndroid : MonoBehaviour
     public float DragSpeed = 1f;
     [Range(2f, 20f)]
     public float RotateSpeed = 5f;
-
 
     [Space]
     public Button BtnResetCamera;
@@ -46,7 +45,7 @@ public class CameraControlAndroid : MonoBehaviour
     [Header("Camera Offsets")]
     public float ZoomSpeed;
     public float MaxZoomIn = 10.0f;
-    public float MaxZoomOut = 60.0f;
+    public float MaxZoomOut = 120.0f;
 
 
     void Awake()
@@ -98,10 +97,10 @@ public class CameraControlAndroid : MonoBehaviour
             switch (currentCameraType)
             {
                 case EnumCameraType.Zoom:
-                    ZoomHandle();
+                    zoomHandle();
                     break;
                 case EnumCameraType.Rotate:
-                    RotateHandle();
+                    rotateHandle();
                     break;
                 case EnumCameraType.Panning:
 
@@ -150,37 +149,79 @@ public class CameraControlAndroid : MonoBehaviour
     }
 
     #region Camera Gestures
-    private void ZoomHandle()
+    private void zoomHandle()
     {
-        Touch one = Input.GetTouch(0);
-        Touch two = Input.GetTouch(1);
+        one = Input.GetTouch(0);
+        two = Input.GetTouch(1);
 
-        Vector2 preOnePos = one.position - one.deltaPosition;
-        Vector2 preTwoPos = two.position - two.deltaPosition;
+        preOnePos = one.position - one.deltaPosition;
+        preTwoPos = two.position - two.deltaPosition;
 
-        float deltaPreMag = (preOnePos - preTwoPos).magnitude;
-        float deltaTouchMag = (one.position - two.position).magnitude;
+        deltaPreMag = (preOnePos - preTwoPos).magnitude;
+        deltaTouchMag = (one.position - two.position).magnitude;
 
-        float deltaMagDiff = deltaTouchMag - deltaPreMag;
+        deltaMagDiff = deltaTouchMag - deltaPreMag;
         if (deltaMagDiff != 0)
         {
             // apply zoom force
-            if (!thisCamera.orthographic)
-            {
-                thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
-            }
+            thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
         }
     }
-    private void RotateHandle()
+
+    private void rotateHandle()
     {
-        touch = Input.GetTouch(1);
-        Vector2 deltaPos = touch.deltaPosition;
-        if (deltaPos.sqrMagnitude > 0)
+
+
+        //touch = Input.GetTouch(1);
+        //Vector2 deltaPos = touch.deltaPosition;
+        //if (deltaPos.sqrMagnitude > 0)
+        //{
+        //    deltaPos *= Time.deltaTime * RotateSpeed;
+        //    thisCamera.transform.Rotate(deltaPos.y, deltaPos.x, 0.0f);
+        //    debugger.Log("Delta pos: " + deltaPos);
+        //}
+        one = Input.GetTouch(0);
+        two = Input.GetTouch(1);
+
+        switch (one.phase)
         {
-            deltaPos *= Time.deltaTime * RotateSpeed;
-            thisCamera.transform.Rotate(deltaPos.y, deltaPos.x, 0.0f);
-            debugger.Log("Delta pos: " + deltaPos);
+            case TouchPhase.Began:
+                startPos1 = one.position;
+                break;
+            case TouchPhase.Moved:
+                break;
+            case TouchPhase.Stationary:
+                if (two.phase==TouchPhase.Moved)
+                {
+                    rotate = new Vector3(0, direction2.y*Time.deltaTime);
+                }
+                break;
+            case TouchPhase.Ended:
+                break;
+            case TouchPhase.Canceled:
+                break;
+            default:
+                break;
         }
+        switch (two.phase)
+        {
+            case TouchPhase.Began:
+                startPos2 = two.position;
+                break;
+            case TouchPhase.Moved:
+                direction2 = two.position - startPos2;
+                break;
+            case TouchPhase.Stationary:
+                break;
+            case TouchPhase.Ended:
+                break;
+            case TouchPhase.Canceled:
+                break;
+            default:
+                break;
+        }
+        transform.Rotate(rotate);
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
     }
     #endregion
 #endif

@@ -96,7 +96,7 @@ public class Register : MonoBehaviour
 
     private void checkUserNameInput(string input)
     {
-        if (input.Length <= 6 || input.Length > 50)
+        if (input.Length <= 5 || input.Length > 30)
         {
             checkUserName = false;
         }
