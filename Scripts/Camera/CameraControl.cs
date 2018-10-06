@@ -46,6 +46,10 @@ public class CameraControl : MonoBehaviour
     private void Update()
     {
         moveCameraEditor();
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Debug.Log("transform.localEulerAngles: "+ transform.localEulerAngles);
+        }
     }
 
     private void moveCameraEditor()
@@ -90,16 +94,13 @@ public class CameraControl : MonoBehaviour
 
         }
 #endif
-#if UNITY_ANDROID
-        if (Input.touchCount > 0)
-        {
-#endif
 
-            checkLeftTop();
-            checkRightTop();
-            checkRightBot();
-            checkLeftBot();
-        }
+
+        //checkLeftTop();
+        //checkRightTop();
+        //checkRightBot();
+        //checkLeftBot();
+
 
     }
 

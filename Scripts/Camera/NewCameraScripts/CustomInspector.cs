@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
+ #if UNITY_EDITOR
+
 
 [CustomEditor(typeof(AndroidCameraCtrl))]
 public class CustomInspector : Editor
@@ -49,9 +53,10 @@ public class CustomInspector : Editor
 
         return showPropertiesValue;
     }
+
     public override void OnInspectorGUI()
     {
-        //DrawDefaultInspector();
+        DrawDefaultInspector();
         // button
         GUILayout.BeginVertical();
 
@@ -89,3 +94,4 @@ public class CustomInspector : Editor
         }
     }
 }
+#endif

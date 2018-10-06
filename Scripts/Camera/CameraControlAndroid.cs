@@ -5,7 +5,7 @@ using EnumCollect;
 
 public class CameraControlAndroid : MonoBehaviour
 {
-#if UNITY_ANDROID
+
     #region Utils
     private Debugger debugger;
     #endregion
@@ -26,7 +26,7 @@ public class CameraControlAndroid : MonoBehaviour
 
     private Text txtSwitchCamera;
     [SerializeField]
-    private EnumCameraType currentCameraType = EnumCameraType.Zoom;
+    private EnumCameraType currentCameraType = EnumCameraType.Rotate;
     [SerializeField]
     private Vector3 resetCamera = new Vector3(90, 270, 0);
 
@@ -39,8 +39,6 @@ public class CameraControlAndroid : MonoBehaviour
     public Button BtnResetCamera;
     public Button BtnSwitchCamera;
 
-    [Header("Terrain Data")]
-    public Terrain TerrainObj;
     [Space]
     public Vector3 TopLeft, TopRight, BottomRight, BottomLeft;
 
@@ -101,7 +99,6 @@ public class CameraControlAndroid : MonoBehaviour
             /* 
              * Zoom: far range to zoom in, near range to zoom out;
              * Rotate
-             * Panning: up/down for horizontal, left/right for vertical
              */
             switch (currentCameraType)
             {
@@ -150,6 +147,8 @@ public class CameraControlAndroid : MonoBehaviour
                 move = Vector3.zero;
                 break;
             case TouchPhase.Canceled:
+                direction = Vector3.zero;
+                move = Vector3.zero;
                 break;
             default:
                 break;
@@ -173,15 +172,22 @@ public class CameraControlAndroid : MonoBehaviour
         deltaMagDiff = deltaTouchMag - deltaPreMag;
         if (deltaMagDiff != 0)
         {
-            // apply zoom force
-            thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Time.deltaTime + thisCamera.fieldOfView, MaxZoomIn, MaxZoomOut);
+            if (!thisCamera.orthographic)
+            {
+                thisCamera.fieldOfView = Mathf.Clamp(deltaMagDiff * ZoomSpeed * Constants.PixelDependencyDevice + thisCamera.fieldOfView,
+                                        MaxZoomIn,
+                                        MaxZoomOut);
+            }
         }
     }
-
+    private void zeroParam()
+    {
+        direction1 = Vector3.zero;
+        direction2 = Vector3.zero;
+        rotate = Vector3.zero;
+    }
     private void rotateHandle()
     {
-
-
         //touch = Input.GetTouch(1);
         //Vector2 deltaPos = touch.deltaPosition;
         //if (deltaPos.sqrMagnitude > 0)
@@ -194,7 +200,6 @@ public class CameraControlAndroid : MonoBehaviour
         two = Input.GetTouch(1);
 
         switch (one.phase)
-
         {
             case TouchPhase.Began:
                 startPos1 = one.position;
@@ -204,15 +209,15 @@ public class CameraControlAndroid : MonoBehaviour
             case TouchPhase.Stationary:
                 if (two.phase == TouchPhase.Moved)
                 {
-                    rotate = new Vector3(0, direction2.y * Time.deltaTime, 0.0f);
+                    //rotate = new Vector3(0, direction2.y * Time.deltaTime, 0.0f);
+                    rotate = two.deltaPosition;
                 }
                 break;
             case TouchPhase.Ended:
-                direction1 = Vector3.zero;
-                rotate = Vector3.zero;
-                direction2 = Vector3.zero;
+                zeroParam();
                 break;
             case TouchPhase.Canceled:
+                zeroParam();
                 break;
             default:
                 break;
@@ -225,32 +230,40 @@ public class CameraControlAndroid : MonoBehaviour
             case TouchPhase.Moved:
                 //direction2 = two.position - startPos2;
                 direction2 = two.deltaPosition;
-
                 break;
             case TouchPhase.Stationary:
-                if (one.phase == TouchPhase.Moved)
-                {
-                    rotate = new Vector3(0, direction1.y * Time.deltaTime, 0.0f);
-                }
+                //if (one.phase == TouchPhase.Moved)
+                //{
+                //    rotate = new Vector3(0, direction1.y * Time.deltaTime, 0.0f);
+                //}
                 break;
             case TouchPhase.Ended:
-                direction1 = Vector3.zero;
-                direction2 = Vector3.zero;
-                rotate = Vector3.zero;
+                zeroParam();
                 break;
             case TouchPhase.Canceled:
-                move = Vector3.zero;
+                zeroParam();
                 break;
             default:
                 break;
         }
         debugger.Log("current rotation: " + thisCamera.transform.rotation.eulerAngles + " | plus rotate: " + rotate);
-        if (transform.rotation.eulerAngles.x > 80 && transform.rotation.eulerAngles.x < 100)
+        rotate = new Vector3(-rotate.y * DragSpeed, rotate.x * DragSpeed, 0);
+        transform.Rotate(rotate);
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+        if (transform.localEulerAngles.x<30)
         {
-            transform.Rotate(rotate);
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
-            transform.position = new Vector3(transform.position.x, 20, transform.position.z);
+            transform.localEulerAngles = new Vector3(30, transform.localEulerAngles.y, 0);
         }
+        if (transform.localEulerAngles.x > 90)
+        {
+            transform.localEulerAngles = new Vector3(90, transform.localEulerAngles.y, 0);
+        }
+        //if (transform.rotation.eulerAngles.x > 80 && transform.rotation.eulerAngles.x < 100)
+        //{
+        //    transform.Rotate(rotate);
+        //    transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+        //    transform.position = new Vector3(transform.position.x, 20, transform.position.z);
+        //}
 
     }
     #endregion
@@ -379,5 +392,5 @@ public class CameraControlAndroid : MonoBehaviour
         }
 
     }
-#endif
+
 }
