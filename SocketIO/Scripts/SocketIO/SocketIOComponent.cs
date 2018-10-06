@@ -42,7 +42,7 @@ namespace SocketIO
     {
         #region Public Properties
 
-        //public string url = "ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket";
+        public string url = "ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket";
         public bool autoConnect = true;
         [Space]
         public string Ip = "192.168.1.16";
@@ -96,7 +96,7 @@ namespace SocketIO
 
         public void Awake()
         {
-            
+
             GetConnect();
 
 
@@ -113,10 +113,10 @@ namespace SocketIO
             ackList = new List<Ack>();
             sid = null;
             packetId = 0;
-            string wsUrl = "ws://" + Ip + ":" + PortConnect + "/socket.io/?EIO=4&transport=websocket";
-            Debug.Log(wsUrl);
-            //ws = new WebSocket(url);
-            ws = new WebSocket(wsUrl);
+            //string wsUrl = "ws://" + Ip + ":" + PortConnect + "/socket.io/?EIO=4&transport=websocket";
+            //Debug.Log(wsUrl);
+            ws = new WebSocket(url);
+            //ws = new WebSocket(wsUrl);
             //Debug.Log(PortConnect);
             ws.OnOpen += OnOpen;
             ws.OnMessage += OnMessage;
