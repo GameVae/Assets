@@ -8,7 +8,10 @@ public class Constants : MonoBehaviour
     private void Awake()
     {
 
-        PixelDependencyDevice = 1.0f / Screen.dpi;
+        PixelDependencyDevice = 1.0f / Screen.dpi;        
+    }
+    private void Start()
+    {
         Debugger.instance.Log("DPI: " + Screen.dpi);
     }
 }

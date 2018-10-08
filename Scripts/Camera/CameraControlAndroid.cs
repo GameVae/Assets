@@ -23,6 +23,7 @@ public class CameraControlAndroid : MonoBehaviour
     private Vector3 dragOrigin;
     private Touch touch, one, two;
     private Vector3 tempPos;
+    private Rigidbody camRigid;
 
     private Text txtSwitchCamera;
     [SerializeField]
@@ -52,6 +53,9 @@ public class CameraControlAndroid : MonoBehaviour
     void Awake()
     {
         thisCamera = GetComponent<Camera>();
+        camRigid = GetComponent<Rigidbody>();
+        camRigid.maxDepenetrationVelocity = 5.0f;
+
         BtnResetCamera.onClick.AddListener(() => resetCameraRotate());
         BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
         txtSwitchCamera = BtnSwitchCamera.GetComponentInChildren<Text>();
@@ -63,8 +67,30 @@ public class CameraControlAndroid : MonoBehaviour
     }
     private void Update()
     {
+#if UNITY_EDITOR
+        float v, h;
+        v = Input.GetAxis("Vertical");
+        h = Input.GetAxis("Horizontal");
+
+        //Vector3 vel = Vector3.ProjectOnPlane(transform.forward, Vector3.up) * v + Vector3.ProjectOnPlane(transform.right, Vector3.up) * h;
+        //camRigid.velocity += vel;
+
+        camRigid.AddRelativeTorque(-v, 0, h);
+        if (transform.localEulerAngles.x < 30)
+        {
+            transform.localEulerAngles = new Vector3(30, transform.localEulerAngles.y, 0);
+            camRigid.angularVelocity = new Vector3(0,0,camRigid.angularVelocity.z);
+        }
+        if (transform.localEulerAngles.x > 80)
+        {           
+            transform.localEulerAngles = new Vector3(80, transform.localEulerAngles.y, 0);
+            camRigid.angularVelocity = new Vector3(0, 0,camRigid.angularVelocity.z);
+
+        }
+
+#endif
         moveCameraAndroid();
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 || camRigid.velocity.sqrMagnitude > 0.0f || camRigid.angularVelocity.sqrMagnitude > 0.0f)
         {
             checkLeftBot();
             checkRightBot();
@@ -101,17 +127,18 @@ public class CameraControlAndroid : MonoBehaviour
              * Zoom: far range to zoom in, near range to zoom out;
              * Rotate
              */
-            switch (currentCameraType)
-            {
-                case EnumCameraType.Zoom:
-                    zoomHandle();
-                    break;
-                case EnumCameraType.Rotate:
-                    rotateHandle();
-                    break;
-                default:
-                    break;
-            }
+            //switch (currentCameraType)
+            //{
+            //    case EnumCameraType.Zoom:
+            //        zoomHandle();
+            //        break;
+            //    case EnumCameraType.Rotate:
+            //        rotateHandle();
+            //        break;
+            //    default:
+            //        break;
+            //}
+            TwoFingerTouchHandle();
         }
     }
 
@@ -154,7 +181,9 @@ public class CameraControlAndroid : MonoBehaviour
             default:
                 break;
         }
-        transform.Translate(move, Space.Self);
+        //transform.Translate(move, Space.Self);
+        camRigid.velocity += Vector3.ProjectOnPlane(transform.forward, Vector3.up) * move.y
+            + Vector3.ProjectOnPlane(transform.right, Vector3.up) * move.x;
         transform.position = new Vector3(transform.position.x, 20, transform.position.z);
     }
 
@@ -224,8 +253,10 @@ public class CameraControlAndroid : MonoBehaviour
             default:
                 break;
         }
+
         switch (two.phase)
         {
+
             case TouchPhase.Began:
                 startPos2 = two.position;
                 break;
@@ -253,11 +284,11 @@ public class CameraControlAndroid : MonoBehaviour
             default:
                 break;
         }
-        debugger.Log("current rotation: " + thisCamera.transform.rotation.eulerAngles + " | plus rotate: " + rotate);
-        rotate = new Vector3(-rotate.y * DragSpeed, rotate.x * DragSpeed, 0) * Constants.PixelDependencyDevice * DegreePerInch;
+        //debugger.Log("current rotation: " + thisCamera.transform.rotation.eulerAngles + " | plus rotate: " + rotate);
+        rotate = new Vector3(-rotate.y * RotateSpeed, rotate.x * RotateSpeed, 0) * Constants.PixelDependencyDevice * DegreePerInch;
         transform.Rotate(rotate);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
-        if (transform.localEulerAngles.x<30)
+        if (transform.localEulerAngles.x < 30)
         {
             transform.localEulerAngles = new Vector3(30, transform.localEulerAngles.y, 0);
         }
@@ -272,6 +303,23 @@ public class CameraControlAndroid : MonoBehaviour
         //    transform.position = new Vector3(transform.position.x, 20, transform.position.z);
         //}
 
+    }
+
+    private void TwoFingerTouchHandle()
+    {
+        one = Input.GetTouch(0);
+        two = Input.GetTouch(1);
+        float floorMagnitudeOne = Mathf.Floor(one.deltaPosition.sqrMagnitude * Constants.PixelDependencyDevice);
+        float floorMagnitudeTwo = Mathf.Floor(two.deltaPosition.sqrMagnitude * Constants.PixelDependencyDevice);
+        if ( floorMagnitudeOne> 0 &&
+             floorMagnitudeTwo> 0)
+        {
+            zoomHandle();
+        }
+        else if(floorMagnitudeTwo > 0 || floorMagnitudeOne > 0)
+        {
+            rotateHandle();
+        }
     }
     #endregion
 
