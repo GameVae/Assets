@@ -54,7 +54,7 @@ public class CameraControlAndroid : MonoBehaviour
     {
         thisCamera = GetComponent<Camera>();
         camRigid = GetComponent<Rigidbody>();
-        camRigid.maxDepenetrationVelocity = 5.0f;
+        camRigid.maxDepenetrationVelocity = 2.0f;
 
         BtnResetCamera.onClick.AddListener(() => resetCameraRotate());
         BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
@@ -145,6 +145,7 @@ public class CameraControlAndroid : MonoBehaviour
     private void resetCameraRotate()
     {
         transform.rotation = Quaternion.Euler(resetCamera);
+        thisCamera.fieldOfView = 60.0f;
     }
 
     private void moveTouch()
