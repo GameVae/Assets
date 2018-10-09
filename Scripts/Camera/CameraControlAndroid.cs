@@ -5,7 +5,6 @@ using EnumCollect;
 
 public class CameraControlAndroid : MonoBehaviour
 {
-
     #region Utils
     private Debugger debugger;
     #endregion

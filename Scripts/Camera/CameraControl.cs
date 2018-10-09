@@ -48,8 +48,9 @@ public class CameraControl : MonoBehaviour
         moveCameraEditor();
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Debug.Log("transform.localEulerAngles: "+ transform.localEulerAngles);
+            Debug.Log("transform.localEulerAngles: " + transform.localEulerAngles);
         }
+
     }
 
     private void moveCameraEditor()
@@ -77,9 +78,6 @@ public class CameraControl : MonoBehaviour
         {
             rotate = new Vector3(-pos.y * DragSpeed, pos.x * DragSpeed, 0);
             transform.Rotate(rotate);
-            /*
-             * 
-             */
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0);
         }
         else
@@ -94,14 +92,10 @@ public class CameraControl : MonoBehaviour
 
         }
 #endif
-
-
-        //checkLeftTop();
-        //checkRightTop();
-        //checkRightBot();
-        //checkLeftBot();
-
-
+        checkLeftTop();
+        checkRightTop();
+        checkRightBot();
+        checkLeftBot();
     }
 
     private void resetCameraRotate()
