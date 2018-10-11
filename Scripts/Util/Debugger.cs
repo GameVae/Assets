@@ -14,7 +14,7 @@ public class Debugger : MonoBehaviour
     private Scrollbar verticleBar;
 
     private List<Text> logs;
-	private void Awake ()
+    private void Awake()
     {
         if (instance == null) instance = this;
         else if (instance != null) Destroy(instance);
@@ -22,17 +22,20 @@ public class Debugger : MonoBehaviour
 
         message = GetComponentInChildren<Text>();
         verticleBar = GetComponentInChildren<Scrollbar>();
-        content = GetComponentInChildren<ContentSizeFitter>().gameObject;
+        ContentSizeFitter contentObj = GetComponentInChildren<ContentSizeFitter>();
+        if (contentObj != null) content = contentObj.gameObject;
 
-        message.gameObject.SetActive(false); // prefab
-	}
+        if (message != null)
+            message.gameObject.SetActive(false); // prefab
+
+    }
     private void Start()
     {
         Clear();
     }
     public void Clear()
     {
-        for(int i = 0; i < logs.Count; i++)
+        for (int i = 0; i < logs.Count; i++)
         {
             Destroy(logs[i].gameObject);
         }
@@ -42,23 +45,25 @@ public class Debugger : MonoBehaviour
     public void Log(object obj)
     {
 #if UNITY_ANDROID
-
-        if (logs.Count > 300)
+        if (message != null && content != null && verticleBar != null)
         {
-            for (int i = 0; i < 150; i++)
+            if (logs.Count > 300)
             {
-                Destroy(logs[i].gameObject);
+                for (int i = 0; i < 150; i++)
+                {
+                    Destroy(logs[i].gameObject);
+                }
+                logs.RemoveRange(0, 150);
+                System.GC.Collect();
             }
-            logs.RemoveRange(0, 150);
-            System.GC.Collect();
+
+            Text log = Instantiate(message, content.transform);
+            log.text = DateTime.Now + " : " + obj.ToString();
+            log.gameObject.SetActive(true);
+            logs.Add(log);
+            verticleBar.value = 0;
         }
-        
-        Text log = Instantiate(message, content.transform);
-        log.text = DateTime.Now + " : " + obj.ToString();
-        log.gameObject.SetActive(true);
-        logs.Add(log);
-        verticleBar.value = 0;
-        
+
 #endif
 #if UNITY_EDITOR
         Debug.Log(obj);
