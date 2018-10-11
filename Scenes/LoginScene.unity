@@ -131,7 +131,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &11303890
 RectTransform:
   m_ObjectHideFlags: 0
@@ -317,6 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961346d7e16a445ff93777573e78efd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  url: ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket
   autoConnect: 1
   Ip: 192.168.1.24
   PortConnect: 1010
@@ -629,10 +630,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 452, y: -34.99997}
-  m_SizeDelta: {x: 92, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 92, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &119098724
 MonoBehaviour:
@@ -1464,6 +1465,7 @@ GameObject:
   - component: {fileID: 206227371}
   - component: {fileID: 206227373}
   - component: {fileID: 206227372}
+  - component: {fileID: 206227374}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -1529,6 +1531,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 206227370}
   m_CullTransparentMesh: 0
+--- !u!114 &206227374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 206227370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c12d7102073544182e33ad3f2abded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Language: {fileID: 11400000, guid: ae9408ff247d1ac4e9446d136f5be7b4, type: 2}
+  BtnVietnamese: {fileID: 1958919979}
+  BtnEnglish: {fileID: 119098724}
 --- !u!1 &214952758
 GameObject:
   m_ObjectHideFlags: 0
@@ -3288,6 +3304,7 @@ GameObject:
   - component: {fileID: 468183968}
   - component: {fileID: 468183970}
   - component: {fileID: 468183969}
+  - component: {fileID: 468183971}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -3353,6 +3370,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 468183967}
   m_CullTransparentMesh: 0
+--- !u!114 &468183971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 468183967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c12d7102073544182e33ad3f2abded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Language: {fileID: 11400000, guid: abe78e190c488f64eaeabf44998b6834, type: 2}
+  BtnVietnamese: {fileID: 1958919979}
+  BtnEnglish: {fileID: 119098724}
 --- !u!1 &518276462
 GameObject:
   m_ObjectHideFlags: 0
@@ -5692,6 +5723,7 @@ GameObject:
   - component: {fileID: 909623194}
   - component: {fileID: 909623196}
   - component: {fileID: 909623195}
+  - component: {fileID: 909623197}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -5759,6 +5791,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 909623193}
   m_CullTransparentMesh: 0
+--- !u!114 &909623197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 909623193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c12d7102073544182e33ad3f2abded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Language: {fileID: 11400000, guid: 2f5b9879ae0c1dd49962475596358ac4, type: 2}
+  BtnVietnamese: {fileID: 1958919979}
+  BtnEnglish: {fileID: 119098724}
 --- !u!1 &911686597
 GameObject:
   m_ObjectHideFlags: 0
@@ -7693,7 +7739,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 41, y: 0}
+  m_AnchoredPosition: {x: 41.00003, y: 0}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1330723548
@@ -8518,7 +8564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.02334375, y: 0.38325003}
   m_AnchorMax: {x: 0.24200001, y: 0.8725001}
-  m_AnchoredPosition: {x: -2.2999878, y: -1.7999878}
+  m_AnchoredPosition: {x: -2.2999268, y: -1.7999878}
   m_SizeDelta: {x: -4, y: -3.399994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1403532985
@@ -8664,7 +8710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f561e0c65cfe24c88332e67f1f400b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toast: {fileID: 0}
 --- !u!1 &1421494282
 GameObject:
   m_ObjectHideFlags: 0
@@ -10741,10 +10786,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 296, y: -34.99997}
-  m_SizeDelta: {x: 160, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811100653
 MonoBehaviour:
@@ -10916,7 +10961,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 41, y: 0}
+  m_AnchoredPosition: {x: 41.00003, y: 0}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1887230061
@@ -11554,10 +11599,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 574, y: -34.99997}
-  m_SizeDelta: {x: 92, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 92, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1958919979
 MonoBehaviour:
@@ -13353,7 +13398,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2087659780}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 

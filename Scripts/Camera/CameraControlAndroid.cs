@@ -5,43 +5,37 @@ using EnumCollect;
 
 public class CameraControlAndroid : MonoBehaviour
 {
-
-    #region Utils
-    private Debugger debugger;
-    #endregion
-    private Camera thisCamera;
+    private bool directionChosen;
     [SerializeField]
     private int terrainWidth;
     [SerializeField]
     private int terrainHeight;
 
-    private bool directionChosen;
     private float deltaPreMag, deltaTouchMag, deltaMagDiff;
     private Vector2 preOnePos, preTwoPos;
 
     private Vector2 move, startPos, direction, rotate, startPos1, startPos2, direction1, direction2;
     private Vector3 dragOrigin;
-    private Touch touch, one, two;
     private Vector3 tempPos;
-    private Rigidbody camRigid;
-
+    private Touch touch, one, two;
+    
     private Text txtSwitchCamera;
+    private Rigidbody camRigid;
+    private Camera thisCamera;
+
     [SerializeField]
     private EnumCameraType currentCameraType = EnumCameraType.Rotate;
     [SerializeField]
     private Vector3 resetCamera = new Vector3(90, 270, 0);
 
+    #region Utils
+    private Debugger debugger;
+    #endregion
+
     [Range(0.1f, 2f)]
     public float DragSpeed = 1f;
     [Range(2f, 20f)]
-    public float RotateSpeed = 5f;
-
-    [Space]
-    public Button BtnResetCamera;
-    public Button BtnSwitchCamera;
-
-    [Space]
-    public Vector3 TopLeft, TopRight, BottomRight, BottomLeft;
+    public float RotateSpeed = 5f;  
 
     [Header("Camera Offsets")]
     public float ZoomSpeed;
@@ -50,16 +44,28 @@ public class CameraControlAndroid : MonoBehaviour
     public float DegreePerInch;
     public float PixelPerInch;
 
+    [Space]
+    public Vector3 TopLeft = new Vector3(0, 0, 0);
+    public Vector3 TopRight = new Vector3(0, 1448, 0);
+    public Vector3 BottomRight = new Vector3(0, 1089, 0);
+    public Vector3 BottomLeft = new Vector3(1448, 1089, 0);
+
+    [Space]
+    public Button BtnResetCamera;
+    public Button BtnSwitchCamera;
+
     void Awake()
     {
+       
         thisCamera = GetComponent<Camera>();
         camRigid = GetComponent<Rigidbody>();
         camRigid.maxDepenetrationVelocity = 2.0f;
 
-        BtnResetCamera.onClick.AddListener(() => resetCameraRotate());
-        BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
         txtSwitchCamera = BtnSwitchCamera.GetComponentInChildren<Text>();
         txtSwitchCamera.text = currentCameraType.ToString();
+
+        BtnResetCamera.onClick.AddListener(() => resetCameraRotate());
+        BtnSwitchCamera.onClick.AddListener(() => switchCameraType(currentCameraType));
     }
     private void Start()
     {
@@ -79,12 +85,12 @@ public class CameraControlAndroid : MonoBehaviour
         if (transform.localEulerAngles.x < 30)
         {
             transform.localEulerAngles = new Vector3(30, transform.localEulerAngles.y, 0);
-            camRigid.angularVelocity = new Vector3(0,0,camRigid.angularVelocity.z);
+            camRigid.angularVelocity = new Vector3(0, 0, camRigid.angularVelocity.z);
         }
         if (transform.localEulerAngles.x > 80)
-        {           
+        {
             transform.localEulerAngles = new Vector3(80, transform.localEulerAngles.y, 0);
-            camRigid.angularVelocity = new Vector3(0, 0,camRigid.angularVelocity.z);
+            camRigid.angularVelocity = new Vector3(0, 0, camRigid.angularVelocity.z);
 
         }
 
@@ -217,6 +223,7 @@ public class CameraControlAndroid : MonoBehaviour
         direction2 = Vector3.zero;
         rotate = Vector3.zero;
     }
+
     private void rotateHandle()
     {
         //touch = Input.GetTouch(1);
@@ -312,12 +319,12 @@ public class CameraControlAndroid : MonoBehaviour
         two = Input.GetTouch(1);
         float floorMagnitudeOne = Mathf.Floor(one.deltaPosition.sqrMagnitude * Constants.PixelDependencyDevice);
         float floorMagnitudeTwo = Mathf.Floor(two.deltaPosition.sqrMagnitude * Constants.PixelDependencyDevice);
-        if ( floorMagnitudeOne> 0 &&
-             floorMagnitudeTwo> 0)
+        if (floorMagnitudeOne > 0 &&
+             floorMagnitudeTwo > 0)
         {
             zoomHandle();
         }
-        else if(floorMagnitudeTwo > 0 || floorMagnitudeOne > 0)
+        else if (floorMagnitudeTwo > 0 || floorMagnitudeOne > 0)
         {
             rotateHandle();
         }
