@@ -5,14 +5,7 @@ using EnumCollect;
 
 public class CameraControlAndroid : MonoBehaviour
 {
-<<<<<<< HEAD
-    #region Utils
-    private Debugger debugger;
-    #endregion
-    private Camera thisCamera;
-=======
-    private bool directionChosen;
->>>>>>> origin/toan-new
+
     [SerializeField]
     private int terrainWidth;
     [SerializeField]
