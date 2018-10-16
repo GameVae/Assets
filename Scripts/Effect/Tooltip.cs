@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 public class Tooltip : MonoBehaviour, IPointerDownHandler
 {
     private string content;
-    private TooltipType2 type2Instance;
     private TooltipType1 type1Instance;
+    private TooltipType2 type2Instance;
+    
 
     public Language Language;
     private void Start()
@@ -15,14 +16,15 @@ public class Tooltip : MonoBehaviour, IPointerDownHandler
     }
     public void OnPointerDown(PointerEventData eventData)
     {
+        content = Language.ChangeLanguage();
         if (type2Instance)
         {
-            content = Language.ChangeLanguage();
+            //content = Language.ChangeLanguage();
             type2Instance.DisplayTooltip(transform.localPosition, content);
         }
         else
         {
-            content = Language.ChangeLanguage();
+            //content = Language.ChangeLanguage();
             type1Instance.DisplayTooltip(transform.localPosition, content);
         }
     }

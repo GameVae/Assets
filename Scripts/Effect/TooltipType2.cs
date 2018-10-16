@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TooltipType2 : MonoBehaviour
@@ -8,8 +7,8 @@ public class TooltipType2 : MonoBehaviour
 
     private Text contentTxt;
     private Image tooltipImg;
-    private RectTransform tooltipTrans;
     private Vector2 dimention;
+    private RectTransform tooltipTrans;
     private RectTransform txtRectTrans;
     private ContentSizeFitter sizeFitter;
 
@@ -22,7 +21,6 @@ public class TooltipType2 : MonoBehaviour
     }
     private void Start()
     {       
-        // config
         tooltipTrans.SetAsLastSibling();
     }
     private void Reset()
@@ -46,7 +44,6 @@ public class TooltipType2 : MonoBehaviour
         dimention = txtRectTrans.sizeDelta;
         dimention = dimention + dimention * 0.5f;
         tooltipTrans.sizeDelta = dimention;
-        
     }
 
     public void ResiseFont(int size)

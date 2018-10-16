@@ -5,15 +5,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
 
+public struct ServerInfo
+{
+    public int Port { get; set; }
+    public string Host { get; set; }
+    public string Name { get; set; }
+}
+
 public class Connection : MonoBehaviour
 {
-    public struct ServerInfo
-    {
-        public int Port { get; set; }
-        public string Host { get; set; }
-        public string Name { get; set; }
-    }
-
     private static Connection instance;
     private string url;
     private string defaultUrl;
