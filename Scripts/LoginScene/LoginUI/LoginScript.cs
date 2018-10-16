@@ -10,7 +10,7 @@ public class LoginUI
 {
     public InputField InputUser;
     public InputField InputPassword;
-    public Toggle RememberAccountToggle;
+    public Toggle ToggleRememberAccount;
     public Button LoginBtn;
 }
 public class LoginScript : MonoBehaviour {

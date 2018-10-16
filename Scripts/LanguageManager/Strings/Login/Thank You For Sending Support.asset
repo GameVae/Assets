@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd709b4d8047aa45a6b4c24071a5378, type: 3}
+  m_Name: Thank You For Sending Support
+  m_EditorClassIdentifier: 
+  Name: 'Thank You For Sending Support '
+  Vietnamese: "Ca\u0309m \u01A0n Ba\u0323n \u0110a\u0303 G\u01B0\u0309i \u0110o\u0301ng
+    Go\u0301p "
+  English: 'Thank You For Sending Support '
