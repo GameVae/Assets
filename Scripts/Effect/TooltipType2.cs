@@ -43,8 +43,7 @@ public class TooltipType2 : MonoBehaviour
         contentTxt.gameObject.SetActive(true);
         contentTxt.text = content;
         LayoutRebuilder.ForceRebuildLayoutImmediate(txtRectTrans);
-        dimention.x = contentTxt.preferredWidth;
-        dimention.y = contentTxt.preferredHeight;
+        dimention = txtRectTrans.sizeDelta;
         dimention = dimention + dimention * 0.5f;
         tooltipTrans.sizeDelta = dimention;
         
