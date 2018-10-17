@@ -42,22 +42,22 @@ public class CursorPos : MonoBehaviour
     RaycastHit hit;
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!(EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null))
-            {
-                //Vector3 inputMouse = Input.mousePosition;
-                //updateMousePos(inputMouse);
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
-                {
-                    updateCursor(hit.point);
-                }
-            }
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    if (!(EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null))
+        //    {
+        //        //Vector3 inputMouse = Input.mousePosition;
+        //        //updateMousePos(inputMouse);
+        //        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //        if (Physics.Raycast(ray, out hit))
+        //        {
+        //            updateCursor(hit.point);
+        //        }
+        //    }
+        //}
     }
    
-    private void updateCursor(Vector3 hitPoint)
+    public void updateCursor(Vector3 hitPoint)
     {
         cursorCellPosition = grid.WorldToCell(hitPoint);
         tempTransform = grid.CellToWorld(cursorCellPosition);
