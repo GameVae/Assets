@@ -63,7 +63,7 @@ public class Connection : MonoBehaviour
     private void Awake()
     {
         if (instance == null) { instance = this; }
-        else if (instance != null) { Destroy(instance); }
+        else { Destroy(this); }
 
         InitServerInfo();
         IsServerClosed = false;
@@ -78,6 +78,7 @@ public class Connection : MonoBehaviour
 
         // UI
         connectButton.onClick.AddListener(OnConnectButton);
+        DontDestroyOnLoad(this);
     }
     private void Start()
     {
@@ -118,7 +119,7 @@ public class Connection : MonoBehaviour
     {
         serversInfo = new List<ServerInfo>
         {
-            new ServerInfo() { Name = "server1", Port = 9933, Host = "127.0.0.1" },
+            new ServerInfo() { Name = "server1", Port = 1010, Host = "192.168.1.25" },
             new ServerInfo() { Name = "server2", Port = 1000, Host = "192.168.1.18" },
             new ServerInfo() { Name = "server3", Port = 1000, Host = "192.168.1.18" },
 

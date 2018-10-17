@@ -275,79 +275,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &56121113
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 56121114}
-  - component: {fileID: 56121115}
-  - component: {fileID: 56121116}
-  - component: {fileID: 56121118}
-  m_Layer: 0
-  m_Name: SystemSocket
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &56121114
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 56121113}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 628.2619, y: 375.13788, z: 3.5044003}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &56121115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 56121113}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 961346d7e16a445ff93777573e78efd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  url: ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket
-  autoConnect: 1
-  Ip: 192.168.1.16
-  PortConnect: 1010
-  reconnectDelay: 5
-  ackExpirationTime: 1800
-  pingInterval: 25
-  pingTimeout: 60
---- !u!114 &56121116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 56121113}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58205748e323d0b42abe78e604c5d4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SocketIO: {fileID: 0}
---- !u!114 &56121118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 56121113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 040592acadfec2c4c9b008e0e403d2b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &76850889
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 77327103}
+  - component: {fileID: 77327104}
   - component: {fileID: 77327102}
   m_Layer: 0
   m_Name: Connection
@@ -449,8 +377,19 @@ Transform:
   m_Children:
   - {fileID: 1063609115}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &77327104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57ae6df05bb6a9c4994dadc2ddff3c64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &82552909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1034,7 +973,7 @@ Transform:
   - {fileID: 1613588224}
   - {fileID: 76850891}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &159372319
 GameObject:
@@ -6285,7 +6224,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &853988900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10399,10 +10338,10 @@ RectTransform:
   m_Father: {fileID: 2087659781}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -165}
-  m_SizeDelta: {x: 620, y: 90}
+  m_AnchorMin: {x: 0.26456252, y: 0.025}
+  m_AnchorMax: {x: 0.7344376, y: 0.1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402753763
 MonoBehaviour:
@@ -10457,7 +10396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c12d7102073544182e33ad3f2abded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Language: {fileID: 11400000, guid: a2904e296eea61943bdbf1277d5b8763, type: 2}
+  Language: {fileID: 11400000, guid: 83e77f7fb458a6e4aaee9c769be4e9f5, type: 2}
   BtnVietnamese: {fileID: 1958919979}
   BtnEnglish: {fileID: 119098724}
 --- !u!1 &1403532983
@@ -11714,14 +11653,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1613588224}
-  - component: {fileID: 1613588225}
+  - component: {fileID: 1613588227}
   m_Layer: 0
   m_Name: Register
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1613588224
 Transform:
   m_ObjectHideFlags: 0
@@ -11735,7 +11674,7 @@ Transform:
   m_Father: {fileID: 144338315}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1613588225
+--- !u!114 &1613588227
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11743,10 +11682,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1613588223}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ddbc262fab87794eb58fcd4abe7435e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7402616668982f844a50b333fa85a9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SocketIO: {fileID: 56121115}
   registerUI:
     RegisterPanel: {fileID: 2087659780}
     UserName: {fileID: 1341078703}
@@ -11760,7 +11698,7 @@ MonoBehaviour:
     WarningEmail: {fileID: 1758509798}
     RegisterBtn: {fileID: 354906457}
     CloseBtn: {fileID: 11303891}
-  multiLangManager: {fileID: 82552912}
+  Connection: {fileID: 77327102}
 --- !u!1 &1613759878
 GameObject:
   m_ObjectHideFlags: 0
@@ -15546,7 +15484,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2087659781
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15862,7 +15800,7 @@ MonoBehaviour:
     InputPassword: {fileID: 0}
     ToggleRememberAccount: {fileID: 0}
     LoginBtn: {fileID: 803795251}
-  socketIO: {fileID: 56121115}
+  socketIO: {fileID: 0}
 --- !u!1 &2140536748
 GameObject:
   m_ObjectHideFlags: 0

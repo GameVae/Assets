@@ -96,7 +96,7 @@ namespace SocketIO
 
         public void Awake()
         {
-
+            
             GetConnect();
 
 
@@ -104,13 +104,15 @@ namespace SocketIO
 			if(debugMethod == null) { debugMethod = Debug.Log; };
 #endif
         }
+
         public void GetConnect()
         {
             encoder = new Encoder();
             decoder = new Decoder();
             parser = new Parser();
-            handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
-            ackList = new List<Ack>();
+            //handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
+            handlers= SocketData.instance.Handlers;
+             ackList = new List<Ack>();
             sid = null;
             packetId = 0;
             //string wsUrl = "ws://" + Ip + ":" + PortConnect + "/socket.io/?EIO=4&transport=websocket";
@@ -134,6 +136,7 @@ namespace SocketIO
         }
         public void Start()
         {
+            
             if (autoConnect) { Connect(); }
         }
 
@@ -208,6 +211,7 @@ namespace SocketIO
 
         public void On(string ev, Action<SocketIOEvent> callback)
         {
+            Debug.Log(handlers);
             if (!handlers.ContainsKey(ev))
             {
                 handlers[ev] = new List<Action<SocketIOEvent>>();

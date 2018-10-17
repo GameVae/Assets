@@ -5,55 +5,53 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SocketIO;
 using System;
-[Serializable]
-public class RegisterUI
+//[Serializable]
+//public class RegisterUI
+//{
+//    public GameObject RegisterPanel;
+//    [Space]
+//    public InputField UserName;
+//    public InputField Password;
+//    public InputField PasswordConfirm;
+//    public InputField Email;
+//    [Space]
+//    public Text WarningText;
+//    [Header("Warning")]
+//    public GameObject WarningUserName;
+//    public GameObject WarningPassword;
+//    public GameObject WarningPasswordConfirm;
+//    public GameObject WarningEmail;
+//    [Header("Button")]
+//    public Button RegisterBtn;
+//    public Button CloseBtn;
+
+//    public void ClearInfo()
+//    {
+//        UserName.text = "";
+//        Password.text = "";
+//        PasswordConfirm.text = "";
+//        Email.text = "";
+//        WarningText.text = "";
+
+//        WarningUserName.SetActive(false);
+//        WarningPassword.SetActive(false);
+//        WarningPasswordConfirm.SetActive(false);
+//        WarningEmail.SetActive(false);
+//    }
+//}
+
+public class Registerv3 : MonoBehaviour
 {
-    public GameObject RegisterPanel;
-    [Space]
-    public InputField UserName;
-    public InputField Password;
-    public InputField PasswordConfirm;
-    public InputField Email;
-    [Space]
-    public Text WarningText;
-    [Header("Warning")]
-    public GameObject WarningUserName;
-    public GameObject WarningPassword;
-    public GameObject WarningPasswordConfirm;
-    public GameObject WarningEmail;
-    [Header("Button")]
-    public Button RegisterBtn;
-    public Button CloseBtn;
-
-    public void ClearInfo()
-    {
-        UserName.text = "";
-        Password.text = "";
-        PasswordConfirm.text = "";
-        Email.text = "";
-        WarningText.text = "";
-
-        WarningUserName.SetActive(false);
-        WarningPassword.SetActive(false);
-        WarningPasswordConfirm.SetActive(false);
-        WarningEmail.SetActive(false);
-    }
-}
-
-public class Register : MonoBehaviour
-{
-    public SocketIOComponent SocketIO;
-    // public TextLoginRegion TextLoginRegion;
-
     [SerializeField]
     private RegisterUI registerUI;
-    [Space]
-    [SerializeField]
-    private MultiLangManager multiLangManager;
     [Space]
     private bool checkUserName = false;
     private bool checkPassword = false;
     private bool checkEmail = false;
+
+    private SocketIOComponent socketIO;
+
+    public Connection Connection;
 
     private void Awake()
     {
@@ -64,12 +62,16 @@ public class Register : MonoBehaviour
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
 
+       
     }
 
     private void Start()
     {
-        //SocketIO.On("R_REGISTER", R_REGISTER);
+        socketIO = Connection.IOPrefab.GetComponent<SocketIOComponent>();
+        
+     
     }
+
     private void R_REGISTER(SocketIOEvent obj)
     {
         Debug.Log("R_REGISTER: " + obj.data);
@@ -78,17 +80,17 @@ public class Register : MonoBehaviour
         switch (successBool)
         {
             case 0:
-               StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
-              
+                //StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
+                StartCoroutine("showWarningText");
                 break;
             case 1:
                 Debug.Log("Load user data to map scene");
                 break;
         }
     }
-    private IEnumerator showWarningText(string stringContent)
+    private IEnumerator showWarningText()
     {
-        registerUI.WarningText.text = stringContent;
+        registerUI.WarningText.GetComponent<ChangeLanguage>().Language.ChangeLanguage();
         registerUI.RegisterBtn.interactable = true;
         yield return new WaitForSeconds(3);
         registerUI.WarningText.text = "";
@@ -158,7 +160,8 @@ public class Register : MonoBehaviour
             data["UserName"] = registerUI.UserName.text;
             data["Password"] = md5String(registerUI.Password.text);
             data["Email"] = registerUI.Email.text;
-            SocketIO.Emit("S_REGISTER", new JSONObject(data));
+            socketIO.Emit("S_REGISTER", new JSONObject(data));
+            socketIO.On("R_REGISTER", R_REGISTER);
         }
         registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
