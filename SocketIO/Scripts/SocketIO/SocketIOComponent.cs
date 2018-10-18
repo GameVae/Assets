@@ -75,7 +75,7 @@ namespace SocketIO
         private Decoder decoder;
         private Parser parser;
 
-        private Dictionary<string, List<Action<SocketIOEvent>>> handlers;
+        public Dictionary<string, List<Action<SocketIOEvent>>> handlers;
         private List<Ack> ackList;
 
         private int packetId;
@@ -97,7 +97,7 @@ namespace SocketIO
         public void Awake()
         {
             
-            GetConnect();
+           GetConnect();
 
 
 #if SOCKET_IO_DEBUG
@@ -110,8 +110,8 @@ namespace SocketIO
             encoder = new Encoder();
             decoder = new Decoder();
             parser = new Parser();
-            //handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
-            handlers= SocketData.instance.Handlers;
+            handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
+           // handlers= SocketData.instance.Handlers;
              ackList = new List<Ack>();
             sid = null;
             packetId = 0;
@@ -136,7 +136,7 @@ namespace SocketIO
         }
         public void Start()
         {
-            
+          
             if (autoConnect) { Connect(); }
         }
 

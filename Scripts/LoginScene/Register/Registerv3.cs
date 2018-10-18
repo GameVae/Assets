@@ -61,15 +61,11 @@ public class Registerv3 : MonoBehaviour
 
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
-
-       
     }
 
     private void Start()
     {
         socketIO = Connection.IOPrefab.GetComponent<SocketIOComponent>();
-        
-     
     }
 
     private void R_REGISTER(SocketIOEvent obj)
@@ -156,12 +152,11 @@ public class Registerv3 : MonoBehaviour
         if (checkUserAccount() == true)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
-
             data["UserName"] = registerUI.UserName.text;
             data["Password"] = md5String(registerUI.Password.text);
             data["Email"] = registerUI.Email.text;
             socketIO.Emit("S_REGISTER", new JSONObject(data));
-            if (!SocketData.instance.Handlers.ContainsKey("S_REGISTER"))
+            if (!socketIO.handlers.ContainsKey("S_REGISTER"))
             {
                 socketIO.On("R_REGISTER", R_REGISTER);
             }
