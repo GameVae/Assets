@@ -125,7 +125,6 @@ public class BuiltCellContainer : MonoBehaviour
             Vector3Int temp = cellPos + pattern[i];
             uint cellIndex = Convert2DTo1D(temp.x, temp.y);
             BuiltCells.Add(cellIndex, centerIndex);
-            //map.SetTile(temp, null);
         }
         if(isExpand)
         {
@@ -135,7 +134,7 @@ public class BuiltCellContainer : MonoBehaviour
                 Vector3Int temp = cellPos + pattern[i];
                 uint cellIndex = Convert2DTo1D(temp.x, temp.y);
                 BuiltCells.Add(cellIndex, centerIndex);
-                map.SetTile(temp, null);
+                //map.SetTile(temp, null);
             }
         }
     }
