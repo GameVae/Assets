@@ -161,7 +161,10 @@ public class Registerv3 : MonoBehaviour
             data["Password"] = md5String(registerUI.Password.text);
             data["Email"] = registerUI.Email.text;
             socketIO.Emit("S_REGISTER", new JSONObject(data));
-            socketIO.On("R_REGISTER", R_REGISTER);
+            if (!SocketData.instance.Handlers.ContainsKey("S_REGISTER"))
+            {
+                socketIO.On("R_REGISTER", R_REGISTER);
+            }
         }
         registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
