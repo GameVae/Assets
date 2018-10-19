@@ -363,6 +363,7 @@ MonoBehaviour:
   TimeOut: 2
   MaxReconnect: 2
   MaxReconnectPerSever: 3
+  Socket: {fileID: 0}
   IOPrefab: {fileID: 100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
   connectButton: {fileID: 2071038750}
 --- !u!4 &77327103
@@ -6847,9 +6848,9 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 20
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
-    m_MaxSize: 40
+    m_MaxSize: 20
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -14260,7 +14261,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: From 8 to 30 characters
+  m_Text: From 6 to 30 characters
 --- !u!222 &1989385637
 CanvasRenderer:
   m_ObjectHideFlags: 0

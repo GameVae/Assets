@@ -15,18 +15,17 @@ public struct ServerInfo
 public class Connection : MonoBehaviour
 {
     private static Connection instance;
-    private string url;
-    private string defaultUrl;
     private bool isConnected;
     private bool isServerClosed;
     private int reconnectCountInCurrentServer;
-
     private int serverIndex;
     private int reconnectCount;
-    private SocketIOComponent socket;
+    private string url;
+    private string defaultUrl;
+   
     private List<ServerInfo> serversInfo;
     private ServerInfo currentSever;
-
+    private SocketIOComponent socket;
     private Debugger Loger;
 
     [Header("Socket IO")]
@@ -38,6 +37,7 @@ public class Connection : MonoBehaviour
     [Tooltip("How many time reconnect on all server?")]
     public int MaxReconnect;
     public int MaxReconnectPerSever;
+    
     public GameObject IOPrefab;
 
     [Header("UI")]
@@ -59,9 +59,13 @@ public class Connection : MonoBehaviour
     {
         get { return currentSever; }
     }
+
+    public SocketIOComponent Socket { get => socket; set => socket = value; }
+
     #endregion
     private void Awake()
     {
+
         if (instance == null) { instance = this; }
         else { Destroy(this); }
 
@@ -75,14 +79,16 @@ public class Connection : MonoBehaviour
         socket.url = url;
         socket.gameObject.SetActive(true);
         RegisterListener();
-
+        
         // UI
-        connectButton.onClick.AddListener(OnConnectButton);
+        //connectButton.onClick.AddListener(OnConnectButton);
+       
         DontDestroyOnLoad(this);
     }
     private void Start()
     {
         Loger = Debugger.instance;
+        OnConnectButton();
         InvokeRepeating("Reconnection", 1.0f, TimeOut * (MaxReconnectPerSever * (serversInfo.Count == 0 ? 1 : serversInfo.Count) + serversInfo.Count));
     }
     private void CreateUrl(ref string _url)
@@ -120,7 +126,7 @@ public class Connection : MonoBehaviour
         serversInfo = new List<ServerInfo>
         {
             new ServerInfo() { Name = "server1", Port = 1010, Host = "192.168.1.25" },
-            new ServerInfo() { Name = "server2", Port = 1000, Host = "192.168.1.18" },
+            new ServerInfo() { Name = "server2", Port = 1010, Host = "127.0.0.1" },
             new ServerInfo() { Name = "server3", Port = 1000, Host = "192.168.1.18" },
 
         };
