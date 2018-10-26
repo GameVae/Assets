@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class BuiltCellContainer : MonoBehaviour
@@ -58,6 +58,8 @@ public class BuiltCellContainer : MonoBehaviour
         new Vector3Int( 1,-2, 0),
     };
 
+    private EventSystem eventSystem;
+
     public uint TotalRow;
     public uint TotalCol;
    
@@ -65,47 +67,55 @@ public class BuiltCellContainer : MonoBehaviour
     public Tilemap map;
     public CursorPos cursorPos;
     public Camera cameraRaycaster;
-      
-    public static BuiltCellContainer Instance   { get; private set; }
-    public Dictionary<uint, uint>    BuiltCells { get; private set; }
+   
+    public static BuiltCellContainer    Instance        { get; private set; }
+    public Dictionary<uint, uint>       BuiltCells      { get; private set; }
+    public List<uint>                   BuildingIndex   { get; private set; }
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(Instance);
         BuiltCells = new Dictionary<uint, uint>();
+        BuildingIndex = new List<uint>();
+        eventSystem = FindObjectOfType<EventSystem>();
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(
-                cameraRaycaster.ScreenPointToRay(Input.mousePosition),
+            Vector3 mousePos = Input.mousePosition;
+
+            bool raycastHitted = Physics.Raycast(
+                cameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
-                int.MaxValue))
+                int.MaxValue);           
+            bool onClickUI = eventSystem.IsPointerOverGameObject();
+
+            if (raycastHitted && !onClickUI)
             {
                 Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
-                uint selectCellIndex = Convert2DTo1D(selectCell.x, selectCell.y);
-                if (BuiltCells.ContainsKey(selectCellIndex))
-                {
-                    if (Convert1DTo2D(BuiltCells[selectCellIndex], out Vector3Int result))
-                    {
-                        cursorPos.updateCursor(grid.CellToWorld(result));
-                    }
-                }
-                else
+                if (!TrySetIndexOnBuild(selectCell))
                 {
                     cursorPos.updateCursor(hitInfo.point);
                 }
             }
         }
     }
-    private uint Convert2DTo1D(int row, int col)
+
+    public uint Convert2DTo1D(int row, int col)
     {
         return (uint)row * TotalCol + (uint)col;
     }
-    private bool Convert1DTo2D(uint index, out Vector3Int result)
+
+    /// <summary>
+    /// Return position on grid
+    /// </summary>
+    /// <param name="index">Value in 1 dimention</param>
+    /// <param name="result">Position on grid if this return true </param>
+    /// <returns></returns>
+    public bool Convert1DTo2D(uint index, out Vector3Int result)
     {
         result = Vector3Int.zero;
         if (index < 0) return false;
@@ -137,5 +147,20 @@ public class BuiltCellContainer : MonoBehaviour
                 //map.SetTile(temp, null);
             }
         }
+        if (!BuildingIndex.Contains(centerIndex)) BuildingIndex.Add(centerIndex);
+    }
+
+    public bool TrySetIndexOnBuild(Vector3Int cellIndex)
+    {
+        uint selectCellIndex = Convert2DTo1D(cellIndex.x, cellIndex.y);
+        if (BuiltCells.ContainsKey(selectCellIndex))
+        {
+            if (Convert1DTo2D(BuiltCells[selectCellIndex], out Vector3Int result))
+            {
+                cursorPos.updateCursor(grid.CellToWorld(result));
+                return true;
+            }
+        }
+        return false;
     }
 }

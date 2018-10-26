@@ -76,4 +76,9 @@ public class CursorPos : MonoBehaviour
         MapPosition.y = cursorCellPos.y - 5;
         PositionCursor.SetPosTxt(MapPosition.x+"", MapPosition.y+"");
     }
+
+    public Vector3 CellToWorldPoint(Vector3Int cellPos)
+    {
+        return grid.CellToWorld(cellPos);
+    }
 }
