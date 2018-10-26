@@ -12,8 +12,8 @@ public class Debugger : MonoBehaviour
     private GameObject content;
     private Text message;
     private Scrollbar verticleBar;
-
     private List<Text> logs;
+
     private void Awake()
     {
         if (instance == null) instance = this;

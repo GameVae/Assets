@@ -65,29 +65,77 @@ public class AttackControl : MonoBehaviour
             (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
             (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
             (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
-            (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y)||
-            (transformCellPosition.x-3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
-            (transformCellPosition.x+3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
-            (transformCellPosition.x-3 == targetCellPosition.x && transformCellPosition.y+1 == targetCellPosition.y) ||
-            (transformCellPosition.x-2 == targetCellPosition.x && transformCellPosition.y+2 == targetCellPosition.y) ||
-            (transformCellPosition.x-1 == targetCellPosition.x && transformCellPosition.y+3 == targetCellPosition.y) ||
-            (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y+3 == targetCellPosition.y) ||
-            (transformCellPosition.x+1 == targetCellPosition.x && transformCellPosition.y+3 == targetCellPosition.y) ||
-            (transformCellPosition.x+2 == targetCellPosition.x && transformCellPosition.y+3 == targetCellPosition.y) ||
-            (transformCellPosition.x+2 == targetCellPosition.x && transformCellPosition.y+2 == targetCellPosition.y) ||
-            (transformCellPosition.x+3 == targetCellPosition.x && transformCellPosition.y+1 == targetCellPosition.y) ||
-            (transformCellPosition.x+3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
-            (transformCellPosition.x+3 == targetCellPosition.x && transformCellPosition.y-1 == targetCellPosition.y) ||
-            (transformCellPosition.x+2 == targetCellPosition.x && transformCellPosition.y-2 == targetCellPosition.y) ||
-            (transformCellPosition.x+2 == targetCellPosition.x && transformCellPosition.y-3 == targetCellPosition.y) ||
-            (transformCellPosition.x+1 == targetCellPosition.x && transformCellPosition.y-3 == targetCellPosition.y) ||
-            (transformCellPosition.x-1 == targetCellPosition.x && transformCellPosition.y-3 == targetCellPosition.y) ||
-            (transformCellPosition.x-2 == targetCellPosition.x && transformCellPosition.y-2 == targetCellPosition.y) ||
-            (transformCellPosition.x-3 == targetCellPosition.x && transformCellPosition.y-1 == targetCellPosition.y))
+            (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+            (transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+            (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+            (transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+            (transformCellPosition.x - 2 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+            (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+            (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+            (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+            (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+            (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+            (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+            (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+            (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+            (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+            (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+            (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+            (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+            (transformCellPosition.x - 2 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+            (transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y))
         {
             retCheckBool = true;
         }
 
         return retCheckBool;
     }
+
+    //public void Range1(Vector2 transformCellPosition)
+    //{
+    //    transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y)
+    //}
+
+    //public void Range2(Vector2 transformCellPosition)
+    //{
+    //    (transformCellPosition.x - 2 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //       (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //       (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+    //       (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+    //       (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+    //       (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+    //       (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+    //       (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+    //       (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+    //       (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+    //       (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+    //       (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y))
+    //}
+
+    //public void Range3(Vector2 transformCellPosition){
+    //(transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 2 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y + 2 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y + 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 3 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 2 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x + 1 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 1 == targetCellPosition.x && transformCellPosition.y - 3 == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 2 == targetCellPosition.x && transformCellPosition.y - 2 == targetCellPosition.y) ||
+    //        (transformCellPosition.x - 3 == targetCellPosition.x && transformCellPosition.y - 1 == targetCellPosition.y))
+//}
 }
