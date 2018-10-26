@@ -27,7 +27,15 @@ public class TimeControl : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance==null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+       
         //string dateInput = "Wed Aug 01 2018 08:55:04 GMT+0700";
         //string dateInput = "Jul 31 2018 22:16:25";
         //CalcTime(dateInput);
@@ -35,7 +43,7 @@ public class TimeControl : MonoBehaviour
         Debug.Log("UTCTimeNow: "+ UTCTimeNow);
     }
 
-    public DateTime CalcTime(string dateInput)
+    public DateTime CalcToLocalTime(string dateInput)
     {
         DateTime retDateTime = DateTime.Parse(dateInput);
         Debug.Log("retDateTime: "+retDateTime.ToLocalTime());

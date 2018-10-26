@@ -27,7 +27,6 @@ public class Debugger : MonoBehaviour
 
         if (message != null)
             message.gameObject.SetActive(false); // prefab
-
     }
     private void Start()
     {

@@ -14,7 +14,7 @@ public struct ServerInfo
 
 public class Connection : MonoBehaviour
 {
-    private static Connection instance;
+    public static Connection instance;
     private bool isConnected;
     private bool isServerClosed;
     private int reconnectCountInCurrentServer;
@@ -22,7 +22,7 @@ public class Connection : MonoBehaviour
     private int reconnectCount;
     private string url;
     private string defaultUrl;
-   
+
     private List<ServerInfo> serversInfo;
     private ServerInfo currentSever;
     private SocketIOComponent socket;
@@ -37,7 +37,7 @@ public class Connection : MonoBehaviour
     [Tooltip("How many time reconnect on all server?")]
     public int MaxReconnect;
     public int MaxReconnectPerSever;
-    
+
     public GameObject IOPrefab;
 
     [Header("UI")]
@@ -79,10 +79,10 @@ public class Connection : MonoBehaviour
         socket.url = url;
         socket.gameObject.SetActive(true);
         RegisterListener();
-        
+
         // UI
         //connectButton.onClick.AddListener(OnConnectButton);
-       
+
         DontDestroyOnLoad(this);
     }
     private void Start()
@@ -131,7 +131,6 @@ public class Connection : MonoBehaviour
 
         };
     }
-
     private void CreateNewSocket()
     {
         CreateUrl(ref url);
@@ -288,5 +287,12 @@ public class Connection : MonoBehaviour
     {
         StartCoroutine(ConnectToServer());
     }
+    #endregion
+
+    #region Emit
+
+    #endregion
+    #region On
+
     #endregion
 }

@@ -108,7 +108,7 @@ public class CameraControl : MonoBehaviour
     {
 #if UNITY_STANDALONE || UNITY_STANDALONE_WIN || UNITY_EDITOR
         transform.rotation = Quaternion.Euler(resetCamera);
-        transform.position = new Vector3(CursorPos.transform.position.x, 20, CursorPos.transform.position.z);
+      //  transform.position = new Vector3(CursorPos.transform.position.x, 20, CursorPos.transform.position.z);
 #endif
     }
 

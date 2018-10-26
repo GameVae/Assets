@@ -51,7 +51,7 @@ public class Registerv3 : MonoBehaviour
 
     private SocketIOComponent socketIO;
 
-    public Connection Connection;
+    //public Connection Connection;
 
     private void Awake()
     {
@@ -59,13 +59,12 @@ public class Registerv3 : MonoBehaviour
         registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
         registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
-        socketIO = Connection.Socket;
-
+        socketIO = Connection.instance.Socket;
     }
 
     private void Start()
     {
-      
+
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
         socketIO.On("R_REGISTER", R_REGISTER);
@@ -80,7 +79,6 @@ public class Registerv3 : MonoBehaviour
         {
             case 0:
                 registerUI.RegisterBtn.interactable = true;
-                //StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
                 StartCoroutine("showWarningText");
                 break;
             case 1:
@@ -161,12 +159,8 @@ public class Registerv3 : MonoBehaviour
             data["Email"] = registerUI.Email.text;
             socketIO.Emit("S_REGISTER", new JSONObject(data));
             registerUI.RegisterBtn.interactable = false;
-            //if (!socketIO.handlers.ContainsKey("S_REGISTER"))
-            //{
-            //    socketIO.On("R_REGISTER", R_REGISTER);
-            //}
         }
-       // registerUI.RegisterBtn.interactable = !checkUserAccount();
+        registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
 
     private bool checkUserAccount()
