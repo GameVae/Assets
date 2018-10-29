@@ -1,31 +1,41 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MiniMap : MonoBehaviour
 {
-    public CursorPos cursor;
-    public Button MapBtn;
-    public GameObject Panel;
-    [Header("Dimention map base on grid")]
-    public int Width;
-    public int Height;
-    public RectTransform MiniMapImage;
-    public NavigateIcon MapSelectIcon;
-    public Rect MiniMapRect;
-    public GameObject BuildingIcon;
+    public enum SelectPointType
+    {
+        Auto,
+        DoubleClick
+    }
 
     private List<uint> buildingIndex;
     private bool onMiniMap;
+    private bool isClosing;
+    private float closeCounter;
 
     private Vector3Int selectedCell;
     private Vector3Int preSelectedCell;
 
+    public float DelayCloseMiniMap;
+    public SelectPointType SelectType;
+    public Button MapBtn;
+    public GameObject Panel;
+    public CursorPos cursor;
+    [Header("Dimention map base on grid")]
+    public int Width;
+    public int Height;
+    public RectTransform MiniMapImage;
+    public NavigateIcon MapSelectIcon;    
+    public GameObject BuildingIcon;
+
+    public Rect MiniMapRect { get; private set; }
+
     private void OnEnable()
     {
 
-        GetComponentInChildren<Button>().onClick.AddListener(Close);
+        GetComponentInChildren<Button>().onClick.AddListener(ManualClose);
         MapBtn.onClick.AddListener(ShowMiniMap);
         Panel.gameObject.SetActive(false);
 
@@ -52,13 +62,41 @@ public class MiniMap : MonoBehaviour
                 SetNavigateIcon(Input.mousePosition);
             }
         }
+
+        if(isClosing)
+        {
+            closeCounter += Time.deltaTime;
+            if(closeCounter >= DelayCloseMiniMap)
+            {
+
+                Close();
+            }
+        }
     }
     
     private void Close()
     {
-        MapSelectIcon.Disable();
+        if (isClosing)
+        {
+            onMiniMap = false;
+            isClosing = false;
+            MapSelectIcon.Disable();
+            MoveCameraToCell(selectedCell);
+            Panel.gameObject.SetActive(false);
+            cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));
+
+            // refresh 
+            ResetSelectedCell();
+        }
+    }
+
+    private void ManualClose()
+    {
+        isClosing = false;
         onMiniMap = false;
+        MapSelectIcon.Disable();
         Panel.gameObject.SetActive(false);
+        ResetSelectedCell();
     }
    
     private bool TrySetNavOnBuild(Rect area, out Vector3Int cell)
@@ -77,7 +115,7 @@ public class MiniMap : MonoBehaviour
                 if (area.Contains((Vector2)miniMapPos))
                 {
                     cell = result;
-                    return BuiltCellContainer.Instance.TrySetIndexOnBuild(result);
+                    return BuiltCellContainer.Instance.TrySetIndexOnBuild(result,out Vector3Int cellResult);
                 }
             }
         }
@@ -98,7 +136,6 @@ public class MiniMap : MonoBehaviour
         {
             buildingIndex = BuiltCellContainer.Instance.BuildingIndex;
         }
-        Debug.Log(buildingIndex.Count);
         for (int i = 0; i < buildingIndex.Count; i++)
         {
             bool boolResult = BuiltCellContainer.Instance.Convert1DTo2D(buildingIndex[i], out Vector3Int result);
@@ -117,13 +154,11 @@ public class MiniMap : MonoBehaviour
     {
         if (MiniMapRect.Contains(mousePos))
         {
-
             Vector3Int currentSelectCell = GetCellOnMiniMap(mousePos);
             MapSelectIcon.SetPosition(CellToMiniMap(currentSelectCell));
 
             if (TrySetNavOnBuild(MapSelectIcon.Rectangle, out Vector3Int cell))
             {
-                MapSelectIcon.SetPosition(CellToMiniMap(cell));
                 selectedCell = cell;
                 MapSelectIcon.SetPosition(CellToMiniMap(selectedCell));
             }
@@ -131,22 +166,25 @@ public class MiniMap : MonoBehaviour
             {
                 selectedCell = currentSelectCell + new Vector3Int(5, 5, 0);
             }
-            if (preSelectedCell == selectedCell)
+            if (SelectType == SelectPointType.Auto)
             {
-                MoveCameraToCell(selectedCell);
-                ResetSelectedCell();
-                Close();
+                //cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));
+                StartClose();
             }
-            else if ((MapSelectIcon.Rectangle.Contains(CellToMiniMap(selectedCell)) &&
-                MapSelectIcon.Rectangle.Contains(CellToMiniMap(preSelectedCell))))
+            else if (SelectType == SelectPointType.DoubleClick)
             {
-                Vector3 worldPoint = cursor.CellToWorldPoint(selectedCell);
-                cursor.updateCursor(worldPoint);
-                MoveCameraToCell(selectedCell);
-                ResetSelectedCell();
-                Close();
+                if (preSelectedCell == selectedCell)
+                {
+                    Close();
+                }
+                else if ((MapSelectIcon.Rectangle.Contains(CellToMiniMap(selectedCell)) &&
+                    MapSelectIcon.Rectangle.Contains(CellToMiniMap(preSelectedCell))))
+                {
+                    //cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));                    
+                    Close();
+                }
+                preSelectedCell = selectedCell;
             }
-            preSelectedCell = selectedCell;
         }
     }
 
@@ -169,6 +207,13 @@ public class MiniMap : MonoBehaviour
         if (onMiniMap) return;
         onMiniMap = true;
         Panel.gameObject.SetActive(true);
+        MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
+    }
+
+    private void StartClose()
+    {
+        isClosing = true;
+        closeCounter = 0.0f;
     }
 
     public Vector3 CellToMiniMap(Vector3Int cellPos)

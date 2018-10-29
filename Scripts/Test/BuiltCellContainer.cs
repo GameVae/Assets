@@ -90,13 +90,17 @@ public class BuiltCellContainer : MonoBehaviour
             bool raycastHitted = Physics.Raycast(
                 cameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
-                int.MaxValue);           
+                int.MaxValue);
             bool onClickUI = eventSystem.IsPointerOverGameObject();
 
             if (raycastHitted && !onClickUI)
             {
                 Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
-                if (!TrySetIndexOnBuild(selectCell))
+                if (TrySetIndexOnBuild(selectCell,out Vector3Int result))
+                {
+                    cursorPos.updateCursor(grid.CellToWorld(result));
+                }
+                else
                 {
                     cursorPos.updateCursor(hitInfo.point);
                 }
@@ -150,14 +154,15 @@ public class BuiltCellContainer : MonoBehaviour
         if (!BuildingIndex.Contains(centerIndex)) BuildingIndex.Add(centerIndex);
     }
 
-    public bool TrySetIndexOnBuild(Vector3Int cellIndex)
+    public bool TrySetIndexOnBuild(Vector3Int cellIndex,out Vector3Int cellResult)
     {
         uint selectCellIndex = Convert2DTo1D(cellIndex.x, cellIndex.y);
+        cellResult = Vector3Int.zero;
         if (BuiltCells.ContainsKey(selectCellIndex))
         {
             if (Convert1DTo2D(BuiltCells[selectCellIndex], out Vector3Int result))
             {
-                cursorPos.updateCursor(grid.CellToWorld(result));
+                cellResult = result;
                 return true;
             }
         }

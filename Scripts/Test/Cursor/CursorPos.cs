@@ -81,4 +81,9 @@ public class CursorPos : MonoBehaviour
     {
         return grid.CellToWorld(cellPos);
     }
+
+    public Vector3Int GetCurrentCell()
+    {
+        return grid.WorldToCell(transform.position);
+    }
 }
