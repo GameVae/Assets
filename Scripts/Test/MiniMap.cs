@@ -21,7 +21,11 @@ public class MiniMap : MonoBehaviour
     public float DelayCloseMiniMap;
     public SelectPointType SelectType;
     public Button MapBtn;
+    public Button DescriptionBtn;
+
     public GameObject Panel;
+    public GameObject LevelDescription;
+
     public CursorPos cursor;
     [Header("Dimention map base on grid")]
     public int Width;
@@ -36,7 +40,13 @@ public class MiniMap : MonoBehaviour
     {
 
         GetComponentInChildren<Button>().onClick.AddListener(ManualClose);
+
         MapBtn.onClick.AddListener(ShowMiniMap);
+        
+        DescriptionBtn.onClick.AddListener(ShowMiniMap);
+        DescriptionBtn.onClick.AddListener(ShowDescription);
+
+        LevelDescription.gameObject.SetActive(false);
         Panel.gameObject.SetActive(false);
 
         float miniMapWidth = (MiniMapImage.anchorMax.x - MiniMapImage.anchorMin.x) * Screen.width;
@@ -206,6 +216,7 @@ public class MiniMap : MonoBehaviour
     {
         if (onMiniMap) return;
         onMiniMap = true;
+        LevelDescription.gameObject.SetActive(false);
         Panel.gameObject.SetActive(true);
         MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
     }
@@ -222,5 +233,17 @@ public class MiniMap : MonoBehaviour
         result.x = cellPos.x * (MiniMapRect.width / Width) + MiniMapRect.x;
         result.y = cellPos.y * (MiniMapRect.height / Height) + MiniMapRect.y;
         return result;
+    }
+
+    private void ShowDescription()
+    {
+        if (!LevelDescription.activeInHierarchy)
+        {
+            LevelDescription.gameObject.SetActive(true);
+        }
+        else
+        {
+            LevelDescription.gameObject.SetActive(false);
+        }
     }
 }

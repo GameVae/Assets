@@ -123,8 +123,8 @@ public class BuiltCellContainer : MonoBehaviour
     {
         result = Vector3Int.zero;
         if (index < 0) return false;
-        result.x = (int)(index / TotalCol);
-        result.y = (int)(index % TotalCol);
+        result.x = (int)(index % TotalCol);
+        result.y = (int)(index / TotalCol);
         return true;
     }
 
