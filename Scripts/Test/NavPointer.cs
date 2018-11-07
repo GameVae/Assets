@@ -3,26 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NavPointer : MonoBehaviour
-{
-    private int selectCount;
+{  
+    private HexMap HexMap;
+    private AStartAlgorithm AStarCalculator;
+    private List<Vector3Int> path;
 
-    public HexMap HexMap;
-    public Camera CameraRaycaster;
+    public float        Speed;
+    public Camera       CameraRaycaster;
+    public Vector3Int   StartPos;
+    public Vector3Int   EndPos;
 
-    public Vector3Int StartPos;
-    public Vector3Int EndPos;
+    public bool IsMoving { get; private set; }
 
-    public AStartAlgorithm AStarCalculator;
     private void Start()
     {
-        AStarCalculator = AStartAlgorithm.Instance;
+        HexMap = HexMap.Instance;
+        AStarCalculator = AStartAlgorithm.Instance;       
     }
-    void Update ()
+    void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
         {
             Vector3 mousePos = Input.mousePosition;
-
             bool raycastHitted = Physics.Raycast(
                 CameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
@@ -32,17 +34,36 @@ public class NavPointer : MonoBehaviour
             {
                 Vector3Int selectCell = HexMap.WorldToCell(hitInfo.point);
                 if (!HexMap.IsValidCell(selectCell.x, selectCell.y)) return;
-                if (selectCount < 1)
-                {
-                    StartPos = selectCell;
-                    selectCount++;
-                }
-                else
-                {
-                    EndPos = selectCell;
-                    AStarCalculator.FindPath(StartPos, EndPos);
 
+                EndPos      = selectCell;
+                StartPos    = HexMap.WorldToCell(transform.position);
+                IsMoving    = AStarCalculator.FindPath(StartPos, EndPos);
+                path        = AStarCalculator.Path;
+            }
+        }
+
+        MoveToTarget();
+    }
+
+    private void MoveToTarget()
+    {
+        if (IsMoving)
+        {
+            if (path.Count > 0)
+            {
+                Vector3 currentTarget = HexMap.CellToWorld(path[path.Count - 1]);
+                transform.position = Vector3.MoveTowards(
+                    current: transform.position,
+                    target: currentTarget,
+                    maxDistanceDelta: Time.deltaTime * Speed);
+                if ((transform.position - currentTarget).magnitude <= 0.1f)
+                {
+                    path.RemoveAt(path.Count - 1);
                 }
+            }
+            else
+            {
+                IsMoving = false;
             }
         }
     }

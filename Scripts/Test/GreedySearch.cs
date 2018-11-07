@@ -41,7 +41,7 @@ public class GreedySearch : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
         {
             Vector3 mousePos = Input.mousePosition;
 
@@ -49,7 +49,6 @@ public class GreedySearch : MonoBehaviour
                 CameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
                 int.MaxValue);
-
             if (raycastHitted)
             {
                 TargetCell = HexGrid.WorldToCell(hitInfo.point);
@@ -57,7 +56,7 @@ public class GreedySearch : MonoBehaviour
             }
         }
 
-        MoveFollowWayPoint();
+        MoveToTarget();
     }
     private Vector3Int ToTargetMinCostCell(Vector3Int cell, Vector3Int target)
     {
@@ -94,19 +93,7 @@ public class GreedySearch : MonoBehaviour
         }
     }
   
-    private void OnDrawGizmos()
-    {
-        if (trackingList == null) return;
-
-        Gizmos.color = Color.cyan;
-        for (int i = 0; i < trackingList.Count; i++)
-        {
-            Gizmos.DrawSphere(HexGrid.CellToWorld(trackingList[i]), 0.5f);
-        }
-
-    }
-
-    private void MoveFollowWayPoint()
+    private void MoveToTarget()
     {
         if (trackingList.Count > 0)
         {
@@ -121,4 +108,18 @@ public class GreedySearch : MonoBehaviour
             }
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (trackingList == null) return;
+
+        Gizmos.color = Color.cyan;
+        for (int i = 0; i < trackingList.Count; i++)
+        {
+            Gizmos.DrawSphere(HexGrid.CellToWorld(trackingList[i]), 0.5f);
+        }
+
+    }
+#endif
 }

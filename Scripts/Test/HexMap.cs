@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HexMap : MonoBehaviour
 {
+    public static HexMap Instance { get; private set; }
     private readonly Vector3Int[] HexaPatternEven1 = new Vector3Int[]
 {
         new Vector3Int( 0,-1, 0),
@@ -26,6 +27,12 @@ public class HexMap : MonoBehaviour
     public Grid HexGrid;
     public int TotalCol;
     public int TotalRow;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(Instance.gameObject);
+    }
 
     public int ConvertToIndex(int x,int y)
     {

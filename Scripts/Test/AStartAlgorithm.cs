@@ -131,7 +131,7 @@ public class AStartAlgorithm : MonoBehaviour
         Debug.Log("null");
         return null;
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (Path != null)
@@ -143,4 +143,5 @@ public class AStartAlgorithm : MonoBehaviour
             }
         }
     }
+#endif
 }

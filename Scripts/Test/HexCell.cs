@@ -1,4 +1,6 @@
 ﻿
+using UnityEngine;
+
 public class HexCell
 {
     public int X { get; set; }
