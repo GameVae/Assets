@@ -11,6 +11,7 @@ public static class Vector3IntExtension
 }
 public class GreedySearch : MonoBehaviour
 {
+    public static GreedySearch Instance { get; private set; }
     private readonly Vector3Int[] HexaPatternEven1 = new Vector3Int[]
 {
         new Vector3Int( 0,-1, 0),
@@ -29,95 +30,70 @@ public class GreedySearch : MonoBehaviour
         new Vector3Int( 1, 0, 0),
         new Vector3Int(-1, 0, 0),
 };
+    
+    private HexMap HexMap;
 
-    private Vector3Int CurrentCell;
-    private List<Vector3Int> trackingList = new List<Vector3Int>();
-    private float timeCounter = 0.0f;
-
-    public float Speed;
-    public Grid HexGrid;
-    public Vector3Int TargetCell;
-    public Camera CameraRaycaster;
-
-    private void Update()
+    public bool IsMoving            { get; private set; }
+    public List<Vector3Int> Path    { get; private set; }
+    
+    private void Awake()
     {
-        if (Input.GetMouseButtonDown(0) && Input.GetKey(KeyCode.LeftShift))
-        {
-            Vector3 mousePos = Input.mousePosition;
-
-            bool raycastHitted = Physics.Raycast(
-                CameraRaycaster.ScreenPointToRay(mousePos),
-                out RaycastHit hitInfo,
-                int.MaxValue);
-            if (raycastHitted)
-            {
-                TargetCell = HexGrid.WorldToCell(hitInfo.point);
-                FindPath();
-            }
-        }
-
-        MoveToTarget();
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
-    private Vector3Int ToTargetMinCostCell(Vector3Int cell, Vector3Int target)
+    private void Start()
     {
-        if (target == cell) return cell;
+        HexMap = HexMap.Instance;
+        Path = new List<Vector3Int>();
+    }
+    private Vector3Int ToTargetMinCostCell(Vector3Int currentCell, Vector3Int endPos)
+    {
+        if (endPos == currentCell) return currentCell;
         int minCost = int.MaxValue;
         Vector3Int result = Vector3Int.zero; ;
 
-        cell = cell.ProjectOnPlan();
-        target = target.ProjectOnPlan();
+        currentCell = currentCell.ProjectOnPlan();
+        endPos = endPos.ProjectOnPlan();
 
-        Vector3Int[] neighbours = (cell.y % 2) == 0 ? HexaPatternEven1 : HexaPatternOdd1;
+        Vector3Int[] neighbours = (currentCell.y % 2) == 0 ? HexaPatternEven1 : HexaPatternOdd1;
         for (int i = 0; i < neighbours.Length; i++)
         {
-            int dist = Mathf.RoundToInt(Vector3Int.Distance(cell + neighbours[i], target));
+            int dist = Mathf.RoundToInt(Vector3Int.Distance(currentCell + neighbours[i], endPos));
             if (dist < minCost)
             {
                 minCost = dist;
-                result = cell + neighbours[i];
+                result = currentCell + neighbours[i];
             }
         }
         return result;
     }
 
-    [ContextMenu("Find Path")]
-    public void FindPath()
+    public bool FindPath(Vector3Int start,Vector3Int end)
     {
-        CurrentCell = HexGrid.WorldToCell(transform.position).ProjectOnPlan();
-        TargetCell = TargetCell.ProjectOnPlan();
-        trackingList.Clear();
-        trackingList.Add(CurrentCell);
-        while (trackingList[trackingList.Count - 1] != TargetCell)
-        {
-            trackingList.Add(ToTargetMinCostCell(trackingList[trackingList.Count - 1], TargetCell));
-        }
-    }
-  
-    private void MoveToTarget()
-    {
-        if (trackingList.Count > 0)
-        {
-            Vector3 currentWayPoint = HexGrid.CellToWorld(trackingList[0]);
-            transform.position = Vector3.MoveTowards(transform.position, currentWayPoint, Time.deltaTime * Speed);
-            timeCounter += Time.deltaTime;
-            if ((currentWayPoint - transform.position).magnitude <= 0.1f)
-            {
-                Debug.Log(timeCounter);
-                timeCounter = 0.0f;
-                trackingList.RemoveAt(0);
-            }
-        }
-    }
+        //StartCell = HexGrid.WorldToCell(transform.position).ProjectOnPlan();
+        //TargetCell = TargetCell.ProjectOnPlan();
+        start   = start.ProjectOnPlan();
+        end     = end.ProjectOnPlan();
 
+        if (!HexMap.IsValidCell(end.x,end.y)) return false;
+        Path.Clear();
+        Path.Add(start);
+
+        while (Path[Path.Count - 1] != end)
+        {
+            Path.Add(ToTargetMinCostCell(Path[Path.Count - 1], end));
+        }
+        return true;
+    }  
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (trackingList == null) return;
+        if (Path == null) return;
 
         Gizmos.color = Color.cyan;
-        for (int i = 0; i < trackingList.Count; i++)
+        for (int i = 0; i < Path.Count; i++)
         {
-            Gizmos.DrawSphere(HexGrid.CellToWorld(trackingList[i]), 0.5f);
+            Gizmos.DrawSphere(HexMap.CellToWorld(Path[i]), 0.5f);
         }
 
     }

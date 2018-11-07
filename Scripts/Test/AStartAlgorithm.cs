@@ -51,7 +51,7 @@ public class AStartAlgorithm : MonoBehaviour
         else
         {
 #if UNITY_EDITOR
-            Debug.Log("Target not found");
+            Debug.LogWarning("A STAR TERMINAL:Target not found");
 #endif
         }
         return result;

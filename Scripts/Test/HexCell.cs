@@ -1,6 +1,4 @@
 ﻿
-using UnityEngine;
-
 public class HexCell
 {
     public int X { get; set; }
@@ -22,6 +20,7 @@ public class PoolHexCell
     public static PoolHexCell Instance = new PoolHexCell();
 
     private const int MaxSize = 500;
+
     private HexCell[] pool;
 
     private PoolHexCell()
