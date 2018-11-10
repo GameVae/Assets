@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Vector3IntExtension
 {
-    public static Vector3Int ProjectOnPlan(this Vector3Int vectorInt)
+    public static Vector3Int ZToZero(this Vector3Int vectorInt)
     {
         vectorInt.z = 0;
         return vectorInt;
@@ -52,8 +52,8 @@ public class GreedySearch : MonoBehaviour
         int minCost = int.MaxValue;
         Vector3Int result = Vector3Int.zero; ;
 
-        currentCell = currentCell.ProjectOnPlan();
-        endPos = endPos.ProjectOnPlan();
+        currentCell = currentCell.ZToZero();
+        endPos = endPos.ZToZero();
 
         Vector3Int[] neighbours = (currentCell.y % 2) == 0 ? HexaPatternEven1 : HexaPatternOdd1;
         for (int i = 0; i < neighbours.Length; i++)
@@ -72,8 +72,8 @@ public class GreedySearch : MonoBehaviour
     {
         //StartCell = HexGrid.WorldToCell(transform.position).ProjectOnPlan();
         //TargetCell = TargetCell.ProjectOnPlan();
-        start   = start.ProjectOnPlan();
-        end     = end.ProjectOnPlan();
+        start   = start.ZToZero();
+        end     = end.ZToZero();
 
         if (!HexMap.IsValidCell(end.x,end.y)) return false;
         Path.Clear();

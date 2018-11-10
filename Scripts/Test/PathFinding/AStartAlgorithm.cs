@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class AStartAlgorithm : MonoBehaviour
 {
-    public static AStartAlgorithm Instance { get; private set; } 
+    public static AStartAlgorithm Instance { get; private set; }
     private HexMap hexMap;
     private List<HexCell> openCell;
     private List<HexCell> closedCell;
     private List<int> closedIndex;
-   
+
     public List<Vector3Int> Path { get; protected set; }
     public int MaxLevel;
 
@@ -20,11 +20,11 @@ public class AStartAlgorithm : MonoBehaviour
         hexMap = GetComponent<HexMap>();
     }
     private void Start()
-    {       
-        Path        = new List<Vector3Int>();
-        openCell    = new List<HexCell>();
-        closedCell  = new List<HexCell>();
-        closedIndex = new List<int>();               
+    {
+        Path = new List<Vector3Int>();
+        openCell = new List<HexCell>();
+        closedCell = new List<HexCell>();
+        closedIndex = new List<int>();
     }
 
     public bool FindPath(Vector3Int pos, Vector3Int target)
@@ -34,7 +34,7 @@ public class AStartAlgorithm : MonoBehaviour
         Path.Clear();
         openCell.Clear();
         closedCell.Clear();
-        closedIndex.Clear();        
+        closedIndex.Clear();
         PoolHexCell.Instance.ResetAll();
         // set current cell at 'pos' as origin node
         HexCell startCell = PoolHexCell.Instance.GetCell(pos.x, pos.y);
@@ -46,7 +46,7 @@ public class AStartAlgorithm : MonoBehaviour
         if (result)
         {
             HexCell targetCell = FindHexCellInClosedList(target);
-            Tracking(targetCell);
+            Tracking(targetCell, IsObstacle(targetCell));
         }
         else
         {
@@ -61,7 +61,7 @@ public class AStartAlgorithm : MonoBehaviour
     {
         // termnial : Path not found
         if (openCell.Count == 0 || level > MaxLevel) return false;
-               
+
         // mask current cell visited
         closedIndex.Add(hexMap.ConvertToIndex(currentCell.X, currentCell.Y));
         closedCell.Add(currentCell);
@@ -78,13 +78,13 @@ public class AStartAlgorithm : MonoBehaviour
             HexCell cell = PoolHexCell.Instance.GetCell(neighbours[i].x, neighbours[i].y);
             if (cell == null)
             {
-//#if UNITY_EDITOR
-//                Debug.Log("Pool empty");
-//#endif
+                //#if UNITY_EDITOR
+                //                Debug.Log("Pool empty");
+                //#endif
                 continue; // pool empty
             }
             int index = hexMap.ConvertToIndex(cell.X, cell.Y);
-            if (!closedIndex.Contains(index))
+            if (!closedIndex.Contains(index) && (!IsObstacle(cell) || index == hexMap.ConvertToIndex(target.x, target.y)))
             {
                 cell.G = currentCell.G + 1;
                 cell.H = Vector3Int.Distance(neighbours[i], target);
@@ -113,12 +113,13 @@ public class AStartAlgorithm : MonoBehaviour
         return Calculate(nextVisit, target, level + 1);
     }
 
-    public void Tracking(HexCell cell)
+    public void Tracking(HexCell cell, bool ignoreThis)
     {
         if (cell == null) return;
         Vector3Int node = new Vector3Int(cell.X, cell.Y, 0);
-        Path.Add(node);
-        Tracking(cell.Parent);
+        if (!ignoreThis)
+            Path.Add(node);
+        Tracking(cell.Parent, false);
     }
 
     private HexCell FindHexCellInClosedList(Vector3Int pos)
@@ -129,6 +130,12 @@ public class AStartAlgorithm : MonoBehaviour
                 return closedCell[i];
         }
         return null;
+    }
+
+    private bool IsObstacle(HexCell cell)
+    {
+        int index = hexMap.ConvertToIndex(cell.X, cell.Y);
+        return ObstacleManager.Instance.Contain(index);
     }
 #if UNITY_EDITOR
     private void OnDrawGizmos()
