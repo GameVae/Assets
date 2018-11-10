@@ -78,9 +78,9 @@ public class AStartAlgorithm : MonoBehaviour
             HexCell cell = PoolHexCell.Instance.GetCell(neighbours[i].x, neighbours[i].y);
             if (cell == null)
             {
-#if UNITY_EDITOR
-                Debug.Log("Pool empty");
-#endif
+//#if UNITY_EDITOR
+//                Debug.Log("Pool empty");
+//#endif
                 continue; // pool empty
             }
             int index = hexMap.ConvertToIndex(cell.X, cell.Y);
@@ -128,7 +128,6 @@ public class AStartAlgorithm : MonoBehaviour
             if (closedCell[i].X == pos.x && closedCell[i].Y == pos.y)
                 return closedCell[i];
         }
-        Debug.Log("null");
         return null;
     }
 #if UNITY_EDITOR
