@@ -45,8 +45,8 @@ public class LoginScript : MonoBehaviour
         firstConnect.ForgotPasswordBtn.onClick.AddListener(() => firstConnect.ForgotPanel.SetActive(true));
         firstConnect.CreateAccountBtn.onClick.AddListener(() => firstConnect.CreateAccountPanel.SetActive(true));
 
-        connectRegion.SignOutBtn.onClick.AddListener(()=> signOutClick());
-        connectRegion.LoginBtn.onClick.AddListener(()=> loginClick());
+        connectRegion.SignOutBtn.onClick.AddListener(() => signOutClick());
+        connectRegion.LoginBtn.onClick.AddListener(() => loginClick());
 
         bool rememberUserBool = PlayerPrefs.HasKey("UserName");
         connectRegion.ConnectLoginRegion.SetActive(rememberUserBool);
@@ -61,9 +61,7 @@ public class LoginScript : MonoBehaviour
 
     private void R_LOGIN(SocketIOEvent obj)
     {
-        Debug.Log("R_LOGIN: "+obj);
-
-
+        Debug.Log("R_LOGIN: " + obj);
     }
 
     private void login()

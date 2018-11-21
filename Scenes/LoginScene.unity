@@ -411,6 +411,8 @@ GameObject:
   m_Component:
   - component: {fileID: 77327103}
   - component: {fileID: 77327102}
+  - component: {fileID: 77327105}
+  - component: {fileID: 77327104}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -451,6 +453,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &77327104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040592acadfec2c4c9b008e0e403d2b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &77327105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f736b92951fb1b449829ed201f969c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &82552909
 GameObject:
   m_ObjectHideFlags: 0
@@ -10525,6 +10549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613588224}
   - component: {fileID: 1613588225}
+  - component: {fileID: 1613588226}
   m_Layer: 0
   m_Name: Register
   m_TagString: Untagged
@@ -10571,6 +10596,30 @@ MonoBehaviour:
     RegisterBtn: {fileID: 354906457}
     CloseBtn: {fileID: 11303891}
   multiLangManager: {fileID: 82552912}
+--- !u!114 &1613588226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1613588223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7402616668982f844a50b333fa85a9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  registerUI:
+    RegisterPanel: {fileID: 0}
+    UserName: {fileID: 0}
+    Password: {fileID: 0}
+    PasswordConfirm: {fileID: 0}
+    Email: {fileID: 0}
+    WarningText: {fileID: 0}
+    WarningUserName: {fileID: 0}
+    WarningPassword: {fileID: 0}
+    WarningPasswordConfirm: {fileID: 0}
+    WarningEmail: {fileID: 0}
+    RegisterBtn: {fileID: 0}
+    CloseBtn: {fileID: 0}
 --- !u!1 &1613759878
 GameObject:
   m_ObjectHideFlags: 0
@@ -14506,12 +14555,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334fdebd8bdba8846890375a9404db44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginUI:
+  firstConnect:
+    FirstConnectRegion: {fileID: 0}
     InputUser: {fileID: 0}
     InputPassword: {fileID: 0}
     ToggleRememberAccount: {fileID: 0}
-    LoginBtn: {fileID: 803795251}
-  socketIO: {fileID: 56121115}
+    LoginBtn: {fileID: 0}
+    ForgotPasswordBtn: {fileID: 0}
+    ForgotPanel: {fileID: 0}
+    CreateAccountBtn: {fileID: 0}
+    CreateAccountPanel: {fileID: 0}
+  connectRegion:
+    ConnectLoginRegion: {fileID: 0}
+    SignOutBtn: {fileID: 0}
+    LoginBtn: {fileID: 0}
 --- !u!1 &2140536748
 GameObject:
   m_ObjectHideFlags: 0
