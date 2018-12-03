@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: MainBaseContainer
+  m_EditorClassIdentifier: Assembly-CSharp:ManualTable:TableContainer
+  Table: {fileID: 11400000, guid: c29a9e8656513124ba1af8f29cf09ba7, type: 2}
+  RowType: 0

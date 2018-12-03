@@ -22,4 +22,9 @@ public class BuildingBound : MonoBehaviour
         transform.position = grid.CellToWorld(CellPosision);
     }
 
+    [ContextMenu("Get Cell Position")]
+    public void GetPosition()
+    {
+        CellPosision = grid.WorldToCell(transform.position);
+    }
 }

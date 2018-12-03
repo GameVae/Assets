@@ -9,6 +9,16 @@ public static class Vector3IntExtension
         return vectorInt;
     }
 }
+
+public static class Vector3Extension
+{
+    public static Vector3 AddY(this Vector3 vector3,float y)
+    {
+        vector3.y += y;
+        return vector3;
+    }
+}
+
 public class GreedySearch : MonoBehaviour
 {
     public static GreedySearch Instance { get; private set; }

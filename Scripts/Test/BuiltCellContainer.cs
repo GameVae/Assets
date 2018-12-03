@@ -29,7 +29,7 @@ public class BuiltCellContainer : MonoBehaviour
         new Vector3Int(-1, 2, 0),
         new Vector3Int(-2, 1, 0),
         new Vector3Int(-2,-1, 0),
-        new Vector3Int(-1,-2, 0),
+        // new Vector3Int(-1,-2, 0),
     };
     // y odd
     private readonly Vector3Int[] HexaPattern2 = new Vector3Int[]
@@ -40,7 +40,7 @@ public class BuiltCellContainer : MonoBehaviour
         new Vector3Int( 0, 1, 0),   // bot right
         new Vector3Int( 1, 0, 0),   // center right
         new Vector3Int(-1, 0, 0),   // center left       
-        new Vector3Int( 0, 0, 0),   // center               
+        // new Vector3Int( 0, 0, 0),   // center               
     };
     private readonly Vector3Int[] HexaPattern21 = new Vector3Int[]
     {

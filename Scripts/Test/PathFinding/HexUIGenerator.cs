@@ -130,13 +130,13 @@ public class HexUIGenerator : MonoBehaviour
         if (level < MaxLevel)
         {
             Vector3Int center = ConvertToVector3Int(currentCellIndex);
-            Vector3Int[] neighbours = GetNeigboursPosition(center);
+            Vector3Int[] neighbours = GetNeigboursRange1(center);
             int index = -1;
             for (int i = 0; i < neighbours.Length; i++)
             {
                 index = ConvertToIndex(neighbours[i].x, neighbours[i].y);
                 if (!closedCell.Contains(index) && 
-                    !openCell.Contains(index) && 
+                    !openCell.Contains(index)   && 
                     IsValidCell(neighbours[i].x, neighbours[i].y))
                 {
                     openCell.Add(index);
@@ -146,7 +146,7 @@ public class HexUIGenerator : MonoBehaviour
         CalculateDistance(level + 1);
     }
 
-    private Vector3Int[] GetNeigboursPosition(Vector3Int cell)
+    private Vector3Int[] GetNeigboursRange1(Vector3Int cell)
     {
         List<Vector3Int> neighbours = new List<Vector3Int>();
         Vector3Int neighbour;

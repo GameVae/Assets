@@ -1,49 +1,52 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+
 
 [RequireComponent(typeof(LineRenderer))]
 public class NavAgent : MonoBehaviour
 {
-    public enum PathFindingType
-    {
-        AStar,
-        Greedy,
-    }
-
-    private bool    isLineAnimation;
-    private float   animLineCounter;
-
-    private EventSystem         eventSystem;
-    private HexMap              HexMap;     
-    private GreedySearch        GreedyCalculator;
-    private LineRenderer        movingLineRenderer;
-    private AStartAlgorithm     AStarCalculator;   
-    private List<Vector3Int>    path;
+    private bool isLineAnimation;
+    private float animLineCounter;
+    
+    private HexMap map;
+    private AStartAlgorithm aStar;
+    private List<Vector3Int> path;
 
     private Gradient colors;
     private GradientColorKey[] graColorKeys;
     private GradientAlphaKey[] graAlKeys;
+    private LineRenderer movingLineRenderer;
 
+    public int MaxSearchLevel;
+    public int MaxMoveStep;
     public float Speed;
-    public int MaxMoveStep;    
-    public Camera CameraRaycaster;
-    public PathFindingType SearchType;
-       
-    public int CurrentMoveStep      { get; private set; }
-    public bool IsMoving            { get; private set; }
-    public bool IsComparePath       { get; set; }
-    public bool IsAutoMove          { get; set; }
-    
-    public Vector3Int EndCell       { get; private set; }
-    public Vector3Int StartCell     { get; private set; }
+
+    public List<Vector3Int> OffsetMovement;
+    public int CurrentOffsetStep;
+    public bool IsOffsetMoving { get; private set; }
+
+    public int CurrentMoveStep { get; private set; }
+    public bool IsMoving { get; private set; }
+
+    public Vector3Int EndCell { get; private set; }
+    public Vector3Int StartCell { get; private set; }
+    public Vector3Int CurrentCell
+    {
+        get
+        {
+            if (map != null)
+                return map.WorldToCell(transform.position);
+            return Vector3Int.zero;
+        }
+    }
+    public CellInfomation Info { get; private set; }
 
     private void Awake()
     {
-        eventSystem = FindObjectOfType<EventSystem>();
         movingLineRenderer = GetComponent<LineRenderer>();
         movingLineRenderer.allowOcclusionWhenDynamic = true;
-       
+
         graAlKeys = new GradientAlphaKey[2];
         graColorKeys = new GradientColorKey[2];
 
@@ -67,70 +70,37 @@ public class NavAgent : MonoBehaviour
 
     private void Start()
     {
-        HexMap = HexMap.Instance;
-        AStarCalculator = AStartAlgorithm.Instance;
-        GreedyCalculator = GreedySearch.Instance;
+        map = HexMap.Instance;
 
-        IsAutoMove = true;
-        IsComparePath = false;
+        Info = new CellInfomation()
+        {
+            GameObject = gameObject,
+            Id = CellInfoManager.ID(),
+        };
+
+        aStar = new AStartAlgorithm()
+        {
+            HexMap = map,
+            MaxLevel = MaxSearchLevel,
+        };
+
+        MoveFinish();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (eventSystem.IsPointerOverGameObject()) return;
+        MoveToTarget();
 
-            Vector3 mousePos = Input.mousePosition;
-            bool raycastHitted = Physics.Raycast(
-                CameraRaycaster.ScreenPointToRay(mousePos),
-                out RaycastHit hitInfo,
-                int.MaxValue);
-
-            if (raycastHitted)
-            {
-                Vector3Int selectCell = HexMap.WorldToCell(hitInfo.point);
-                if (!HexMap.IsValidCell(selectCell.x, selectCell.y)) return;
-
-                EndCell = selectCell;
-                StartCell = HexMap.WorldToCell(transform.position);
-
-                FindPath();
-            }
-        }
-
-        if (IsAutoMove)
-        {
-            MoveToTarget(SearchType);
-        }
+        MoveFollowOffset();
 
         AnimationLine();
     }
 
-    private void FindPath()
+    private void InitLineRenderer()
     {
-        if (CurrentMoveStep >= MaxMoveStep || (path != null && path.Count == 0))
-        {
-            CurrentMoveStep = 0;
-        }
-        switch (SearchType)
-        {
-            case PathFindingType.AStar:
-                IsMoving = AStarCalculator.FindPath(StartCell, EndCell);
-                path = AStarCalculator.Path;
-
-                if (IsComparePath) GreedyCalculator.FindPath(StartCell, EndCell);
-                break;
-            case PathFindingType.Greedy:
-                IsMoving = GreedyCalculator.FindPath(StartCell, EndCell);
-                path = GreedyCalculator.Path;
-
-                if (IsComparePath) AStarCalculator.FindPath(StartCell, EndCell);
-                break;
-        }
         if (IsMoving)
         {
-            RefreshLineRenderer(SearchType);
+            RefreshLineRenderer();
         }
         else
         {
@@ -144,11 +114,12 @@ public class NavAgent : MonoBehaviour
         {
             if (path.Count > 0)
             {
-                Vector3 currentTarget = HexMap.CellToWorld(path[path.Count - 1]);
+                Vector3 currentTarget = map.CellToWorld(path[path.Count - 1]);
                 transform.position = Vector3.MoveTowards(
                     current: transform.position,
                     target: currentTarget,
                     maxDistanceDelta: Time.deltaTime * Speed);
+
                 if ((transform.position - currentTarget).magnitude <= 0.1f)
                 {
                     path.RemoveAt(path.Count - 1);
@@ -158,6 +129,7 @@ public class NavAgent : MonoBehaviour
             else
             {
                 IsMoving = false;
+                MoveFinish();
             }
         }
     }
@@ -168,7 +140,7 @@ public class NavAgent : MonoBehaviour
         {
             if (path.Count > 0)
             {
-                Vector3 currentWayPoint = HexMap.CellToWorld(path[0]);
+                Vector3 currentWayPoint = map.CellToWorld(path[0]);
                 transform.position = Vector3.MoveTowards(transform.position, currentWayPoint, Time.deltaTime * Speed);
                 if ((currentWayPoint - transform.position).magnitude <= 0.1f)
                 {
@@ -183,21 +155,17 @@ public class NavAgent : MonoBehaviour
         }
     }
 
-    private void MoveToTarget(PathFindingType type)
+    private void MoveToTarget()
     {
-        if (MaxMoveStep - 1 < CurrentMoveStep && path != null) path.Clear();
-        switch (type)
+        if (MaxMoveStep - 1 < CurrentMoveStep || (path != null && path.Count == 0))
         {
-            case PathFindingType.AStar:
-                AStarMoveToTarget();
-                break;
-            case PathFindingType.Greedy:
-                GreedyMoveToTarget();
-                break;
+            path.Clear();
         }
+        AStarMoveToTarget();
     }
 
-    private void RefreshLineRenderer(PathFindingType type)
+    #region Draw Line
+    private void RefreshLineRenderer()
     {
         if (path != null)
         {
@@ -205,14 +173,7 @@ public class NavAgent : MonoBehaviour
             movingLineRenderer.positionCount = count;
             for (int i = 0; i < count; i++)
             {
-                if (type == PathFindingType.AStar)
-                {
-                    movingLineRenderer.SetPosition(count - i - 1, HexMap.CellToWorld(path[count - i - 1]));
-                }
-                else
-                {
-                    movingLineRenderer.SetPosition(count - i - 1, HexMap.CellToWorld(path[i]));
-                }
+                movingLineRenderer.SetPosition(count - i - 1, map.CellToWorld(path[count - i - 1]).AddY(0.2f));
             }
         }
     }
@@ -261,7 +222,7 @@ public class NavAgent : MonoBehaviour
     {
         movingLineRenderer.positionCount = 2;
         movingLineRenderer.SetPosition(0, transform.position);
-        movingLineRenderer.SetPosition(1, HexMap.CellToWorld(EndCell));
+        movingLineRenderer.SetPosition(1, map.CellToWorld(EndCell));
         CalculateGradiantColor();
         isLineAnimation = true;
     }
@@ -279,10 +240,92 @@ public class NavAgent : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    public void ClearPath()
+    private bool FindPath(Vector3Int start, Vector3Int end)
     {
-        movingLineRenderer.positionCount = 0;
-        CurrentMoveStep = MaxMoveStep;
+        StartCell = start;
+        EndCell = end;
+        if (CurrentMoveStep >= MaxMoveStep || (path != null && path.Count == 0))
+        {
+            CurrentMoveStep = 0;
+        }
+
+        IsMoving = aStar.FindPath(StartCell.ZToZero(), EndCell.ZToZero());
+        path = aStar.Path;
+        InitLineRenderer();
+        return IsMoving;
     }
+
+    private void MoveFinish()
+    {
+        Vector3Int currentCell = map.WorldToCell(transform.position).ZToZero();
+        if (!CellInfoManager.Instance.AddToDict(currentCell, Info))
+        {
+            if (BreathFirstSearch.Instance.GetNearestCell(currentCell, out Vector3Int result))
+            {
+                FindPath(currentCell, result);
+                CurrentMoveStep = 0;
+            }
+        }
+    }
+
+    public void StartMove(Vector3Int start, Vector3Int end)
+    {
+        if (IsMoving == false)
+        {
+            CellInfoManager.Instance.RemoveDict(start);
+        }
+        FindPath(start, end);
+    }
+
+    private void MoveFollowOffset()
+    {
+        if (IsOffsetMoving)
+        {
+            if (CurrentOffsetStep < OffsetMovement.Count)
+            {
+                Vector3 currentTarget = map.CellToWorld(OffsetMovement[CurrentOffsetStep]);
+                transform.position = Vector3.MoveTowards(
+                    current: transform.position,
+                    target: currentTarget,
+                    maxDistanceDelta: Time.deltaTime * Speed);
+
+                if ((transform.position - currentTarget).magnitude <= 0.1f)
+                {
+                    CurrentOffsetStep++;
+                }
+            }
+            else
+            {
+                IsOffsetMoving = false;
+                MoveFinish();
+            }
+        }
+    }
+
+    public void StartMove()
+    {
+        CurrentOffsetStep = 0;
+        IsOffsetMoving = true;
+        if (OffsetMovement.Count > 0)
+        {
+            CellInfoManager.Instance.RemoveDict(map.WorldToCell(transform.position).ZToZero());
+            transform.position = map.CellToWorld(OffsetMovement[0]);
+        }
+    }
+
+    private void Dead()
+    {
+        if(!IsMoving)
+        {
+            CellInfoManager.Instance.RemoveDict(map.WorldToCell(transform.position).ZToZero());
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Dead();
+    }
+
 }

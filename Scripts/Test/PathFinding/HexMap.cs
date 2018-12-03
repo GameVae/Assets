@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class HexMap : MonoBehaviour
@@ -34,20 +33,22 @@ public class HexMap : MonoBehaviour
         else Destroy(Instance.gameObject);
     }
 
-    public int ConvertToIndex(int x,int y)
+    public int ConvertToIndex(int x, int y)
     {
         return y * TotalCol + x;
     }
 
     public Vector3Int ConvertToVector3Int(int index)
     {
-        Vector3Int result = Vector3Int.one * -1;
+        Vector3Int result = Vector3Int.zero;
         result.x = index % TotalCol;
         result.y = index / TotalCol;
+
+        if (IsValidCell(result.x, result.y)) return Vector3Int.one * -1;
         return result;
     }
 
-    public Vector3Int[] GetNeigboursPosition(Vector3Int cell)
+    public Vector3Int[] GetNeighbours(Vector3Int cell)
     {
         List<Vector3Int> neighbours = new List<Vector3Int>();
         Vector3Int neighbour;
@@ -56,6 +57,23 @@ public class HexMap : MonoBehaviour
         {
             neighbour = pattern[i] + cell;
             if (IsValidCell(neighbour.x, neighbour.y))
+            {
+                neighbours.Add(neighbour);
+            }
+        }
+        return neighbours.ToArray();
+    }
+
+    public Vector3Int[] GetNeighboursEmpty(Vector3Int cell)
+    {
+        List<Vector3Int> neighbours = new List<Vector3Int>();
+        Vector3Int neighbour;
+        Vector3Int[] pattern = (cell.y % 2 == 0) ? HexaPatternEven1 : HexaPatternOdd1;
+        for (int i = 0; i < pattern.Length; i++)
+        {
+            neighbour = pattern[i] + cell;
+            if (IsValidCell(neighbour.x, neighbour.y) &&
+                !CellInfoManager.Instance.ContainsKey(neighbour.ZToZero()))
             {
                 neighbours.Add(neighbour);
             }
@@ -75,6 +93,8 @@ public class HexMap : MonoBehaviour
 
     public Vector3Int WorldToCell(Vector3 position)
     {
-        return HexGrid.WorldToCell(position);
+        if (HexGrid != null)
+            return HexGrid.WorldToCell(position);
+        return Vector3Int.zero;
     }
 }

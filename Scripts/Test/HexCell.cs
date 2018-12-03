@@ -1,9 +1,11 @@
 ﻿
+using UnityEngine;
+
 public class HexCell
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public HexCell Parent { get; set; }
+    public int X            { get; set; }
+    public int Y            { get; set; }
+    public HexCell Parent   { get; set; }
 
     public bool IsUsing { get; set; }
 
@@ -19,12 +21,15 @@ public class PoolHexCell
 {
     public static PoolHexCell Instance = new PoolHexCell();
 
-    private const int MaxSize = 500;
+    private const int MaxSize = 1000;
 
     private HexCell[] pool;
 
+    public int RetainingEmpty { get; private set; }
+
     private PoolHexCell()
     {
+        RetainingEmpty = 0;
         pool = new HexCell[MaxSize];
         for (int i = 0; i < pool.Length; i++)
         {
@@ -33,12 +38,13 @@ public class PoolHexCell
         }
     }
 
-    public HexCell GetCell(int initX, int initY)
+    public HexCell CreateCell(int initX, int initY)
     {
         for (int i = 0; i < pool.Length; i++)
         {
             if (!pool[i].IsUsing)
             {
+                RetainingEmpty--;
                 pool[i].X = initX;
                 pool[i].Y = initY;
                 pool[i].IsUsing = true;
@@ -52,6 +58,7 @@ public class PoolHexCell
 
     public void Reset(HexCell cell)
     {
+        RetainingEmpty++;
         cell.X = -1;
         cell.Y = -1;
         cell.Parent = null;

@@ -2,16 +2,10 @@
 using UnityEngine.UI;
 
 public class EnableAgent : MonoBehaviour
-{ 
-    public NavAgent agent;
-
+{
+    public int Index;
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(Enable);
-    }
-
-    private void Enable()
-    {
-        agent.enabled = true;
+        GetComponent<Button>().onClick.AddListener(() => AgentController.Instance.SwitchToAgent(Index));
     }
 }
