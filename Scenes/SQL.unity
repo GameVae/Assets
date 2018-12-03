@@ -256,6 +256,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1015758473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1015758474}
+  - component: {fileID: 1015758475}
+  m_Layer: 0
+  m_Name: SQLiteVersionConnection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1015758474
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1015758473}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1205642448}
+  m_Father: {fileID: 1967700693}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1015758475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1015758473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 520103603212ebc4ca45744c02d26273, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DBPath: /Data/DB/Task.sqlite
 --- !u!1 &1205642447
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,11 +320,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1205642447}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1967700693}
+  m_Father: {fileID: 1015758474}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1205642449
@@ -296,10 +338,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e5b6b4213993e47903eb811db99f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SQL: {fileID: 1967700692}
+  CurrentVersion: 
+  SQLDataConnection: {fileID: 1967700692}
+  SQLVersionConnection: {fileID: 1015758475}
+  Version: {fileID: 11400000, guid: ea77f838832acfe4aa735e36794f47dd, type: 2}
   Containers:
-  - {fileID: 11400000, guid: 638a98da46ef5c340829ad28015659ed, type: 2}
-  - {fileID: 11400000, guid: e2091ecbf0c9cc841b844da72e6ae502, type: 2}
+  - {fileID: 11400000, guid: 36e95bf0a74ebe748bc29ad269bf3f97, type: 2}
+  - {fileID: 11400000, guid: efcb1d64eb39b9f4fa943393c9455bed, type: 2}
+  ServerVersion: 1
 --- !u!1 &1967700691
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +384,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1205642448}
+  - {fileID: 1015758474}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

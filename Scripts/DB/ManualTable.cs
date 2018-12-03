@@ -7,17 +7,9 @@ using Utils;
 
 namespace ManualTable
 {
-    [CreateAssetMenu(fileName = "New Container", menuName = "SQLiteTable/Container", order = 1)]
-    public class TableContainer : ScriptableObject
-    {
-        [SerializeField] public ScriptableObject Table;
-        [SerializeField] public RowType RowType;
-    }
-
     public class ManualTableBase<T> : ScriptableObject, ITable where T : IManualRow
     {
         [SerializeField] public string TableName;
-        [SerializeField] public string Version;
         [SerializeField] public List<string> Columns;
         [SerializeField] public List<T> rows;
 
@@ -57,10 +49,9 @@ namespace ManualTable
         {
             string[] cols = Columns.ToArray();
             string colsString = SQLUtils.GetSequenceString(",", cols);
-            string valuesString = row.ValuesSequence + "," + Version;
+            string valuesString = row.ValuesSequence;
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);
-            Debug.Log(cmd);
             if (dbConnection.InsertValue(cmd))
                 rows.Add(row);
         }
@@ -70,7 +61,7 @@ namespace ManualTable
             T row = rows[index];
             string keyValuePairs = row.KeyValuePairs;
             string cmd = SQLUtils.GetUpdateCommand(TableName, index + 1, keyValuePairs);
-            Debug.Log(cmd);
+            Debug.Log(keyValuePairs + "\n" +cmd);
             dbConnection.UpdateValue(cmd);
         }
 
@@ -90,5 +81,8 @@ namespace ManualTable
 
     [CreateAssetMenu(fileName = "New MainBase Table", menuName = "SQLiteTable/MainBase", order = 2)]
     public class MainBaseTable : ManualTableBase<MainBaseRow> { }
-    
+
+    [CreateAssetMenu(fileName = "New Version Table", menuName = "SQLiteTable/Version", order = 3)]
+    public class VersionTable : ManualTableBase<VersionRow> { }
+
 }

@@ -28,7 +28,6 @@ namespace ManualTable.SQL
 
         public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, new()
         {
-            if (CheckVersion(table)) return;
             try
             {
                 DbConnection.Open();
@@ -55,7 +54,7 @@ namespace ManualTable.SQL
                             } while (reader.Read());
                         }
                     }
-
+                    DbConnection.Close();
                 }
             }
             catch (Exception e)
@@ -65,43 +64,43 @@ namespace ManualTable.SQL
             }
         }
 
-        public bool CheckVersion<T>(ManualTableBase<T> table) where T : IManualRow
-        {
-            try
-            {
-                DbConnection.Open();
-                using (IDbCommand dbCmd = DbConnection.CreateCommand())
-                {
-                    dbCmd.CommandText = string.Format("SELECT Version FROM {0} ", table.TableName);
-                    using (IDataReader reader = dbCmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            string version = reader.GetValue(0).ToString();
-                            if (version.CompareTo(table.Version) == 0)
-                            {
-                                DbConnection.Close();
-                                return true;
-                            }
-                            else
-                            {
-                                table.Version = version;
-                            }
-                        }
-                    }
-                }
-                DbConnection.Close();
-                return false;
-            }
-            catch (Exception e)
-            {
-#if UNITY_EDITOR
-                Debug.Log(e.ToString());
-#endif
-                DbConnection.Close();
-                return false;
-            }
-        }
+//        public bool CheckVersion<T>(ManualTableBase<T> table) where T : IManualRow
+//        {
+//            try
+//            {
+//                DbConnection.Open();
+//                using (IDbCommand dbCmd = DbConnection.CreateCommand())
+//                {
+//                    dbCmd.CommandText = string.Format("SELECT Version FROM {0} ", table.TableName);
+//                    using (IDataReader reader = dbCmd.ExecuteReader())
+//                    {
+//                        if (reader.Read())
+//                        {
+//                            string version = reader.GetValue(0).ToString();
+//                            //if (version.CompareTo(table.Version) == 0)
+//                            //{
+//                            //    DbConnection.Close();
+//                            //    return true;
+//                            //}
+//                            //else
+//                            //{
+//                            //   // table.Version = version;
+//                            //}
+//                        }
+//                    }
+//                }
+//                DbConnection.Close();
+//                return false;
+//            }
+//            catch (Exception e)
+//            {
+//#if UNITY_EDITOR
+//                Debug.Log(e.ToString());
+//#endif
+//                DbConnection.Close();
+//                return false;
+//            }
+//        }
 
         private void LoadColumns<T>(IDataReader reader, ManualTableBase<T> table) where T : IManualRow
         {
@@ -114,7 +113,7 @@ namespace ManualTable.SQL
         #region JSON Utilities
         public static string MakeJSONValue(string field, object value)
         {
-            if (value.GetType() == typeof(string))
+            if (value.GetType() == typeof(DBNull) || value == null || value.GetType() == typeof(string))
                 return string.Format("\"{0}\":\"{1}\"", field, value);
             else
                 return string.Format("\"{0}\":{1}", field, value);

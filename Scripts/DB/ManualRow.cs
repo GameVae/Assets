@@ -6,6 +6,7 @@ namespace ManualTable.Row
     public enum RowType
     {
         MainBase,
+        Version
     }
 
     [System.Serializable]
@@ -54,6 +55,41 @@ namespace ManualTable.Row
                                         "Required = {8}," +
                                         "Unlock = \"{9}\"",
                     Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin, TimeInt, Required, Unlock);
+                return result;
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class VersionRow : IManualRow
+    {
+        [SerializeField] public int Id;
+        [SerializeField] public string Task;
+        [SerializeField] public string Content;
+        [SerializeField] public string Comment;
+
+        public int FieldCount { get { return 4; } }
+
+        public string ValuesSequence
+        {
+            get
+            {
+                string result = "";
+                result += string.Format("{0},{1},{2},{3}",
+                    Id,Task ?? "0",Content ?? "0",Comment ?? "0");
+                return result;
+            }
+        }
+
+        public string KeyValuePairs
+        {
+            get
+            {
+                string result = "";
+                result += string.Format("Id = {0}," +
+                                        "Task = \"{1}\"," +
+                                        "Content = \"{2}\"," +
+                                        "Comment = \"{3}\"",Id,Task,Content,Comment);
                 return result;
             }
         }

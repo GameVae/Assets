@@ -12,19 +12,7 @@ MonoBehaviour:
   m_Name: InfantryUpgrade
   m_EditorClassIdentifier: Assembly-CSharp:ManualTable:MainBaseTable
   TableName: InfantryUpgrade
-  Version: 2
-  Columns:
-  - Level
-  - MightBonus
-  - FoodCost
-  - WoodCost
-  - StoneCost
-  - MetalCost
-  - TimeMin
-  - TimeInt
-  - Required
-  - Unlock
-  - Version
+  Columns: []
   rows:
   - Level: 1
     MightBonus: 20
