@@ -43,7 +43,7 @@ public class TimeControl : MonoBehaviour
         Debug.Log("LocalTimeNow: " + LocalTimeNow);
         Debug.Log("UTCTimeNow: " + UTCTimeNow);
         //2018 - 10 - 18 09:34:58
-        Debug.Log("Test Time: "+ CalcToLocalTime("null"));
+        //Debug.Log("Test Time: "+ CalcToLocalTime("null"));
        // Debug.Log("Test Mins Time: " +(CalcToLocalTime("2018 - 11 - 06 2:49:58") - LocalTimeNow).TotalSeconds);
     }
 

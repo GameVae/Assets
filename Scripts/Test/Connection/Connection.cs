@@ -25,7 +25,7 @@ public class Connection : MonoBehaviour
 
     private List<ServerInfo> serversInfo;
     private ServerInfo currentSever;
-    private SocketIOComponent socket;
+    public SocketIOComponent socket;
     private Debugger Loger;
 
     [Header("Socket IO")]
@@ -125,7 +125,7 @@ public class Connection : MonoBehaviour
     {
         serversInfo = new List<ServerInfo>
         {
-            new ServerInfo() { Name = "server1", Port = 1010, Host = "192.168.1.25" },
+            new ServerInfo() { Name = "server1", Port = 1010, Host = "192.168.1.114" },
             new ServerInfo() { Name = "server2", Port = 1010, Host = "127.0.0.1" },
             new ServerInfo() { Name = "server3", Port = 1000, Host = "192.168.1.18" },
 
