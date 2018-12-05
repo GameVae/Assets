@@ -11,9 +11,9 @@ namespace ManualTable.SQL
     {
         public SqliteConnection DbConnection { get; private set; }
 
-        private string ConnectionString;
-
         public string DBPath;
+
+        private string ConnectionString;       
 
         private void Awake()
         {

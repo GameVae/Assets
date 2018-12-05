@@ -33,33 +33,42 @@ namespace ManualTable.Loader
             return (T)data;
         }
 
+
+        private void LoadTables()
+        {
+            for (int i = 0; i < Containers.Length; i++)
+            {
+                Load(Containers[i].RowType, Containers[i].Table);
+            }
+        }
+
+        private bool CheckVersion(out VersionRow versionTask)
+        {
+            Load(RowType.Version, Version);
+            versionTask = Version.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            return versionTask == null ? true : (versionTask.Content.CompareTo(ServerVersion) != 0);
+        }
+
         private void Awake()
         {
             VersionRow version = Version.rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             CurrentVersion = version?.Content;
-            Debug.Log("Task:" + version?.Task + "-" + CurrentVersion);
         }
-
         
         private void Start()
         {
-            float startTime = Time.realtimeSinceStartup;
 
-            Load(RowType.Version, Version);
-            VersionTable taskTable = Cast<VersionTable>(Version);
-            VersionRow versionTask = taskTable.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            bool isReloadDatabase = versionTask == null ? true : (versionTask.Content.CompareTo(ServerVersion) != 0);
+            bool isReloadDatabase = CheckVersion(out VersionRow versionTask);
             if (isReloadDatabase)
             {
-                for (int i = 0; i < Containers.Length; i++)
+                if (versionTask != null)
                 {
-                    Load(Containers[i].RowType, Containers[i].Table);
+                    versionTask.Content = ServerVersion;
+                    Version.SQLUpdate(SQLVersionConnection.DbConnection,Version.rows.IndexOf(versionTask));
                 }
-                versionTask.Content = ServerVersion;
-                Version.SQLUpdate(SQLDataConnection.DbConnection,0);
-            }
 
-            Debug.Log("Load done: " + (Time.realtimeSinceStartup - startTime));
+                LoadTables();
+            }
         }
     }
 }

@@ -56,12 +56,11 @@ namespace ManualTable
                 rows.Add(row);
         }
 
-        public void SQLUpdate(IDbConnection dbConnection, int index)
+        public void SQLUpdate(IDbConnection dbConnection, int rowID)
         {
-            T row = rows[index];
+            T row = rows[rowID];
             string keyValuePairs = row.KeyValuePairs;
-            string cmd = SQLUtils.GetUpdateCommand(TableName, index + 1, keyValuePairs);
-            Debug.Log(keyValuePairs + "\n" +cmd);
+            string cmd = SQLUtils.GetUpdateCommand(TableName, rowID + 1, keyValuePairs);
             dbConnection.UpdateValue(cmd);
         }
 
@@ -71,12 +70,6 @@ namespace ManualTable
             if (dbConnection.Delete(cmd))
                 rows.RemoveAt(rowId);
         }
-
-        //public bool SQLAddColumn(IDbConnection dbConnection, string colName, string dataType, string defaultValue, bool notNull = false)
-        //{
-        //    string cmd = SQLUtils.GetGenerateColumnCommand(TableName, colName, dataType, defaultValue, notNull);
-        //    return dbConnection.AddColumn(cmd);
-        //}
     }
 
     [CreateAssetMenu(fileName = "New MainBase Table", menuName = "SQLiteTable/MainBase", order = 2)]
