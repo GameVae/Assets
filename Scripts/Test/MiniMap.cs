@@ -10,7 +10,6 @@ public class MiniMap : MonoBehaviour
         DoubleClick
     }
 
-    private List<uint> buildingIndex;
     private bool onMiniMap;
     private bool isClosing;
     private float closeCounter;
@@ -111,24 +110,17 @@ public class MiniMap : MonoBehaviour
    
     private bool TrySetNavOnBuild(Rect area, out Vector3Int cell)
     {
-        cell = Vector3Int.zero;
-        if (buildingIndex == null)
+        List<Vector3Int> buildingCell = CellInfoManager.Instance.BuildingCell;
+        for (int i = 0; i < buildingCell.Count ; i++)
         {
-            buildingIndex = BuiltCellContainer.Instance.BuildingIndex;
-        }
-        for (int i = 0; i < buildingIndex.Count; i++)
-        {
-            bool boolResult = BuiltCellContainer.Instance.Convert1DTo2D(buildingIndex[i], out Vector3Int result);
-            if (boolResult)
+            Vector3 miniMapPos = CellToMiniMap(buildingCell[i]);
+            if (area.Contains((Vector2)miniMapPos))
             {
-                Vector3 miniMapPos = CellToMiniMap(result);
-                if (area.Contains((Vector2)miniMapPos))
-                {
-                    cell = result;
-                    return BuiltCellContainer.Instance.TrySetIndexOnBuild(result,out Vector3Int cellResult);
-                }
+                cell = buildingCell[i];
+                return true;
             }
         }
+        cell = Vector3Int.one * -1;
         return false;
     }
 
@@ -142,21 +134,13 @@ public class MiniMap : MonoBehaviour
 
     private void SetupBuildingIcon()
     {
-        if (buildingIndex == null)
+        List<Vector3Int> buildingCell = CellInfoManager.Instance.BuildingCell;
+        for (int i = 0; i < buildingCell.Count; i++)
         {
-            buildingIndex = BuiltCellContainer.Instance.BuildingIndex;
-        }
-        for (int i = 0; i < buildingIndex.Count; i++)
-        {
-            bool boolResult = BuiltCellContainer.Instance.Convert1DTo2D(buildingIndex[i], out Vector3Int result);
-            if (boolResult)
-            {
-                Vector3 miniMapPos = CellToMiniMap(result);
-                GameObject build = Instantiate(BuildingIcon, MiniMapImage);
-                build.SetActive(true);
-                build.GetComponent<RectTransform>().position = miniMapPos;
-
-            }
+            Vector3 miniMapPos = CellToMiniMap(buildingCell[i]);
+            GameObject build = Instantiate(BuildingIcon, MiniMapImage);
+            build.SetActive(true);
+            build.GetComponent<RectTransform>().position = miniMapPos;
         }
     }
 
@@ -178,7 +162,6 @@ public class MiniMap : MonoBehaviour
             }
             if (SelectType == SelectPointType.Auto)
             {
-                //cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));
                 StartClose();
             }
             else if (SelectType == SelectPointType.DoubleClick)
@@ -189,8 +172,7 @@ public class MiniMap : MonoBehaviour
                 }
                 else if ((MapSelectIcon.Rectangle.Contains(CellToMiniMap(selectedCell)) &&
                     MapSelectIcon.Rectangle.Contains(CellToMiniMap(preSelectedCell))))
-                {
-                    //cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));                    
+                {                   
                     Close();
                 }
                 preSelectedCell = selectedCell;

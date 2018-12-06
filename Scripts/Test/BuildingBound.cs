@@ -2,18 +2,25 @@
 
 public class BuildingBound : MonoBehaviour
 {
-    public bool IsExpand;
-    public Vector3Int CellPosision;
+    private Grid grid;
+    private CellInfomation cellInfo;
 
-    public Grid grid;
+    public bool IsExpand;
+    public Vector3Int CellPosision;   
 
     private void Awake()
     {
+        grid = FindObjectOfType<Grid>();
         transform.position = grid.CellToWorld(CellPosision);
+        cellInfo = new CellInfomation()
+        {
+            GameObject = gameObject,
+            Id = CellInfoManager.ID(),
+        };
     }
     private void Start()
     {
-        BuiltCellContainer.Instance.AddBuiltCell(this, IsExpand);
+        CellInfoManager.Instance.AddBuilding(grid.WorldToCell(transform.position).ZToZero(), cellInfo, IsExpand);
     }
 
     [ContextMenu("Set Position")]
