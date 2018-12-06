@@ -25,7 +25,7 @@ public class Connection : MonoBehaviour
 
     private List<ServerInfo> serversInfo;
     private ServerInfo currentSever;
-    public SocketIOComponent socket;
+    public SocketIOComponent Socket;
     private Debugger Loger;
 
     [Header("Socket IO")]
@@ -60,7 +60,7 @@ public class Connection : MonoBehaviour
         get { return currentSever; }
     }
 
-    public SocketIOComponent Socket { get => socket; set => socket = value; }
+   // public SocketIOComponent Socket { get => socket; set => socket = value; }
 
     #endregion
     private void Awake()
@@ -73,11 +73,11 @@ public class Connection : MonoBehaviour
         IsServerClosed = false;
         IsConnected = false;
         // init socket
-        socket = Instantiate(IOPrefab).GetComponent<SocketIOComponent>();
-        defaultUrl = socket.url;
+        Socket = Instantiate(IOPrefab).GetComponent<SocketIOComponent>();
+        defaultUrl = Socket.url;
         CreateUrl(ref url);
-        socket.url = url;
-        socket.gameObject.SetActive(true);
+        Socket.url = url;
+        Socket.gameObject.SetActive(true);
         RegisterListener();
 
         // UI
@@ -107,10 +107,10 @@ public class Connection : MonoBehaviour
     }
     private void RegisterListener()
     {
-        if (socket != null)
+        if (Socket != null)
         {
-            socket.socket.OnClose += OnServerClose;
-            socket.On("connection", OnConnection);
+            Socket.socket.OnClose += OnServerClose;
+            Socket.On("connection", OnConnection);
         }
     }
     private void Reconnection()
@@ -134,9 +134,9 @@ public class Connection : MonoBehaviour
     private void CreateNewSocket()
     {
         CreateUrl(ref url);
-        socket = Instantiate(IOPrefab).GetComponent<SocketIOComponent>();
-        socket.url = url;
-        socket.gameObject.SetActive(true);
+        Socket = Instantiate(IOPrefab).GetComponent<SocketIOComponent>();
+        Socket.url = url;
+        Socket.gameObject.SetActive(true);
         RegisterListener();
     }
     #region Request to server
@@ -170,18 +170,18 @@ public class Connection : MonoBehaviour
             if (firstConnect)
             {
                 Debug.Log(Loger);
-                Loger.Log("Connecting ..." + socket.url);
+                Loger.Log("Connecting ..." + Socket.url);
                 firstConnect = false;
-                socket.Connect();
+                Socket.Connect();
             }
             yield return new WaitForSecondsRealtime(0.5f);
             elapsedTime += 0.5f;
             if (elapsedTime > TimeOut)
             {
                 Loger.Log("Time out");
-                socket.Close();
-                Destroy(socket.gameObject);
-                socket = null;
+                Socket.Close();
+                Destroy(Socket.gameObject);
+                Socket = null;
                 UpToNextServer();
                 StartCoroutine(ForwardToServer());
                 yield break;
@@ -199,18 +199,18 @@ public class Connection : MonoBehaviour
             if (firstConnect)
             {
                 CreateNewSocket();
-                socket.Connect();
-                Loger.Log("Forwarding ..." + socket.url);
+                Socket.Connect();
+                Loger.Log("Forwarding ..." + Socket.url);
                 firstConnect = false;
             }
             yield return new WaitForSecondsRealtime(0.5f);
             elapsedTime += 0.5f;
             if (elapsedTime > TimeOut)
             {
-                socket.Close();
-                Loger.Log("Timeout: forward to " + socket.url + " fail !");
-                Destroy(socket.gameObject);
-                socket = null;
+                Socket.Close();
+                Loger.Log("Timeout: forward to " + Socket.url + " fail !");
+                Destroy(Socket.gameObject);
+                Socket = null;
 
                 // reset and forward next server
                 firstConnect = true;
@@ -235,31 +235,31 @@ public class Connection : MonoBehaviour
         bool firstConnect = true;
         serverIndex = 0;
         reconnectCountInCurrentServer = 0;
-        if (socket != null)
+        if (Socket != null)
         {
-            Destroy(socket.gameObject);
-            socket = null;
+            Destroy(Socket.gameObject);
+            Socket = null;
         }
         do
         {
             if (firstConnect)
             {
                 CreateNewSocket();
-                socket.Connect();
+                Socket.Connect();
                 firstConnect = false;
                 reconnectCountInCurrentServer++;
-                Loger.Log("Reconnecting ..." + socket.url + " | Times: " + reconnectCountInCurrentServer);
+                Loger.Log("Reconnecting ..." + Socket.url + " | Times: " + reconnectCountInCurrentServer);
             }
             yield return new WaitForSecondsRealtime(0.5f);
             elapsedTime += 0.5f;
             if (elapsedTime > TimeOut)
             {
-                if (socket != null)
+                if (Socket != null)
                 {
                     // Loger.Log("Timeout: reconnect to " + socket.url + " fail !");
-                    socket.Close();
-                    Destroy(socket.gameObject);
-                    socket = null;
+                    Socket.Close();
+                    Destroy(Socket.gameObject);
+                    Socket = null;
                 }
 
                 // reset and forward next server

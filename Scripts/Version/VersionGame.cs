@@ -1,43 +1,27 @@
-﻿using System.Collections;
+﻿using SocketIO;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class VersionGame : MonoBehaviour
 {
-    public static VersionGame instance;
-    [SerializeField]
-    private int versionInt;
-    public GameObject WaitPanel;
 
-    public int VersionInt
+    public SocketIOComponent Socket;
+
+    void Start()
     {
-        get
-        {
-            versionInt = 1;
-            if (PlayerPrefs.HasKey("Version"))
-            {
-                versionInt = PlayerPrefs.GetInt("Version");
-            }
-            return versionInt;
-        }
+        Dictionary<string, string> data = new Dictionary<string, string>();
+
+        //data["Version"] = ;
         
-        set
-        {
-            
-            if (PlayerPrefs.GetInt("Version") != value)
-            {
-                versionInt = value;
-                PlayerPrefs.SetInt("Version", value);
 
-                WaitPanel.SetActive(false);
-            }            
-        }       
+        Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
+        Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
     }
 
-    void Awake()
+    private void R_CHECK_VERSION(SocketIOEvent obj)
     {
-      //  instance = this;
-        versionInt = VersionInt;
+        Debug.Log("R_CHECK_VERSION: "+obj);
     }
-
 }
