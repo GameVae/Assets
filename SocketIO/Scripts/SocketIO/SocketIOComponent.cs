@@ -96,30 +96,15 @@ namespace SocketIO
 
         public void Awake()
         {
-            
-           GetConnect();
-
-
-#if SOCKET_IO_DEBUG
-			if(debugMethod == null) { debugMethod = Debug.Log; };
-#endif
-        }
-
-        public void GetConnect()
-        {
             encoder = new Encoder();
             decoder = new Decoder();
             parser = new Parser();
             handlers = new Dictionary<string, List<Action<SocketIOEvent>>>();
-           // handlers= SocketData.instance.Handlers;
-             ackList = new List<Ack>();
+            ackList = new List<Ack>();
             sid = null;
             packetId = 0;
-            //string wsUrl = "ws://" + Ip + ":" + PortConnect + "/socket.io/?EIO=4&transport=websocket";
-            //Debug.Log(wsUrl);
+
             ws = new WebSocket(url);
-            //ws = new WebSocket(wsUrl);
-            //Debug.Log(PortConnect);
             ws.OnOpen += OnOpen;
             ws.OnMessage += OnMessage;
             ws.OnError += OnError;
@@ -136,7 +121,7 @@ namespace SocketIO
         }
         public void Start()
         {
-          
+
             if (autoConnect) { Connect(); }
         }
 
@@ -211,7 +196,7 @@ namespace SocketIO
 
         public void On(string ev, Action<SocketIOEvent> callback)
         {
-            Debug.Log(handlers);
+            //Debug.Log(handlers);
             if (!handlers.ContainsKey(ev))
             {
                 handlers[ev] = new List<Action<SocketIOEvent>>();
@@ -319,6 +304,7 @@ namespace SocketIO
                     if (!thPong)
                     {
                         webSocket.Close();
+                        Debug.Log("Lose connect");
                     }
 
                     Thread.Sleep(intervalMilis);

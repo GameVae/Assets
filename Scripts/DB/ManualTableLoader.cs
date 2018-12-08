@@ -46,7 +46,8 @@ namespace ManualTable.Loader
         {
             Load(RowType.Version, Version);
             versionTask = Version.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            return versionTask == null ? true : (versionTask.Content.CompareTo(ServerVersion) != 0);
+            // return versionTask == null ? true : (versionTask.Content.CompareTo(ServerVersion) != 0);
+            return CurrentVersion.CompareTo(ServerVersion) == 0;
         }
 
         private void Awake()
@@ -66,7 +67,6 @@ namespace ManualTable.Loader
                     versionTask.Content = ServerVersion;
                     Version.SQLUpdate(SQLVersionConnection.DbConnection,Version.rows.IndexOf(versionTask));
                 }
-
                 LoadTables();
             }
         }

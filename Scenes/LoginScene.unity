@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -284,7 +284,6 @@ GameObject:
   m_Component:
   - component: {fileID: 56121114}
   - component: {fileID: 56121115}
-  - component: {fileID: 56121116}
   - component: {fileID: 56121118}
   m_Layer: 0
   m_Name: SystemSocket
@@ -292,7 +291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &56121114
 Transform:
   m_ObjectHideFlags: 0
@@ -312,31 +311,19 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 56121113}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 961346d7e16a445ff93777573e78efd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   url: ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket
-  autoConnect: 1
-  Ip: 192.168.1.16
+  autoConnect: 0
+  Ip: 192.168.1.44
   PortConnect: 1010
-  reconnectDelay: 5
+  reconnectDelay: 2
   ackExpirationTime: 1800
-  pingInterval: 25
-  pingTimeout: 60
---- !u!114 &56121116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 56121113}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58205748e323d0b42abe78e604c5d4ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SocketIO: {fileID: 0}
+  pingInterval: 1
+  pingTimeout: 10
 --- !u!114 &56121118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &76850890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,8 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ab4c9725f0caa847a5842c56b6b495e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  versionInt: 0
-  WaitPanel: {fileID: 1221747762}
+  Connection: {fileID: 77327102}
 --- !u!4 &76850891
 Transform:
   m_ObjectHideFlags: 0
@@ -431,15 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236b986a5f7921d4290ff0b9c24984ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  socket: {fileID: 56121115}
-  ConnectingServer: 
-  ConnectingPort: 0
-  ConnectingHost: 
-  TimeOut: 2
-  MaxReconnect: 2
-  MaxReconnectPerSever: 3
-  IOPrefab: {fileID: 100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-  connectButton: {fileID: 2071038750}
+  SocketComponent: {fileID: 56121115}
 --- !u!4 &77327103
 Transform:
   m_ObjectHideFlags: 0
@@ -704,10 +682,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 452, y: -34.99997}
-  m_SizeDelta: {x: 92, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 92, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &119098724
 MonoBehaviour:
@@ -1971,7 +1949,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 44}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &293915253
 MonoBehaviour:
@@ -11477,10 +11455,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 296, y: -34.99997}
-  m_SizeDelta: {x: 160, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811100653
 MonoBehaviour:
@@ -12389,10 +12367,10 @@ RectTransform:
   m_Father: {fileID: 839079705}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 574, y: -34.99997}
-  m_SizeDelta: {x: 92, y: 59.99994}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 92, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1958919979
 MonoBehaviour:
