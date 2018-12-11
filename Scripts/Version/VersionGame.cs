@@ -10,27 +10,20 @@ using Utils;
 
 public class VersionGame : MonoBehaviour
 {
-    public static VersionGame instance;
+    public static VersionGame Instance;
     public Connection Connection;
     public ManualTableLoader Loader;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
-    void Start()
+    private void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
     }
-
-    public void S_CHECK_VERSION()
-    {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Version"] = "1";
-        Connection.Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
-    }
-
+  
     private void R_CHECK_VERSION(SocketIOEvent obj)
     {
         //Debug.Log("Recieve data version");
@@ -73,5 +66,12 @@ public class VersionGame : MonoBehaviour
 
         Loader.InitSQLConnection();
         Loader.ReloadData();        
+    }
+
+    public void S_CHECK_VERSION()
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        data["Version"] = "1";
+        Connection.Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
     }
 }

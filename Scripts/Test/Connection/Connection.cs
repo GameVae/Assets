@@ -6,7 +6,7 @@ using WebSocketSharp;
 
 public class Connection : MonoBehaviour
 {
-    public static Connection instance;
+    public static Connection Instance;
 
     public SocketIOComponent SocketComponent;
 
@@ -31,13 +31,12 @@ public class Connection : MonoBehaviour
     public float PingTimeOut { get { return SocketComponent.pingTimeout; } }
 
     private volatile float pingElapsed;
-
     private Decoder decoder;
     private Thread timer;
 
     private void Awake()
     {
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
         decoder = new Decoder();
     }
 
@@ -65,18 +64,6 @@ public class Connection : MonoBehaviour
         StartCoroutine("CheckVersion");
     }
 
-    private IEnumerator CheckVersion()
-    {
-        while (!IsServerConnected)
-        {
-            yield return null;
-        }
-
-        Debug.Log("Server: " + IsServerConnected);
-        VersionGame.instance.S_CHECK_VERSION();
-        yield break;
-    }
-
     private void Update()
     {
         if (!IsClose)
@@ -89,6 +76,24 @@ public class Connection : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        timer.Abort();
+        SocketComponent.Close();
+    }
+
+    private IEnumerator CheckVersion()
+    {
+        while (!IsServerConnected)
+        {
+            yield return null;
+        }
+
+        Debug.Log("Server: " + IsServerConnected);
+        VersionGame.Instance.S_CHECK_VERSION();
+        yield break;
+    }
+
     private void OnMessage(object sender, MessageEventArgs e)
     {
         Packet packet = decoder.Decode(e);
@@ -98,11 +103,5 @@ public class Connection : MonoBehaviour
                 pingElapsed = 0;
                 break;
         }
-    }
-
-    private void OnApplicationQuit()
-    {
-        timer.Abort();
-        SocketComponent.Close();
     }
 }

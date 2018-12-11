@@ -16,7 +16,46 @@ namespace ManualTable.Loader
         public SQLiteManualConnection SQLDataConnection;
         public SQLiteManualConnection SQLVersionConnection;
         public VersionTable Version;
-        public TableContainer[] Containers;
+        public TableContainer[] Containers;    
+
+        private void Awake()
+        {
+            versionTask = Version.rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            CurrentVersion = versionTask?.Content;
+        }
+
+        private void Start()
+        {
+            SQLVersionConnection.Init();
+        }
+
+        private void OnApplicationQuit()
+        {
+            SQLDataConnection.Dispose();
+            SQLVersionConnection.Dispose();
+
+            System.GC.Collect(2, System.GCCollectionMode.Forced);
+            System.GC.WaitForPendingFinalizers();
+        }
+
+        private void LoadTables()
+        {
+            for (int i = 0; i < Containers.Length; i++)
+            {
+                Load(Containers[i].RowType, Containers[i].Table);
+            }
+        }
+
+        private bool CheckVersion(ref VersionRow versionTask)
+        {
+            if (versionTask == null)
+                Load(RowType.Version, Version);
+
+            versionTask = Version.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            CurrentVersion = versionTask?.Content;
+            bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
+            return result;
+        }
 
         public void Load(RowType ManualRowType, ScriptableObject TableData)
         {
@@ -36,37 +75,9 @@ namespace ManualTable.Loader
             return (T)data;
         }
 
-        private void LoadTables()
-        {
-            for (int i = 0; i < Containers.Length; i++)
-            {
-                Load(Containers[i].RowType, Containers[i].Table);
-            }
-        }
-
-        private bool CheckVersion(out VersionRow versionTask)
-        {
-            Load(RowType.Version, Version);
-            versionTask = Version.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            CurrentVersion = versionTask?.Content;
-            bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
-            return result;
-        }
-
-        private void Awake()
-        {            
-            VersionRow version = Version.rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            CurrentVersion = version?.Content;
-        }
-
-        private void Start()
-        {
-            SQLVersionConnection.Init();
-        }
-
         public bool CheckVersion()
         {
-            return CheckVersion(versionTask: out versionTask);
+            return CheckVersion(versionTask: ref versionTask);
         }
 
         public void ReloadData()
@@ -91,24 +102,7 @@ namespace ManualTable.Loader
 
         public void InitSQLConnection()
         {
-            try
-            {
-                SQLDataConnection.Init();
-            }
-            catch (System.Exception ex)
-            {
-                Debug.Log(ex);
-                throw;
-            }
-        }
-
-        private void OnApplicationQuit()
-        {
-            SQLDataConnection.Dispose();
-            SQLVersionConnection.Dispose();
-            System.GC.Collect(2, System.GCCollectionMode.Forced);
-            System.GC.WaitForPendingFinalizers();
-            Debug.Log("Dispose SQL");
-        }
+            SQLDataConnection.Init();
+        }        
     }
 }

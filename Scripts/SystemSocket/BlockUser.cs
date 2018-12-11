@@ -11,7 +11,7 @@ public class BlockUser : MonoBehaviour
 
     void Start()
     {
-        socketIO = Connection.instance.Socket;
+        socketIO = Connection.Instance.Socket;
         socketIO.On("R_BLOCKED", R_BLOCKED);
     }
 

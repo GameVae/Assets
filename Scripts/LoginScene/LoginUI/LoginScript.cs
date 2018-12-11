@@ -55,7 +55,7 @@ public class LoginScript : MonoBehaviour
 
     private void Start()
     {
-        socketIO = Connection.instance.Socket;
+        socketIO = Connection.Instance.Socket;
         socketIO.On("R_LOGIN", R_LOGIN);
     }
 

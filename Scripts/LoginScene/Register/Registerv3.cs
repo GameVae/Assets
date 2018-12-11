@@ -59,7 +59,7 @@ public class Registerv3 : MonoBehaviour
         registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
         registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
-        socketIO = Connection.instance.Socket;
+        socketIO = Connection.Instance.Socket;
     }
 
     private void Start()
