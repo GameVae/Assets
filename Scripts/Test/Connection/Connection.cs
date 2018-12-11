@@ -1,4 +1,5 @@
 ﻿using SocketIO;
+using System.Collections;
 using System.Threading;
 using UnityEngine;
 using WebSocketSharp;
@@ -18,7 +19,7 @@ public class Connection : MonoBehaviour
     {
         get
         {
-            return IsClose && SocketComponent.socket.IsConnected;
+            return !IsClose && SocketComponent.socket.IsConnected;
         }
     }
 
@@ -61,6 +62,19 @@ public class Connection : MonoBehaviour
             }
         });
         timer.Start();
+        StartCoroutine("CheckVersion");
+    }
+
+    private IEnumerator CheckVersion()
+    {
+        while (!IsServerConnected)
+        {
+            yield return null;
+        }
+
+        Debug.Log("Server: " + IsServerConnected);
+        VersionGame.instance.S_CHECK_VERSION();
+        yield break;
     }
 
     private void Update()
@@ -89,11 +103,6 @@ public class Connection : MonoBehaviour
     private void OnApplicationQuit()
     {
         timer.Abort();
-    }
-
-    private void OnDestroy()
-    {
         SocketComponent.Close();
-        timer.Abort();
     }
 }

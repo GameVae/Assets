@@ -96,6 +96,9 @@ namespace SocketIO
 
         public void Awake()
         {
+            url = url.Replace("4567", PortConnect);
+            url = url.Replace("127.0.0.1", Ip);
+
             encoder = new Encoder();
             decoder = new Decoder();
             parser = new Parser();
@@ -121,7 +124,6 @@ namespace SocketIO
         }
         public void Start()
         {
-
             if (autoConnect) { Connect(); }
         }
 

@@ -7,20 +7,24 @@ using ManualTable.Interface;
 
 namespace ManualTable.SQL
 {
-    public class SQLiteManualConnection : MonoBehaviour
+    public class SQLiteManualConnection : MonoBehaviour, IDisposable
     {
         public SqliteConnection DbConnection { get; private set; }
 
         public string DBPath;
 
-        private string ConnectionString;       
+        private string ConnectionString;
 
         private void Awake()
         {
             DBPath = Application.dataPath + DBPath;
             ConnectionString = "URI=file:" + DBPath;
+            Debug.Log(DBPath);
+        }
 
-            if (File.Exists(DBPath))
+        public void Init()
+        {
+            if (DbConnection == null)
             {
                 DbConnection = new SqliteConnection(ConnectionString);
             }
@@ -53,6 +57,8 @@ namespace ManualTable.SQL
                                 table.LoadRow((T)JsonUtility.FromJson(json, typeof(T)));
                             } while (reader.Read());
                         }
+                        reader.Close();
+                        dbCmd.Dispose();
                     }
                     DbConnection.Close();
                 }
@@ -63,44 +69,6 @@ namespace ManualTable.SQL
                 Debug.Log(e.ToString());
             }
         }
-
-//        public bool CheckVersion<T>(ManualTableBase<T> table) where T : IManualRow
-//        {
-//            try
-//            {
-//                DbConnection.Open();
-//                using (IDbCommand dbCmd = DbConnection.CreateCommand())
-//                {
-//                    dbCmd.CommandText = string.Format("SELECT Version FROM {0} ", table.TableName);
-//                    using (IDataReader reader = dbCmd.ExecuteReader())
-//                    {
-//                        if (reader.Read())
-//                        {
-//                            string version = reader.GetValue(0).ToString();
-//                            //if (version.CompareTo(table.Version) == 0)
-//                            //{
-//                            //    DbConnection.Close();
-//                            //    return true;
-//                            //}
-//                            //else
-//                            //{
-//                            //   // table.Version = version;
-//                            //}
-//                        }
-//                    }
-//                }
-//                DbConnection.Close();
-//                return false;
-//            }
-//            catch (Exception e)
-//            {
-//#if UNITY_EDITOR
-//                Debug.Log(e.ToString());
-//#endif
-//                DbConnection.Close();
-//                return false;
-//            }
-//        }
 
         private void LoadColumns<T>(IDataReader reader, ManualTableBase<T> table) where T : IManualRow
         {
@@ -124,5 +92,16 @@ namespace ManualTable.SQL
             return "{" + valueString + "}";
         }
         #endregion      
+
+        public void Dispose()
+        {
+            if (DbConnection != null)
+            {
+                DbConnection.ConnectionString = "";
+                DbConnection.Close();
+                DbConnection.Dispose();
+                DbConnection = null;
+            }
+        }
     }
 }

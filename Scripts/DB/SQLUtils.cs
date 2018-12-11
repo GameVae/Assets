@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Utils
 {
-
     public static class SQLUtils
     {
 
@@ -173,9 +173,9 @@ namespace Utils
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     dbCmd.CommandText = cmd;
-                    dbCmd.ExecuteScalar();
-                    dbConnection.Close();
+                    dbCmd.ExecuteScalar();                    
                 }
+                dbConnection.Close();
                 return true;
             }
             catch (Exception e)
@@ -198,9 +198,9 @@ namespace Utils
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     dbCmd.CommandText = cmd;
-                    dbCmd.ExecuteScalar();
-                    dbConnection.Close();
+                    dbCmd.ExecuteScalar();                    
                 }
+                dbConnection.Close();
                 return true;
             }
             catch (Exception e)
@@ -223,9 +223,9 @@ namespace Utils
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     dbCmd.CommandText = cmd;
-                    dbCmd.ExecuteScalar();
-                    dbConnection.Close();
+                    dbCmd.ExecuteScalar();                    
                 }
+                dbConnection.Close();
                 return true;
             }
             catch (Exception e)
@@ -246,9 +246,9 @@ namespace Utils
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     dbCmd.CommandText = cmd;
-                    dbCmd.ExecuteScalar();
-                    dbConnection.Close();
+                    dbCmd.ExecuteScalar();                    
                 }
+                dbConnection.Close();
                 return true;
             }
             catch (Exception e)
@@ -272,7 +272,7 @@ namespace Utils
 
         public static string GetInsertCommand(string table, string cols, string values)
         {
-            return string.Format("INSERT INTO {0} ({1}) VALUES ({2})", table, cols, values);
+            return string.Format("INSERT INTO {0} ({1}) VALUES ({2}) ", table, cols, values);
         }
 
         public static string GetDeleteCommand(string table, string conditions)
@@ -305,6 +305,12 @@ namespace Utils
                 return string.Format("{0} {2} {1}", key, value, operateSign);
             else
                 return string.Format("{0} {2} \"{1}\"", key, value, operateSign);
+        }
+
+        public static string JsonToString(this string target)
+        {
+            string[] newS = Regex.Split(target,"\"");
+            return newS[1];
         }
     }
 }

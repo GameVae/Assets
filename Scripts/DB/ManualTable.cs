@@ -52,6 +52,7 @@ namespace ManualTable
             string valuesString = row.ValuesSequence;
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);
+            Debug.Log(cmd);
             if (dbConnection.InsertValue(cmd))
                 rows.Add(row);
         }
