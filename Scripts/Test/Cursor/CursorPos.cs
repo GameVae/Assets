@@ -63,7 +63,7 @@ public class CursorPos : MonoBehaviour
         tempTransform = grid.CellToWorld(cursorCellPosition);
         tempTransform.y = 1;
 
-        GetMapPosition(cursorCellPosition);
+        // GetMapPosition(cursorCellPosition);
         if ((MapPosition.x >= 0 && MapPosition.x <= 512) && (MapPosition.y >= 0 && MapPosition.y <= 512))
         {
             transform.position = tempTransform;

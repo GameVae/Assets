@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -41,13 +41,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   url: ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket
-  autoConnect: 0
-  Ip: 
-  PortConnect: 
+  autoConnect: 1
+  Ip: 192.168.1.44
+  PortConnect: 1010
   reconnectDelay: 5
   ackExpirationTime: 1800
-  pingInterval: 25
-  pingTimeout: 60
+  pingInterval: 1
+  pingTimeout: 10
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

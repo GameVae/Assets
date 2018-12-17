@@ -27,17 +27,21 @@ public class CursorController : MonoBehaviour
                 int.MaxValue);
             bool onClickUI = eventSystem.IsPointerOverGameObject();
 
+            
             if (raycastHitted && !onClickUI)
             {
                 Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
                 if(CellInfoManager.Instance.GetCellInfo(selectCell.ZToZero(),out CellInfomation result))
                 {
+                    selectCell = grid.WorldToCell(result.GameObject.transform.position);                    
                     cursorPos.updateCursor(result.GameObject.transform.position);
                 }
                 else
                 {
                     cursorPos.updateCursor(hitInfo.point);
                 }
+                cursorPos.PositionCursor.SetPosTxt(selectCell.x.ToString(), selectCell.y.ToString());
+
             }
         }
     }

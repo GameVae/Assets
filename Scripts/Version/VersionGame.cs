@@ -13,29 +13,49 @@ public class VersionGame : MonoBehaviour
     public static VersionGame Instance;
     public Connection Connection;
     public ManualTableLoader Loader;
+    public RSS_PositionJSONTable RSS_Table;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    private void Start()
+    void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
+        Connection.Socket.On("R_GET_RSS", R_GET_RSS);
+
     }
-  
+
+    public void S_GET_RSS()
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        data["Server"] = "1";
+        Connection.Socket.Emit("S_GET_RSS", new JSONObject(data));
+    }
+
+    private void R_GET_RSS(SocketIOEvent obj)
+    {
+        RSS_Table.LoadTable(obj.data["Data"]);
+    }
+
+    public void S_CHECK_VERSION()
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        data["Version"] = "1";
+        Connection.Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
+    }
+
     private void R_CHECK_VERSION(SocketIOEvent obj)
     {
-        //Debug.Log("Recieve data version");
-        //Debug.Log("R_CHECK_VERSION: " + obj.data["Version"]);
-        //Debug.Log("R_CHECK_VERSION: " + obj.data["Data"]);
-
         Loader.ServerVersion = obj.data.GetField("Version")?.ToString().JsonToString();
         if (Loader.CheckVersion())
         {
+
             // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"
             string link = obj.data["Data"]?.ToString().JsonToString();
-            string saveAt = Application.dataPath + @"\Data\DB\Infantry.sqlite";
+            string saveAt = Application.dataPath + @"\Data\Infantry.sqlite";
             try
             {
                 if (File.Exists(saveAt))
@@ -52,26 +72,24 @@ public class VersionGame : MonoBehaviour
     private void DownloadFile(string link,string saveAt)
     {
         // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"),Application.dataPath + @"\Infantry.sqlite"
-        System.Net.WebClient client = new WebClient(); 
-        client.DownloadFileAsync(new Uri(link),saveAt);
-        client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
+        WebClient client =  DownloadFileAsync.Instance.DownloadFile(link, saveAt);
+        if(client != null)
+        {
+            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChange);
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
+        }
+    }
+
+    private void DownloadProgressChange(object sender, DownloadProgressChangedEventArgs e)
+    {
+
     }
 
     private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
-    {
+    {        
         Debug.Log("Download Complete " + sender.ToString());
-        WebClient client = (WebClient)sender;
-        client.CancelAsync();
-        client.Dispose();
-
         Loader.InitSQLConnection();
-        Loader.ReloadData();        
-    }
-
-    public void S_CHECK_VERSION()
-    {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Version"] = "1";
-        Connection.Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
+        Loader.ReloadData();
+        S_GET_RSS();
     }
 }

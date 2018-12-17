@@ -9,12 +9,14 @@ public class AgentController : MonoBehaviour
     private HexMap HexMap;
     private NavAgent curAgent;
 
+    public OnOffSwitch SwitchButton;
     public Camera CameraRaycaster;
     public NavAgent[] Agents;
 
     public AStartAlgorithm  AStarCalculator { get; private set; }
     public Vector3Int StartCell { get; private set; }
     public Vector3Int EndCell { get; private set; }
+    public bool IsDisable { get; private set; }
 
     private void Awake()
     {
@@ -22,6 +24,9 @@ public class AgentController : MonoBehaviour
         else Destroy(Instance.gameObject);
        
         curAgent = Agents[0];
+
+        SwitchButton.On += On;
+        SwitchButton.Off += Off;
     }
 
     private void Start()
@@ -32,7 +37,7 @@ public class AgentController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !IsDisable)
         {
             if (eventSystem.IsPointerOverGameObject()) return;
 
@@ -69,5 +74,15 @@ public class AgentController : MonoBehaviour
             return;
         }
         curAgent = Agents[index];
+    }
+
+    private void On(OnOffSwitch onOff)
+    {
+        IsDisable = true;
+    }
+
+    private void Off(OnOffSwitch onOff)
+    {
+        IsDisable = false;
     }
 }

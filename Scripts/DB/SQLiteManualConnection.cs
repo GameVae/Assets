@@ -19,7 +19,6 @@ namespace ManualTable.SQL
         {
             DBPath = Application.dataPath + DBPath;
             ConnectionString = "URI=file:" + DBPath;
-            Debug.Log(DBPath);
         }
 
         public void Init()

@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Name: Version
   m_EditorClassIdentifier: Assembly-CSharp:ManualTable:VersionTable
   TableName: Task
-  Columns: []
-  rows: []
+  Columns:
+  - Id
+  - Task
+  - Content
+  - Comment
+  rows:
+  - Id: 1
+    Task: Version
+    Content: 0
+    Comment: 

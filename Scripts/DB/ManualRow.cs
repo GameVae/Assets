@@ -76,7 +76,7 @@ namespace ManualTable.Row
             {
                 string result = "";
                 result += string.Format("{0},{1},{2},{3}",
-                    Id,Task ?? "0",Content ?? "0",Comment ?? "0");
+                    Id, Task ?? "0", Content ?? "0", Comment ?? "0");
                 return result;
             }
         }
@@ -89,9 +89,38 @@ namespace ManualTable.Row
                 result += string.Format("Id = {0}," +
                                         "Task = \"{1}\"," +
                                         "Content = \"{2}\"," +
-                                        "Comment = \"{3}\"",Id,Task,Content,Comment);
+                                        "Comment = \"{3}\"", Id, Task, Content, Comment);
                 return result;
             }
         }
+    }
+
+    [System.Serializable]
+    public class RSS_PositionRow : IManualRow
+    {
+        [SerializeField] public int ID;
+        [SerializeField] public int RssType;
+        [SerializeField] public int Level;
+        [SerializeField] public string Position;
+        [SerializeField] public int Quality;
+        [SerializeField] public int Region_Position;
+        [SerializeField] public int ID_Player;
+        [SerializeField] public int ID_Base;
+        [SerializeField] public int ID_Unit;
+        [SerializeField] public string TimePrepare;
+        [SerializeField] public string TimeHarvestFinish;
+        [SerializeField] public string TimeRemove;
+
+        public int FieldCount
+        {
+            get
+            {
+                return 12;
+            }
+        }
+
+        public string ValuesSequence { get { return ""; } }
+
+        public string KeyValuePairs { get { return ""; } }
     }
 }
