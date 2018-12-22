@@ -50,7 +50,7 @@ public class TimeControl : MonoBehaviour
     public DateTime CalcToLocalTime(string dateInput)
     {
         DateTime retDateTime = DateTime.Parse(dateInput);
-        Debug.Log("retDateTime: " + retDateTime);
+        //Debug.Log("retDateTime: " + retDateTime);
         return retDateTime.ToLocalTime();
     }
 

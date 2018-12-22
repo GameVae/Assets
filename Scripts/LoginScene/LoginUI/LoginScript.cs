@@ -32,6 +32,7 @@ public class FirstConnect
 }
 public class LoginScript : MonoBehaviour
 {
+    public static LoginScript Instance;
     [SerializeField]
     private FirstConnect firstConnect;
     [SerializeField]
@@ -41,6 +42,9 @@ public class LoginScript : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance == null) { Instance = this; }
+        else { Destroy(gameObject); }
+
         firstConnect.LoginBtn.onClick.AddListener(() => login());
         firstConnect.ForgotPasswordBtn.onClick.AddListener(() => firstConnect.ForgotPanel.SetActive(true));
         firstConnect.CreateAccountBtn.onClick.AddListener(() => firstConnect.CreateAccountPanel.SetActive(true));
@@ -62,22 +66,16 @@ public class LoginScript : MonoBehaviour
     private void R_LOGIN(SocketIOEvent obj)
     {
         Debug.Log("R_LOGIN: " + obj);
+        int successBool = int.Parse(obj.data["LoginBool"].ToString());
     }
 
     private void login()
     {
         string UserName = firstConnect.InputUser.text.ToString();
         string Password = firstConnect.InputPassword.text.ToString();
-
         if (UserName.Length >= 6 && Password.Length >= 6)
         {
-            Dictionary<string, string> data = new Dictionary<string, string>();
-            data["name"] = UserName;
-            data["password"] = md5String(Password);
-            data["modelDevide"] = SystemInfo.deviceModel;
-            data["ramDevide"] = SystemInfo.systemMemorySize.ToString();
-            socketIO.Emit("S_LOGIN", new JSONObject(data));
-
+            S_LOGIN(UserName, Password);
             if (firstConnect.ToggleRememberAccount.isOn == true)
             {
                 PlayerPrefs.SetString("UserName", UserName);
@@ -95,12 +93,9 @@ public class LoginScript : MonoBehaviour
     }
     private void loginClick()
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        data["UserName"] = PlayerPrefs.GetString("UserName");
-        data["Password"] = md5String(PlayerPrefs.GetString("Password"));
-        data["ModelDevice"] = SystemInfo.deviceModel;
-        data["RamDevice"] = SystemInfo.systemMemorySize.ToString();
-        socketIO.Emit("S_LOGIN", new JSONObject(data));
+        string UserName = PlayerPrefs.GetString("UserName");
+        string Password = md5String(PlayerPrefs.GetString("Password"));
+        S_LOGIN(UserName, Password);
     }
     #region Encrypt Password
     private string md5String(string strToEncrypt)
@@ -123,4 +118,13 @@ public class LoginScript : MonoBehaviour
         return hashString.PadLeft(32, '0');
     }
     #endregion
+    public void S_LOGIN(string UserName, string Password)
+    {
+        Dictionary<string, string> data = new Dictionary<string, string>();
+        data["name"] = UserName;
+        data["password"] = md5String(Password);
+        data["modelDevide"] = SystemInfo.deviceModel;
+        data["ramDevide"] = SystemInfo.systemMemorySize.ToString();
+        socketIO.Emit("S_LOGIN", new JSONObject(data));
+    }
 }

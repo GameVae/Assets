@@ -90,7 +90,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -188,7 +188,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 799454760}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -292,7 +292,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &56121114
 Transform:
   m_ObjectHideFlags: 0
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 56121113}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 961346d7e16a445ff93777573e78efd6, type: 3}
   m_Name: 
@@ -357,14 +357,13 @@ GameObject:
   m_Component:
   - component: {fileID: 76850891}
   - component: {fileID: 76850890}
-  - component: {fileID: 76850892}
   m_Layer: 0
   m_Name: VersionControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &76850890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,8 +375,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ab4c9725f0caa847a5842c56b6b495e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  versionInt: 0
-  WaitPanel: {fileID: 1221747762}
+  Connection: {fileID: 77327102}
+  Loader: {fileID: 0}
+  RSS_Table: {fileID: 0}
 --- !u!4 &76850891
 Transform:
   m_ObjectHideFlags: 0
@@ -391,17 +391,6 @@ Transform:
   m_Father: {fileID: 144338315}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &76850892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 76850889}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41ab3b65c5ea16b4db8e4733f58dadda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &77327101
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,15 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236b986a5f7921d4290ff0b9c24984ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  socket: {fileID: 56121115}
-  ConnectingServer: 
-  ConnectingPort: 0
-  ConnectingHost: 
-  TimeOut: 2
-  MaxReconnect: 2
-  MaxReconnectPerSever: 3
-  IOPrefab: {fileID: 100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-  connectButton: {fileID: 2071038750}
+  SocketComponent: {fileID: 56121115}
 --- !u!4 &77327103
 Transform:
   m_ObjectHideFlags: 0
@@ -8988,7 +8969,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1402753762
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9003,10 +8984,10 @@ RectTransform:
   m_Father: {fileID: 2087659781}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -165}
-  m_SizeDelta: {x: 620, y: 90}
+  m_AnchorMin: {x: 0.25843754, y: 0.040000003}
+  m_AnchorMax: {x: 0.74256253, y: 0.15125}
+  m_AnchoredPosition: {x: -0.2199707, y: 0.5}
+  m_SizeDelta: {x: -1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402753763
 MonoBehaviour:
@@ -10557,7 +10538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1613588224
 Transform:
   m_ObjectHideFlags: 0
@@ -10577,7 +10558,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1613588223}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ddbc262fab87794eb58fcd4abe7435e, type: 3}
   m_Name: 
@@ -10609,18 +10590,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   registerUI:
-    RegisterPanel: {fileID: 0}
-    UserName: {fileID: 0}
-    Password: {fileID: 0}
-    PasswordConfirm: {fileID: 0}
-    Email: {fileID: 0}
-    WarningText: {fileID: 0}
-    WarningUserName: {fileID: 0}
-    WarningPassword: {fileID: 0}
-    WarningPasswordConfirm: {fileID: 0}
-    WarningEmail: {fileID: 0}
-    RegisterBtn: {fileID: 0}
-    CloseBtn: {fileID: 0}
+    RegisterPanel: {fileID: 2087659780}
+    UserName: {fileID: 1341078703}
+    Password: {fileID: 2070035447}
+    PasswordConfirm: {fileID: 159372321}
+    Email: {fileID: 456975073}
+    WarningText: {fileID: 1402753763}
+    WarningUserName: {fileID: 2084828836}
+    WarningPassword: {fileID: 1684505782}
+    WarningPasswordConfirm: {fileID: 1034121240}
+    WarningEmail: {fileID: 1758509798}
+    RegisterBtn: {fileID: 354906457}
+    CloseBtn: {fileID: 11303891}
 --- !u!1 &1613759878
 GameObject:
   m_ObjectHideFlags: 0

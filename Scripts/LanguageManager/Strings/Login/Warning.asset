@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Name: Warning
   m_EditorClassIdentifier: 
   Name: 'Warning '
-  Vietnamese: "Th\xF4ng Ba\u0301o "
-  English: 'Warning '
+  Vietnamese: "T\xE0i kho\u1EA3n ho\u1EB7c Email \u0111\xE3 t\u1ED3n t\u1EA1i "
+  English: Account or Email is existed
