@@ -9,7 +9,7 @@ public class AgentController : MonoBehaviour
     private HexMap HexMap;
     private NavAgent curAgent;
 
-    public OnOffSwitch SwitchButton;
+    public GUIOnOffSwitch SwitchButton;
     public Camera CameraRaycaster;
     public NavAgent[] Agents;
 
@@ -76,12 +76,12 @@ public class AgentController : MonoBehaviour
         curAgent = Agents[index];
     }
 
-    private void On(OnOffSwitch onOff)
+    private void On(GUIOnOffSwitch onOff)
     {
         IsDisable = true;
     }
 
-    private void Off(OnOffSwitch onOff)
+    private void Off(GUIOnOffSwitch onOff)
     {
         IsDisable = false;
     }

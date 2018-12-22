@@ -5,7 +5,7 @@ public class CircularParEffect : MonoBehaviour
     public float Radius;
     public float StartSize;
     public Color Color;
-    public OnOffSwitch SwitchButton;
+    public GUIOnOffSwitch SwitchButton;
 
     private ParticleSystem particle;
     private ParticleSystem.MainModule main;
@@ -25,11 +25,11 @@ public class CircularParEffect : MonoBehaviour
         SwitchButton.Off += Off;
     }
 
-    private void On(OnOffSwitch onOff)
+    private void On(GUIOnOffSwitch onOff)
     {
         particle.Play();
     }
-    private void Off(OnOffSwitch onOff)
+    private void Off(GUIOnOffSwitch onOff)
     {
         particle.Stop();
     }
