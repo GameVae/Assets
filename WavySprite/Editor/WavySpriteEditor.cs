@@ -47,7 +47,7 @@ public class WavySpriteEditor:Editor{
 			}
 		}
 		//Sorting layer dropdown
-		EditorGUI.BeginChangeCheck();
+		UnityEditor.EditorGUI.BeginChangeCheck();
 		selected=EditorGUILayout.Popup("Sorting Layer",selected,layerNames);
 		if(EditorGUI.EndChangeCheck()){
 			Undo.RecordObject(script,"Change sorting layer");
