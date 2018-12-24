@@ -5,40 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SocketIO;
 using System;
-[Serializable]
-public class RegisterUI
-{
-    public GameObject RegisterPanel;
-    [Space]
-    public InputField UserName;
-    public InputField Password;
-    public InputField PasswordConfirm;
-    public InputField Email;
-    [Space]
-    public Text WarningText;
-    [Header("Warning")]
-    public GameObject WarningUserName;
-    public GameObject WarningPassword;
-    public GameObject WarningPasswordConfirm;
-    public GameObject WarningEmail;
-    [Header("Button")]
-    public Button RegisterBtn;
-    public Button CloseBtn;
 
-    public void ClearInfo()
-    {
-        UserName.text = "";
-        Password.text = "";
-        PasswordConfirm.text = "";
-        Email.text = "";
-        WarningText.text = "";
-
-        WarningUserName.SetActive(false);
-        WarningPassword.SetActive(false);
-        WarningPasswordConfirm.SetActive(false);
-        WarningEmail.SetActive(false);
-    }
-}
 
 public class Register : MonoBehaviour
 {
@@ -48,8 +15,8 @@ public class Register : MonoBehaviour
     [SerializeField]
     private RegisterUI registerUI;
     [Space]
-    [SerializeField]
-    private MultiLangManager multiLangManager;
+    //[SerializeField]
+    //private MultiLangManager multiLangManager;
     [Space]
     private bool checkUserName = false;
     private bool checkPassword = false;
@@ -78,7 +45,7 @@ public class Register : MonoBehaviour
         switch (successBool)
         {
             case 0:
-               StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
+               //StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
               
                 break;
             case 1:
