@@ -4,9 +4,13 @@ using UnityEngine.UI;
 
 public class GUICheckMark : CustomGUI
 {
-    public bool IsShowText { get; private set; }
-    public Image MaskImage { get; private set; }
-    public TextMeshProUGUI Placeholder { get; private set; }
+    [SerializeField] [HideInInspector] Image maskImage;
+
+    public Image MaskImage
+    {
+        get { return maskImage ?? (maskImage = GetComponent<Image>()); }
+        protected set { maskImage = value; }
+    }
     public GUIOnOffSwitch OnOffSwitch;
 
     public Sprite OnSprite;
@@ -14,14 +18,13 @@ public class GUICheckMark : CustomGUI
 
     public override bool Interactable
     {
-        get { return base.Interactable; }
+        get { return interactable; }
 
         protected set
         {
             if (value) Enable();
             else Disable();
-
-            base.Interactable = value;
+            interactable = value;
         }
     }
 
@@ -41,36 +44,21 @@ public class GUICheckMark : CustomGUI
             OnOffSwitch.Image.sprite = OffSprite;
             MaskImage.color = Color.white;
         };
-        InteractableChange(true);
+
+        OnOffSwitch.InteractableChange(Interactable);
     }
 
     public override void InteractableChange(bool value)
     {
         Interactable = value;
-    }
-
-    public void PlaceholderText(string text)
-    {
-        if (Placeholder == null)
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
-        if (Placeholder != null)
-            Placeholder.text = text;
-    }
-
-    public void IsShowTextChange(bool value)
-    {
-        IsShowText = value;
-        if (Placeholder == null)
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
-        if (Placeholder != null)
-            Placeholder.enabled = value;
+        OnOffSwitch.InteractableChange(value);
     }
 
     public void SetGroup(GUIToggle group)
     {
         OnOffSwitch.On += delegate
         {
-            if(group.ActiveMark != this)
+            if (group.ActiveMark != this)
             {
                 group.ActiveMark?.OnOffSwitch.SwitchOff();
                 group.ActiveMark = this;
@@ -81,15 +69,19 @@ public class GUICheckMark : CustomGUI
 
     private void Disable()
     {
-        if (MaskImage == null)
-            MaskImage = GetComponent<Image>();
-        MaskImage.color = Color.gray;
+        if (MaskImage != null)
+        {
+            MaskImage.color = Color.gray;
+            OnOffSwitch.InteractableChange(true);
+        }
     }
 
     private void Enable()
     {
-        if (MaskImage == null)
-            MaskImage = GetComponent<Image>();
-        MaskImage.color = Color.white;
+        if (MaskImage != null)
+        {
+            MaskImage.color = Color.white;
+            OnOffSwitch.InteractableChange(false);
+        }
     }
 }

@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 224119341723523054}
   - component: {fileID: 114424794328446070}
   - component: {fileID: 114860016154994226}
+  - component: {fileID: 222813220254092004}
   m_Layer: 5
   m_Name: GUISlider
   m_TagString: Untagged
@@ -293,6 +294,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e13d06cc3acf9c4bab59b9f8b3c226f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placeholder: {fileID: 0}
+  mask: {fileID: 0}
+  maskable: 0
+  interactable: 0
+  isPlaceholder: 0
+  slider: {fileID: 0}
 --- !u!114 &114971121592351360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -333,6 +340,13 @@ CanvasRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1310542964479190}
+  m_CullTransparentMesh: 0
+--- !u!222 &222813220254092004
+CanvasRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1108775867932718}
   m_CullTransparentMesh: 0
 --- !u!222 &222850771295622864
 CanvasRenderer:

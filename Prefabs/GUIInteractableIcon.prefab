@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 114266881590370998}
   - component: {fileID: 114948992265788408}
   - component: {fileID: 114770629996748518}
+  - component: {fileID: 114318701257547144}
   m_Layer: 5
   m_Name: GUIInteractableIcon
   m_TagString: Untagged
@@ -91,6 +92,29 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114318701257547144
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1507640702478790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b66de9fa0e2cbc84391f04fa22873bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placeholder: {fileID: 0}
+  mask: {fileID: 0}
+  maskable: 0
+  interactable: 0
+  isPlaceholder: 0
+  button: {fileID: 0}
+  image: {fileID: 0}
+  OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114650756813123130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -215,6 +239,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59633893be690b543acac6a3aedabf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placeholder: {fileID: 0}
+  mask: {fileID: 0}
+  maskable: 0
+  interactable: 0
+  isPlaceholder: 0
+  button: {fileID: 0}
+  maskImage: {fileID: 0}
+  backgroundImage: {fileID: 0}
+  onOffSwitch: {fileID: 0}
 --- !u!114 &114772060953516044
 MonoBehaviour:
   m_ObjectHideFlags: 1

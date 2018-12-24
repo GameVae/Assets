@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [CustomEditor(typeof(GUIToggle))]
@@ -7,15 +8,19 @@ public class EditorToggle : Editor
 {
     private GUIToggle Owner;
 
-    private bool maskable;
-    private bool interactable;
+    public bool maskable;
+    public bool interactable;
+    public GUIToggle.ToggleType Type;
+
 
     private void OnEnable()
     {
         Owner = (GUIToggle)target;
+        Undo.RecordObject(Owner.gameObject, Owner.name);
 
         maskable = Owner.Maskable;
         interactable = Owner.Interactable;
+        Type = Owner.Type;
     }
 
     public override void OnInspectorGUI()
@@ -26,10 +31,16 @@ public class EditorToggle : Editor
             Owner.MaskableChange(maskable);
         }
 
-        interactable = EditorGUILayout.Toggle("Interactable", interactable);
+        interactable = EditorGUILayout.Toggle("Interactable", Owner.Interactable);
         if (interactable != Owner.Interactable)
         {
             Owner.InteractableChange(interactable);
+        }
+
+        Type = (GUIToggle.ToggleType)EditorGUILayout.EnumPopup(Type, GUILayout.MaxWidth(150));
+        if (Type != Owner.Type)
+        {
+            Owner.TypeChange(Type);
         }
 
         GUILayout.BeginHorizontal();
@@ -54,9 +65,13 @@ public class EditorToggle : Editor
         {
             Owner.Refresh();
         }
+        base.OnInspectorGUI();
         GUILayout.EndHorizontal();
 
-        base.OnInspectorGUI();
+        if(GUI.changed)
+        {
+            EditorUtility.SetDirty(Owner);
+        }
     }
 }
 #endif

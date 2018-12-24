@@ -15,10 +15,11 @@ public class EditorProgressSlider : Editor
     private void OnEnable()
     {
         Owner = (GUIProgressSlider)target;
+        Undo.RecordObject(Owner, Owner.name);
 
         maskable = Owner.Maskable;
         interactable = Owner.Interactable;
-        placeholder = Owner.PlaceHolder?.text;
+        placeholder = Owner.Placeholder?.text;
     }
 
     public override void OnInspectorGUI()
@@ -35,15 +36,19 @@ public class EditorProgressSlider : Editor
             Owner.InteractableChange(interactable);
         }
 
-        showPlaceholder = EditorGUILayout.Toggle("Show Placeholder", showPlaceholder);
-        if(showPlaceholder != Owner.IsShowText)
+        showPlaceholder = EditorGUILayout.Foldout(showPlaceholder, "Use Placeholder");
+        if (showPlaceholder != Owner.IsPlaceholder)
+            Owner.IsPlaceholderChange(showPlaceholder);
+        if (showPlaceholder)
         {
-            Owner.IsShowTextChange(showPlaceholder);
+            placeholder = EditorGUILayout.TextField("Placeholder", placeholder);
+            Owner.PlaceholderText(placeholder);
         }
 
-        placeholder = EditorGUILayout.TextField("Placeholder", placeholder);
-        Owner.PlaceholderText(placeholder);
-
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(Owner);
+        }
         base.OnInspectorGUI();
     }
 }

@@ -25,7 +25,6 @@ public class VersionGame : MonoBehaviour
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
         Connection.Socket.On("R_GET_RSS", R_GET_RSS);
-
     }
 
     public void S_GET_RSS()

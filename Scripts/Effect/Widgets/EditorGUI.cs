@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CustomeEditor
+namespace GUICustomInspector
 {
     public sealed class EditorGUI : MonoBehaviour
     {

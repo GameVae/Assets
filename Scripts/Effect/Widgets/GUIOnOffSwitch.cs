@@ -1,15 +1,27 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public delegate void OnOffAction(GUIOnOffSwitch onOff);
 
 [RequireComponent(typeof(Button), typeof(Image))]
-public class GUIOnOffSwitch : MonoBehaviour
+public class GUIOnOffSwitch : CustomGUI
 {
-    public Button Button { get; private set; }
-    public bool IsOn { get; private set; }
-    public Image Image { get; private set; }
+    [SerializeField, HideInInspector] private Button button;
+    [SerializeField, HideInInspector] private Image image;
+
+    public Button Button
+    {
+        get { return button ?? (button = GetComponent<Button>()); }
+        protected set { button = value; }
+    }
+    public Image Image
+    {
+        get { return image ?? (image = GetComponent<Image>()); }
+        protected set { image = value; }
+    }
+    public bool IsOn { get; protected set; }
 
     public Func<bool> CanSwitch;
     public event OnOffAction On;
@@ -21,6 +33,7 @@ public class GUIOnOffSwitch : MonoBehaviour
     {
         Button = GetComponent<Button>();
         Image = GetComponent<Image>();
+        Placeholder = GetComponentInChildren<TextMeshProUGUI>();
         Button.onClick = OnClick;
     }
 
@@ -37,7 +50,7 @@ public class GUIOnOffSwitch : MonoBehaviour
 
     private void OnOffEffect()
     {
-        if (!CanSwitch()) return;
+        if (!CanSwitch() || !Interactable) return;
         if (!IsOn)
             SwitchOn();
         else
@@ -54,5 +67,11 @@ public class GUIOnOffSwitch : MonoBehaviour
     {
         On(this);
         IsOn = true;
+    }
+
+    public override void InteractableChange(bool value)
+    {
+        Interactable = value;
+        Button.interactable = value;
     }
 }

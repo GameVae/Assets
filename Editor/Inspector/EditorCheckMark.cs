@@ -9,39 +9,46 @@ public class EditorCheckMark : Editor
 
     private bool maskable;
     private bool interactable;
-    private bool isShowText;
+    private bool showPlaceholder;
     private string placeholder;
-
 
     private void OnEnable()
     {
         Owner = (GUICheckMark)target;
-        maskable = Owner.Maskable;
+        Undo.RecordObject(Owner, Owner.name);
 
+        maskable = Owner.Maskable;
         interactable = Owner.Interactable;
+        showPlaceholder = Owner.IsPlaceholder;
+        placeholder = Owner.Placeholder?.text;
     }
 
     public override void OnInspectorGUI()
     {
-        maskable = EditorGUILayout.Toggle("Maskable", maskable);
+        maskable = EditorGUILayout.Toggle("Maskable", Owner.Maskable);
         if (maskable != Owner.Maskable)
         {
             Owner.MaskableChange(maskable);
         }
 
-        interactable = EditorGUILayout.Toggle("Interactable", interactable);
+        interactable = EditorGUILayout.Toggle("Interactable", Owner.Interactable);
         if (interactable != Owner.Interactable)
         {
             Owner.InteractableChange(interactable);
         }
 
-        isShowText = EditorGUILayout.Foldout(isShowText, "Use Placeholder");
-        if (isShowText != Owner.IsShowText)
-            Owner.IsShowTextChange(isShowText);
-        if(isShowText)
+        showPlaceholder = EditorGUILayout.Foldout(Owner.IsPlaceholder, "Use Placeholder");
+        if (showPlaceholder != Owner.IsPlaceholder)
+            Owner.IsPlaceholderChange(showPlaceholder);
+        if(showPlaceholder)
         {
             placeholder = EditorGUILayout.TextField("Placeholder", placeholder);
             Owner.PlaceholderText(placeholder);
+        }
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(Owner);
         }
         base.OnInspectorGUI();
     }

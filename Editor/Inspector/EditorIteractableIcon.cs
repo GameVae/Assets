@@ -1,25 +1,28 @@
 ﻿#if UNITY_EDITOR
-using TMPro;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [CustomEditor(typeof(GUIInteractableIcon))]
 public class EditorIteractableIcon : Editor
 {
     private GUIInteractableIcon Owner;
+    private SerializedObject serializer;
 
     private bool maskable;
     private bool interactable;
     private string placeholder;
+    private bool showPlaceholder;
 
     private void OnEnable()
     {
         Owner = (GUIInteractableIcon)target;
-        maskable = Owner.Maskable;
+        Undo.RecordObject(Owner, Owner.name);
 
+        maskable = Owner.Maskable;
         interactable = Owner.Interactable;
         placeholder = Owner.Placeholder?.text;
-        if (placeholder == null) placeholder = Owner.GetComponent<TextMeshProUGUI>().text;
+        showPlaceholder = Owner.IsPlaceholder;
     }
 
     public override void OnInspectorGUI()
@@ -36,9 +39,19 @@ public class EditorIteractableIcon : Editor
             Owner.InteractableChange(interactable);
         }
 
-        placeholder = EditorGUILayout.TextField("Placeholder", placeholder);
-        Owner.PlaceholderText(placeholder);
+        showPlaceholder = EditorGUILayout.Foldout(showPlaceholder, "Use Placeholder");
+        if (showPlaceholder != Owner.IsPlaceholder)
+            Owner.IsPlaceholderChange(showPlaceholder);
+        if (showPlaceholder)
+        {
+            placeholder = EditorGUILayout.TextField("Placeholder", placeholder);
+            Owner.PlaceholderText(placeholder);
+        }
 
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(Owner);
+        }
         base.OnInspectorGUI();
     }
 }

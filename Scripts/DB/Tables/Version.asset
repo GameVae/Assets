@@ -20,5 +20,5 @@ MonoBehaviour:
   rows:
   - Id: 1
     Task: Version
-    Content: 0
+    Content: 
     Comment: 

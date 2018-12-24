@@ -1,13 +1,51 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class CustomGUI : MonoBehaviour
 {
-    public Mask Mask { get; protected set; }
+    [SerializeField, HideInInspector] protected TextMeshProUGUI placeholder;
+    [SerializeField, HideInInspector] protected Mask mask;
+    [SerializeField, HideInInspector] protected bool maskable;
+    [SerializeField, HideInInspector] protected bool interactable;
+    [SerializeField, HideInInspector] protected bool isPlaceholder;
 
-    public bool Maskable { get; protected set; }
 
-    public virtual bool Interactable { get; protected set; }
+    public Mask Mask
+    {
+        get { return mask ?? GetComponent<Mask>(); }
+        protected set { mask = value; }
+    }
+
+    public TextMeshProUGUI Placeholder
+    {
+        get { return placeholder ?? GetComponentInChildren<TextMeshProUGUI>(); }
+        protected set { placeholder = value; }
+    }
+
+    public bool Maskable
+    {
+        get { return maskable; }
+        protected set { maskable = value; }
+    }
+
+    public bool IsPlaceholder
+    {
+        get { return isPlaceholder; }
+        set { isPlaceholder = value; }
+    }
+
+    public virtual bool Interactable
+    {
+        get { return interactable; }
+        protected set { interactable = value; }
+    }
+
+    public void PlaceholderText(string text)
+    {
+        if (Placeholder != null)
+            Placeholder.text = text;
+    }
 
     public void MaskableChange(bool value)
     {
@@ -25,6 +63,13 @@ public abstract class CustomGUI : MonoBehaviour
             if (Mask != null)
                 Mask.enabled = false;
         }
+    }
+
+    public void IsPlaceholderChange(bool value)
+    {
+        IsPlaceholder = value;
+        if (Placeholder != null)
+            Placeholder.enabled = value;
     }
 
     public abstract void InteractableChange(bool value);

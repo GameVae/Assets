@@ -5,66 +5,57 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class GUIProgressSlider : CustomGUI
 {
-    public bool IsShowText { get; private set; }
-    public Slider Slider { get; private set; }
-    public TextMeshProUGUI PlaceHolder { get; private set; }    
+    [SerializeField, HideInInspector] Slider slider;
+    public Slider Slider
+    {
+        get { return slider ?? (slider = GetComponent<Slider>()); }
+        protected set { slider = value; }
+    }
 
     public float Value
     {
-        get { return Slider.value; }
+        get { return Slider == null ? 0 : Slider.value; }
         set
         {
-            Slider.value = value;
-            if (IsShowText && PlaceHolder)
-                PlaceHolder.text = string.Format("{0}/{1}", Value, MaxValue);
+            if (Slider != null)
+            {
+                if (IsPlaceholder && Placeholder)
+                    Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
+                Slider.value = value;
+            }
         }
     }
 
     public float MaxValue
     {
-        get { return Slider.maxValue; }
-        set { Slider.maxValue = value; }
+        get { return Slider == null ? 0 : Slider.maxValue; }
+        set { if (Slider != null) Slider.maxValue = value; }
     }
 
     public float MinValue
     {
-        get { return Slider.minValue; }
-        set { Slider.minValue = value; }
+        get { return Slider == null ? 0 : Slider.minValue; }
+        set { if (Slider != null) Slider.minValue = value; }
     }
-    
+
     public Graphic Backgroud
     {
-        get { return Slider.targetGraphic; }
-        set { Slider.targetGraphic = value; }
+        get { return Slider?.targetGraphic; }
+        set { if (Slider) Slider.targetGraphic = value; }
     }
 
     private void Awake()
     {
-        PlaceHolder = GetComponentInChildren<TextMeshProUGUI>();
+        Placeholder = GetComponentInChildren<TextMeshProUGUI>();
         Slider = GetComponent<Slider>();
-        Slider.interactable = false;
-    }
-
-    public void PlaceholderText(string text)
-    {
-        if(PlaceHolder == null)
-            PlaceHolder = GetComponentInChildren<TextMeshProUGUI>();
-        PlaceHolder.text = text;
     }
 
     public override void InteractableChange(bool value)
     {
-        if (Slider == null)
-            Slider = GetComponent<Slider>();
-        Slider.interactable = value;
-        Interactable = value;
-    }
-
-    public void IsShowTextChange(bool value)
-    {
-        if (PlaceHolder == null)
-            PlaceHolder = GetComponentInChildren<TextMeshProUGUI>();
-        PlaceHolder.enabled = value;
-        IsShowText = value;
+        if (Slider != null)
+        {
+            Slider.interactable = value;
+            Interactable = value;
+        }
     }
 }
