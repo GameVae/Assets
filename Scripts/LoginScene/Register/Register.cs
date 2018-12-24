@@ -15,8 +15,8 @@ public class Register : MonoBehaviour
     [SerializeField]
     private RegisterUI registerUI;
     [Space]
-    [SerializeField]
-    private MultiLangManager multiLangManager;
+    //[SerializeField]
+    //private MultiLangManager multiLangManager;
     [Space]
     private bool checkUserName = false;
     private bool checkPassword = false;
@@ -45,7 +45,7 @@ public class Register : MonoBehaviour
         switch (successBool)
         {
             case 0:
-               StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
+               //StartCoroutine("showWarningText", multiLangManager.GetString(Assets.LoginStringEnums.LoginLangEnum.UsernameOrEmailExisted));
               
                 break;
             case 1:

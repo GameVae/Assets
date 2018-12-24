@@ -32,7 +32,7 @@ public class FirstConnect
 }
 public class LoginScript : MonoBehaviour
 {
-    public static LoginScript Instance;
+    public static LoginScript instances;
     [SerializeField]
     private FirstConnect firstConnect;
     [SerializeField]
@@ -42,7 +42,7 @@ public class LoginScript : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) { Instance = this; }
+        if (instances == null) { instances = this; }
         else { Destroy(gameObject); }
 
         firstConnect.LoginBtn.onClick.AddListener(() => login());
@@ -67,8 +67,17 @@ public class LoginScript : MonoBehaviour
     {
         Debug.Log("R_LOGIN: " + obj);
         int successBool = int.Parse(obj.data["LoginBool"].ToString());
+        switch (successBool)
+        {
+            case 0:
+                Debug.Log("Login fail");
+                break;
+            case 1:
+                Debug.Log("Login success");
+                break;
+        }
     }
-
+    
     private void login()
     {
         string UserName = firstConnect.InputUser.text.ToString();

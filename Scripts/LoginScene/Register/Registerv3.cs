@@ -118,7 +118,7 @@ public class Registerv3 : MonoBehaviour
                 StartCoroutine("showWarningText");
                 break;
             case 1:
-                LoginScript.Instance.S_LOGIN(UserName, Password);
+                LoginScript.instances.S_LOGIN(UserName, Password);
                 Debug.Log("Load user data to map scene");
                 break;
         }

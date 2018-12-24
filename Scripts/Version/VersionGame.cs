@@ -13,7 +13,7 @@ public class VersionGame : MonoBehaviour
     public static VersionGame Instance;
     public Connection Connection;
     public ManualTableLoader Loader;
-    public RSS_PositionJSONTable RSS_Table;
+    //public RSS_PositionJSONTable RSS_Table;
 
     private void Awake()
     {
@@ -24,21 +24,13 @@ public class VersionGame : MonoBehaviour
     void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
-        Connection.Socket.On("R_GET_RSS", R_GET_RSS);
-
+        //Connection.Socket.On("R_GET_RSS", R_GET_RSS);
     }
-
-    public void S_GET_RSS()
-    {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Server"] = "1";
-        Connection.Socket.Emit("S_GET_RSS", new JSONObject(data));
-    }
-
-    private void R_GET_RSS(SocketIOEvent obj)
-    {
-        RSS_Table.LoadTable(obj.data["Data"]);
-    }
+    
+    //private void R_GET_RSS(SocketIOEvent obj)
+    //{
+    //    RSS_Table.LoadTable(obj.data["Data"]);
+    //}
 
     public void S_CHECK_VERSION()
     {
@@ -65,7 +57,7 @@ public class VersionGame : MonoBehaviour
                 }
                 DownloadFile(link, saveAt);
             }
-            catch(Exception e) { Debug.Log(e.ToString()); }                                   
+            catch(Exception e) { Debug.Log(e.ToString()); }
         }
     }
 
@@ -90,6 +82,5 @@ public class VersionGame : MonoBehaviour
         Debug.Log("Download Complete " + sender.ToString());
         Loader.InitSQLConnection();
         Loader.ReloadData();
-        S_GET_RSS();
     }
 }

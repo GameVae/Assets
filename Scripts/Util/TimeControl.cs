@@ -35,7 +35,7 @@ public class TimeControl : MonoBehaviour
         {
             Destroy(this);
         }
-
+        DontDestroyOnLoad(this);
         //string dateInput = "Wed Aug 01 2018 08:55:04 GMT+0700";
         //string dateInput = "Jul 31 2018 22:16:25";
         //CalcTime(dateInput);
