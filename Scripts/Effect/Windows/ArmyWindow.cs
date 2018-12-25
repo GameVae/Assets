@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-public class ArmyWindow : MonoBehaviour
+public class ArmyWindow : MonoBehaviour,IWindow
 {
     [Serializable]
     public struct Element
@@ -11,6 +11,9 @@ public class ArmyWindow : MonoBehaviour
         public GUIProgressSlider LevelBar;
     }
 
+    private bool inited;
+    private UpgradeResearchManager manager;
+    
     [Header("Toggle Group")]
     public GUIToggle Toggle;
 
@@ -28,8 +31,18 @@ public class ArmyWindow : MonoBehaviour
 
     private void Awake()
     {
-        SetupIllustrationGroup();
-        SetupOrderElements();
+        if (!inited)
+        {
+            manager = GetComponentInParent<UpgradeResearchManager>();
+            SetupIllustrationGroup();
+            SetupOrderElements();
+            inited = true;
+        }
+    }
+
+    private void Start()
+    {
+        // elements[0].Icon.OnOffSwitch.SwitchOn();
     }
 
     private void SetupIllustrationGroup()
@@ -55,6 +68,13 @@ public class ArmyWindow : MonoBehaviour
                 Icon = OrderElements[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = OrderElements[i].GetComponentInChildren<GUIProgressSlider>(),
             };
+            elements[i].Icon.OnClickEvents +=
+                delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
         }
+    }
+
+    public void LoadData(params object[] input)
+    {
+        throw new NotImplementedException();
     }
 }

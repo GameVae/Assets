@@ -44,15 +44,22 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
     public GUIInteractableIcon InstantBtn;
     public GUIInteractableIcon LevelUpBtn;
 
+    private int level;
+    private bool inited;
     private void Awake()
     {
-        manager = GetComponentInParent<UpgradeResearchManager>();
-        SetupOrderMateralElements();
+        if (!inited)
+        {
+            manager = GetComponentInParent<UpgradeResearchManager>();
+            SetupOrderMateralElements();
+            LevelUpBtn.OnClickEvents += delegate { level++; LoadData(level); };
+            inited = true;
+        }
     }
 
     private void Start()
     {
-        LoadData(new object[] { 2 });
+        LoadData(level);
     }
     private void SetupOrderMateralElements()
     {
