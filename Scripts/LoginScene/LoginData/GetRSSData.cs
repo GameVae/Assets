@@ -1,4 +1,5 @@
-﻿using SocketIO;
+﻿using ManualTable;
+using SocketIO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

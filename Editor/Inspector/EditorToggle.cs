@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UI.Widget;
 
 [CustomEditor(typeof(GUIToggle))]
 public class EditorToggle : Editor

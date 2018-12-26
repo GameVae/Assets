@@ -1,13 +1,12 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.SceneManagement;
+using UI.Widget;
 using UnityEngine;
 
 [CustomEditor(typeof(GUIInteractableIcon))]
 public class EditorIteractableIcon : Editor
 {
     private GUIInteractableIcon Owner;
-    private SerializedObject serializer;
 
     private bool maskable;
     private bool interactable;

@@ -1,4 +1,5 @@
-﻿using ManualTable.Row;
+﻿using ManualTable;
+using ManualTable.Row;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

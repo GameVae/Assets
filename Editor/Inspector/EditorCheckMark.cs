@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using UI.Widget;
 
 [CustomEditor(typeof(GUICheckMark))]
 public class EditorCheckMark : Editor

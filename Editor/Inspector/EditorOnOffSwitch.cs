@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
+using UI.Widget;
 
 [CustomEditor(typeof(GUIOnOffSwitch))]
 public class EditorOnOffSwitch : Editor

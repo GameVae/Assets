@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
+using UI.Widget;
 using UnityEngine;
 
 [CustomEditor(typeof(GUIProgressSlider))]

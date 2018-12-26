@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UI.Widget;
+using UnityEngine;
 
 public class CircularParEffect : MonoBehaviour
 {
@@ -25,6 +26,10 @@ public class CircularParEffect : MonoBehaviour
         SwitchButton.Off += Off;
     }
 
+    private void Start()
+    {
+        SwitchButton.SwitchOff();
+    }
     private void On(GUIOnOffSwitch onOff)
     {
         particle.Play();
