@@ -2,5 +2,7 @@
 
 public interface IWindow
 {
-    void LoadData(params object[] input);
+    void Load(params object[] input);
+    void Open();
+    void Close();
 }

@@ -1,4 +1,4 @@
-﻿using TMPro;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,17 +6,34 @@ namespace UI.Widget
 {
     public class GUICheckMark : CustomGUI
     {
-        [SerializeField, HideInInspector] Image maskImage;
+        private GUIToggle group;
+        private Image backgroudImg;
+        private GUIOnOffSwitch onOffSwitch;
 
-        public Image MaskImage
+        [Header("Check Animation")]
+        public Sprite OnSprite;
+        public Sprite OffSprite;
+
+        public GUIOnOffSwitch OnOffSwitch
+        {
+            get { return onOffSwitch ?? (onOffSwitch = GetComponentInChildren<GUIOnOffSwitch>()); }
+            private set { onOffSwitch = value; }
+        }
+
+        public override Image MaskImage
         {
             get { return maskImage ?? (maskImage = GetComponent<Image>()); }
             protected set { maskImage = value; }
         }
-        public GUIOnOffSwitch OnOffSwitch;
 
-        public Sprite OnSprite;
-        public Sprite OffSprite;
+        public Image BackgroundImage
+        {
+            get
+            {
+                return backgroudImg ?? (backgroudImg = GetComponentsInChildren<Image>().
+                                                                  FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
+            }
+        }
 
         public override bool Interactable
         {
@@ -32,18 +49,18 @@ namespace UI.Widget
 
         protected override void Awake()
         {
-            MaskImage = GetComponent<Image>();
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
-
-            OnOffSwitch.CanSwitch = delegate { return Interactable; };
+            OnOffSwitch.CanSwitch = delegate 
+            {
+                return Interactable && (group == null || group.ActiveMark != this);
+            };
             OnOffSwitch.On += delegate
             {
-                OnOffSwitch.Image.sprite = OnSprite;
+                BackgroundImage.sprite = OnSprite;
                 MaskImage.color = Color.cyan;
             };
             OnOffSwitch.Off += delegate
             {
-                OnOffSwitch.Image.sprite = OffSprite;
+                BackgroundImage.sprite = OffSprite;
                 MaskImage.color = Color.white;
             };
 
@@ -62,17 +79,24 @@ namespace UI.Widget
             OnOffSwitch.InteractableChange(value);
         }
 
-        public void SetGroup(GUIToggle group)
+        public void SetGroup(GUIToggle agroup)
         {
+            group = agroup;
             OnOffSwitch.On += delegate
             {
-                if (group.ActiveMark != this)
+
+                if (agroup.ActiveMark != this)
                 {
-                    group.ActiveMark?.OnOffSwitch.SwitchOff();
-                    group.ActiveMark = this;
-                    group.CheckActionCallback();
+                    agroup.ActiveMark?.OnOffSwitch.SwitchOff();
+                    agroup.ActiveMark = this;
+                    agroup.CheckActionCallback();
                 }
             };
+        }
+
+        public override void SetChildrenDependence()
+        {
+            OnOffSwitch.UIDependent = true;
         }
 
         private void Disable()
@@ -92,5 +116,6 @@ namespace UI.Widget
                 OnOffSwitch.InteractableChange(false);
             }
         }
+
     }
 }

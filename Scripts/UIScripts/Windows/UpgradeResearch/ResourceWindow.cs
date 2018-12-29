@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class ResourceWindow : MonoBehaviour, IWindow
 {
-
-    private bool inited;
     private UpgradeResearchManager manager;
 
     [Header("Constructs"), Space]
@@ -17,13 +15,9 @@ public class ResourceWindow : MonoBehaviour, IWindow
 
     private void Awake()
     {
-        if (!inited)
-        {
-            manager = GetComponentInParent<UpgradeResearchManager>();
-            SetupConstructElement();
-            SetupResearchElements();
-            inited = true;
-        }
+        manager = GetComponentInParent<UpgradeResearchManager>();
+        SetupConstructElement();
+        SetupResearchElements();
     }
 
 
@@ -33,13 +27,18 @@ public class ResourceWindow : MonoBehaviour, IWindow
         constructElements = new ArmyWindow.Element[count];
         for (int i = 0; i < count; i++)
         {
+            int captureIndex = i;
             constructElements[i] = new ArmyWindow.Element()
             {
                 Icon = Constructs[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = Constructs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             constructElements[i].Icon.OnClickEvents +=
-                delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
+                delegate 
+                {
+                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
+                    manager.UpgradeResearchWindow.Load(constructElements[captureIndex].Icon.Placeholder.text);
+                };
         }
     }
 
@@ -49,18 +48,33 @@ public class ResourceWindow : MonoBehaviour, IWindow
         researchElements = new ArmyWindow.Element[count];
         for (int i = 0; i < count; i++)
         {
+            int captureIndex = i;
             researchElements[i] = new ArmyWindow.Element()
             {
                 Icon = Researchs[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = Researchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             researchElements[i].Icon.OnClickEvents +=
-               delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
+               delegate 
+               {
+                   manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
+                   manager.UpgradeResearchWindow.Load(researchElements[captureIndex].Icon.Placeholder.text);
+               };
         }
     }
 
-    public void LoadData(params object[] input)
+    public void Load(params object[] input)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 }

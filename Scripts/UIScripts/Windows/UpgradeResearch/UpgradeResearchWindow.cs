@@ -1,5 +1,5 @@
 ﻿using ManualTable.Row;
-using System;
+using Network.Sync;
 using System.Linq;
 using TMPro;
 using UI.Widget;
@@ -7,30 +7,19 @@ using UnityEngine;
 
 public class UpgradeResearchWindow : MonoBehaviour, IWindow
 {
-    [Serializable]
-    public struct MaterialElement
-    {
-        public GUIInteractableIcon Icon;
-        public TextMeshProUGUI Current;
-        public TextMeshProUGUI Need;
-        public GUIInteractableIcon GetBtn;
-    }
-
     private UpgradeResearchManager manager;
 
     public TextMeshProUGUI Title;
 
     [Header("Progess Bar"), Space]
-    public GUIProgressSlider ProgressSlider;
-    public GUIInteractableIcon InstantProgress;
+    public GUISliderWithBtn ProgressSlider;
 
     [Header("Requirement"), Space]
     public TextMeshProUGUI BuildingLevel;
     public TextMeshProUGUI ResearchLevel;
 
     [Header("Order Materials"), Space]
-    [HideInInspector] public MaterialElement[] OrderMaterialElements;
-    public Transform[] OrderMaterials;
+    public GUIHorizontalInfo[] OrderMaterialElements;
     public TextMeshProUGUI DurationText;
 
     [Header("Info Group"), Space]
@@ -45,55 +34,77 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
     public GUIInteractableIcon InstantBtn;
     public GUIInteractableIcon LevelUpBtn;
 
-    private int level;
-    private bool inited;
     private void Awake()
     {
-        if (!inited)
-        {
-            manager = GetComponentInParent<UpgradeResearchManager>();
-            SetupOrderMateralElements();
-            LevelUpBtn.OnClickEvents += delegate { level++; LoadData(level); };
-            inited = true;
-        }
+        manager = GetComponentInParent<UpgradeResearchManager>();
     }
 
     private void Start()
     {
-        LoadData(level);
     }
-    private void SetupOrderMateralElements()
-    {
-        int count = OrderMaterials.Length;
-        OrderMaterialElements = new MaterialElement[count];
 
-        for (int i = 0; i < count; i++)
+
+    /// <summary>
+    /// 0: name - string
+    /// 1: current level - int
+    /// 2: current material - int[4]
+    /// 3: need material - int[4]
+    /// 4: might bonus - int
+    /// 5: time min - string
+    /// </summary>
+    /// <param name="data">Params object</param>
+    public void Load(params object[] data)
+    {
+        string name = data.TryGet<string>(0);
+        int curLevel = data.TryGet<int>(1);
+        int[] curMaterials = data.TryGet<int[]>(2);
+        int[] needMaterials = data.TryGet<int[]>(3);
+        int mightBonus = data.TryGet<int>(4);
+        string timeMin = data.TryGet<string>(5);
+        int timeInt = data.TryGet<int>(6);
+
+        if (name != "Main Base")
+            ActiveButtonGroup((curLevel < Sync.Instance.MainBaseLevel && 
+                Sync.Instance.ResearchRemainTime == 0));
+        else ActiveButtonGroup(Sync.Instance.ResearchRemainTime == 0);
+
+        NumberName.text = "Might Bonus";
+        Amount.text = string.Format("{0}", mightBonus);
+        DurationText.text = "Duration: " + timeMin;
+
+        ProgressSlider.Slider.MaxValue = timeInt;
+        ProgressSlider.Slider.Value = (float)(timeInt - Sync.Instance.ResearchRemainTime);
+
+        if (curMaterials != null)
         {
-            OrderMaterialElements[i] = new MaterialElement()
+            for (int i = 0; i < 4; i++)
             {
-                Icon = OrderMaterials[i].GetChild(1).GetComponent<GUIInteractableIcon>(),
-                Current = OrderMaterials[i].GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>(),
-                Need = OrderMaterials[i].GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>(),
-                GetBtn = OrderMaterials[i].GetChild(2).GetComponent<GUIInteractableIcon>()
-            };
+                SetMaterialRequirement(i, curMaterials[i], needMaterials[i]);
+            }
         }
+        Title.text = name;
     }
 
-    public void LoadData(params object[] data)
+    private void SetMaterialRequirement(int index, int cur, int need)
     {
-        int curLevel = (int)data[0];
-        MainBaseRow row = manager.MainbaseData.rows.FirstOrDefault(x => x.Level == curLevel);
-        if (row != null)
-        {
-            ProgressSlider.Value = row.Level;
-            NumberName.text = "Might Bonus" +
-                                "\nFood Cost" +
-                                "\nWood Cost" +
-                                "\nStone Cost" +
-                                "\nMetal Cost";
-            Amount.text = string.Format("{0} \n{1} \n{2} \n{3} \n{4}",
-                row.MightBonus, row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost);
-            DurationText.text = "Duration: " + row.TimeMin;
-        }
+        GUIHorizontalInfo material = OrderMaterialElements[index];
+        material.InteractableChange(cur < need);
+        material.Placeholder.text = string.Format("{0}/{1}", cur, need);
+    }
+
+    private void ActiveButtonGroup(bool value)
+    {
+        InstantBtn.InteractableChange(value);
+        LevelUpBtn.InteractableChange(value);
+    }
+
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 }

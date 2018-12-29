@@ -4,14 +4,41 @@ using UnityEngine.UI;
 
 namespace UI.Widget
 {
+    [RequireComponent(typeof(Image))]
     public abstract class CustomGUI : MonoBehaviour
     {
         [SerializeField, HideInInspector] protected TextMeshProUGUI placeholder;
         [SerializeField, HideInInspector] protected Mask mask;
+        [SerializeField, HideInInspector] protected Image maskImage;
         [SerializeField, HideInInspector] protected bool maskable;
         [SerializeField, HideInInspector] protected bool interactable;
         [SerializeField, HideInInspector] protected bool isPlaceholder;
 
+#if UNITY_EDITOR
+        [SerializeField, HideInInspector] protected bool isUIDependent;
+#endif
+
+        public float FontSize
+        {
+            get { return Placeholder.fontSize; }
+            protected set { Placeholder.fontSize = value; }
+        }
+
+        public Color PlaceholderColor
+        {
+            get
+            {
+                if (Placeholder) return Placeholder.color;
+                return default(Color);
+            }
+            protected set { if (Placeholder) Placeholder.color = value; }
+        }
+
+        public bool UIDependent
+        {
+            get { return isUIDependent; }
+            set { isUIDependent = value; }
+        }
 
         public Mask Mask
         {
@@ -19,7 +46,7 @@ namespace UI.Widget
             protected set { mask = value; }
         }
 
-        public TextMeshProUGUI Placeholder
+        public virtual TextMeshProUGUI Placeholder
         {
             get { return placeholder ?? (placeholder = GetComponentInChildren<TextMeshProUGUI>()); }
             protected set { placeholder = value; }
@@ -67,6 +94,11 @@ namespace UI.Widget
             }
         }
 
+        public void FontSizeChange(float fontSize)
+        {
+            FontSize = fontSize;
+        }
+
         public void IsPlaceholderChange(bool value)
         {
             IsPlaceholder = value;
@@ -76,6 +108,15 @@ namespace UI.Widget
 
         public abstract void InteractableChange(bool value);
 
+        public abstract Image MaskImage { get; protected set; }
+
+        public abstract void SetChildrenDependence();
+
+        public void PlaceholderColorChange(Color newColor)
+        {
+            PlaceholderColor = newColor;
+        }
+
         protected virtual void Awake()
         {
         }
@@ -83,6 +124,5 @@ namespace UI.Widget
         protected virtual void Start()
         {
         }
-
     }
 }

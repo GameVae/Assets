@@ -76,6 +76,34 @@ namespace CustomUI
                 Selection.activeObject = onOffSwitch;
             }
         }
+
+        [MenuItem("GameObject/UI/GUI/GUISliderWithBtn")]
+        public static void CreateSliderWithBtn(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUISliderWithBtn.prefab";
+            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
+            if (asset != null)
+            {
+                GameObject sliderWithBtn = Instantiate(asset) as GameObject;
+                GameObjectUtility.SetParentAndAlign(sliderWithBtn, menuCmd.context as GameObject);
+                Undo.RegisterCreatedObjectUndo(sliderWithBtn, "Create " + sliderWithBtn.name);
+                Selection.activeObject = sliderWithBtn;
+            }
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUIHorizontalBarInfo")]
+        public static void CreateHorizontalBarInfo(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUIHorizontalBarInfo.prefab";
+            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
+            if (asset != null)
+            {
+                GameObject infoBar = Instantiate(asset) as GameObject;
+                GameObjectUtility.SetParentAndAlign(infoBar, menuCmd.context as GameObject);
+                Undo.RegisterCreatedObjectUndo(infoBar, "Create " + infoBar.name);
+                Selection.activeObject = infoBar;
+            }
+        }
     }
 #endif
 }

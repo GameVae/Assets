@@ -3,8 +3,9 @@ using UI.Widget;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeResearchManager : MonoBehaviour, IWindow
+public class UpgradeResearchManager : MonoBehaviour
 {
+
     public enum Window
     {
         None,
@@ -16,7 +17,7 @@ public class UpgradeResearchManager : MonoBehaviour, IWindow
         Trade
     }
 
-    private Dictionary<int, GameObject> windows;
+    private Dictionary<int, IWindow> windows;
     private Stack<Window> preWindow;
     private Window curWindow;
     private bool inited;
@@ -35,23 +36,23 @@ public class UpgradeResearchManager : MonoBehaviour, IWindow
 
     private void Awake()
     {
-
+        if (!inited)
+        { Init(); }
     }
 
     private void Init()
     {
-
         preWindow = new Stack<Window>();
         BackBtn.OnClickEvents += delegate { Back(); };
 
-        windows = new Dictionary<int, GameObject>()
+        windows = new Dictionary<int, IWindow>()
         {
-            { Window.Army.GetHashCode(), ArmyWindow.gameObject},
-            { Window.UpgradeResearch.GetHashCode(), UpgradeResearchWindow.gameObject},
-            { Window.Startup.GetHashCode(),StartupWindow.gameObject },
-            { Window.Trade.GetHashCode(),TradeWindow.gameObject },
-            { Window.Resource.GetHashCode(),ResourceWindow.gameObject },
-            { Window.Defense.GetHashCode(),DefenseWindow.gameObject },
+            { Window.Army.GetHashCode(), ArmyWindow},
+            { Window.UpgradeResearch.GetHashCode(), UpgradeResearchWindow},
+            { Window.Startup.GetHashCode(),StartupWindow},
+            { Window.Trade.GetHashCode(),TradeWindow},
+            { Window.Resource.GetHashCode(),ResourceWindow},
+            { Window.Defense.GetHashCode(),DefenseWindow },
         };
         inited = true;
     }
@@ -75,7 +76,7 @@ public class UpgradeResearchManager : MonoBehaviour, IWindow
         }
         else
         {
-            windows[type.GetHashCode()].SetActive(true);
+            windows[type.GetHashCode()].Open();
             Close(curWindow);
             if (!back)
                 preWindow.Push(curWindow);
@@ -94,16 +95,11 @@ public class UpgradeResearchManager : MonoBehaviour, IWindow
     public void Close(Window type)
     {
         if (curWindow != Window.None)
-            windows[type.GetHashCode()].SetActive(false);
+            windows[type.GetHashCode()].Close();
     }
 
     public void Back()
     {
         Open(preWindow.Pop(), true);
-    }
-
-    public void LoadData(params object[] input)
-    {
-        throw new System.NotImplementedException();
     }
 }

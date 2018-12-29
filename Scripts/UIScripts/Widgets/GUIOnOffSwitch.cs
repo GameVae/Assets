@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,18 +12,30 @@ namespace UI.Widget
     public class GUIOnOffSwitch : CustomGUI
     {
         [SerializeField, HideInInspector] private Button button;
-        [SerializeField, HideInInspector] private Image image;
+        [SerializeField, HideInInspector] private Image backgroundImg;
 
         public Button Button
         {
             get { return button ?? (button = GetComponent<Button>()); }
             protected set { button = value; }
         }
-        public Image Image
+
+        public Image BackgroundImage
         {
-            get { return image ?? (image = GetComponent<Image>()); }
-            protected set { image = value; }
+            get
+            {
+                return backgroundImg ?? (backgroundImg = GetComponentsInChildren<Image>().
+                                                                  FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
+            }
+            protected set { backgroundImg = value; }
         }
+
+        public override Image MaskImage
+        {
+            get { return maskImage ?? (maskImage = Button?.GetComponent<Image>()); }
+            protected set { maskImage = value; }
+        }
+
         public bool IsOn { get; protected set; }
 
         public Func<bool> CanSwitch;
@@ -33,9 +46,11 @@ namespace UI.Widget
 
         protected override void Awake()
         {
-            Button = GetComponent<Button>();
-            Image = GetComponent<Image>();
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
+            if (Button)
+            {
+                Button.targetGraphic = BackgroundImage;
+            }
+
             Button.onClick = OnClick;
             Button.onClick.AddListener(OnOffEffect);
             base.Awake();
@@ -44,9 +59,9 @@ namespace UI.Widget
         protected override void Start()
         {
             if (On == null)
-                On += delegate { Image.color = Color.white; };
+                On += delegate { BackgroundImage.color = Color.white; };
             if (Off == null)
-                Off += delegate { Image.color = Color.gray; };
+                Off += delegate { BackgroundImage.color = Color.gray; };
             CanSwitch = CanSwitch ?? delegate { return true; };
             base.Start();
         }
@@ -62,12 +77,15 @@ namespace UI.Widget
 
         public void SwitchOff()
         {
+            if (!IsOn)
+                return;
             Off(this);
             IsOn = false;
         }
 
         public void SwitchOn()
         {
+            if (IsOn) return;
             On(this);
             IsOn = true;
         }
@@ -77,5 +95,8 @@ namespace UI.Widget
             Interactable = value;
             Button.interactable = value;
         }
+
+        public override void SetChildrenDependence() { }
+
     }
 }

@@ -64,9 +64,13 @@ namespace ManualTable.Loader
                 case RowType.MainBase:
                     SQLDataConnection.LoadTable(Cast<MainBaseTable>(TableData));
                     break;
+                case RowType.Soldier:
+                    SQLDataConnection.LoadTable(Cast<SoldierTable>(TableData));
+                    break;
                 case RowType.Version:
                     SQLVersionConnection.LoadTable(Cast<VersionTable>(TableData));
                     break;
+
             }
         }
 

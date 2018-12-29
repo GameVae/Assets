@@ -9,7 +9,6 @@ namespace Utils
 {
     public static class SQLUtils
     {
-
         #region Select 
         public static object[] QueryValue(this IDbConnection dbConnection, string table, int id)
         {

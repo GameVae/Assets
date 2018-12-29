@@ -7,7 +7,8 @@ namespace UI.Widget
     [RequireComponent(typeof(Slider))]
     public class GUIProgressSlider : CustomGUI
     {
-        [SerializeField, HideInInspector] Slider slider;
+        [SerializeField, HideInInspector] private Slider slider;
+
         public Slider Slider
         {
             get { return slider ?? (slider = GetComponent<Slider>()); }
@@ -40,16 +41,14 @@ namespace UI.Widget
             set { if (Slider != null) Slider.minValue = value; }
         }
 
-        public Graphic Backgroud
+        public override Image MaskImage
         {
-            get { return Slider?.targetGraphic; }
-            set { if (Slider) Slider.targetGraphic = value; }
+            get { return Slider?.image ?? (maskImage = GetComponent<Slider>()?.image); }
+            protected set { maskImage = value; }
         }
 
         protected override void Awake()
         {
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
-            Slider = GetComponent<Slider>();
             base.Awake();
         }
 
@@ -61,5 +60,8 @@ namespace UI.Widget
                 Interactable = value;
             }
         }
+
+        public override void SetChildrenDependence() { }
+
     }
 }

@@ -4,7 +4,6 @@ using UI.Widget;
 
 public class TradeWindow : MonoBehaviour, IWindow
 {
-    private bool inited;
     private UpgradeResearchManager manager;
 
     [Header("Constructs"), Space]
@@ -20,13 +19,10 @@ public class TradeWindow : MonoBehaviour, IWindow
 
     private void Awake()
     {
-        if (!inited)
-        {
-            manager = GetComponentInParent<UpgradeResearchManager>();
-            SetupMarketResearch();
-            SetupHPShipResearch();
-            inited = true;
-        }
+        manager = GetComponentInParent<UpgradeResearchManager>();
+        SetupMarketResearch();
+        SetupHPShipResearch();
+
     }
 
     private void SetupMarketResearch()
@@ -35,13 +31,18 @@ public class TradeWindow : MonoBehaviour, IWindow
         marketResearchElements = new ArmyWindow.Element[count];
         for (int i = 0; i < count; i++)
         {
+            int captureIndex = i;
             marketResearchElements[i] = new ArmyWindow.Element()
             {
                 Icon = MarketResearchs[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = MarketResearchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             marketResearchElements[i].Icon.OnClickEvents
-                += delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
+                += delegate 
+                {
+                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
+                    manager.UpgradeResearchWindow.Load(marketResearchElements[captureIndex].Icon.Placeholder.text);
+                };
         }
     }
 
@@ -51,19 +52,33 @@ public class TradeWindow : MonoBehaviour, IWindow
         PHShipResearchElements = new ArmyWindow.Element[count];
         for (int i = 0; i < count; i++)
         {
+            int captureIndex = i;
             PHShipResearchElements[i] = new ArmyWindow.Element()
             {
                 Icon = PHShiptResearchs[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = PHShiptResearchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             PHShipResearchElements[i].Icon.OnClickEvents
-                += delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
+                += delegate 
+                {
+                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
+                    manager.UpgradeResearchWindow.Load(PHShipResearchElements[captureIndex].Icon.Placeholder.text);
+                };
         }
     }
 
-    public void LoadData(params object[] input)
+    public void Load(params object[] input)
     {
         throw new System.NotImplementedException();
     }
 
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
+    }
 }

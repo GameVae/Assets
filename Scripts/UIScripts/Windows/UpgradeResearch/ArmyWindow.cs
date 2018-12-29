@@ -2,8 +2,10 @@
 using TMPro;
 using UnityEngine;
 using UI.Widget;
+using System.Collections.Generic;
+using Network.Sync;
 
-public class ArmyWindow : MonoBehaviour,IWindow
+public class ArmyWindow : MonoBehaviour, IWindow
 {
     [Serializable]
     public struct Element
@@ -12,10 +14,14 @@ public class ArmyWindow : MonoBehaviour,IWindow
         public GUIProgressSlider LevelBar;
     }
 
+    [Serializable]
+    public struct ArmyType
+    {
+        public string[] Types;
+    }
 
-    private bool inited;
     private UpgradeResearchManager manager;
-    
+
     [Header("Toggle Group")]
     public GUIToggle Toggle;
 
@@ -31,16 +37,32 @@ public class ArmyWindow : MonoBehaviour,IWindow
 
     public Transform[] OrderElements;
 
+    [Header("Army Type's Name")]
+    public ArmyType Infantry;
+    public ArmyType Ranged;
+    public ArmyType Mounted;
+    public ArmyType SeigeEngine;
+    private Dictionary<string, ArmyType> typeDict;
+
     private void Awake()
     {
-        if (!inited)
+        manager = GetComponentInParent<UpgradeResearchManager>();
+
+        typeDict = new Dictionary<string, ArmyType>()
         {
-            manager = GetComponentInParent<UpgradeResearchManager>();
-            SetupIllustrationGroup();
-            SetupOrderElements();
-            inited = true;
-            Toggle.CheckMarkEvents += delegate { typeName.text = Toggle.ActiveMark.Placeholder.text; };
-        }
+            {"Infantry" ,Infantry},
+            {"Ranged" ,Ranged},
+            {"Mounted" ,Mounted},
+            {"Siege Engine" ,SeigeEngine},
+        };
+
+        SetupIllustrationGroup();
+        SetupOrderElements();
+        Toggle.CheckMarkEvents += delegate
+        {
+            typeName.text = Toggle.ActiveMark.Placeholder.text;
+            Load(typeName.text);
+        };
     }
 
     private void Start()
@@ -66,18 +88,45 @@ public class ArmyWindow : MonoBehaviour,IWindow
 
         for (int i = 0; i < elementCount; i++)
         {
+            int captureIndex = i;
             elements[i] = new Element()
             {
                 Icon = OrderElements[i].GetComponentInChildren<GUIInteractableIcon>(),
                 LevelBar = OrderElements[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             elements[i].Icon.OnClickEvents +=
-                delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
+                delegate
+                {
+                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
+                    manager.UpgradeResearchWindow.Load(typeDict[typeName.text].Types[captureIndex]);
+                };
+        }
+
+    }
+
+    public void Load(params object[] input)
+    {
+        int mainLevel = Sync.Instance.MainBaseLevel;
+        int curLevel = input.TryGet<int>(1);
+
+        ArmyType armyType = typeDict[(string)input[0]];
+
+        upgradeIcon.InteractableChange(mainLevel > curLevel);
+        levelBar.Value = curLevel;
+
+        for (int i = 0; i < armyType.Types.Length; i++)
+        {
+            elements[i].Icon.Placeholder.text = armyType.Types[i];
         }
     }
 
-    public void LoadData(params object[] input)
+    public void Open()
     {
-        throw new NotImplementedException();
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
     }
 }

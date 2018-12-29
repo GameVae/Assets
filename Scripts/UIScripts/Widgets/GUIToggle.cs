@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.Widget
 {
     public delegate void CheckMarkCallback(GUICheckMark mark);
+
     public class GUIToggle : CustomGUI
     {
         public enum ToggleType
@@ -17,6 +20,19 @@ namespace UI.Widget
         [SerializeField, HideInInspector] private ToggleType type;
 
         public GUICheckMark ActiveMark { get; set; }
+
+        public override Image MaskImage
+        {
+            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
+            protected set { maskImage = value; }
+        }
+
+        public override TextMeshProUGUI Placeholder
+        {
+            get { return (placeholder = null); }
+            protected set { return; }
+        }
+
         public ToggleType Type
         {
             get { return type; }
@@ -26,7 +42,6 @@ namespace UI.Widget
         protected override void Awake()
         {
             SetupGroup();
-            InteractableChange(Interactable);
             base.Awake();
         }
 
@@ -111,5 +126,7 @@ namespace UI.Widget
         {
             checkMarks[index].OnOffSwitch.SwitchOn();
         }
+
+        public override void SetChildrenDependence() { }
     }
 }

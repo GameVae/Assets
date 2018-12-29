@@ -1,32 +1,28 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Widget
 {
-    [RequireComponent(typeof(Button))]
+    [RequireComponent(typeof(Button), typeof(Image), typeof(GUIOnOffSwitch))]
     public class GUIInteractableIcon : CustomGUI
     {
-        [SerializeField, HideInInspector] Button button;
-        [SerializeField, HideInInspector] Image maskImage;
-        [SerializeField, HideInInspector] Image backgroundImage;
-        [SerializeField, HideInInspector] GUIOnOffSwitch onOffSwitch;
+        [SerializeField, HideInInspector] private GUIOnOffSwitch onOffSwitch;
 
         public Button Button
         {
-            get { return button ?? GetComponent<Button>(); }
-            protected set { button = value; }
+            get { return OnOffSwitch.Button; }
         }
-        public Image MaskImage
+
+        public override Image MaskImage
         {
-            get { return maskImage ?? (maskImage = Button?.GetComponent<Image>()); }
-            protected set { maskImage = value; }
+            get { return OnOffSwitch.MaskImage; }
+            protected set { return; }
         }
+
         public Image BackgroundImage
         {
-            get { return backgroundImage ?? (backgroundImage = Button?.GetComponentInChildren<Image>()); }
-            protected set { backgroundImage = value; }
+            get { return OnOffSwitch.BackgroundImage; }
         }
 
         public GUIOnOffSwitch OnOffSwitch
@@ -34,18 +30,12 @@ namespace UI.Widget
             get { return onOffSwitch ?? (onOffSwitch = GetComponent<GUIOnOffSwitch>()); }
             protected set { onOffSwitch = value; }
         }
+
         public event UnityAction OnClickEvents;
 
         protected override void Awake()
         {
-            Button = GetComponent<Button>();
-            MaskImage = Button?.GetComponent<Image>();
-            BackgroundImage = transform.GetChild(0).GetComponent<Image>();
-            Placeholder = GetComponentInChildren<TextMeshProUGUI>();
-
-            InteractableChange(Interactable);
-            OnOffSwitch = GetComponent<GUIOnOffSwitch>();
-            Button.targetGraphic = backgroundImage;
+            OnOffSwitch.Off += delegate { };
             base.Awake();
         }
 
@@ -61,13 +51,23 @@ namespace UI.Widget
             if (Button != null)
             {
                 Interactable = value;
-                if (value)
-                    Button.transition = Selectable.Transition.ColorTint;
-                else
-                    Button.transition = Selectable.Transition.None;
+                //if (value)
+                //    Button.transition = Selectable.Transition.ColorTint;
+                //else
+                //    Button.transition = Selectable.Transition.None;
                 Button.interactable = value;
                 OnOffSwitch.InteractableChange(value);
             }
+        }
+
+        public override void SetChildrenDependence()
+        {
+            OnOffSwitch.UIDependent = true;
+        }
+
+        public void ForceChangeEvent(UnityAction events)
+        {
+            OnClickEvents = events;
         }
     }
 
