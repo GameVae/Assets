@@ -9,5 +9,8 @@ namespace ManualTable.Interface
         string KeyValuePairs { get; }
     }
 
-    public interface ITable { }
+    public interface ITable
+    {
+
+    }
 }

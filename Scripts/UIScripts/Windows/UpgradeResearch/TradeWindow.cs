@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UI.Widget;
-
+using static UpgradeResearchManager;
 
 public class TradeWindow : MonoBehaviour, IWindow
 {
@@ -22,7 +22,6 @@ public class TradeWindow : MonoBehaviour, IWindow
         manager = GetComponentInParent<UpgradeResearchManager>();
         SetupMarketResearch();
         SetupHPShipResearch();
-
     }
 
     private void SetupMarketResearch()
@@ -40,8 +39,8 @@ public class TradeWindow : MonoBehaviour, IWindow
             marketResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
-                    manager.UpgradeResearchWindow.Load(marketResearchElements[captureIndex].Icon.Placeholder.text);
+                    manager.Open(Window.UpgradeResearch);
+                    manager[Window.UpgradeResearch].Load(marketResearchElements[captureIndex].Icon.Placeholder.text);
                 };
         }
     }
@@ -61,8 +60,8 @@ public class TradeWindow : MonoBehaviour, IWindow
             PHShipResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
-                    manager.UpgradeResearchWindow.Load(PHShipResearchElements[captureIndex].Icon.Placeholder.text);
+                    manager.Open(Window.UpgradeResearch);
+                    manager[Window.UpgradeResearch].Load(PHShipResearchElements[captureIndex].Icon.Placeholder.text);
                 };
         }
     }

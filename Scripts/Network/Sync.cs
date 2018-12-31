@@ -37,8 +37,8 @@ namespace Network.Sync
         public void Init()
         {
             MainBaseLevel = 10;
-            ResearchRemainTime = 1000;
-            InfantryLevel = 10;
+            ResearchRemainTime = 0;
+            InfantryLevel = 9;
         }
     }
 }

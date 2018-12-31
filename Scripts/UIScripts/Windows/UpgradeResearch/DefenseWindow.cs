@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UI.Widget;
-
+using static UpgradeResearchManager;
 
 public class DefenseWindow : MonoBehaviour, IWindow
 {
@@ -31,8 +31,8 @@ public class DefenseWindow : MonoBehaviour, IWindow
             constructElements[i].Icon.OnClickEvents +=
                 delegate 
                 {
-                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
-                    manager.UpgradeResearchWindow.Load(constructElements[captureIndex].Icon.Placeholder.text);
+                    manager.Open(Window.UpgradeResearch);
+                    manager[Window.UpgradeResearch].Load(constructElements[captureIndex].Icon.Placeholder.text);
                 };
         }
     }

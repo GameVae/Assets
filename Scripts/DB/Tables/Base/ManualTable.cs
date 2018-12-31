@@ -10,13 +10,14 @@ namespace ManualTable
     {
         [SerializeField] public string TableName;
         [SerializeField] public List<string> Columns;
-        [SerializeField] public List<T> rows;
+        [SerializeField] public List<T> Rows;
+
 
         public void LoadRow(T newRow)
         {
-            if (rows == null)
-                rows = new List<T>();
-            rows.Add(newRow);
+            if (Rows == null)
+                Rows = new List<T>();
+            Rows.Add(newRow);
         }
 
         public void LoadColumn(string column)
@@ -32,14 +33,14 @@ namespace ManualTable
 
         public T this[int rowID]
         {
-            get { return rows[rowID]; }
-            set { rows[rowID] = value; }
+            get { return Rows[rowID]; }
+            set { Rows[rowID] = value; }
         }
 
         public void Clear()
         {
-            if (rows != null)
-                rows.Clear();
+            if (Rows != null)
+                Rows.Clear();
             if (Columns != null)
                 Columns.Clear();
         }
@@ -51,14 +52,13 @@ namespace ManualTable
             string valuesString = row.ValuesSequence;
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);
-            Debug.Log(cmd);
             if (dbConnection.InsertValue(cmd))
-                rows.Add(row);
+                Rows.Add(row);
         }
 
         public void SQLUpdate(IDbConnection dbConnection, int rowID)
         {
-            T row = rows[rowID];
+            T row = Rows[rowID];
             string keyValuePairs = row.KeyValuePairs;
             string cmd = SQLUtils.GetUpdateCommand(TableName, rowID + 1, keyValuePairs);
             dbConnection.UpdateValue(cmd);
@@ -68,7 +68,7 @@ namespace ManualTable
         {
             string cmd = SQLUtils.GetDeleteCommand(TableName, string.Format(" _rowid_ = {0}", rowId + 1));
             if (dbConnection.Delete(cmd))
-                rows.RemoveAt(rowId);
+                Rows.RemoveAt(rowId);
         }
     }
 

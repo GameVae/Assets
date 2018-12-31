@@ -16,7 +16,6 @@ public class EditorToggle : EditorGUIBase
         Owner = (GUIToggle)target;
 
         Type = Owner.Type;
-        Debug.Log(Owner);
     }
 
     public override void OnInspectorGUI()

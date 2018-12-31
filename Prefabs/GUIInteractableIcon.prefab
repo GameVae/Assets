@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 114948992265788408}
   - component: {fileID: 114770629996748518}
   - component: {fileID: 114318701257547144}
+  - component: {fileID: 114529983561174988}
   m_Layer: 5
   m_Name: GUIInteractableIcon
   m_TagString: Untagged
@@ -103,18 +104,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b66de9fa0e2cbc84391f04fa22873bf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placeholder: {fileID: 0}
+  placeholder: {fileID: 114650756813123130}
   mask: {fileID: 0}
+  maskImage: {fileID: 0}
   maskable: 0
-  interactable: 0
+  interactable: 1
   isPlaceholder: 0
-  button: {fileID: 0}
-  image: {fileID: 0}
+  isUIDependent: 1
+  button: {fileID: 114948992265788408}
+  backgroundImg: {fileID: 0}
   OnClick:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114529983561174988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1507640702478790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1200242548, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!114 &114650756813123130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -239,15 +254,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59633893be690b543acac6a3aedabf08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placeholder: {fileID: 0}
-  mask: {fileID: 0}
-  maskable: 0
-  interactable: 0
-  isPlaceholder: 0
-  button: {fileID: 0}
+  placeholder: {fileID: 114650756813123130}
+  mask: {fileID: 114529983561174988}
   maskImage: {fileID: 0}
-  backgroundImage: {fileID: 0}
-  onOffSwitch: {fileID: 0}
+  maskable: 1
+  interactable: 1
+  isPlaceholder: 0
+  isUIDependent: 0
+  onOffSwitch: {fileID: 114318701257547144}
 --- !u!114 &114772060953516044
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -292,7 +306,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -309,7 +323,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 114266881590370998}
   m_OnClick:
     m_PersistentCalls:

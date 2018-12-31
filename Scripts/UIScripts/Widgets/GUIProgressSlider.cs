@@ -22,9 +22,9 @@ namespace UI.Widget
             {
                 if (Slider != null)
                 {
-                    if (IsPlaceholder && Placeholder)
-                        Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
                     Slider.value = value;
+                    //if (IsPlaceholder && Placeholder)
+                    Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
                 }
             }
         }

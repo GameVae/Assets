@@ -23,7 +23,7 @@ MonoBehaviour:
   - TimeInt
   - Required
   - Unlock
-  rows:
+  Rows:
   - Level: 1
     MightBonus: 40
     FoodCost: 560

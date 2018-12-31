@@ -2,9 +2,18 @@
 using UI.Widget;
 using System.Collections.Generic;
 using UnityEngine;
+using ManualTable.Interface;
 
 public class UpgradeResearchManager : MonoBehaviour
 {
+    public enum Database
+    {
+        Mainbase,
+        Infantry,
+        Ranged,
+        Mounted,
+        SeigeEngine
+    }
 
     public enum Window
     {
@@ -18,20 +27,24 @@ public class UpgradeResearchManager : MonoBehaviour
     }
 
     private Dictionary<int, IWindow> windows;
+    private Dictionary<int, ITable> constructDB;
+
     private Stack<Window> preWindow;
     private Window curWindow;
     private bool inited;
 
-    public MainBaseTable MainbaseData;
+    [Header("Construct Database")]
+    [SerializeField] private MainBaseTable MainbaseDB;
+    [SerializeField] private MainBaseTable InfantryDB;
 
     public GUIInteractableIcon BackBtn;
-
-    public StartupWindow StartupWindow;
-    public ArmyWindow ArmyWindow;
-    public UpgradeResearchWindow UpgradeResearchWindow;
-    public TradeWindow TradeWindow;
-    public ResourceWindow ResourceWindow;
-    public DefenseWindow DefenseWindow;
+    [Header("windows")]
+    [SerializeField] private StartupWindow StartupWindow;
+    [SerializeField] private ArmyWindow ArmyWindow;
+    [SerializeField] private UpgradeResearchWindow UpgradeResearchWindow;
+    [SerializeField] private TradeWindow TradeWindow;
+    [SerializeField] private ResourceWindow ResourceWindow;
+    [SerializeField] private DefenseWindow DefenseWindow;
 
 
     private void Awake()
@@ -47,12 +60,21 @@ public class UpgradeResearchManager : MonoBehaviour
 
         windows = new Dictionary<int, IWindow>()
         {
-            { Window.Army.GetHashCode(), ArmyWindow},
-            { Window.UpgradeResearch.GetHashCode(), UpgradeResearchWindow},
-            { Window.Startup.GetHashCode(),StartupWindow},
-            { Window.Trade.GetHashCode(),TradeWindow},
-            { Window.Resource.GetHashCode(),ResourceWindow},
-            { Window.Defense.GetHashCode(),DefenseWindow },
+            { Window.Army.GetHashCode()             ,ArmyWindow},
+            { Window.UpgradeResearch.GetHashCode()  ,UpgradeResearchWindow},
+            { Window.Startup.GetHashCode()          ,StartupWindow},
+            { Window.Trade.GetHashCode()            ,TradeWindow},
+            { Window.Resource.GetHashCode()         ,ResourceWindow},
+            { Window.Defense.GetHashCode()          ,DefenseWindow },
+        };
+
+        constructDB = new Dictionary<int, ITable>()
+        {
+            {Database.Mainbase.GetHashCode()    ,MainbaseDB},
+            {Database.Infantry.GetHashCode()    ,InfantryDB },
+            {Database.Ranged.GetHashCode()      ,null },
+            {Database.Mounted.GetHashCode()     ,null },
+            {Database.SeigeEngine.GetHashCode() ,null }
         };
         inited = true;
     }
@@ -101,5 +123,23 @@ public class UpgradeResearchManager : MonoBehaviour
     public void Back()
     {
         Open(preWindow.Pop(), true);
+    }
+
+    public IWindow this[Window type]
+    {
+        get
+        {
+            windows.TryGetValue(type.GetHashCode(), out IWindow window);
+            return window;
+        }
+    }
+
+    public ITable this[Database type]
+    {
+        get
+        {
+            constructDB.TryGetValue(type.GetHashCode(), out ITable table);
+            return table;
+        }
     }
 }

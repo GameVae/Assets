@@ -20,7 +20,7 @@ namespace ManualTable.Loader
 
         private void Awake()
         {
-            versionTask = Version.rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            versionTask = Version.Rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             CurrentVersion = versionTask?.Content;
         }
 
@@ -51,7 +51,7 @@ namespace ManualTable.Loader
             if (versionTask == null)
                 Load(RowType.Version, Version);
 
-            versionTask = Version.rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             CurrentVersion = versionTask?.Content;
             bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
             return result;
@@ -89,7 +89,7 @@ namespace ManualTable.Loader
             if (versionTask != null)
             {
                 versionTask.Content = ServerVersion;
-                Version.SQLUpdate(SQLVersionConnection.DbConnection, Version.rows.IndexOf(versionTask));
+                Version.SQLUpdate(SQLVersionConnection.DbConnection, Version.Rows.IndexOf(versionTask));
             }
             else
             {

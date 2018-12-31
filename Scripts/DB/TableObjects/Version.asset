@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Name: Version
   m_EditorClassIdentifier: 
   TableName: Task
-  Columns: []
-  rows:
-  - Id: 0
+  Columns:
+  - Id
+  - Task
+  - Content
+  - Comment
+  Rows:
+  - Id: 1
     Task: Version
     Content: 
     Comment: 

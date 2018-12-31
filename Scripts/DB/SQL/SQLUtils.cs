@@ -206,6 +206,7 @@ namespace Utils
             {
                 dbConnection.Close();
 #if UNITY_EDITOR
+                Debug.Log(cmd);
                 Debug.Log(e.ToString());
 #endif
                 return false;

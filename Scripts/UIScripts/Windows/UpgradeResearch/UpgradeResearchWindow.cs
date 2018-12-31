@@ -51,6 +51,9 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
     /// 3: need material - int[4]
     /// 4: might bonus - int
     /// 5: time min - string
+    /// 6: time int - int
+    /// 7: building require level - int
+    /// 8: research require level - int
     /// </summary>
     /// <param name="data">Params object</param>
     public void Load(params object[] data)
@@ -62,6 +65,11 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
         int mightBonus = data.TryGet<int>(4);
         string timeMin = data.TryGet<string>(5);
         int timeInt = data.TryGet<int>(6);
+        int buildingRequire = data.TryGet<int>(7);
+        int researchRequire = data.TryGet<int>(8);
+
+        // 1
+        Title.text = name;
 
         if (name != "Main Base")
             ActiveButtonGroup((curLevel < Sync.Instance.MainBaseLevel && 
@@ -82,7 +90,14 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
                 SetMaterialRequirement(i, curMaterials[i], needMaterials[i]);
             }
         }
-        Title.text = name;
+
+        // test 
+        int testLevel = 5;
+        BuildingLevel.transform.parent.gameObject.SetActive(testLevel <= buildingRequire);
+        BuildingLevel.text = buildingRequire.ToString();
+
+        ResearchLevel.transform.parent.gameObject.SetActive(testLevel <= researchRequire);
+        ResearchLevel.text = researchRequire.ToString();
     }
 
     private void SetMaterialRequirement(int index, int cur, int need)
@@ -96,6 +111,7 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
     {
         InstantBtn.InteractableChange(value);
         LevelUpBtn.InteractableChange(value);
+        ProgressSlider.Button.InteractableChange(!value);
     }
 
     public void Open()

@@ -4,6 +4,10 @@ using UnityEngine;
 using UI.Widget;
 using System.Collections.Generic;
 using Network.Sync;
+using static UpgradeResearchManager;
+using ManualTable;
+using ManualTable.Row;
+using System.Linq;
 
 public class ArmyWindow : MonoBehaviour, IWindow
 {
@@ -18,6 +22,8 @@ public class ArmyWindow : MonoBehaviour, IWindow
     public struct ArmyType
     {
         public string[] Types;
+        public SoldierTable[] AgentDatabase;
+        public Database ConstructType;
     }
 
     private UpgradeResearchManager manager;
@@ -53,7 +59,7 @@ public class ArmyWindow : MonoBehaviour, IWindow
             {"Infantry" ,Infantry},
             {"Ranged" ,Ranged},
             {"Mounted" ,Mounted},
-            {"Siege Engine" ,SeigeEngine},
+            {"Siege Engine",SeigeEngine},
         };
 
         SetupIllustrationGroup();
@@ -63,6 +69,8 @@ public class ArmyWindow : MonoBehaviour, IWindow
             typeName.text = Toggle.ActiveMark.Placeholder.text;
             Load(typeName.text);
         };
+        upgradeIcon.OnClickEvents +=
+            delegate { OnUpgradeBtn(typeName.text); };
     }
 
     private void Start()
@@ -97,19 +105,89 @@ public class ArmyWindow : MonoBehaviour, IWindow
             elements[i].Icon.OnClickEvents +=
                 delegate
                 {
-                    manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
-                    manager.UpgradeResearchWindow.Load(typeDict[typeName.text].Types[captureIndex]);
+                    manager.Open(Window.UpgradeResearch);
+                    OnElementBtn(typeName.text,captureIndex);
                 };
         }
 
     }
 
+    private void OnElementBtn(string type, int index)
+    {
+        SoldierTable table = typeDict[type].AgentDatabase[index];
+        string name = typeDict[typeName.text].Types[index];
+
+       // server data
+        int level = 4;
+        int[] current = new int[] { 0, 1, 2, 3 };
+        int[] need;
+        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == level);
+
+        if (row != null)
+            need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };
+        else need = new int[4];
+
+        manager[Window.UpgradeResearch].Load(
+            name,
+            level,
+            current,
+            need,
+            row?.MightBonus,
+            row?.ResearchTime,
+            row?.TimeInt,
+            6
+            );
+    }
+
+    private void OnUpgradeBtn(string datatype)
+    {
+        // server data 
+        int level = 4;
+        int[] current = new int[] { 10000, 1, 2, 3 };
+
+        ArmyType info = typeDict[datatype];
+        manager.Open(Window.UpgradeResearch);
+        MainBaseTable table = manager[info.ConstructType] as MainBaseTable;
+
+        int[] need;
+        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == level);
+        if (row != null)
+        {
+            need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
+        }
+        else need = new int[4];
+
+        manager[Window.UpgradeResearch].Load
+            (typeName.text,
+            level,
+            current,
+            need,
+            row?.MightBonus,
+            row?.TimeMin,
+            row?.TimeInt,
+            row?.Required,
+            6 // research require
+            );
+    }
+
     public void Load(params object[] input)
     {
+        // data for test
         int mainLevel = Sync.Instance.MainBaseLevel;
-        int curLevel = input.TryGet<int>(1);
+        int curLevel = Sync.Instance.InfantryLevel;
 
-        ArmyType armyType = typeDict[(string)input[0]];
+        ArmyType armyType = typeDict[input.TryGet<string>(0)];
+        MainBaseTable table = manager[armyType.ConstructType] as MainBaseTable;
+
+        for (int i = 0, j = 0; i < table.Rows.Count && j < elements.Length; i++)
+        {
+            if (table.Rows[i].Unlock != null &&
+                table.Rows[i].Unlock != "")
+            {
+                elements[j].Icon.InteractableChange(curLevel >= table.Rows[i].Level);
+                j++;
+            }
+        }
 
         upgradeIcon.InteractableChange(mainLevel > curLevel);
         levelBar.Value = curLevel;
