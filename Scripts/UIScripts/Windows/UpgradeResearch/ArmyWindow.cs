@@ -8,6 +8,8 @@ using static UpgradeResearchManager;
 using ManualTable;
 using ManualTable.Row;
 using System.Linq;
+using EnumCollect;
+using CustomAttr;
 
 public class ArmyWindow : MonoBehaviour, IWindow
 {
@@ -19,11 +21,12 @@ public class ArmyWindow : MonoBehaviour, IWindow
     }
 
     [Serializable]
-    public struct ArmyType
+    public struct ElementTypeInfo
     {
-        public string[] Types;
+        public string[] Titles;
+        public ListUpgrade[] Types;
         public SoldierTable[] AgentDatabase;
-        public Database ConstructType;
+        public ListUpgrade ConstructType;
     }
 
     private UpgradeResearchManager manager;
@@ -44,21 +47,22 @@ public class ArmyWindow : MonoBehaviour, IWindow
     public Transform[] OrderElements;
 
     [Header("Army Type's Name")]
-    public ArmyType Infantry;
-    public ArmyType Ranged;
-    public ArmyType Mounted;
-    public ArmyType SeigeEngine;
-    private Dictionary<string, ArmyType> typeDict;
+    public ElementTypeInfo Infantry;
+    public ElementTypeInfo Ranged;
+    public ElementTypeInfo Mounted;
+    public ElementTypeInfo SeigeEngine;
+
+    private Dictionary<string, ElementTypeInfo> typeDict;
 
     private void Awake()
     {
         manager = GetComponentInParent<UpgradeResearchManager>();
 
-        typeDict = new Dictionary<string, ArmyType>()
+        typeDict = new Dictionary<string, ElementTypeInfo>()
         {
             {"Infantry" ,Infantry},
-            {"Ranged" ,Ranged},
-            {"Mounted" ,Mounted},
+            {"Ranged",Ranged},
+            {"Mounted",Mounted},
             {"Siege Engine",SeigeEngine},
         };
 
@@ -115,70 +119,61 @@ public class ArmyWindow : MonoBehaviour, IWindow
     private void OnElementBtn(string type, int index)
     {
         SoldierTable table = typeDict[type].AgentDatabase[index];
-        string name = typeDict[typeName.text].Types[index];
+        ListUpgrade title = typeDict[typeName.text].Types[index];
 
-       // server data
-        int level = 4;
-        int[] current = new int[] { 0, 1, 2, 3 };
         int[] need;
-        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == level);
+        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == Sync.Instance.Levels.CurrentUpgradeLv);
 
         if (row != null)
             need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };
         else need = new int[4];
 
         manager[Window.UpgradeResearch].Load(
-            name,
-            level,
-            current,
+            title,
             need,
             row?.MightBonus,
             row?.ResearchTime,
-            row?.TimeInt,
-            6
+            row?.TimeInt
             );
     }
 
     private void OnUpgradeBtn(string datatype)
     {
-        // server data 
-        int level = 4;
-        int[] current = new int[] { 10000, 1, 2, 3 };
-
-        ArmyType info = typeDict[datatype];
+        // open
         manager.Open(Window.UpgradeResearch);
+        // server data 
+        int level = Sync.Instance.Levels.CurrentUpgradeLv;
+
+        // get database
+        ElementTypeInfo info = typeDict[datatype];
         MainBaseTable table = manager[info.ConstructType] as MainBaseTable;
 
         int[] need;
         MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == level);
         if (row != null)
-        {
             need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
-        }
         else need = new int[4];
 
         manager[Window.UpgradeResearch].Load
-            (typeName.text,
-            level,
-            current,
+            (info.ConstructType,
             need,
             row?.MightBonus,
             row?.TimeMin,
-            row?.TimeInt,
-            row?.Required,
-            6 // research require
+            row?.TimeInt
             );
     }
 
     public void Load(params object[] input)
     {
         // data for test
-        int mainLevel = Sync.Instance.MainBaseLevel;
-        int curLevel = Sync.Instance.InfantryLevel;
+        int mainLevel = Sync.Instance.Levels.MainbaseLevel;
+        int curLevel = Sync.Instance.Levels.CurrentUpgradeLv;
 
-        ArmyType armyType = typeDict[input.TryGet<string>(0)];
+        // get database
+        ElementTypeInfo armyType = typeDict[input.TryGet<string>(0)];
         MainBaseTable table = manager[armyType.ConstructType] as MainBaseTable;
 
+        // active button element from 1 -> 4
         for (int i = 0, j = 0; i < table.Rows.Count && j < elements.Length; i++)
         {
             if (table.Rows[i].Unlock != null &&
@@ -189,12 +184,14 @@ public class ArmyWindow : MonoBehaviour, IWindow
             }
         }
 
+        // check active or not for upgrade btn
         upgradeIcon.InteractableChange(mainLevel > curLevel);
-        levelBar.Value = curLevel;
 
+        // set level bar value and rename element btn
+        levelBar.Value = curLevel;
         for (int i = 0; i < armyType.Types.Length; i++)
         {
-            elements[i].Icon.Placeholder.text = armyType.Types[i];
+            elements[i].Icon.Placeholder.text = armyType.Titles[i];
         }
     }
 

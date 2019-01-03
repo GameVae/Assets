@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Network.Sync;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 
@@ -14,7 +15,7 @@ public class BtnEffect : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
      
     public void OnPointerDown(PointerEventData eventData)
     {
-        transform.localScale = changeCalc * changeTransform;        
+        transform.localScale = changeCalc * changeTransform;
     }
 
     public void OnPointerUp(PointerEventData eventData)

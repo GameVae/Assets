@@ -1,4 +1,5 @@
-﻿using UI.Widget;
+﻿using EnumCollect;
+using UI.Widget;
 using UnityEngine;
 using static UpgradeResearchManager;
 
@@ -13,6 +14,9 @@ public class ResourceWindow : MonoBehaviour, IWindow
     [Header("Research")]
     public Transform[] Researchs;
     private ArmyWindow.Element[] researchElements;
+
+    public ListUpgrade[] ResearchTypes;
+    public ListUpgrade[] ConstructTypes;
 
     private void Awake()
     {
@@ -39,7 +43,7 @@ public class ResourceWindow : MonoBehaviour, IWindow
                 {
                     manager.Open(Window.UpgradeResearch);
                     manager[Window.UpgradeResearch]
-                    .Load(constructElements[captureIndex].Icon.Placeholder.text);
+                    .Load(ConstructTypes[captureIndex]);
                 };
         }
     }
@@ -59,9 +63,9 @@ public class ResourceWindow : MonoBehaviour, IWindow
             researchElements[i].Icon.OnClickEvents +=
                delegate 
                {
-                   manager.Open(UpgradeResearchManager.Window.UpgradeResearch);
-                   manager[UpgradeResearchManager.Window.UpgradeResearch].
-                   Load(researchElements[captureIndex].Icon.Placeholder.text);
+                   manager.Open(Window.UpgradeResearch);
+                   manager[Window.UpgradeResearch].
+                   Load(ResearchTypes[captureIndex]);
                };
         }
     }

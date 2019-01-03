@@ -3,18 +3,10 @@ using UI.Widget;
 using System.Collections.Generic;
 using UnityEngine;
 using ManualTable.Interface;
+using EnumCollect;
 
 public class UpgradeResearchManager : MonoBehaviour
 {
-    public enum Database
-    {
-        Mainbase,
-        Infantry,
-        Ranged,
-        Mounted,
-        SeigeEngine
-    }
-
     public enum Window
     {
         None,
@@ -70,11 +62,11 @@ public class UpgradeResearchManager : MonoBehaviour
 
         constructDB = new Dictionary<int, ITable>()
         {
-            {Database.Mainbase.GetHashCode()    ,MainbaseDB},
-            {Database.Infantry.GetHashCode()    ,InfantryDB },
-            {Database.Ranged.GetHashCode()      ,null },
-            {Database.Mounted.GetHashCode()     ,null },
-            {Database.SeigeEngine.GetHashCode() ,null }
+            {ListUpgrade.MainBase.GetHashCode()    ,MainbaseDB},
+            {ListUpgrade.Infantry.GetHashCode()    ,InfantryDB },
+            {ListUpgrade.Ranged.GetHashCode()      ,null },
+            {ListUpgrade.Mounted.GetHashCode()     ,null },
+            {ListUpgrade.SiegeEngine.GetHashCode() ,null }
         };
         inited = true;
     }
@@ -134,7 +126,7 @@ public class UpgradeResearchManager : MonoBehaviour
         }
     }
 
-    public ITable this[Database type]
+    public ITable this[ListUpgrade type]
     {
         get
         {

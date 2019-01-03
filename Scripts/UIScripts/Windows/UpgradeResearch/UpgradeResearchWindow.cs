@@ -1,12 +1,20 @@
-﻿using ManualTable.Row;
+﻿using EnumCollect;
 using Network.Sync;
-using System.Linq;
+using System;
+using System.Text.RegularExpressions;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
 
 public class UpgradeResearchWindow : MonoBehaviour, IWindow
 {
+    private ListUpgrade type;
+    private int[] curMaterials;
+    private int[] needMaterials;
+    private int mightBonus;
+    private string timeMin;
+    private int timeInt;
+
     private UpgradeResearchManager manager;
 
     public TextMeshProUGUI Title;
@@ -34,84 +42,123 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
     public GUIInteractableIcon InstantBtn;
     public GUIInteractableIcon LevelUpBtn;
 
+
     private void Awake()
     {
         manager = GetComponentInParent<UpgradeResearchManager>();
+        curMaterials = new int[4];
     }
 
     private void Start()
     {
     }
 
-
+    private void Update()
+    {
+        ProgressBarCount();
+    }
     /// <summary>
     /// 0: name - string
-    /// 1: current level - int
-    /// 2: current material - int[4]
-    /// 3: need material - int[4]
-    /// 4: might bonus - int
-    /// 5: time min - string
-    /// 6: time int - int
-    /// 7: building require level - int
-    /// 8: research require level - int
+    /// 1: need material - int[4]
+    /// 2: might bonus - int
+    /// 3: time min - string
+    /// 4: time int - int
     /// </summary>
     /// <param name="data">Params object</param>
     public void Load(params object[] data)
     {
-        string name = data.TryGet<string>(0);
-        int curLevel = data.TryGet<int>(1);
-        int[] curMaterials = data.TryGet<int[]>(2);
-        int[] needMaterials = data.TryGet<int[]>(3);
-        int mightBonus = data.TryGet<int>(4);
-        string timeMin = data.TryGet<string>(5);
-        int timeInt = data.TryGet<int>(6);
-        int buildingRequire = data.TryGet<int>(7);
-        int researchRequire = data.TryGet<int>(8);
+        type = data.TryGet<ListUpgrade>(0);
+        needMaterials = data.TryGet<int[]>(1);
+        mightBonus = data.TryGet<int>(2);
+        timeMin = data.TryGet<string>(3);
+        timeInt = data.TryGet<int>(4);
 
-        // 1
-        Title.text = name;
+        ProgressSlider.Slider.MaxValue = timeInt;
+        bool activeProgressBar = type.IsUpgrade() ? type == Sync.Instance.UpgradeInfo.UpgradeType
+                                                              : type == Sync.Instance.UpgradeInfo.ResearchType;
+        ActiveButtonGroup(!activeProgressBar);
 
-        if (name != "Main Base")
-            ActiveButtonGroup((curLevel < Sync.Instance.MainBaseLevel && 
-                Sync.Instance.ResearchRemainTime == 0));
-        else ActiveButtonGroup(Sync.Instance.ResearchRemainTime == 0);
+        curMaterials[0] = Sync.Instance.ResInfo.Food;
+        curMaterials[1] = Sync.Instance.ResInfo.Wood;
+        curMaterials[2] = Sync.Instance.ResInfo.Stone;
+        curMaterials[3] = Sync.Instance.ResInfo.Metal;
+        // 1 - name - title
+        Title.text = type.ToString().InsertSpace();
+
 
         NumberName.text = "Might Bonus";
         Amount.text = string.Format("{0}", mightBonus);
         DurationText.text = "Duration: " + timeMin;
 
-        ProgressSlider.Slider.MaxValue = timeInt;
-        ProgressSlider.Slider.Value = (float)(timeInt - Sync.Instance.ResearchRemainTime);
 
-        if (curMaterials != null)
+        if (curMaterials != null && needMaterials != null)
         {
             for (int i = 0; i < 4; i++)
             {
+                int captureInt = i;
+                OrderMaterialElements[i].Button.OnClickEvents += delegate
+                {
+                    SetMaterialRequirement(captureInt, ++curMaterials[captureInt], needMaterials[captureInt]);
+                };
                 SetMaterialRequirement(i, curMaterials[i], needMaterials[i]);
             }
         }
 
-        // test 
-        int testLevel = 5;
-        BuildingLevel.transform.parent.gameObject.SetActive(testLevel <= buildingRequire);
-        BuildingLevel.text = buildingRequire.ToString();
+        if (Sync.Instance.Levels.CurrentUpgradeLv < Sync.Instance.Levels.UpgradeRequire)
+        {
+            BuildingLevel.transform.parent.gameObject.SetActive(true);
+            BuildingLevel.text = Sync.Instance.Levels.UpgradeRequire.ToString();
+            BuildingLevel.color = Color.red;
+        }
+        else BuildingLevel.transform.parent.gameObject.SetActive(false);
 
-        ResearchLevel.transform.parent.gameObject.SetActive(testLevel <= researchRequire);
-        ResearchLevel.text = researchRequire.ToString();
+        if (Sync.Instance.Levels.CurrentUpgradeLv < Sync.Instance.Levels.ResearchRequire)
+        {
+            ResearchLevel.transform.parent.gameObject.SetActive(true);
+            ResearchLevel.text = Sync.Instance.Levels.ResearchRequire.ToString();
+            ResearchLevel.color = Color.red;
+        }
+        else ResearchLevel.transform.parent.gameObject.SetActive(false);
+
     }
 
     private void SetMaterialRequirement(int index, int cur, int need)
     {
         GUIHorizontalInfo material = OrderMaterialElements[index];
         material.InteractableChange(cur < need);
-        material.Placeholder.text = string.Format("{0}/{1}", cur, need);
+        if (cur >= need)
+            material.Placeholder.text = string.Format("{0}/{1}", cur, need);
+        else
+            material.Placeholder.text = string.Format("<color=red>{0}</color>/{1}", cur, need);
     }
 
     private void ActiveButtonGroup(bool value)
     {
         InstantBtn.InteractableChange(value);
         LevelUpBtn.InteractableChange(value);
-        ProgressSlider.Button.InteractableChange(!value);
+        ProgressSlider.gameObject.SetActive(!value);
+    }
+
+
+    private void ProgressBarCount()
+    {
+        if (ProgressSlider.gameObject.activeInHierarchy)
+        {
+            if (type.IsUpgrade())
+            {
+                ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
+                   TimeSpan.FromSeconds(Sync.Instance.UpgradeInfo.UpgradeRemainingInt).ToString();
+                if (Sync.Instance.UpgradeInfo.UpgradeRemainingInt == 0)
+                    ActiveButtonGroup(true);
+            }
+            else
+            {
+                ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
+                   TimeSpan.FromSeconds(Sync.Instance.UpgradeInfo.ResearchRemainingInt).ToString();
+                if (Sync.Instance.UpgradeInfo.ResearchRemainingInt == 0)
+                    ActiveButtonGroup(true);
+            }
+        }
     }
 
     public void Open()

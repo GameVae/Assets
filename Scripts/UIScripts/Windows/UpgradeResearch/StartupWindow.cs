@@ -1,6 +1,8 @@
-﻿using ManualTable;
+﻿using EnumCollect;
+using ManualTable;
 using ManualTable.Row;
 using Network.Sync;
+using System;
 using System.Linq;
 using UI.Widget;
 using UnityEngine;
@@ -30,15 +32,43 @@ public class StartupWindow : MonoBehaviour, IWindow
     {
     }
 
+    private void Update()
+    {
+        ProgressBarCount();
+    }
+
+    private void ProgressBarCount()
+    {
+        if (ResearchProgressBar.gameObject.activeInHierarchy)
+        {
+            ResearchProgressBar.Placeholder.text = Sync.Instance.UpgradeInfo.ResearchType.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(Sync.Instance.UpgradeInfo.ResearchRemainingInt)).ToString();
+            if (Sync.Instance.UpgradeInfo.ResearchRemainingInt <= 0)
+                ResearchProgressBar.gameObject.SetActive(false);
+        }
+
+        if (UpgradeProgressBar.gameObject.activeInHierarchy)
+        {
+            UpgradeProgressBar.Placeholder.text = Sync.Instance.UpgradeInfo.UpgradeType.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(Sync.Instance.UpgradeInfo.UpgradeRemainingInt)).ToString();
+            if (Sync.Instance.UpgradeInfo.UpgradeRemainingInt <= 0)
+                UpgradeProgressBar.gameObject.SetActive(false);
+        }
+    }
+
     public void Load(params object[] input)
     {
-        MainbaseLevelBar.Value = Sync.Instance.MainBaseLevel;
+        MainbaseLevelBar.Value = Sync.Instance.Levels.MainbaseLevel;
+
+        UpgradeProgressBar.gameObject.SetActive(Sync.Instance.UpgradeInfo.UpgradeRemainingStr != null &&
+            Sync.Instance.UpgradeInfo.UpgradeRemainingStr != "" && Sync.Instance.UpgradeInfo.UpgradeRemainingInt != 0);
+        ResearchProgressBar.gameObject.SetActive(Sync.Instance.UpgradeInfo.ResearchRemainingStr != null &&
+            Sync.Instance.UpgradeInfo.ResearchRemainingStr != "" && Sync.Instance.UpgradeInfo.ResearchRemainingInt != 0);
     }
 
     private void Init()
     {
         manager = GetComponentInParent<UpgradeResearchManager>();
-        //Mainbase.OnClickEvents += delegate { manager.Open(UpgradeResearchManager.Window.UpgradeResearch); };
         Mainbase.OnClickEvents += OnMainbaseBtn;
         Resource.OnClickEvents += delegate { manager.Open(Window.Resource); };
         Defense.OnClickEvents += delegate { manager.Open(Window.Defense); };
@@ -48,8 +78,8 @@ public class StartupWindow : MonoBehaviour, IWindow
 
     private void OnMainbaseBtn()
     {
-        int mainLevel = Sync.Instance.MainBaseLevel;
-        MainBaseTable table = manager[Database.Mainbase] as MainBaseTable;
+        int mainLevel = Sync.Instance.Levels.MainbaseLevel;
+        MainBaseTable table = manager[ListUpgrade.MainBase] as MainBaseTable;
         MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == mainLevel);
 
         int[] need = (row == null) ? new int[4] :
@@ -57,9 +87,7 @@ public class StartupWindow : MonoBehaviour, IWindow
 
         manager.Open(Window.UpgradeResearch);
         manager[Window.UpgradeResearch].Load
-            ("Main Base",
-            mainLevel,
-            new int[] { 0, 0, 0, 0 },
+            (ListUpgrade.MainBase,
             need,
             row?.MightBonus,
             row?.TimeMin,

@@ -1,44 +1,95 @@
-﻿
+﻿using EnumCollect;
+using System;
+using System.Threading;
+using UnityEngine;
 
 namespace Network.Sync
 {
-    public sealed class Sync
+    public sealed class Sync : MonoBehaviour
     {
-        public static Sync Instance
+        public static Sync Instance { get; private set; }
+
+        public ResourceInfo ResInfo;
+        public Level Levels;
+        public UpgradeInfo UpgradeInfo;
+
+        private float researchTimer;
+        private float upgradeTimer;
+        private void Awake()
         {
-            get { return instance ?? (instance = new Sync()); }
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else Destroy(Instance.gameObject);
         }
 
-        private static Sync instance;
-        private volatile int mainBaseLevel;
-        private volatile float upgradeRemainTime;
-        private volatile float researchRemainTime;
-
-        public int MainBaseLevel
+        private void Update()
         {
-            get { return mainBaseLevel; }
-            private set { mainBaseLevel = value; }
-        }
+            if(UpgradeInfo.ResearchRemainingInt > 0)
+            {
+                researchTimer += Time.deltaTime;
+                if(researchTimer >= 1.0f)
+                {
+                    UpgradeInfo.ResearchRemainingInt -= 1;
+                    researchTimer -= 1.0f;
+                    if(UpgradeInfo.ResearchRemainingInt <= 0)
+                    {
+                        UpgradeInfo.ResearchRemainingInt = 0;
+                        Levels.CurrentResearchLv++;
+                    }
+                }
+            }
 
-        public float UpgradeRemainTime
-        {
-            get { return upgradeRemainTime; }
-            private set { upgradeRemainTime = value; }
+            if (UpgradeInfo.UpgradeRemainingInt > 0)
+            {
+                upgradeTimer += Time.deltaTime;
+                if (upgradeTimer >= 1.0f)
+                {
+                    UpgradeInfo.UpgradeRemainingInt -= 1;
+                    upgradeTimer -= 1.0f;
+                    if(UpgradeInfo.UpgradeRemainingInt <= 0)
+                    {
+                        UpgradeInfo.UpgradeRemainingInt = 0;
+                        Levels.CurrentUpgradeLv++;
+                    }
+                }
+            }
         }
+    }
 
-        public float ResearchRemainTime
-        {
-            get { return researchRemainTime; }
-            private set { researchRemainTime = value; }
-        }
+    [Serializable]
+    public class ResourceInfo
+    {
+        public int Food;
+        public int Wood;
+        public int Stone;
+        public int Metal;
+    }
 
-        public int InfantryLevel { get; set; }
-        
-        public void Init()
-        {
-            MainBaseLevel = 10;
-            ResearchRemainTime = 0;
-            InfantryLevel = 9;
-        }
+    [Serializable]
+    public class Level
+    {
+        public int MainbaseLevel;
+
+        public int CurrentUpgradeLv;
+        public int CurrentResearchLv;
+
+        public int UpgradeRequire;
+        public int ResearchRequire;
+    }
+
+    [Serializable]
+    public class UpgradeInfo
+    {
+        public ListUpgrade UpgradeType;
+        public ListUpgrade ResearchType;
+
+        public string ResearchRemainingStr;
+        public string UpgradeRemainingStr;
+
+        public int ResearchRemainingInt;
+        public int UpgradeRemainingInt;
     }
 }

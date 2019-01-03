@@ -63,9 +63,6 @@ public sealed class Connection : MonoBehaviour
         });
         timer.Start();
         StartCoroutine("CheckVersion");
-
-        /// test 
-        Sync.Instance.Init();
     }
 
     private void Update()
