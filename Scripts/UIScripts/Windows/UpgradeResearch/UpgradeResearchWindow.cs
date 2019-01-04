@@ -74,14 +74,14 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
         timeInt = data.TryGet<int>(4);
 
         ProgressSlider.Slider.MaxValue = timeInt;
-        bool activeProgressBar = type.IsUpgrade() ? type == Sync.Instance.UpgradeInfo.UpgradeType
-                                                              : type == Sync.Instance.UpgradeInfo.ResearchType;
+        bool activeProgressBar = type.IsUpgrade() ? type == manager.Sync.UpgradeInfo.UpgradeType
+                                                              : type == manager.Sync.UpgradeInfo.ResearchType;
         ActiveButtonGroup(!activeProgressBar);
 
-        curMaterials[0] = Sync.Instance.ResInfo.Food;
-        curMaterials[1] = Sync.Instance.ResInfo.Wood;
-        curMaterials[2] = Sync.Instance.ResInfo.Stone;
-        curMaterials[3] = Sync.Instance.ResInfo.Metal;
+        curMaterials[0] = manager.Sync.ResInfo.Food;
+        curMaterials[1] = manager.Sync.ResInfo.Wood;
+        curMaterials[2] = manager.Sync.ResInfo.Stone;
+        curMaterials[3] = manager.Sync.ResInfo.Metal;
         // 1 - name - title
         Title.text = type.ToString().InsertSpace();
 
@@ -104,18 +104,18 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
             }
         }
 
-        if (Sync.Instance.Levels.CurrentUpgradeLv < Sync.Instance.Levels.UpgradeRequire)
+        if (manager.Sync.Levels.CurrentUpgradeLv < manager.Sync.Levels.UpgradeRequire)
         {
             BuildingLevel.transform.parent.gameObject.SetActive(true);
-            BuildingLevel.text = Sync.Instance.Levels.UpgradeRequire.ToString();
+            BuildingLevel.text = manager.Sync.Levels.UpgradeRequire.ToString();
             BuildingLevel.color = Color.red;
         }
         else BuildingLevel.transform.parent.gameObject.SetActive(false);
 
-        if (Sync.Instance.Levels.CurrentUpgradeLv < Sync.Instance.Levels.ResearchRequire)
+        if (manager.Sync.Levels.CurrentUpgradeLv < manager.Sync.Levels.ResearchRequire)
         {
             ResearchLevel.transform.parent.gameObject.SetActive(true);
-            ResearchLevel.text = Sync.Instance.Levels.ResearchRequire.ToString();
+            ResearchLevel.text = manager.Sync.Levels.ResearchRequire.ToString();
             ResearchLevel.color = Color.red;
         }
         else ResearchLevel.transform.parent.gameObject.SetActive(false);
@@ -147,15 +147,15 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
             if (type.IsUpgrade())
             {
                 ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
-                   TimeSpan.FromSeconds(Sync.Instance.UpgradeInfo.UpgradeRemainingInt).ToString();
-                if (Sync.Instance.UpgradeInfo.UpgradeRemainingInt == 0)
+                   TimeSpan.FromSeconds(manager.Sync.UpgradeInfo.UpgradeRemainingInt).ToString();
+                if (manager.Sync.UpgradeInfo.UpgradeRemainingInt == 0)
                     ActiveButtonGroup(true);
             }
             else
             {
                 ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
-                   TimeSpan.FromSeconds(Sync.Instance.UpgradeInfo.ResearchRemainingInt).ToString();
-                if (Sync.Instance.UpgradeInfo.ResearchRemainingInt == 0)
+                   TimeSpan.FromSeconds(manager.Sync.UpgradeInfo.ResearchRemainingInt).ToString();
+                if (manager.Sync.UpgradeInfo.ResearchRemainingInt == 0)
                     ActiveButtonGroup(true);
             }
         }

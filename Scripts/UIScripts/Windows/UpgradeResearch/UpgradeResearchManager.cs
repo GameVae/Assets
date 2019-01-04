@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ManualTable.Interface;
 using EnumCollect;
+using Network.Sync;
 
 public class UpgradeResearchManager : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class UpgradeResearchManager : MonoBehaviour
     private Window curWindow;
     private bool inited;
 
+    public Connection Conn;
+
     [Header("Construct Database")]
     [SerializeField] private MainBaseTable MainbaseDB;
     [SerializeField] private MainBaseTable InfantryDB;
@@ -38,6 +41,7 @@ public class UpgradeResearchManager : MonoBehaviour
     [SerializeField] private ResourceWindow ResourceWindow;
     [SerializeField] private DefenseWindow DefenseWindow;
 
+    public Sync Sync { get { return Conn.Sync; } }
 
     private void Awake()
     {

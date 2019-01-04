@@ -91,9 +91,9 @@ public class Registerv3 : MonoBehaviour
 
     private void Awake()
     {
-        registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
-        registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
-        registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
+        //registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
+        //registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
+        //registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
         socketIO = Connection.Instance.Socket;
     }
@@ -109,7 +109,7 @@ public class Registerv3 : MonoBehaviour
     private void R_REGISTER(SocketIOEvent obj)
     {
         Debug.Log("R_REGISTER: " + obj.data);
-        int successBool = int.Parse(obj.data["Message"].ToString());
+        int successBool = int.Parse(obj.data["R_REGISTER"].ToString());
         Debug.Log("successBool: " + successBool);
         switch (successBool)
         {
@@ -189,7 +189,7 @@ public class Registerv3 : MonoBehaviour
 
     private void setRegisterClick()
     {
-        if (checkUserAccount() == true)
+        // if (checkUserAccount() == true)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["UserName"] = registerUI.UserName.text;
@@ -197,10 +197,16 @@ public class Registerv3 : MonoBehaviour
             data["Email"] = registerUI.Email.text;
             UserName = registerUI.UserName.text;
             Password = md5String(registerUI.Password.text);
-            socketIO.Emit("S_REGISTER", new JSONObject(data));
             registerUI.RegisterBtn.interactable = false;
+            S_REGISTER(data);
         }
-        registerUI.RegisterBtn.interactable = !checkUserAccount();
+        // registerUI.RegisterBtn.interactable = !checkUserAccount();
+    }
+
+    public void S_REGISTER(Dictionary<string,string> data)
+    {
+        socketIO.Emit("S_REGISTER", new JSONObject(data));
+
     }
 
     private bool checkUserAccount()

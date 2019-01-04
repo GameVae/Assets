@@ -10,6 +10,7 @@ using static UpgradeResearchManager;
 
 public class StartupWindow : MonoBehaviour, IWindow
 {
+    private bool inited;
     private UpgradeResearchManager manager;
 
     public GUISliderWithBtn UpgradeProgressBar;
@@ -24,8 +25,8 @@ public class StartupWindow : MonoBehaviour, IWindow
 
     private void Awake()
     {
-        Init();
-        MainbaseLevelBar.MaxValue = 20;
+        TimeSpan time = TimeSpan.ParseExact("1d 12:12:12", "%d hh:mm:ss", System.Globalization.CultureInfo.CurrentCulture);
+        Debug.Log(time);
     }
 
     private void Start()
@@ -41,29 +42,29 @@ public class StartupWindow : MonoBehaviour, IWindow
     {
         if (ResearchProgressBar.gameObject.activeInHierarchy)
         {
-            ResearchProgressBar.Placeholder.text = Sync.Instance.UpgradeInfo.ResearchType.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(Sync.Instance.UpgradeInfo.ResearchRemainingInt)).ToString();
-            if (Sync.Instance.UpgradeInfo.ResearchRemainingInt <= 0)
+            ResearchProgressBar.Placeholder.text = manager.Sync.UpgradeInfo.ResearchType.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.UpgradeInfo.ResearchRemainingInt)).ToString();
+            if (manager.Sync.UpgradeInfo.ResearchRemainingInt <= 0)
                 ResearchProgressBar.gameObject.SetActive(false);
         }
 
         if (UpgradeProgressBar.gameObject.activeInHierarchy)
         {
-            UpgradeProgressBar.Placeholder.text = Sync.Instance.UpgradeInfo.UpgradeType.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(Sync.Instance.UpgradeInfo.UpgradeRemainingInt)).ToString();
-            if (Sync.Instance.UpgradeInfo.UpgradeRemainingInt <= 0)
+            UpgradeProgressBar.Placeholder.text = manager.Sync.UpgradeInfo.UpgradeType.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.UpgradeInfo.UpgradeRemainingInt)).ToString();
+            if (manager.Sync.UpgradeInfo.UpgradeRemainingInt <= 0)
                 UpgradeProgressBar.gameObject.SetActive(false);
         }
     }
 
     public void Load(params object[] input)
     {
-        MainbaseLevelBar.Value = Sync.Instance.Levels.MainbaseLevel;
+        MainbaseLevelBar.Value = manager.Sync.Levels.MainbaseLevel;
 
-        UpgradeProgressBar.gameObject.SetActive(Sync.Instance.UpgradeInfo.UpgradeRemainingStr != null &&
-            Sync.Instance.UpgradeInfo.UpgradeRemainingStr != "" && Sync.Instance.UpgradeInfo.UpgradeRemainingInt != 0);
-        ResearchProgressBar.gameObject.SetActive(Sync.Instance.UpgradeInfo.ResearchRemainingStr != null &&
-            Sync.Instance.UpgradeInfo.ResearchRemainingStr != "" && Sync.Instance.UpgradeInfo.ResearchRemainingInt != 0);
+        UpgradeProgressBar.gameObject.SetActive(manager.Sync.UpgradeInfo.UpgradeRemainingStr != null &&
+            manager.Sync.UpgradeInfo.UpgradeRemainingStr != "" && manager.Sync.UpgradeInfo.UpgradeRemainingInt != 0);
+        ResearchProgressBar.gameObject.SetActive(manager.Sync.UpgradeInfo.ResearchRemainingStr != null &&
+            manager.Sync.UpgradeInfo.ResearchRemainingStr != "" && manager.Sync.UpgradeInfo.ResearchRemainingInt != 0);
     }
 
     private void Init()
@@ -78,7 +79,7 @@ public class StartupWindow : MonoBehaviour, IWindow
 
     private void OnMainbaseBtn()
     {
-        int mainLevel = Sync.Instance.Levels.MainbaseLevel;
+        int mainLevel = manager.Sync.Levels.MainbaseLevel;
         MainBaseTable table = manager[ListUpgrade.MainBase] as MainBaseTable;
         MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == mainLevel);
 
@@ -97,6 +98,12 @@ public class StartupWindow : MonoBehaviour, IWindow
 
     public void Open()
     {
+        if(!inited)
+        {
+            Init();
+            MainbaseLevelBar.MaxValue = 20;
+            inited = true;
+        }
         Load();
         gameObject.SetActive(true);
     }

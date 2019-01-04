@@ -13,7 +13,7 @@ public class GetRSSData : MonoBehaviour {
         else { Destroy(gameObject); }
     }
 
-    private void R_GET_RSS(SocketIOEvent obj)
+    public void R_GET_RSS(SocketIOEvent obj)
     {
         RSS_Table.LoadTable(obj.data["Data"]);
     }

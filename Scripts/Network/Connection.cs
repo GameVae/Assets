@@ -9,6 +9,8 @@ public sealed class Connection : MonoBehaviour
 {
     public static Connection Instance;
 
+    public Sync Sync;
+
     public SocketIOComponent SocketComponent;
 
     public SocketIOComponent Socket
@@ -72,9 +74,12 @@ public sealed class Connection : MonoBehaviour
             if (pingElapsed >= PingTimeOut)
             {
                 SocketComponent.Close();
-                Debug.Log("Closed");
+#if UNITY_EDITOR
+                Debug.Log("Connection Closed");
+#endif
             }
         }
+        // Sync.Update();
     }
 
     private void OnApplicationQuit()

@@ -1,31 +1,20 @@
 ﻿using EnumCollect;
 using System;
-using System.Threading;
 using UnityEngine;
 
 namespace Network.Sync
 {
-    public sealed class Sync : MonoBehaviour
+    [CreateAssetMenu(fileName = @"Sync",menuName = @"Conn/Sync",order = 1)]
+    public sealed class Sync : ScriptableObject
     {
-        public static Sync Instance { get; private set; }
-
         public ResourceInfo ResInfo;
         public Level Levels;
         public UpgradeInfo UpgradeInfo;
 
         private float researchTimer;
         private float upgradeTimer;
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else Destroy(Instance.gameObject);
-        }
 
-        private void Update()
+        public void Update()
         {
             if(UpgradeInfo.ResearchRemainingInt > 0)
             {

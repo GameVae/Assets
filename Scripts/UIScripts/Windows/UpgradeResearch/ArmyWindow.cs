@@ -122,7 +122,7 @@ public class ArmyWindow : MonoBehaviour, IWindow
         ListUpgrade title = typeDict[typeName.text].Types[index];
 
         int[] need;
-        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == Sync.Instance.Levels.CurrentUpgradeLv);
+        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == manager.Sync.Levels.CurrentUpgradeLv);
 
         if (row != null)
             need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };
@@ -142,7 +142,7 @@ public class ArmyWindow : MonoBehaviour, IWindow
         // open
         manager.Open(Window.UpgradeResearch);
         // server data 
-        int level = Sync.Instance.Levels.CurrentUpgradeLv;
+        int level = manager.Conn.Sync.Levels.CurrentUpgradeLv;
 
         // get database
         ElementTypeInfo info = typeDict[datatype];
@@ -166,8 +166,8 @@ public class ArmyWindow : MonoBehaviour, IWindow
     public void Load(params object[] input)
     {
         // data for test
-        int mainLevel = Sync.Instance.Levels.MainbaseLevel;
-        int curLevel = Sync.Instance.Levels.CurrentUpgradeLv;
+        int mainLevel = manager.Sync.Levels.MainbaseLevel;
+        int curLevel = manager.Sync.Levels.CurrentUpgradeLv;
 
         // get database
         ElementTypeInfo armyType = typeDict[input.TryGet<string>(0)];

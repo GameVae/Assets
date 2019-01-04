@@ -24,9 +24,9 @@ public class Register : MonoBehaviour
 
     private void Awake()
     {
-        registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
-        registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
-        registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
+        //registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
+        //registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
+        //registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
         registerUI.RegisterBtn.onClick.AddListener(() => setRegisterClick());
         registerUI.CloseBtn.onClick.AddListener(() => registerUI.ClearInfo());
@@ -118,16 +118,21 @@ public class Register : MonoBehaviour
 
     private void setRegisterClick()
     {
-        if (checkUserAccount() == true)
+        // if (checkUserAccount() == true)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
 
             data["UserName"] = registerUI.UserName.text;
             data["Password"] = md5String(registerUI.Password.text);
             data["Email"] = registerUI.Email.text;
-            SocketIO.Emit("S_REGISTER", new JSONObject(data));
+            S_REGISTER(data);
         }
         registerUI.RegisterBtn.interactable = !checkUserAccount();
+    }
+
+    public void S_REGISTER(Dictionary<string, string>  data)
+    {
+        SocketIO.Emit("S_REGISTER", new JSONObject(data));
     }
 
     private bool checkUserAccount()
@@ -137,9 +142,9 @@ public class Register : MonoBehaviour
         {
             checkBool = true;
         }
-        registerUI.WarningUserName.SetActive(!checkUserName);
-        registerUI.WarningPassword.SetActive(!checkPassword);
-        registerUI.WarningEmail.SetActive(!checkEmail);
+        //registerUI.WarningUserName.SetActive(!checkUserName);
+        //registerUI.WarningPassword.SetActive(!checkPassword);
+        //registerUI.WarningEmail.SetActive(!checkEmail);
 
         return checkBool;
     }
