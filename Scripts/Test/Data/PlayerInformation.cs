@@ -60,6 +60,7 @@ public class PlayerInformation : MonoBehaviour {
     void Awake () {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
+        Connection = Connection.Instance;
     }
     private void Start()
     {

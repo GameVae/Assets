@@ -91,9 +91,9 @@ public class Registerv3 : MonoBehaviour
 
     private void Awake()
     {
-        //registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
-        //registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
-        //registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
+        registerUI.UserName.onEndEdit.AddListener(delegate { checkUserNameInput(registerUI.UserName.text); });
+        registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
+        registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
         socketIO = Connection.Instance.Socket;
     }
@@ -118,7 +118,7 @@ public class Registerv3 : MonoBehaviour
                 StartCoroutine("showWarningText");
                 break;
             case 1:
-                LoginScript.instances.S_LOGIN(UserName, Password);
+                //LoginScript.instances.S_LOGIN(UserName, Password);
                 Debug.Log("Load user data to map scene");
                 break;
         }
@@ -189,7 +189,7 @@ public class Registerv3 : MonoBehaviour
 
     private void setRegisterClick()
     {
-        // if (checkUserAccount() == true)
+        if (checkUserAccount() == true)
         {
             Dictionary<string, string> data = new Dictionary<string, string>();
             data["UserName"] = registerUI.UserName.text;
@@ -200,7 +200,7 @@ public class Registerv3 : MonoBehaviour
             registerUI.RegisterBtn.interactable = false;
             S_REGISTER(data);
         }
-        // registerUI.RegisterBtn.interactable = !checkUserAccount();
+        registerUI.RegisterBtn.interactable = !checkUserAccount();
     }
 
     public void S_REGISTER(Dictionary<string,string> data)

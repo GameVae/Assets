@@ -131,10 +131,11 @@ public class LoginScript : MonoBehaviour
     public void S_LOGIN(string UserName, string Password)
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
-        data["name"] = UserName;
-        data["password"] = md5String(Password);
-        data["modelDevide"] = SystemInfo.deviceModel;
-        data["ramDevide"] = SystemInfo.systemMemorySize.ToString();
+        data["UserName"] = UserName;
+        data["Password"] = md5String(Password);
+        data["Model_Device"] = SystemInfo.deviceModel;
+        data["Ram_Device"] = SystemInfo.systemMemorySize.ToString();
         socketIO.Emit("S_LOGIN", new JSONObject(data));
+
     }
 }
