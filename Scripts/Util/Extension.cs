@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 public static class Extension
 {
@@ -38,5 +39,25 @@ public static class Extension
     public static string InsertSpace(this string value)
     {
         return Regex.Replace(value, "([a-z])([A-Z])", "$1 $2");
+    }
+
+    public static Vector3Int Parse3Int(this string value)
+    {
+        try
+        {
+            string[] xyz = value.Split(',');
+            return new Vector3Int(int.Parse(xyz[0]), int.Parse(xyz[1]), int.Parse(xyz[2]));
+        }
+        catch { return Vector3Int.zero; }
+    }
+
+    public static Vector3 Parse3Float(this string value)
+    {
+        try
+        {
+            string[] xyz = value.Split(',');
+            return new Vector3(float.Parse(xyz[0]), float.Parse(xyz[1]), float.Parse(xyz[2]));
+        }
+        catch { return Vector3.zero; }
     }
 }

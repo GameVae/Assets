@@ -48,6 +48,7 @@ public class ResourceManager : MonoBehaviour
             child = transform.GetChild(id);
             child.GetComponent<NaturalResource>().Id = id + 1;
             id++;
+            child.name = id.ToString();
         }
     }
 

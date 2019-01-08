@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UI.Widget;
 using static UpgradeResearchManager;
+using EnumCollect;
 
 public class TradeWindow : MonoBehaviour, IWindow
 {
@@ -9,10 +10,14 @@ public class TradeWindow : MonoBehaviour, IWindow
     [Header("Constructs"), Space]
     public ArmyWindow.Element Market;
     public ArmyWindow.Element PhoHienShip;
+    public ListUpgrade[] UpgradeTypes;
 
     [Header("Research"), Space]
     public Transform[] MarketResearchs;
     public Transform[] PHShiptResearchs;
+
+    public ListUpgrade[] MarketResearchTypes;
+    public ListUpgrade[] PHShiptResearchTypes;
 
     private ArmyWindow.Element[] marketResearchElements;
     private ArmyWindow.Element[] PHShipResearchElements;
@@ -40,7 +45,7 @@ public class TradeWindow : MonoBehaviour, IWindow
                 += delegate 
                 {
                     manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(marketResearchElements[captureIndex].Icon.Placeholder.text);
+                    manager[Window.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
                 };
         }
     }
@@ -61,7 +66,7 @@ public class TradeWindow : MonoBehaviour, IWindow
                 += delegate 
                 {
                     manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(PHShipResearchElements[captureIndex].Icon.Placeholder.text);
+                    manager[Window.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
                 };
         }
     }

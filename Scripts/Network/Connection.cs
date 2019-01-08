@@ -65,6 +65,9 @@ public sealed class Connection : MonoBehaviour
         });
         timer.Start();
         StartCoroutine("CheckVersion");
+
+        GameProgress.Instance.AddTask("check version");
+        GameProgress.Instance.StartTask();
     }
 
     private void Update()
@@ -79,7 +82,7 @@ public sealed class Connection : MonoBehaviour
 #endif
             }
         }
-        // Sync.Update();
+        // Sync?.Update();
     }
 
     private void OnApplicationQuit()

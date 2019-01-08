@@ -72,12 +72,12 @@ public class ResourceWindow : MonoBehaviour, IWindow
 
     public void Load(params object[] input)
     {
-        throw new System.NotImplementedException();
     }
 
     public void Open()
     {
         gameObject.SetActive(true);
+        Load();
     }
 
     public void Close()

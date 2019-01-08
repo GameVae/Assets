@@ -14,9 +14,7 @@ namespace UI.Widget
         [SerializeField, HideInInspector] protected bool interactable;
         [SerializeField, HideInInspector] protected bool isPlaceholder;
 
-#if UNITY_EDITOR
         [SerializeField, HideInInspector] protected bool isUIDependent;
-#endif
 
         public float FontSize
         {
@@ -117,12 +115,8 @@ namespace UI.Widget
             PlaceholderColor = newColor;
         }
 
-        protected virtual void Awake()
-        {
-        }
+        protected virtual void Awake() { }
 
-        protected virtual void Start()
-        {
-        }
+        protected virtual void Start() { }
     }
 }

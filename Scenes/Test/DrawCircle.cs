@@ -17,7 +17,6 @@ public class DrawCircle : MonoBehaviour
             float x = Mathf.Cos((radiusPerSegment * i) * Mathf.Deg2Rad) * 3;
             float y = Mathf.Sin((radiusPerSegment * i) * Mathf.Deg2Rad) * 3;
             lineRender.SetPosition(i, new Vector3(x, 0.5f, y));
-            // test add 21213
         }
     }
 }

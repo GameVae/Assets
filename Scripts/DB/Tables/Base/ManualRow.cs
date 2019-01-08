@@ -148,4 +148,20 @@ namespace ManualTable.Row
         public int TimeInt;
         public string Required;
     }
+
+    [System.Serializable]
+    public class PositionRow : IManualRow
+    {
+        public int ID;
+        public string Position_Transform;
+        public string Position_Cell;
+        public string ID_Type;
+        public string Comment;
+
+        public int FieldCount { get { return 5; } }
+
+        public string ValuesSequence { get { return ""; } }
+
+        public string KeyValuePairs { get { return ""; } }
+    }
 }

@@ -25,8 +25,6 @@ public class StartupWindow : MonoBehaviour, IWindow
 
     private void Awake()
     {
-        TimeSpan time = TimeSpan.ParseExact("1d 12:12:12", "%d hh:mm:ss", System.Globalization.CultureInfo.CurrentCulture);
-        Debug.Log(time);
     }
 
     private void Start()
@@ -42,17 +40,17 @@ public class StartupWindow : MonoBehaviour, IWindow
     {
         if (ResearchProgressBar.gameObject.activeInHierarchy)
         {
-            ResearchProgressBar.Placeholder.text = manager.Sync.UpgradeInfo.ResearchType.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.UpgradeInfo.ResearchRemainingInt)).ToString();
-            if (manager.Sync.UpgradeInfo.ResearchRemainingInt <= 0)
+            ResearchProgressBar.Placeholder.text = manager.Sync.BaseInfo.ResearchWait_ID.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.BaseInfo.ResearchRemainingInt)).ToString();
+            if (manager.Sync.BaseInfo.ResearchRemainingInt <= 0)
                 ResearchProgressBar.gameObject.SetActive(false);
         }
 
         if (UpgradeProgressBar.gameObject.activeInHierarchy)
         {
-            UpgradeProgressBar.Placeholder.text = manager.Sync.UpgradeInfo.UpgradeType.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.UpgradeInfo.UpgradeRemainingInt)).ToString();
-            if (manager.Sync.UpgradeInfo.UpgradeRemainingInt <= 0)
+            UpgradeProgressBar.Placeholder.text = manager.Sync.BaseInfo.UpgradeWait_ID.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.BaseInfo.UpgradeRemainingInt)).ToString();
+            if (manager.Sync.BaseInfo.UpgradeRemainingInt <= 0)
                 UpgradeProgressBar.gameObject.SetActive(false);
         }
     }
@@ -61,10 +59,10 @@ public class StartupWindow : MonoBehaviour, IWindow
     {
         MainbaseLevelBar.Value = manager.Sync.Levels.MainbaseLevel;
 
-        UpgradeProgressBar.gameObject.SetActive(manager.Sync.UpgradeInfo.UpgradeRemainingStr != null &&
-            manager.Sync.UpgradeInfo.UpgradeRemainingStr != "" && manager.Sync.UpgradeInfo.UpgradeRemainingInt != 0);
-        ResearchProgressBar.gameObject.SetActive(manager.Sync.UpgradeInfo.ResearchRemainingStr != null &&
-            manager.Sync.UpgradeInfo.ResearchRemainingStr != "" && manager.Sync.UpgradeInfo.ResearchRemainingInt != 0);
+        UpgradeProgressBar.gameObject.SetActive(manager.Sync.BaseInfo.UpgradeTime != null &&
+            manager.Sync.BaseInfo.UpgradeTime != "");
+        ResearchProgressBar.gameObject.SetActive(manager.Sync.BaseInfo.ResearchTime != null &&
+            manager.Sync.BaseInfo.ResearchTime != "");
     }
 
     private void Init()

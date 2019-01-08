@@ -36,8 +36,8 @@ public class ArmyWindow : MonoBehaviour, IWindow
 
     [Header("Illustration Group")]
     private TextMeshProUGUI typeName;
-    private GUIInteractableIcon illusIcon;
-    private GUIInteractableIcon upgradeIcon;
+    private GUIInteractableIcon illusImg;
+    private GUIInteractableIcon upgradeBtn;
     private GUIProgressSlider levelBar;
     public Transform IllustrationGroup;
 
@@ -73,7 +73,7 @@ public class ArmyWindow : MonoBehaviour, IWindow
             typeName.text = Toggle.ActiveMark.Placeholder.text;
             Load(typeName.text);
         };
-        upgradeIcon.OnClickEvents +=
+        upgradeBtn.OnClickEvents +=
             delegate { OnUpgradeBtn(typeName.text); };
     }
 
@@ -85,9 +85,9 @@ public class ArmyWindow : MonoBehaviour, IWindow
     private void SetupIllustrationGroup()
     {
         typeName = IllustrationGroup.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
-        illusIcon = IllustrationGroup.GetChild(0).GetComponentInChildren<GUIInteractableIcon>();
+        illusImg = IllustrationGroup.GetChild(0).GetComponentInChildren<GUIInteractableIcon>();
 
-        upgradeIcon = IllustrationGroup.GetChild(1).GetComponent<GUIInteractableIcon>();
+        upgradeBtn = IllustrationGroup.GetChild(1).GetComponent<GUIInteractableIcon>();
 
         levelBar = IllustrationGroup.GetChild(2).GetComponent<GUIProgressSlider>();
 
@@ -185,7 +185,7 @@ public class ArmyWindow : MonoBehaviour, IWindow
         }
 
         // check active or not for upgrade btn
-        upgradeIcon.InteractableChange(mainLevel > curLevel);
+        upgradeBtn.InteractableChange(mainLevel > curLevel);
 
         // set level bar value and rename element btn
         levelBar.Value = curLevel;

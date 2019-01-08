@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UI.Widget;
 using static UpgradeResearchManager;
+using EnumCollect;
 
 public class DefenseWindow : MonoBehaviour, IWindow
 {
@@ -8,6 +9,8 @@ public class DefenseWindow : MonoBehaviour, IWindow
 
     [Header("Constructs"), Space]
     public Transform[] Constructs;
+    public ListUpgrade[] Types;
+
     private ArmyWindow.Element[] constructElements;
 
     private void Awake()
@@ -32,7 +35,7 @@ public class DefenseWindow : MonoBehaviour, IWindow
                 delegate 
                 {
                     manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(constructElements[captureIndex].Icon.Placeholder.text);
+                    manager[Window.UpgradeResearch].Load(Types[captureIndex]);
                 };
         }
     }

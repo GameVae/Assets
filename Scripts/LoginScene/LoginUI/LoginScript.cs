@@ -61,7 +61,11 @@ public class LoginScript : MonoBehaviour
     {
         socketIO = Connection.Instance.Socket;
         socketIO.On("R_LOGIN", R_LOGIN);
+
         socketIO.On("R_GET_RSS", GetRSSData.instance.R_GET_RSS);
+        socketIO.On("R_BASE_INFO", GetRSSData.instance.R_BASE_INFO);
+        socketIO.On("R_USER_INFO", GetRSSData.instance.R_USER_INFO);
+        socketIO.On("R_GET_POSITION", GetRSSData.instance.R_GET_POSITION);
     }
 
     private void R_LOGIN(SocketIOEvent obj)
@@ -78,7 +82,7 @@ public class LoginScript : MonoBehaviour
                 break;
         }
     }
-    
+
     private void login()
     {
         string UserName = firstConnect.InputUser.text.ToString();
@@ -104,7 +108,7 @@ public class LoginScript : MonoBehaviour
     private void loginClick()
     {
         string UserName = PlayerPrefs.GetString("UserName");
-        string Password = md5String(PlayerPrefs.GetString("Password"));
+        string Password = PlayerPrefs.GetString("Password");
         S_LOGIN(UserName, Password);
     }
     #region Encrypt Password
@@ -130,6 +134,12 @@ public class LoginScript : MonoBehaviour
     #endregion
     public void S_LOGIN(string UserName, string Password)
     {
+        GameProgress.Instance.AddTask("get user info", GetDataDone);
+        GameProgress.Instance.AddTask("get base info", GetDataDone);
+        GameProgress.Instance.AddTask("get position", GetDataDone);
+
+        Debug.Log(Password + "- " + UserName);
+
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["UserName"] = UserName;
         data["Password"] = md5String(Password);
@@ -137,5 +147,13 @@ public class LoginScript : MonoBehaviour
         data["Ram_Device"] = SystemInfo.systemMemorySize.ToString();
         socketIO.Emit("S_LOGIN", new JSONObject(data));
 
+    }
+
+    public void GetDataDone()
+    {
+        if(GameProgress.Instance.IsEmpty)
+        {
+
+        }
     }
 }

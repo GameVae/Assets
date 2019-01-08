@@ -74,14 +74,14 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
         timeInt = data.TryGet<int>(4);
 
         ProgressSlider.Slider.MaxValue = timeInt;
-        bool activeProgressBar = type.IsUpgrade() ? type == manager.Sync.UpgradeInfo.UpgradeType
-                                                              : type == manager.Sync.UpgradeInfo.ResearchType;
+        bool activeProgressBar = type.IsUpgrade() ? type == manager.Sync.BaseInfo.UpgradeWait_ID
+                                                              : type == manager.Sync.BaseInfo.ResearchWait_ID;
         ActiveButtonGroup(!activeProgressBar);
 
-        curMaterials[0] = manager.Sync.ResInfo.Food;
-        curMaterials[1] = manager.Sync.ResInfo.Wood;
-        curMaterials[2] = manager.Sync.ResInfo.Stone;
-        curMaterials[3] = manager.Sync.ResInfo.Metal;
+        curMaterials[0] = manager.Sync.BaseInfo.Farm;
+        curMaterials[1] = manager.Sync.BaseInfo.Wood;
+        curMaterials[2] = manager.Sync.BaseInfo.Stone;
+        curMaterials[3] = manager.Sync.BaseInfo.Metal;
         // 1 - name - title
         Title.text = type.ToString().InsertSpace();
 
@@ -147,15 +147,15 @@ public class UpgradeResearchWindow : MonoBehaviour, IWindow
             if (type.IsUpgrade())
             {
                 ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
-                   TimeSpan.FromSeconds(manager.Sync.UpgradeInfo.UpgradeRemainingInt).ToString();
-                if (manager.Sync.UpgradeInfo.UpgradeRemainingInt == 0)
+                   TimeSpan.FromSeconds(manager.Sync.BaseInfo.UpgradeRemainingInt).ToString();
+                if (manager.Sync.BaseInfo.UpgradeRemainingInt == 0)
                     ActiveButtonGroup(true);
             }
             else
             {
                 ProgressSlider.Slider.Placeholder.text = type.ToString().InsertSpace() + " " +
-                   TimeSpan.FromSeconds(manager.Sync.UpgradeInfo.ResearchRemainingInt).ToString();
-                if (manager.Sync.UpgradeInfo.ResearchRemainingInt == 0)
+                   TimeSpan.FromSeconds(manager.Sync.BaseInfo.ResearchRemainingInt).ToString();
+                if (manager.Sync.BaseInfo.ResearchRemainingInt == 0)
                     ActiveButtonGroup(true);
             }
         }

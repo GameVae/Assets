@@ -15,10 +15,13 @@ public class VersionGame : MonoBehaviour
     public ManualTableLoader Loader;
     //public RSS_PositionJSONTable RSS_Table;
 
+    private GameProgress checkversion;
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        checkversion = GameProgress.Instance;
     }
 
     void Start()
@@ -44,7 +47,6 @@ public class VersionGame : MonoBehaviour
         Loader.ServerVersion = obj.data.GetField("Version")?.ToString().JsonToString();
         if (Loader.CheckVersion())
         {
-
             // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"
             string link = obj.data["Data"]?.ToString().JsonToString();
             string saveAt = Application.dataPath + @"\Data\Infantry.sqlite";
@@ -58,6 +60,10 @@ public class VersionGame : MonoBehaviour
                 DownloadFile(link, saveAt);
             }
             catch(Exception e) { Debug.Log(e.ToString()); }
+        }
+        else
+        {
+            checkversion.Done("check version");
         }
     }
 
@@ -82,5 +88,7 @@ public class VersionGame : MonoBehaviour
         Debug.Log("Download Complete " + sender.ToString());
         Loader.InitSQLConnection();
         Loader.ReloadData();
+
+        checkversion.Done("check version");
     }
 }

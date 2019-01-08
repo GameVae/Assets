@@ -30,17 +30,20 @@ public class NaturalResource : MonoBehaviour
 
     private void Awake()
     {
-        LookAt look = GetComponent<LookAt>();
-        look.GameObject = transform;
-        look.Target = Camera.main.transform;
-        look.ProjectionDir = ProjectionDir.Right;
     }
 
     private void Start()
     {
         Data = ResourceManager.Instance.Datas[Id - 1];        
         ResourceManager.Instance[Id] = this;
-        InitData();       
+
+        InitData();
+
+        LookAt look = GetComponent<LookAt>();
+        look.GameObject = flag.transform;
+        look.Target = Camera.main.transform;
+        look.ProjectionDir = ProjectionDir.Right;
+
     }
 
     private void OnMouseUp()
@@ -60,11 +63,11 @@ public class NaturalResource : MonoBehaviour
             rss = transform.GetChild(type).gameObject;
             rss?.SetActive(true);
 
+            flag = transform.GetChild(4).gameObject;
+            flag?.SetActive(true);
+ 
             // parse position
-            string[] posArr = Data.Position.Split(',');
-
-            CellPos = Vector3Int.zero;
-            CellPos = new Vector3Int(int.Parse(posArr[0]),int.Parse(posArr[1]), int.Parse(posArr[2]));
+            CellPos = Data.Position.Parse3Int();
 
             transform.position = HexMap.Instance.CellToWorld(CellPos + new Vector3Int(5,5,0));
         }
