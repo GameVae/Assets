@@ -28,9 +28,6 @@ public class GameProgress : MonoBehaviour
         }
         else Destroy(gameObject);
         progressSequence = new Dictionary<string, UnityAction>();
-        //progressSequence.Add("get user info");
-        //progressSequence.Add("get base info");
-        //progressSequence.Add("get position");
 
     }
 
@@ -38,28 +35,15 @@ public class GameProgress : MonoBehaviour
     {
         if(progressSequence.ContainsKey(task))
         {
-            progressSequence[task]?.Invoke();
+            UnityAction temp = progressSequence[task];
             progressSequence.Remove(task);
+            temp?.Invoke();
         }
         Debug.Log("Complete: " + task);
-        if (progressSequence.Count == 0)
-        {
-            LoadingUICtrl.Instance.Done();
-        }
-        else
-        {
-            StartTask();
-        }
     }
 
-    public void AddTask(string tasks,UnityAction act = null)
+    public void AddTask(string tasks,UnityAction doneAct = null)
     {
-        progressSequence[tasks] = act;
-    }
-
-    public void StartTask()
-    {
-        LoadingUICtrl.Instance.StartProgress(1);
-        LoadingUICtrl.Instance.Progress = 1;
+        progressSequence[tasks] = doneAct;
     }
 }

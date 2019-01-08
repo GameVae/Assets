@@ -1,4 +1,5 @@
-﻿using ManualTable.Loader;
+﻿using ManualTable;
+using ManualTable.Loader;
 using SocketIO;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ public class VersionGame : MonoBehaviour
     public static VersionGame Instance;
     public Connection Connection;
     public ManualTableLoader Loader;
-    //public RSS_PositionJSONTable RSS_Table;
+    public RSS_PositionJSONTable RSS_Table;
 
     private GameProgress checkversion;
     private void Awake()
@@ -21,19 +22,21 @@ public class VersionGame : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        checkversion = GameProgress.Instance;
+       
     }
 
     void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
-        //Connection.Socket.On("R_GET_RSS", R_GET_RSS);
+        Connection.Socket.On("R_GET_RSS", R_GET_RSS);
+
+        checkversion = GameProgress.Instance;
     }
-    
-    //private void R_GET_RSS(SocketIOEvent obj)
-    //{
-    //    RSS_Table.LoadTable(obj.data["Data"]);
-    //}
+
+    private void R_GET_RSS(SocketIOEvent obj)
+    {
+        RSS_Table.LoadTable(obj.data["R_GET_RSS"]);
+    }
 
     public void S_CHECK_VERSION()
     {
@@ -59,7 +62,11 @@ public class VersionGame : MonoBehaviour
                 }
                 DownloadFile(link, saveAt);
             }
-            catch(Exception e) { Debug.Log(e.ToString()); }
+            catch(Exception e)
+            {
+                Debug.Log(e.ToString());
+                checkversion.Done("check version"); // test
+            }
         }
         else
         {
@@ -85,10 +92,8 @@ public class VersionGame : MonoBehaviour
 
     private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
     {        
-        Debug.Log("Download Complete " + sender.ToString());
         Loader.InitSQLConnection();
         Loader.ReloadData();
-
         checkversion.Done("check version");
     }
 }

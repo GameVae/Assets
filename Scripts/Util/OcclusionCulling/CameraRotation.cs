@@ -10,7 +10,7 @@ public class CameraRotation : MonoBehaviour
 
     private void Update ()
     {
-		if(Input.GetMouseButton(1))
+        if(Input.GetMouseButton(1))
         {
             thisCam.transform.Rotate(0, Input.GetAxis("Mouse X") * 2, 0);
         }

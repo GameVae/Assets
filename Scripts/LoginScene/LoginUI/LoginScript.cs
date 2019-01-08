@@ -153,7 +153,14 @@ public class LoginScript : MonoBehaviour
     {
         if(GameProgress.Instance.IsEmpty)
         {
-
+            LoadingUICtrl.Instance.Done(() => 
+            {
+                LoadingUICtrl.Instance.LoadScene(1);
+            });
+        }
+        else
+        {
+            LoadingUICtrl.Instance.StartProgress(1);
         }
     }
 }

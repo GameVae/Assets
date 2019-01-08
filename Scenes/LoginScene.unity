@@ -352,6 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Connection: {fileID: 77327102}
   Loader: {fileID: 77327106}
+  RSS_Table: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
 --- !u!4 &76850891
 Transform:
   m_ObjectHideFlags: 0
@@ -378,6 +379,7 @@ GameObject:
   - component: {fileID: 77327105}
   - component: {fileID: 77327104}
   - component: {fileID: 77327106}
+  - component: {fileID: 77327108}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -465,6 +467,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57e4f7a766706f84a9222ee081307c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &77327108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a35a245d33149e4bade1462bd05e6a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &89660090

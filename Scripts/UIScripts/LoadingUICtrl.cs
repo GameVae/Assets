@@ -1,11 +1,13 @@
 ﻿using UI;
 using UI.Widget;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LoadingUICtrl : MonoBehaviour
 {
     public static LoadingUICtrl Instance { get; private set; }
+
     public Image Background;
     public GameObject Panel;
     public GUIProgressSlider ProgressBar;
@@ -19,17 +21,18 @@ public class LoadingUICtrl : MonoBehaviour
 
     private bool isLoadingScene;
     private bool isDone;
-
+    private UnityAction doneAction;
     private SceneLoader sceneLoader;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(Instance.gameObject);
+    }
 
+    private void Start()
+    {
         sceneLoader = SceneLoader.Instance;
-        Done();
-
     }
 
     private void Update()
@@ -39,46 +42,60 @@ public class LoadingUICtrl : MonoBehaviour
             if (isLoadingScene)
             {
                 Progress = sceneLoader.Progress;
-                ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, Progress, Time.deltaTime);
                 if (ProgressBar.Value == ProgressBar.MaxValue)
                 {
                     sceneLoader.ActiveScene();
                     if (sceneLoader.IsActiveDone)
                     {
                         isLoadingScene = false;
-                        Done();
+                        Panel.SetActive(false);
                     }
                 }
             }
             else
             {
-                if (IsDone)
+                if(IsDone)
                 {
-                    Panel.SetActive(false);
+                    doneAction?.Invoke();
+                    doneAction = null;
                 }
-                ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, Progress, Time.deltaTime);
             }
+            ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, Progress, Time.deltaTime);
         }
     }
 
     public void LoadScene(int index)
     {
-        isLoadingScene = true;
-
-        Panel.SetActive(true);
-        sceneLoader.LoadScene(index);
-        StartProgress(1.0f);
+        if (!isLoadingScene)
+        {
+            isLoadingScene = true;
+            Panel.SetActive(true);
+            sceneLoader.LoadScene(index);
+            ProgressBar.MaxValue = 1;
+            ProgressBar.Value = 0;
+        }
     }
 
     public void StartProgress(float max)
     {
-        ProgressBar.MaxValue = max;
-        ProgressBar.Value = 0;
-        Panel.SetActive(true);
+        if (!isLoadingScene)
+        {
+            isDone = false;
+            ProgressBar.MaxValue = max;
+            ProgressBar.Value = 0;
+            Progress = max;
+            Panel.SetActive(true);
+        }
     }
 
-    public void Done()
-    {
+    public void Done(UnityAction doneAct = null)
+    {       
         isDone = true;
+        doneAction = doneAct ?? ClosePanel;
+    }
+
+    public void ClosePanel()
+    {
+        Panel.SetActive(false);
     }
 }
