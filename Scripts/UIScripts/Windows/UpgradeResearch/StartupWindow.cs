@@ -1,20 +1,16 @@
 ﻿using EnumCollect;
 using ManualTable;
 using ManualTable.Row;
-using Network.Sync;
 using System;
 using System.Linq;
 using UI.Widget;
 using UnityEngine;
-using static UpgradeResearchManager;
+using static UpgResWdoCtrl;
 
-public class StartupWindow : MonoBehaviour, IWindow
+public class StartupWindow : BaseWindow
 {
-    private bool inited;
-    private UpgradeResearchManager manager;
-
-    public GUISliderWithBtn UpgradeProgressBar;
-    public GUISliderWithBtn ResearchProgressBar;
+    public GUISliderWithBtn UpgProgBar;
+    public GUISliderWithBtn ResProgBar;
     public GUIProgressSlider MainbaseLevelBar;
 
     public GUIInteractableIcon Mainbase;
@@ -23,69 +19,65 @@ public class StartupWindow : MonoBehaviour, IWindow
     public GUIInteractableIcon Army;
     public GUIInteractableIcon Trade;
 
-    private void Awake()
+
+    protected override void Update()
     {
+        base.Update();
+        SetTextProgCoundown();
     }
 
-    private void Start()
+    private void SetTextProgCoundown()
     {
-    }
-
-    private void Update()
-    {
-        ProgressBarCount();
-    }
-
-    private void ProgressBarCount()
-    {
-        if (ResearchProgressBar.gameObject.activeInHierarchy)
+        if (ResProgBar.gameObject.activeInHierarchy)
         {
-            ResearchProgressBar.Placeholder.text = manager.Sync.BaseInfo.ResearchWait_ID.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.BaseInfo.ResearchRemainingInt)).ToString();
-            if (manager.Sync.BaseInfo.ResearchRemainingInt <= 0)
-                ResearchProgressBar.gameObject.SetActive(false);
+            ResProgBar.Placeholder.text = Controller.Sync.BaseInfo.GetResTimeString();
+
+            if (Controller.Sync.BaseInfo.ResIsDone())
+            {
+                ResProgBar.gameObject.SetActive(false);
+            }
         }
 
-        if (UpgradeProgressBar.gameObject.activeInHierarchy)
+        if (UpgProgBar.gameObject.activeInHierarchy)
         {
-            UpgradeProgressBar.Placeholder.text = manager.Sync.BaseInfo.UpgradeWait_ID.ToString().InsertSpace() + " " +
-                TimeSpan.FromSeconds(Mathf.RoundToInt(manager.Sync.BaseInfo.UpgradeRemainingInt)).ToString();
-            if (manager.Sync.BaseInfo.UpgradeRemainingInt <= 0)
-                UpgradeProgressBar.gameObject.SetActive(false);
+            UpgProgBar.Placeholder.text = Controller.Sync.BaseInfo.GetUpgTimeString();
+            if (Controller.Sync.BaseInfo.UpgIsDone())
+            {
+                UpgProgBar.gameObject.SetActive(false);
+            }
         }
     }
 
-    public void Load(params object[] input)
+    public override void Load(params object[] input)
     {
-        MainbaseLevelBar.Value = manager.Sync.Levels.MainbaseLevel;
+        MainbaseLevelBar.Value = Controller.Sync.Levels.MainbaseLevel;
 
-        UpgradeProgressBar.gameObject.SetActive(manager.Sync.BaseInfo.UpgradeTime != null &&
-            manager.Sync.BaseInfo.UpgradeTime != "");
-        ResearchProgressBar.gameObject.SetActive(manager.Sync.BaseInfo.ResearchTime != null &&
-            manager.Sync.BaseInfo.ResearchTime != "");
+        UpgProgBar.gameObject.SetActive(Controller.Sync.BaseInfo.UpgradeTime != null &&
+            Controller.Sync.BaseInfo.UpgradeTime != "");
+        ResProgBar.gameObject.SetActive(Controller.Sync.BaseInfo.ResearchTime != null &&
+            Controller.Sync.BaseInfo.ResearchTime != "");
     }
 
-    private void Init()
+    protected override void Init()
     {
-        manager = GetComponentInParent<UpgradeResearchManager>();
         Mainbase.OnClickEvents += OnMainbaseBtn;
-        Resource.OnClickEvents += delegate { manager.Open(Window.Resource); };
-        Defense.OnClickEvents += delegate { manager.Open(Window.Defense); };
-        Army.OnClickEvents += delegate { manager.Open(Window.Army); };
-        Trade.OnClickEvents += delegate { manager.Open(Window.Trade); };
+        Resource.OnClickEvents += delegate { Controller.Open(UgrResWindow.Resource); };
+        Defense.OnClickEvents += delegate { Controller.Open(UgrResWindow.Defense); };
+        Army.OnClickEvents += delegate { Controller.Open(UgrResWindow.Army); };
+        Trade.OnClickEvents += delegate { Controller.Open(UgrResWindow.Trade); };
     }
 
     private void OnMainbaseBtn()
     {
-        int mainLevel = manager.Sync.Levels.MainbaseLevel;
-        MainBaseTable table = manager[ListUpgrade.MainBase] as MainBaseTable;
+        int mainLevel = Controller.Sync.Levels.MainbaseLevel;
+        MainBaseTable table = Controller[ListUpgrade.MainBase] as MainBaseTable;
         MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == mainLevel);
 
         int[] need = (row == null) ? new int[4] :
             new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
 
-        manager.Open(Window.UpgradeResearch);
-        manager[Window.UpgradeResearch].Load
+        Controller.Open(UgrResWindow.UpgradeResearch);
+        Controller[UgrResWindow.UpgradeResearch].Load
             (ListUpgrade.MainBase,
             need,
             row?.MightBonus,
@@ -94,20 +86,9 @@ public class StartupWindow : MonoBehaviour, IWindow
             );
     }
 
-    public void Open()
+    public override void Open()
     {
-        if(!inited)
-        {
-            Init();
-            MainbaseLevelBar.MaxValue = 20;
-            inited = true;
-        }
+        base.Open();
         Load();
-        gameObject.SetActive(true);
-    }
-
-    public void Close()
-    {
-        gameObject.SetActive(false);
     }
 }

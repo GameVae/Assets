@@ -48,7 +48,7 @@ public class LoadingUICtrl : MonoBehaviour
                     if (sceneLoader.IsActiveDone)
                     {
                         isLoadingScene = false;
-                        Panel.SetActive(false);
+                        ClosePanel();
                     }
                 }
             }
@@ -80,11 +80,11 @@ public class LoadingUICtrl : MonoBehaviour
     {
         if (!isLoadingScene)
         {
+            Panel.SetActive(true);
             isDone = false;
             ProgressBar.MaxValue = max;
             ProgressBar.Value = 0;
             Progress = max;
-            Panel.SetActive(true);
         }
     }
 

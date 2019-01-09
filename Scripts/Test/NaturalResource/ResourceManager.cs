@@ -55,19 +55,20 @@ public class ResourceManager : MonoBehaviour
         int count = Datas.rows.Count;
         for (int i = 0; i < count; i++)
         {
-            GenResource((RssType)Datas.rows[i].RssType, 2).Id = i + 1;
+            GenResource((RssType)Datas.rows[i].RssType, Flag.Owner, i + 1);
         }
 
         Debug.Log("instaniate done: " + (Time.realtimeSinceStartup - start));
     }
 
 
-    public NaturalResource GenResource(RssType rssType, int group)
+    public NaturalResource GenResource(RssType rssType, Flag group, int id)
     {
-        NaturalResource newGO = new GameObject("Resource").AddComponent<NaturalResource>();
+        NaturalResource newGO = new GameObject("Resource" + rssType.ToString() + id).AddComponent<NaturalResource>();
 
+        newGO.Id = id;
         Instantiate(resourceTypes[((int)rssType - 1)], newGO.transform);    // resource
-        Instantiate(flags[group], newGO.transform);                         // flag
+        Instantiate(flags[(int)group], newGO.transform);                         // flag
 
         newGO.transform.SetParent(transform);
 

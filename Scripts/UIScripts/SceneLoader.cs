@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace UI
 {
-    public class SceneLoader : MonoBehaviour
+    public sealed class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Instance { get; private set; }
         private AsyncOperation asyncOperation;

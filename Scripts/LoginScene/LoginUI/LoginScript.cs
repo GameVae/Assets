@@ -70,7 +70,7 @@ public class LoginScript : MonoBehaviour
 
     private void R_LOGIN(SocketIOEvent obj)
     {
-        Debug.Log("R_LOGIN: " + obj);
+        //Debug.Log("R_LOGIN: " + obj);
         int successBool = int.Parse(obj.data["LoginBool"].ToString());
         switch (successBool)
         {
@@ -134,11 +134,10 @@ public class LoginScript : MonoBehaviour
     #endregion
     public void S_LOGIN(string UserName, string Password)
     {
-        GameProgress.Instance.AddTask("get user info", GetDataDone);
-        GameProgress.Instance.AddTask("get base info", GetDataDone);
-        GameProgress.Instance.AddTask("get position", GetDataDone);
+        GameProgress.Instance.AddTask("get user info", CheckGetDataDone);
+        GameProgress.Instance.AddTask("get base info", CheckGetDataDone);
+        GameProgress.Instance.AddTask("get position", CheckGetDataDone);
 
-        Debug.Log(Password + "- " + UserName);
 
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["UserName"] = UserName;
@@ -149,11 +148,11 @@ public class LoginScript : MonoBehaviour
 
     }
 
-    public void GetDataDone()
+    public void CheckGetDataDone()
     {
-        if(GameProgress.Instance.IsEmpty)
+        if (GameProgress.Instance.IsEmpty)
         {
-            LoadingUICtrl.Instance.Done(() => 
+            LoadingUICtrl.Instance.Done(() =>
             {
                 LoadingUICtrl.Instance.LoadScene(1);
             });
@@ -161,6 +160,7 @@ public class LoginScript : MonoBehaviour
         else
         {
             LoadingUICtrl.Instance.StartProgress(1);
+
         }
     }
 }

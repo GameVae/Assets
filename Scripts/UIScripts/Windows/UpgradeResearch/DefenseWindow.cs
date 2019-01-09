@@ -1,23 +1,15 @@
 ﻿using UnityEngine;
 using UI.Widget;
-using static UpgradeResearchManager;
+using static UpgResWdoCtrl;
 using EnumCollect;
 
-public class DefenseWindow : MonoBehaviour, IWindow
+public class DefenseWindow : BaseWindow
 {
-    private UpgradeResearchManager manager;
-
     [Header("Constructs"), Space]
     public Transform[] Constructs;
     public ListUpgrade[] Types;
 
     private ArmyWindow.Element[] constructElements;
-
-    private void Awake()
-    {
-        manager = GetComponentInParent<UpgradeResearchManager>();
-        SetupConstructElement();
-    }
 
     private void SetupConstructElement()
     {
@@ -34,24 +26,20 @@ public class DefenseWindow : MonoBehaviour, IWindow
             constructElements[i].Icon.OnClickEvents +=
                 delegate 
                 {
-                    manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(Types[captureIndex]);
+                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    Controller[UgrResWindow.UpgradeResearch].Load(Types[captureIndex]);
                 };
         }
     }
 
-    public void Load(params object[] input)
+    protected override void Init()
+    {
+        SetupConstructElement();
+    }
+
+    public override void Load(params object[] input)
     {
         throw new System.NotImplementedException();
     }
 
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Close()
-    {
-        gameObject.SetActive(false);
-    }
 }

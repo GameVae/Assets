@@ -16,13 +16,11 @@ public class VersionGame : MonoBehaviour
     public ManualTableLoader Loader;
     public RSS_PositionJSONTable RSS_Table;
 
-    private GameProgress checkversion;
+    private GameProgress taskSequences;
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-
-       
     }
 
     void Start()
@@ -30,7 +28,7 @@ public class VersionGame : MonoBehaviour
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
         Connection.Socket.On("R_GET_RSS", R_GET_RSS);
 
-        checkversion = GameProgress.Instance;
+        taskSequences = GameProgress.Instance;
     }
 
     private void R_GET_RSS(SocketIOEvent obj)
@@ -65,12 +63,11 @@ public class VersionGame : MonoBehaviour
             catch(Exception e)
             {
                 Debug.Log(e.ToString());
-                checkversion.Done("check version"); // test
             }
         }
         else
         {
-            checkversion.Done("check version");
+            taskSequences.Done("check version");
         }
     }
 
@@ -94,6 +91,6 @@ public class VersionGame : MonoBehaviour
     {        
         Loader.InitSQLConnection();
         Loader.ReloadData();
-        checkversion.Done("check version");
+        taskSequences.Done("check version");
     }
 }

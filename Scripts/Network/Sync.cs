@@ -11,40 +11,9 @@ namespace Network.Sync
         public UserInfo UserInfo;
         public BaseInfo BaseInfo;
 
-        private float researchTimer;
-        private float upgradeTimer;
-
-        public void Update()
+        public void Update(float deltaTime)
         {
-            if (BaseInfo.ResearchRemainingInt > 0)
-            {
-                researchTimer += Time.deltaTime;
-                if (researchTimer >= 1.0f)
-                {
-                    BaseInfo.ResearchRemainingInt -= 1;
-                    researchTimer -= 1.0f;
-                    if (BaseInfo.ResearchRemainingInt <= 0)
-                    {
-                        BaseInfo.ResearchRemainingInt = 0;
-                        Levels.CurrentResearchLv++;
-                    }
-                }
-            }
-
-            if (BaseInfo.UpgradeRemainingInt > 0)
-            {
-                upgradeTimer += Time.deltaTime;
-                if (upgradeTimer >= 1.0f)
-                {
-                    BaseInfo.UpgradeRemainingInt -= 1;
-                    upgradeTimer -= 1.0f;
-                    if (BaseInfo.UpgradeRemainingInt <= 0)
-                    {
-                        BaseInfo.UpgradeRemainingInt = 0;
-                        Levels.CurrentUpgradeLv++;
-                    }
-                }
-            }
+            BaseInfo.UpdateTime(deltaTime,Levels);
         }
     }
 
@@ -76,8 +45,8 @@ namespace Network.Sync
         public string UpgradeWait_Might;
         public string ResearchWait_Might;
 
-        public int ResearchRemainingInt;
-        public int UpgradeRemainingInt;
+        public int ResRemainingInt;
+        public int UpgRemainingInt;
 
         public int Farm;
         public int Wood;
@@ -93,6 +62,60 @@ namespace Network.Sync
         public string TrainingQuality;
         public string Training_Might;
         public int SumUnitQuality;
+
+        /*===============Util Funs==================*/
+        private float researchTimer;
+        private float upgradeTimer;
+
+        public string GetResTimeString()
+        {
+            return ResearchWait_ID.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(ResRemainingInt)).ToString();
+        }
+
+        public string GetUpgTimeString()
+        {
+            return UpgradeWait_ID.ToString().InsertSpace() + " " +
+                TimeSpan.FromSeconds(Mathf.RoundToInt(UpgRemainingInt)).ToString();
+        }
+
+        public bool ResIsDone()
+        { return ResRemainingInt <= 0; }
+
+        public bool UpgIsDone()
+        { return UpgRemainingInt <= 0; }
+
+        public void UpdateTime(float deltaTime,Level levels)
+        {
+            if (ResRemainingInt > 0)
+            {
+                researchTimer += deltaTime;
+                if (researchTimer >= 1.0f)
+                {
+                    ResRemainingInt -= 1;
+                    researchTimer -= 1.0f;
+                    if (ResIsDone())
+                    {
+                        ResRemainingInt = 0;
+                        levels.CurrentResearchLv++;
+                    }
+                }
+            }
+            if (UpgRemainingInt > 0)
+            {
+                upgradeTimer += deltaTime;
+                if (upgradeTimer >= 1.0f)
+                {
+                    UpgRemainingInt -= 1;
+                    upgradeTimer -= 1.0f;
+                    if (UpgIsDone())
+                    {
+                        UpgRemainingInt = 0;
+                        levels.CurrentUpgradeLv++;
+                    }
+                }
+            }
+        }
     }
 
     [Serializable]

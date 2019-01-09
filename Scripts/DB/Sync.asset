@@ -11,21 +11,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31811130277dd3d4eb7c08de449e04e0, type: 3}
   m_Name: Sync
   m_EditorClassIdentifier: 
-  ResInfo:
-    Food: 1230
-    Wood: 123
-    Stone: 648
-    Metal: 994
   Levels:
     MainbaseLevel: 2
-    CurrentUpgradeLv: 1
-    CurrentResearchLv: 1
+    CurrentUpgradeLv: 2
+    CurrentResearchLv: 3
     UpgradeRequire: 3
     ResearchRequire: 3
-  UpgradeInfo:
-    UpgradeType: 15
-    ResearchType: 10
-    ResearchRemainingStr: 1
-    UpgradeRemainingStr: 1
-    ResearchRemainingInt: 60
-    UpgradeRemainingInt: 60
+  UserInfo:
+    ID_User: 42
+    NameInGame: ndinhtoan45
+    ChatWorldColor: FFFFFF
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 0
+    Killed: 0
+    Server_ID: 1
+  BaseInfo:
+    ID_User: 42
+    BaseNumber: 1
+    Position: 500,80,0
+    UpgradeWait_ID: 0
+    ResearchWait_ID: 0
+    ResearchTime: 1
+    UpgradeTime: 1
+    UpgradeWait_Might: 
+    ResearchWait_Might: 
+    ResRemainingInt: 2657
+    UpgRemainingInt: 718949
+    Farm: 10000
+    Wood: 10000
+    Stone: 10000
+    Metal: 10000
+    UnitTransferType: 
+    UnitTransferQuality: 
+    UnitTransferTime: 
+    UnitTransfer_ID_Base: 
+    TrainingUnit_ID: 
+    TrainingTime: 
+    TrainingQuality: 
+    Training_Might: 
+    SumUnitQuality: 0

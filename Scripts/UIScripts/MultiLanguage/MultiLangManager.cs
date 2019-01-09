@@ -24,7 +24,7 @@ namespace MultiLang
             LangChangeEvts += act;
         }
 
-        public void Invoke()
+        public void ChangeLanguage()
         {
             LangChangeEvts?.Invoke();
         }

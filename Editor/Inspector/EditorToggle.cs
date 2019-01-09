@@ -3,56 +3,59 @@ using UnityEditor;
 using UnityEngine;
 using UI.Widget;
 
-[CustomEditor(typeof(GUIToggle))]
-public class EditorToggle : EditorGUIBase
+namespace UI.CustomInspector
 {
-    private GUIToggle Owner;
-    public GUIToggle.ToggleType Type;
-
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(GUIToggle))]
+    public class EditorToggle : EditorGUIBase
     {
-        base.OnEnable();
-        Owner = (GUIToggle)target;
+        private GUIToggle Owner;
+        public GUIToggle.ToggleType Type;
 
-        Type = Owner.Type;
-    }
 
-    public override void OnInspectorGUI()
-    {
-        showPlaceholder = false;
-        base.OnInspectorGUI();
-        if (!Owner.UIDependent && !Application.isPlaying)
+        protected override void OnEnable()
         {
-            Type = (GUIToggle.ToggleType)EditorGUILayout.EnumPopup(Type, GUILayout.MaxWidth(150));
-            if (Type != Owner.Type)
-            {
-                Owner.TypeChange(Type);
-            }
+            base.OnEnable();
+            Owner = (GUIToggle)target;
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("+", GUILayout.MaxWidth(50)))
+            Type = Owner.Type;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            showPlaceholder = false;
+            base.OnInspectorGUI();
+            if (!Owner.UIDependent && !Application.isPlaying)
             {
-                Selection.activeGameObject = Owner.gameObject;
-                string path = @"Assets/Prefabs/GUICheckMask.prefab";
-                Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-                if (asset != null)
+                Type = (GUIToggle.ToggleType)EditorGUILayout.EnumPopup(Type, GUILayout.MaxWidth(150));
+                if (Type != Owner.Type)
                 {
-                    GameObject checkMark = Instantiate(asset) as GameObject;
-                    GameObjectUtility.SetParentAndAlign(checkMark, Owner.gameObject);
-                    Undo.RegisterCreatedObjectUndo(checkMark, "Create " + checkMark.name);
-                    Owner.Add(checkMark.GetComponent<GUICheckMark>());
+                    Owner.TypeChange(Type);
                 }
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("+", GUILayout.MaxWidth(50)))
+                {
+                    Selection.activeGameObject = Owner.gameObject;
+                    string path = @"Assets/Prefabs/GUICheckMask.prefab";
+                    Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
+                    if (asset != null)
+                    {
+                        GameObject checkMark = Instantiate(asset) as GameObject;
+                        GameObjectUtility.SetParentAndAlign(checkMark, Owner.gameObject);
+                        Undo.RegisterCreatedObjectUndo(checkMark, "Create " + checkMark.name);
+                        Owner.Add(checkMark.GetComponent<GUICheckMark>());
+                    }
+                }
+                if (GUILayout.Button("-", GUILayout.MaxWidth(50)))
+                {
+                    Owner.DestroyLastIndex();
+                }
+                if (GUILayout.Button("#", GUILayout.MaxWidth(50)))
+                {
+                    Owner.Refresh();
+                }
+                GUILayout.EndHorizontal();
             }
-            if (GUILayout.Button("-", GUILayout.MaxWidth(50)))
-            {
-                Owner.DestroyLastIndex();
-            }
-            if (GUILayout.Button("#", GUILayout.MaxWidth(50)))
-            {
-                Owner.Refresh();
-            }
-            GUILayout.EndHorizontal();
         }
     }
 }

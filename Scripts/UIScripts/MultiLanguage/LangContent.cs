@@ -10,26 +10,25 @@ namespace MultiLang
 
         private TextMeshProUGUI meshText;
 
-        public string MeshText
+        public TextMeshProUGUI MeshText
         {
             get
             {
-                return (meshText?.text ?? (meshText = GetComponent<TextMeshProUGUI>())?.text);
+                return (meshText ?? (meshText = GetComponent<TextMeshProUGUI>()));
             }
 
-            set
+            private set
             {
-                if (meshText != null)
-                    meshText.text = value;
+                meshText = value;
             }
         }
+
         private void Awake()
         {
-            meshText = GetComponent<TextMeshProUGUI>();
-
+            MeshText.text = Language.ChangeLanguage();
             MultiLangManager.Instance.Add(() =>
             {
-                meshText.text = Language.ChangeLanguage();
+                MeshText.text = Language.ChangeLanguage();
             });
         }
     }

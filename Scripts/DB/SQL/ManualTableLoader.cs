@@ -16,12 +16,10 @@ namespace ManualTable.Loader
         public SQLiteManualConnection SQLDataConnection;
         public SQLiteManualConnection SQLVersionConnection;
         public VersionTable Version;
-        public TableContainer[] Containers;    
+        public TableContainer[] Containers;
 
         private void Awake()
         {
-            versionTask = Version.Rows?.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            CurrentVersion = versionTask?.Content;
         }
 
         private void Start()
@@ -46,13 +44,14 @@ namespace ManualTable.Loader
             }
         }
 
-        private bool CheckVersion(ref VersionRow versionTask)
+        private bool IsUpdateVersion(ref VersionRow versionTask)
         {
             if (versionTask == null)
                 Load(RowType.Version, Version);
 
             versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             CurrentVersion = versionTask?.Content;
+
             bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
             return result;
         }
@@ -81,7 +80,7 @@ namespace ManualTable.Loader
 
         public bool CheckVersion()
         {
-            return CheckVersion(versionTask: ref versionTask);
+            return IsUpdateVersion(versionTask: ref versionTask);
         }
 
         public void ReloadData()
@@ -93,13 +92,14 @@ namespace ManualTable.Loader
             }
             else
             {
-                Version.SQLInsert(SQLVersionConnection.DbConnection, new VersionRow()
+                versionTask = new VersionRow()
                 {
                     Id = 1,
                     Task = "Version",
                     Content = ServerVersion,
                     Comment = "None"
-                });
+                };
+                Version.SQLInsert(SQLVersionConnection.DbConnection, versionTask);
             }
             LoadTables();
         }
@@ -107,6 +107,6 @@ namespace ManualTable.Loader
         public void InitSQLConnection()
         {
             SQLDataConnection.Init();
-        }        
+        }
     }
 }

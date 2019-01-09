@@ -1,78 +1,81 @@
 ﻿#if UNITY_EDITOR
+
 using UnityEditor;
 using UI.Widget;
 using UnityEngine;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
-[CustomEditor(typeof(CustomGUI), editorForChildClasses: true)]
-public class EditorGUIBase : Editor
+namespace UI.CustomInspector
 {
-    private CustomGUI BaseOwner;
-
-    protected bool maskable;
-    protected bool interactable;
-    protected string placeholder;
-    protected bool showPlaceholder;
-    protected Color placeholderColor;
-    protected float fontSize;
-
-    protected virtual void OnEnable()
+    [CustomEditor(typeof(CustomGUI), editorForChildClasses: true)]
+    public class EditorGUIBase : Editor
     {
-        BaseOwner = (CustomGUI)target;
-        Undo.RecordObject(BaseOwner, BaseOwner.name);
-        BaseOwner.SetChildrenDependence();
+        private CustomGUI BaseOwner;
 
-        maskable = BaseOwner.Maskable;
-        interactable = BaseOwner.Interactable;
-        placeholder = BaseOwner.Placeholder?.text;
-        showPlaceholder = BaseOwner.IsPlaceholder;
-        placeholderColor = BaseOwner.PlaceholderColor;
-    }
+        protected bool maskable;
+        protected bool interactable;
+        protected string placeholder;
+        protected bool showPlaceholder;
+        protected Color placeholderColor;
+        protected float fontSize;
 
-    public override void OnInspectorGUI()
-    {
-        if (!BaseOwner.UIDependent && !Application.isPlaying)
+        protected virtual void OnEnable()
         {
-            maskable = EditorGUILayout.Toggle("Maskable", BaseOwner.Maskable);
-            if (maskable != BaseOwner.Maskable)
-            {
-                BaseOwner.MaskableChange(maskable);
-            }
+            BaseOwner = (CustomGUI)target;
+            Undo.RecordObject(BaseOwner, BaseOwner.name);
+            BaseOwner.SetChildrenDependence();
 
-            interactable = EditorGUILayout.Toggle("Interactable", BaseOwner.Interactable);
-            if (interactable != BaseOwner.Interactable)
-            {
-                BaseOwner.InteractableChange(interactable);
-            }
+            maskable = BaseOwner.Maskable;
+            interactable = BaseOwner.Interactable;
+            placeholder = BaseOwner.Placeholder?.text;
+            showPlaceholder = BaseOwner.IsPlaceholder;
+            placeholderColor = BaseOwner.PlaceholderColor;
+        }
 
-            showPlaceholder = EditorGUILayout.Foldout(BaseOwner.IsPlaceholder, "Use Placeholder");
-            if (showPlaceholder != BaseOwner.IsPlaceholder)
-                BaseOwner.IsPlaceholderChange(showPlaceholder);
-            if (showPlaceholder)
+        public override void OnInspectorGUI()
+        {
+            if (!BaseOwner.UIDependent && !Application.isPlaying)
             {
-                placeholder = EditorGUILayout.DelayedTextField("Placeholder", BaseOwner.Placeholder.text);
-                BaseOwner.PlaceholderText(placeholder);
-
-                placeholderColor = EditorGUILayout.ColorField("Color", BaseOwner.PlaceholderColor);
-                if (placeholderColor != BaseOwner.PlaceholderColor)
+                maskable = EditorGUILayout.Toggle("Maskable", BaseOwner.Maskable);
+                if (maskable != BaseOwner.Maskable)
                 {
-                    BaseOwner.PlaceholderColorChange(placeholderColor);
+                    BaseOwner.MaskableChange(maskable);
                 }
 
-                fontSize = EditorGUILayout.DelayedFloatField("Font Size", BaseOwner.FontSize);
-                if(!Mathf.Approximately(fontSize,BaseOwner.FontSize))
+                interactable = EditorGUILayout.Toggle("Interactable", BaseOwner.Interactable);
+                if (interactable != BaseOwner.Interactable)
                 {
-                    BaseOwner.FontSizeChange(fontSize);
+                    BaseOwner.InteractableChange(interactable);
                 }
-            }
 
-          
-            if (GUI.changed)
-            {
-                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                showPlaceholder = EditorGUILayout.Foldout(BaseOwner.IsPlaceholder, "Use Placeholder");
+                if (showPlaceholder != BaseOwner.IsPlaceholder)
+                    BaseOwner.IsPlaceholderChange(showPlaceholder);
+                if (showPlaceholder)
+                {
+                    placeholder = EditorGUILayout.DelayedTextField("Placeholder", BaseOwner.Placeholder.text);
+                    BaseOwner.PlaceholderText(placeholder);
+
+                    placeholderColor = EditorGUILayout.ColorField("Color", BaseOwner.PlaceholderColor);
+                    if (placeholderColor != BaseOwner.PlaceholderColor)
+                    {
+                        BaseOwner.PlaceholderColorChange(placeholderColor);
+                    }
+
+                    fontSize = EditorGUILayout.DelayedFloatField("Font Size", BaseOwner.FontSize);
+                    if (!Mathf.Approximately(fontSize, BaseOwner.FontSize))
+                    {
+                        BaseOwner.FontSizeChange(fontSize);
+                    }
+                }
+
+                if (GUI.changed)
+                {
+                    EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+                }
+                base.OnInspectorGUI();
             }
-            base.OnInspectorGUI();
         }
     }
 }

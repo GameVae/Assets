@@ -1,12 +1,10 @@
 ﻿using EnumCollect;
 using UI.Widget;
 using UnityEngine;
-using static UpgradeResearchManager;
+using static UpgResWdoCtrl;
 
-public class ResourceWindow : MonoBehaviour, IWindow
+public class ResourceWindow : BaseWindow
 {
-    private UpgradeResearchManager manager;
-
     [Header("Constructs"), Space]
     public Transform[] Constructs;
     private ArmyWindow.Element[] constructElements;
@@ -17,14 +15,6 @@ public class ResourceWindow : MonoBehaviour, IWindow
 
     public ListUpgrade[] ResearchTypes;
     public ListUpgrade[] ConstructTypes;
-
-    private void Awake()
-    {
-        manager = GetComponentInParent<UpgradeResearchManager>();
-        SetupConstructElement();
-        SetupResearchElements();
-    }
-
 
     private void SetupConstructElement()
     {
@@ -39,10 +29,10 @@ public class ResourceWindow : MonoBehaviour, IWindow
                 LevelBar = Constructs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             constructElements[i].Icon.OnClickEvents +=
-                delegate 
+                delegate
                 {
-                    manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch]
+                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    Controller[UgrResWindow.UpgradeResearch]
                     .Load(ConstructTypes[captureIndex]);
                 };
         }
@@ -61,27 +51,23 @@ public class ResourceWindow : MonoBehaviour, IWindow
                 LevelBar = Researchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             researchElements[i].Icon.OnClickEvents +=
-               delegate 
+               delegate
                {
-                   manager.Open(Window.UpgradeResearch);
-                   manager[Window.UpgradeResearch].
+                   Controller.Open(UgrResWindow.UpgradeResearch);
+                   Controller[UgrResWindow.UpgradeResearch].
                    Load(ResearchTypes[captureIndex]);
                };
         }
     }
 
-    public void Load(params object[] input)
+    protected override void Init()
     {
+        SetupConstructElement();
+        SetupResearchElements();
     }
 
-    public void Open()
+    public override void Load(params object[] input)
     {
-        gameObject.SetActive(true);
-        Load();
-    }
-
-    public void Close()
-    {
-        gameObject.SetActive(false);
+        throw new System.NotImplementedException();
     }
 }

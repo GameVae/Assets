@@ -4,32 +4,33 @@
 using UI.Widget;
 using UnityEditor;
 using UnityEngine;
-
-[CustomEditor(typeof(GUISliderWithBtn))]
-public class EditorSliderWithBtn : EditorGUIBase
+namespace UI.CustomInspector
 {
-    private GUISliderWithBtn Owner;
-    
-    private float sliderRatio;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(GUISliderWithBtn))]
+    public class EditorSliderWithBtn : EditorGUIBase
     {
-        base.OnEnable();
-        Owner = (GUISliderWithBtn)target;
+        private GUISliderWithBtn Owner;
 
-        sliderRatio = Owner.SliderRatio;
-    }
+        private float sliderRatio;
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        if (!Owner.UIDependent && !Application.isPlaying)
-            sliderRatio = EditorGUILayout.DelayedFloatField("Slider Ratio",Owner.SliderRatio);
-        if(!Mathf.Approximately(sliderRatio,Owner.SliderRatio))
+        protected override void OnEnable()
         {
-            Owner.SliderRatioChange(sliderRatio);
+            base.OnEnable();
+            Owner = (GUISliderWithBtn)target;
+
+            sliderRatio = Owner.SliderRatio;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            if (!Owner.UIDependent && !Application.isPlaying)
+                sliderRatio = EditorGUILayout.DelayedFloatField("Slider Ratio", Owner.SliderRatio);
+            if (!Mathf.Approximately(sliderRatio, Owner.SliderRatio))
+            {
+                Owner.SliderRatioChange(sliderRatio);
+            }
         }
     }
 }
-
 #endif

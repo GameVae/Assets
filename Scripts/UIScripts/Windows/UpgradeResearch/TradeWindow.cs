@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 using UI.Widget;
-using static UpgradeResearchManager;
+using static UpgResWdoCtrl;
 using EnumCollect;
 
-public class TradeWindow : MonoBehaviour, IWindow
+public class TradeWindow : BaseWindow
 {
-    private UpgradeResearchManager manager;
-
     [Header("Constructs"), Space]
     public ArmyWindow.Element Market;
     public ArmyWindow.Element PhoHienShip;
@@ -21,13 +19,6 @@ public class TradeWindow : MonoBehaviour, IWindow
 
     private ArmyWindow.Element[] marketResearchElements;
     private ArmyWindow.Element[] PHShipResearchElements;
-
-    private void Awake()
-    {
-        manager = GetComponentInParent<UpgradeResearchManager>();
-        SetupMarketResearch();
-        SetupHPShipResearch();
-    }
 
     private void SetupMarketResearch()
     {
@@ -44,8 +35,8 @@ public class TradeWindow : MonoBehaviour, IWindow
             marketResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
+                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    Controller[UgrResWindow.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
                 };
         }
     }
@@ -65,24 +56,20 @@ public class TradeWindow : MonoBehaviour, IWindow
             PHShipResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    manager.Open(Window.UpgradeResearch);
-                    manager[Window.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
+                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    Controller[UgrResWindow.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
                 };
         }
     }
 
-    public void Load(params object[] input)
+    protected override void Init()
+    {
+        SetupMarketResearch();
+        SetupHPShipResearch();
+    }
+
+    public override void Load(params object[] input)
     {
         throw new System.NotImplementedException();
-    }
-
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Close()
-    {
-        gameObject.SetActive(false);
     }
 }

@@ -3,37 +3,40 @@ using UI.Widget;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(GUIHorizontalInfo))]
-public class EditorHorizontalInfo : EditorGUIBase
+namespace UI.CustomInspector
 {
-    private GUIHorizontalInfo Owner;
-    private float iconRatio;
-    private float desrRatio;
-
-    protected override void OnEnable()
+    [CustomEditor(typeof(GUIHorizontalInfo))]
+    public class EditorHorizontalInfo : EditorGUIBase
     {
-        base.OnEnable();
-        Owner = target as GUIHorizontalInfo;
-        iconRatio = Owner.IconRatio;
-        desrRatio = Owner.DesribeRatio;
-    }
+        private GUIHorizontalInfo Owner;
+        private float iconRatio;
+        private float desrRatio;
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        if (!Owner.UIDependent && !Application.isPlaying)
+        protected override void OnEnable()
         {
-            EditorGUILayout.BeginVertical();
-            EditorGUI.BeginChangeCheck();
-            iconRatio = EditorGUILayout.DelayedFloatField("Icon %", Owner.IconRatio);
-            desrRatio = EditorGUILayout.DelayedFloatField("Desr %", Owner.DesribeRatio);
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Btn % ");
-            EditorGUILayout.LabelField(Mathf.Clamp((1 - iconRatio - desrRatio), 0, 1).ToString());
-            EditorGUILayout.EndHorizontal();
-            if (EditorGUI.EndChangeCheck()) Owner.RatioChange(iconRatio, desrRatio);
-            EditorGUILayout.EndVertical();
+            base.OnEnable();
+            Owner = target as GUIHorizontalInfo;
+            iconRatio = Owner.IconRatio;
+            desrRatio = Owner.DesribeRatio;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            if (!Owner.UIDependent && !Application.isPlaying)
+            {
+                EditorGUILayout.BeginVertical();
+                EditorGUI.BeginChangeCheck();
+                iconRatio = EditorGUILayout.DelayedFloatField("Icon %", Owner.IconRatio);
+                desrRatio = EditorGUILayout.DelayedFloatField("Desr %", Owner.DesribeRatio);
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Btn % ");
+                EditorGUILayout.LabelField(Mathf.Clamp((1 - iconRatio - desrRatio), 0, 1).ToString());
+                EditorGUILayout.EndHorizontal();
+                if (EditorGUI.EndChangeCheck()) Owner.RatioChange(iconRatio, desrRatio);
+                EditorGUILayout.EndVertical();
+            }
         }
     }
 }
