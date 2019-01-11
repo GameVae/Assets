@@ -1,5 +1,6 @@
 ﻿using Network.Sync;
 using SocketIO;
+using System;
 using System.Collections;
 using System.Threading;
 using UnityEngine;
@@ -70,6 +71,8 @@ public sealed class Connection : MonoBehaviour
         LoadingUICtrl.Instance.StartProgress(1);
     }
 
+  
+
     private void Update()
     {
         if (!IsClose)
@@ -82,7 +85,7 @@ public sealed class Connection : MonoBehaviour
 #endif
             }
         }
-        Sync?.Update(Time.deltaTime);
+        Sync?.SyncUpdate(Time.deltaTime);
     }
 
     private void OnApplicationQuit()
@@ -112,5 +115,15 @@ public sealed class Connection : MonoBehaviour
                 pingElapsed = 0;
                 break;
         }
+    }
+
+    public void On(string ev, System.Action<SocketIOEvent> callback)
+    {
+        SocketComponent.On(ev, callback);
+    }
+
+    public void Emit(string v, JSONObject data)
+    {
+        SocketComponent.Emit(v, data);
     }
 }

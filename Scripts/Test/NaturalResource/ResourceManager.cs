@@ -52,10 +52,10 @@ public class ResourceManager : MonoBehaviour
     private void Start()
     {
         float start = Time.realtimeSinceStartup;
-        int count = Datas.rows.Count;
+        int count = Datas.Rows.Count;
         for (int i = 0; i < count; i++)
         {
-            GenResource((RssType)Datas.rows[i].RssType, Flag.Owner, i + 1);
+            GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, i + 1);
         }
 
         Debug.Log("instaniate done: " + (Time.realtimeSinceStartup - start));

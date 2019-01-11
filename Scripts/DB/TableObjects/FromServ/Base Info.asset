@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 264e5fe9e3fdced4889177e2cc14572d, type: 3}
+  m_Name: Base Info
+  m_EditorClassIdentifier: 
+  Rows:
+  - ID_User: 42
+    BaseNumber: 1
+    Position: 500,80,0
+    Farm: 6500
+    Wood: 5620
+    Stone: 3000
+    Metal: 7380
+    UpgradeWait_ID: 0
+    UpgradeWait_Might: 
+    UpgradeTime: 122955.414
+    ResearchWait_ID: 0
+    ResearchWait_Might: 
+    ResearchTime: 0
+    UnitTransferType: 
+    UnitTransferQuality: 
+    UnitTransferTime: 
+    UnitTransfer_ID_Base: 
+    TrainingUnit_ID: 
+    TrainingTime: 
+    TrainingQuality: 
+    Training_Might: 
+    SumUnitQuality: 0

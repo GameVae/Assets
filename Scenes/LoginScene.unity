@@ -380,6 +380,7 @@ GameObject:
   - component: {fileID: 77327104}
   - component: {fileID: 77327106}
   - component: {fileID: 77327108}
+  - component: {fileID: 77327109}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -480,6 +481,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a35a245d33149e4bade1462bd05e6a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &77327109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65075a3a07c6db4da1806ba212b1688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncData: {fileID: 11400000, guid: e7d31efb8a4ef8c459f4791dbdf85a22, type: 2}
+  Conn: {fileID: 77327102}
 --- !u!1 &89660090
 GameObject:
   m_ObjectHideFlags: 0
@@ -9200,6 +9214,7 @@ GameObject:
   - component: {fileID: 1251073627}
   - component: {fileID: 1251073625}
   - component: {fileID: 1251073628}
+  - component: {fileID: 1251073626}
   m_Layer: 0
   m_Name: GameData
   m_TagString: Untagged
@@ -9220,7 +9235,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RSS_Table: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
   Position_Table: {fileID: 11400000, guid: 3a7a7582f5be8d24a9c795572c169ec6, type: 2}
-  Conn: {fileID: 77327102}
+--- !u!114 &1251073626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1251073624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52824db6443bcd84ca3e209c50d43b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1251073627
 Transform:
   m_ObjectHideFlags: 0

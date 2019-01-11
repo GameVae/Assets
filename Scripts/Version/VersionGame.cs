@@ -91,6 +91,7 @@ public class VersionGame : MonoBehaviour
     {        
         Loader.InitSQLConnection();
         Loader.ReloadData();
+        Debug.Log("reload data");
         taskSequences.Done("check version");
     }
 }

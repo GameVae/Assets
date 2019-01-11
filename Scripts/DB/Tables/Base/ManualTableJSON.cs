@@ -1,19 +1,21 @@
-﻿using ManualTable.Interface;
+﻿using Json;
+using Json.Interface;
+using ManualTable.Interface;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ManualTable
 {
-    public class ManualTableJSON<T> : ScriptableObject, ITable where T : IManualRow, new()
+    public class ManualTableJSON<T> : ScriptableObject, ITable where T : IJSON, IManualRow, new()
     {
-        [SerializeField] public List<T> rows;
+        [SerializeField] public List<T> Rows;
 
         public T this[int index]
         {
             get
             {
-                if (index >= rows.Count) return default(T);
-                return rows[index];
+                if (index >= Rows.Count) return default(T);
+                return Rows[index];
             }
         }
 
@@ -22,15 +24,17 @@ namespace ManualTable
 
         public void LoadRow(string json)
         {
-            T row = JsonUtility.FromJson<T>(json);
-            rows.Add(row);
+            if (Rows == null)
+                Rows = new List<T>();
+            T row = JSONBase.FromJSON<T>(json);
+            Rows.Add(row);
         }
 
         public void LoadTable(JSONObject data)
         {
-            if (rows == null)
-                rows = new List<T>();
-            else rows.Clear();
+            if (Rows == null)
+                Rows = new List<T>();
+            else Rows.Clear();
 
             int count = data.Count;
             for (int i = 0; i < count; i++)

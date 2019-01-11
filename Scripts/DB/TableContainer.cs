@@ -7,6 +7,6 @@ namespace ManualTable
     public class TableContainer : ScriptableObject
     {
         [SerializeField] public ScriptableObject Table;
-        [SerializeField] public RowType RowType;
+        [SerializeField] public DBRowType RowType;
     }
 }

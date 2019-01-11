@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff29f3b25cefe749ace1aec64dccb42, type: 3}
+  m_Name: UserInfo Table
+  m_EditorClassIdentifier: 
+  Rows:
+  - ID_User: 42
+    Server_ID: 1
+    NameInGame: ndinhtoan45
+    ChatWorldColor: FFFFFF
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 40
+    Killed: 0

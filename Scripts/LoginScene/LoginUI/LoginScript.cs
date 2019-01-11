@@ -61,11 +61,6 @@ public class LoginScript : MonoBehaviour
     {
         socketIO = Connection.Instance.Socket;
         socketIO.On("R_LOGIN", R_LOGIN);
-
-        socketIO.On("R_GET_RSS", GetRSSData.instance.R_GET_RSS);
-        socketIO.On("R_BASE_INFO", GetRSSData.instance.R_BASE_INFO);
-        socketIO.On("R_USER_INFO", GetRSSData.instance.R_USER_INFO);
-        socketIO.On("R_GET_POSITION", GetRSSData.instance.R_GET_POSITION);
     }
 
     private void R_LOGIN(SocketIOEvent obj)

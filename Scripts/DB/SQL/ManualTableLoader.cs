@@ -47,26 +47,27 @@ namespace ManualTable.Loader
         private bool IsUpdateVersion(ref VersionRow versionTask)
         {
             if (versionTask == null)
-                Load(RowType.Version, Version);
+                Load(DBRowType.Version, Version);
 
             versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             CurrentVersion = versionTask?.Content;
 
             bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
+            Debug.Log(result + ServerVersion + " - " + CurrentVersion);
             return result;
         }
 
-        public void Load(RowType ManualRowType, ScriptableObject TableData)
+        public void Load(DBRowType ManualRowType, ScriptableObject TableData)
         {
             switch (ManualRowType)
             {
-                case RowType.MainBase:
+                case DBRowType.MainBase:
                     SQLDataConnection.LoadTable(Cast<MainBaseTable>(TableData));
                     break;
-                case RowType.Soldier:
+                case DBRowType.Soldier:
                     SQLDataConnection.LoadTable(Cast<SoldierTable>(TableData));
                     break;
-                case RowType.Version:
+                case DBRowType.Version:
                     SQLVersionConnection.LoadTable(Cast<VersionTable>(TableData));
                     break;
 

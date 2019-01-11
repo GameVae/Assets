@@ -12,43 +12,11 @@ MonoBehaviour:
   m_Name: Sync
   m_EditorClassIdentifier: 
   Levels:
-    MainbaseLevel: 2
-    CurrentUpgradeLv: 2
-    CurrentResearchLv: 3
+    MainbaseLevel: 4
+    CurrentUpgradeLv: 1
+    CurrentResearchLv: 4
     UpgradeRequire: 3
     ResearchRequire: 3
-  UserInfo:
-    ID_User: 42
-    NameInGame: ndinhtoan45
-    ChatWorldColor: FFFFFF
-    Guild_ID: 
-    Guild_Name: 
-    LastGuildID: 
-    Might: 0
-    Killed: 0
-    Server_ID: 1
-  BaseInfo:
-    ID_User: 42
-    BaseNumber: 1
-    Position: 500,80,0
-    UpgradeWait_ID: 0
-    ResearchWait_ID: 0
-    ResearchTime: 1
-    UpgradeTime: 1
-    UpgradeWait_Might: 
-    ResearchWait_Might: 
-    ResRemainingInt: 2657
-    UpgRemainingInt: 718949
-    Farm: 10000
-    Wood: 10000
-    Stone: 10000
-    Metal: 10000
-    UnitTransferType: 
-    UnitTransferQuality: 
-    UnitTransferTime: 
-    UnitTransfer_ID_Base: 
-    TrainingUnit_ID: 
-    TrainingTime: 
-    TrainingQuality: 
-    Training_Might: 
-    SumUnitQuality: 0
+  UserInfo: {fileID: 11400000, guid: 30c8655fc391a2d42b3e389ce1501a41, type: 2}
+  BaseInfo: {fileID: 11400000, guid: 203c5f93255f20a4cb9dc0ea092e5e59, type: 2}
+  BaseUpgrade: {fileID: 11400000, guid: f9b313d243d8a3c43a0f836ac2454cdc, type: 2}
