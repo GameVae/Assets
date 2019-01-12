@@ -41,7 +41,7 @@ public class UpgResWindow : BaseWindow
     {
         base.Awake();
         UpgradeHanlder = FindObjectOfType<GetUpgradeData>();
-        UpgradeHanlder.AddEmiter("S_UPGRADE",CreateUpgData);
+        UpgradeHanlder?.AddEmiter("S_UPGRADE",CreateUpgData);
     }
 
     protected override void Update()
@@ -70,11 +70,11 @@ public class UpgResWindow : BaseWindow
     /// <param name="data">Params object</param>
     public override void Load(params object[] data)
     {
-        ListUpgrade type = data.TryGet<ListUpgrade>(0);
-        int[] needMaterials = data.TryGet<int[]>(1);
-        int mightBonus = data.TryGet<int>(2);
-        string timeMin = data.TryGet<string>(3);
-        int timeInt = data.TryGet<int>(4);
+        ListUpgrade type        = data.TryGet<ListUpgrade>(0);
+        int[] needMaterials     = data.TryGet<int[]>(1);
+        int mightBonus          = data.TryGet<int>(2);
+        string timeMin          = data.TryGet<string>(3);
+        int timeInt             = data.TryGet<int>(4);
 
         refType = SyncData.BaseUpgrade[type];
         isUpgradeType = type.IsUpgrade();
@@ -83,6 +83,8 @@ public class UpgResWindow : BaseWindow
         bool isResearchRequire = false;
         bool activeProgressBar = isUpgradeType ? type == SyncData.CurrentMainBase.UpgradeWait_ID
                                                              : type == SyncData.CurrentMainBase.ResearchWait_ID;
+        bool activeBtnGroup = isUpgradeType ? !SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined()
+                                                             : !SyncData.CurrentMainBase.ResearchWait_ID.IsDefined();
         curMaterials[0] = SyncData.CurrentMainBase.Farm;
         curMaterials[1] = SyncData.CurrentMainBase.Wood;
         curMaterials[2] = SyncData.CurrentMainBase.Stone;
@@ -90,7 +92,9 @@ public class UpgResWindow : BaseWindow
 
         Title.text = type.ToString().InsertSpace();
 
-        ActiveButtonGroup(!activeProgressBar);
+        ActiveProgressBar(activeProgressBar);
+        ActiveBtnGroup(activeBtnGroup);
+
         ProgressSlider.Slider.MaxValue = timeInt;
 
         BuildingLevel.transform.parent.gameObject.SetActive(isBuildingRequire);
@@ -126,11 +130,15 @@ public class UpgResWindow : BaseWindow
             material.Placeholder.text = string.Format("<color=red>{0}</color>/{1}", cur, need);
     }
 
-    private void ActiveButtonGroup(bool value)
+    private void ActiveProgressBar(bool value)
+    {
+        ProgressSlider.gameObject.SetActive(value);
+    }
+
+    private void ActiveBtnGroup(bool value)
     {
         InstantBtn.InteractableChange(value);
         LevelUpBtn.InteractableChange(value);
-        ProgressSlider.gameObject.SetActive(!value);
     }
 
     private void SetTextProgCountdown()
@@ -144,7 +152,8 @@ public class UpgResWindow : BaseWindow
 
                 if (SyncData.CurrentMainBase.UpgIsDone())
                 {
-                    ActiveButtonGroup(true);
+                    ActiveProgressBar(false);
+                    ActiveBtnGroup(true);
                 }
             }
             else
@@ -153,7 +162,8 @@ public class UpgResWindow : BaseWindow
                 ProgressSlider.Slider.Placeholder.text = SyncData.CurrentMainBase.GetResTimeString();
                 if (SyncData.CurrentMainBase.ResIsDone())
                 {
-                    ActiveButtonGroup(true);
+                    ActiveProgressBar(false);
+                    ActiveBtnGroup(true);
                 }
             }
         }

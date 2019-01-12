@@ -8,6 +8,7 @@ using ManualTable;
 using ManualTable.Row;
 using System.Linq;
 using EnumCollect;
+using DB;
 
 public class ArmyWindow : BaseWindow
 {
@@ -21,10 +22,9 @@ public class ArmyWindow : BaseWindow
     [Serializable]
     public struct ElementTypeInfo
     {
+        public ListUpgrade BaseType;
         public string[] Titles;
         public ListUpgrade[] Types;
-        public SoldierTable[] AgentDatabase;
-        public ListUpgrade ConstructType;
     }
 
     [Header("Toggle Group")]
@@ -43,12 +43,7 @@ public class ArmyWindow : BaseWindow
     public Transform[] OrderElements;
 
     [Header("Army Type's Name")]
-    public ElementTypeInfo Infantry;
-    public ElementTypeInfo Ranged;
-    public ElementTypeInfo Mounted;
-    public ElementTypeInfo SeigeEngine;
-
-    private Dictionary<string, ElementTypeInfo> typeDict;
+    public ElementTypeInfo[] ArmyTypes;
 
     protected override void Start()
     {
@@ -57,23 +52,15 @@ public class ArmyWindow : BaseWindow
 
     protected override void Init()
     {
-        typeDict = new Dictionary<string, ElementTypeInfo>()
-        {
-            {"Infantry" ,Infantry},
-            {"Ranged",Ranged},
-            {"Mounted",Mounted},
-            {"Siege Engine",SeigeEngine},
-        };
-
         SetupIllustrationGroup();
         SetupOrderElements();
         Toggle.CheckMarkEvents += delegate
         {
-            typeName.text = Toggle.ActiveMark.Placeholder.text;
             Load();
         };
+
         upgradeBtn.OnClickEvents +=
-            delegate { OnUpgradeBtn(typeName.text); };
+            delegate { OnUpgradeBtn(); };
     }
 
     private void SetupIllustrationGroup()
@@ -104,16 +91,15 @@ public class ArmyWindow : BaseWindow
                 delegate
                 {
                     Controller.Open(UgrResWindow.UpgradeResearch);
-                    OnElementBtn(typeName.text, captureIndex);
+                    OnElementBtn(ArmyTypes[Toggle.ActiveIndex].Types[captureIndex]);
                 };
         }
 
     }
 
-    private void OnElementBtn(string type, int index)
+    private void OnElementBtn(ListUpgrade type)
     {
-        SoldierTable table = typeDict[type].AgentDatabase[index];
-        ListUpgrade title = typeDict[typeName.text].Types[index];
+        SoldierTable table = DBReference.Instance[type] as SoldierTable;
 
         int[] need;
         SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade.Level);
@@ -123,7 +109,7 @@ public class ArmyWindow : BaseWindow
         else need = new int[4];
 
         Controller[UgrResWindow.UpgradeResearch].Load(
-            title,
+            type,
             need,
             row?.MightBonus,
             row?.ResearchTime,
@@ -131,11 +117,10 @@ public class ArmyWindow : BaseWindow
             );
     }
 
-    private void OnUpgradeBtn(string datatype)
+    private void OnUpgradeBtn()
     {
-        string upgTypeName = typeName.text;
-        ElementTypeInfo armyType = typeDict[upgTypeName];
-        ListUpgrade type = armyType.ConstructType;
+        ElementTypeInfo armyType = ArmyTypes[Toggle.ActiveIndex];
+        ListUpgrade type = armyType.BaseType;
 
         // open
         Controller.Open(UgrResWindow.UpgradeResearch);
@@ -168,28 +153,20 @@ public class ArmyWindow : BaseWindow
 
     public override void Load(params object[] data)
     {
-        string upgTypeName = typeName.text;
-        ElementTypeInfo armyType = typeDict[upgTypeName];
-        ListUpgrade type = armyType.ConstructType;
+        ElementTypeInfo armyType = ArmyTypes[Toggle.ActiveIndex];
+        ListUpgrade type = armyType.BaseType;
 
-        // data for test
+        // sv data
         int mainbaseLv = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
         int selTypeLv = SyncData.BaseUpgrade[type].Level;
 
-        // get database
-        MainBaseTable table = Controller[armyType.ConstructType] as MainBaseTable;
-
-        // active button element from 1 -> 4
-        for (int i = 0, j = 0; i < table.Rows.Count && j < elements.Length; i++)
+        for (int i = 0,level = 0; i < armyType.Types.Length; i++)
         {
-            if (table.Rows[i].Unlock != null &&
-                table.Rows[i].Unlock != "")
-            {
-                elements[j].Icon.InteractableChange(selTypeLv >= table.Rows[i].Level);
-                j++;
-            }
+            level = SyncData.BaseUpgrade[armyType.Types[i]].Level;
+            elements[i].Icon.InteractableChange(level > 0);
+            elements[i].LevelBar.Value = level;
         }
-
+        
         // check active or not for upgrade btn
         upgradeBtn.InteractableChange(mainbaseLv > selTypeLv);
 
@@ -200,7 +177,4 @@ public class ArmyWindow : BaseWindow
             elements[i].Icon.Placeholder.text = armyType.Titles[i];
         }
     }
-
-
-
 }

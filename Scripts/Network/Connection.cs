@@ -72,7 +72,6 @@ public sealed class Connection : MonoBehaviour
     }
 
   
-
     private void Update()
     {
         if (!IsClose)
@@ -84,8 +83,8 @@ public sealed class Connection : MonoBehaviour
                 Debug.Log("Connection Closed");
 #endif
             }
+            Sync?.SyncUpdate(Time.deltaTime);
         }
-        Sync?.SyncUpdate(Time.deltaTime);
     }
 
     private void OnApplicationQuit()

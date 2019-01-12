@@ -5,6 +5,7 @@ using UnityEngine;
 using ManualTable.Interface;
 using EnumCollect;
 using Network.Sync;
+using DB;
 
 [SerializeField]
 public sealed class UpgResWdoCtrl : MonoBehaviour
@@ -21,7 +22,6 @@ public sealed class UpgResWdoCtrl : MonoBehaviour
     }
 
     private Dictionary<int, IWindow> windows;
-    private Dictionary<int, ITable> constructDB;
 
     private Stack<UgrResWindow> preWindow;
     private UgrResWindow curWindow;
@@ -42,7 +42,7 @@ public sealed class UpgResWdoCtrl : MonoBehaviour
     [SerializeField] private ResourceWindow ResourceWindow;
     [SerializeField] private DefenseWindow DefenseWindow;
 
-    public Sync Sync { get { return Conn.Sync; } }
+    public Sync Sync { get { return Conn?.Sync; } }
 
     private void Awake()
     {
@@ -63,15 +63,6 @@ public sealed class UpgResWdoCtrl : MonoBehaviour
             { UgrResWindow.Trade.GetHashCode()            ,TradeWindow},
             { UgrResWindow.Resource.GetHashCode()         ,ResourceWindow},
             { UgrResWindow.Defense.GetHashCode()          ,DefenseWindow },
-        };
-
-        constructDB = new Dictionary<int, ITable>()
-        {
-            {ListUpgrade.MainBase.GetHashCode()    ,MainbaseDB},
-            {ListUpgrade.Infantry.GetHashCode()    ,InfantryDB },
-            {ListUpgrade.Ranged.GetHashCode()      ,null },
-            {ListUpgrade.Mounted.GetHashCode()     ,null },
-            {ListUpgrade.SiegeEngine.GetHashCode() ,null }
         };
     }
 
@@ -129,10 +120,6 @@ public sealed class UpgResWdoCtrl : MonoBehaviour
 
     public ITable this[ListUpgrade type]
     {
-        get
-        {
-            constructDB.TryGetValue(type.GetHashCode(), out ITable table);
-            return table;
-        }
+        get { return DBReference.Instance[type]; }
     }
 }

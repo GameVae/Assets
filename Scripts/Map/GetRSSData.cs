@@ -1,15 +1,7 @@
-﻿using Json;
-using ManualTable;
-using Network.Sync;
-using SocketIO;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using SocketIO;
 
-public class GetRSSData : Listener
+public sealed class GetRSSData : Listener
 {
-    public RSS_PositionJSONTable RSS_Table;
-    public PositionJSONTable Position_Table;
-
     private GameProgress getDataProgress;
 
     protected override void Start()
@@ -20,7 +12,7 @@ public class GetRSSData : Listener
 
     public void R_GET_RSS(SocketIOEvent obj)
     {
-        RSS_Table.LoadTable(obj.data["R_GET_RSS"]);
+        SyncData.RSS_Position.LoadTable(obj.data["R_GET_RSS"]);
     }
 
     public void R_BASE_INFO(SocketIOEvent obj)
@@ -41,7 +33,7 @@ public class GetRSSData : Listener
     public void R_GET_POSITION(SocketIOEvent obj)
     {
         //Debug.Log(obj.data["R_GET_POSITION"]);
-        Position_Table.LoadTable(obj.data["R_GET_POSITION"]);
+        SyncData.Position.LoadTable(obj.data["R_GET_POSITION"]);
         getDataProgress.Done("get position");
     }
 

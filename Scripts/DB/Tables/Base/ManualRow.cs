@@ -25,7 +25,7 @@ namespace ManualTable.Row
         public int TimeInt;
         public int Required;
         public string Unlock;
-        public int Unlock_ID;
+        public ListUpgrade Unlock_ID;
 
         public int FieldCount
         {
@@ -124,6 +124,7 @@ namespace ManualTable.Row
         public string Required;
     }
 
+    //======================================//
     [System.Serializable]
     public class RSS_PositionRow : JSONBase, IManualRow
     {
@@ -222,17 +223,25 @@ namespace ManualTable.Row
         public int SumUnitQuality;
 
         ///*===============Util Funs==================*/
-        public void RecordElapsedTime(float elapsedTime)
+        public void RecordElapsedTime(float elapsedTime, BaseUpgradeJSONTable baseUpgrade)
         {
-            if(UpgradeTime > 0)
+            if (UpgradeTime > 0)
             {
                 UpgradeTime -= elapsedTime;
-                if (UpgradeTime <= 0) UpgradeTime = 0;
+                if (UpgradeTime <= 0)
+                {
+                    UpgradeTime = 0;
+                    baseUpgrade[UpgradeWait_ID].Level++;
+                }
             }
             if(ResearchTime > 0)
             {
                 ResearchTime -= elapsedTime;
-                if (ResearchTime <= 0) ResearchTime = 0;
+                if (ResearchTime <= 0)
+                {
+                    ResearchTime = 0;
+                    baseUpgrade[ResearchWait_ID].Level++;
+                }
             }
         }
 

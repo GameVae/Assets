@@ -11,12 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31811130277dd3d4eb7c08de449e04e0, type: 3}
   m_Name: Sync
   m_EditorClassIdentifier: 
-  Levels:
-    MainbaseLevel: 4
-    CurrentUpgradeLv: 1
-    CurrentResearchLv: 4
-    UpgradeRequire: 3
-    ResearchRequire: 3
+  RSS_Position: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
+  Position: {fileID: 11400000, guid: 3a7a7582f5be8d24a9c795572c169ec6, type: 2}
   UserInfo: {fileID: 11400000, guid: 30c8655fc391a2d42b3e389ce1501a41, type: 2}
   BaseInfo: {fileID: 11400000, guid: 203c5f93255f20a4cb9dc0ea092e5e59, type: 2}
   BaseUpgrade: {fileID: 11400000, guid: f9b313d243d8a3c43a0f836ac2454cdc, type: 2}

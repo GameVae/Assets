@@ -84,12 +84,10 @@ namespace UI.Widget
             group = agroup;
             OnOffSwitch.On += delegate
             {
-
                 if (agroup.ActiveMark != this)
                 {
                     agroup.ActiveMark?.OnOffSwitch.SwitchOff();
                     agroup.ActiveMark = this;
-                    agroup.CheckActionCallback();
                 }
             };
         }

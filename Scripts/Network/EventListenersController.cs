@@ -7,7 +7,7 @@ namespace Network.Data
     {
         public static EventListenersController Instance { get; private set; }
 
-        public Sync.Sync SyncData;
+        public Sync.Sync SyncData { get { return Conn?.Sync; } }
         public Connection Conn;
 
         private Dictionary<string, System.Func<JSONObject>> emitter;
@@ -34,7 +34,9 @@ namespace Network.Data
             }
             catch (System.Exception ex)
             {
+#if UNITY_EDITOR
                 Debug.Log(ex.ToString());
+#endif
             }
         }
     }

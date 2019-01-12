@@ -1,17 +1,11 @@
 ﻿using SocketIO;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GetUpgradeData : Listener
+public sealed class GetUpgradeData : Listener
 {
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void R_UPGRADE(SocketIOEvent obj)
     {
-        //Debug.Log(obj);
+        Debug.Log(obj);
     }
 
     public void R_BASE_UPGRADE(SocketIOEvent obj)

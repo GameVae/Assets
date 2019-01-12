@@ -19,7 +19,21 @@ namespace UI.Widget
         [SerializeField, HideInInspector] private List<GUICheckMark> checkMarks;
         [SerializeField, HideInInspector] private ToggleType type;
 
-        public GUICheckMark ActiveMark { get; set; }
+        public ToggleType Type
+        {
+            get { return type; }
+            protected set { type = value; }
+        }
+
+        public int ActiveIndex
+        {
+            get { return checkMarks.IndexOf(ActiveMark); }
+        }
+
+        public GUICheckMark ActiveMark
+        {
+            get; set;
+        }
 
         public override Image MaskImage
         {
@@ -32,13 +46,7 @@ namespace UI.Widget
             get { return (placeholder = null); }
             protected set { return; }
         }
-
-        public ToggleType Type
-        {
-            get { return type; }
-            protected set { type = value; }
-        }
-
+    
         protected override void Awake()
         {
             SetupGroup();
@@ -113,6 +121,11 @@ namespace UI.Widget
             Refresh();
         }
 
+        public void ActiveToggle(int index)
+        {
+            checkMarks[index].OnOffSwitch.SwitchOn();
+        }
+
         public override void InteractableChange(bool value)
         {
             Interactable = value;
@@ -120,11 +133,6 @@ namespace UI.Widget
             {
                 checkMarks[i].InteractableChange(value);
             }
-        }
-
-        public void ActiveToggle(int index)
-        {
-            checkMarks[index].OnOffSwitch.SwitchOn();
         }
 
         public override void SetChildrenDependence() { }

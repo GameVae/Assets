@@ -34,7 +34,7 @@ namespace UI.CustomInspector
 
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("+", GUILayout.MaxWidth(50)))
-                {
+                { 
                     Selection.activeGameObject = Owner.gameObject;
                     string path = @"Assets/Prefabs/GUICheckMask.prefab";
                     Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));

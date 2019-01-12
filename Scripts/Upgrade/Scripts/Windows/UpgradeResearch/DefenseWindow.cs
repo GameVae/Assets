@@ -2,6 +2,10 @@
 using UI.Widget;
 using static UpgResWdoCtrl;
 using EnumCollect;
+using ManualTable;
+using DB;
+using ManualTable.Row;
+using System.Linq;
 
 public class DefenseWindow : BaseWindow
 {
@@ -27,7 +31,7 @@ public class DefenseWindow : BaseWindow
                 delegate 
                 {
                     Controller.Open(UgrResWindow.UpgradeResearch);
-                    Controller[UgrResWindow.UpgradeResearch].Load(Types[captureIndex]);
+                    OnBtnElement(Types[captureIndex]);
                 };
         }
     }
@@ -42,4 +46,24 @@ public class DefenseWindow : BaseWindow
         throw new System.NotImplementedException();
     }
 
+    private void OnBtnElement(ListUpgrade type)
+    {
+        MainBaseTable table = DBReference.Instance[type] as MainBaseTable;
+        if (table == null) return;
+
+        int[] need;
+        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.BaseUpgrade[type].Level);
+
+        if (row != null)
+            need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
+        else need = new int[4];
+
+        Controller[UgrResWindow.UpgradeResearch].Load(
+            type,
+            need,
+            row?.MightBonus,
+            row?.TimeMin,
+            row?.TimeInt
+            );
+    }
 }

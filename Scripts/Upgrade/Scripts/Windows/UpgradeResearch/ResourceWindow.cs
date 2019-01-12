@@ -1,4 +1,8 @@
-﻿using EnumCollect;
+﻿using DB;
+using EnumCollect;
+using ManualTable;
+using ManualTable.Row;
+using System.Linq;
 using UI.Widget;
 using UnityEngine;
 using static UpgResWdoCtrl;
@@ -32,8 +36,7 @@ public class ResourceWindow : BaseWindow
                 delegate
                 {
                     Controller.Open(UgrResWindow.UpgradeResearch);
-                    Controller[UgrResWindow.UpgradeResearch]
-                    .Load(ConstructTypes[captureIndex]);
+                    OnBtnElement(ConstructTypes[captureIndex]);
                 };
         }
     }
@@ -54,8 +57,7 @@ public class ResourceWindow : BaseWindow
                delegate
                {
                    Controller.Open(UgrResWindow.UpgradeResearch);
-                   Controller[UgrResWindow.UpgradeResearch].
-                   Load(ResearchTypes[captureIndex]);
+                   OnBtnElement(ResearchTypes[captureIndex]);
                };
         }
     }
@@ -69,5 +71,26 @@ public class ResourceWindow : BaseWindow
     public override void Load(params object[] input)
     {
         throw new System.NotImplementedException();
+    }
+
+    private void OnBtnElement(ListUpgrade type)
+    {
+        MainBaseTable table = DBReference.Instance[type] as MainBaseTable;
+        if (table == null) return;
+
+        int[] need;
+        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.BaseUpgrade[type].Level);
+
+        if (row != null)
+            need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
+        else need = new int[4];
+
+        Controller[UgrResWindow.UpgradeResearch].Load(
+            type,
+            need,
+            row?.MightBonus,
+            row?.TimeMin,
+            row?.TimeInt
+            );
     }
 }
