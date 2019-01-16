@@ -3,14 +3,14 @@ using UnityEngine;
 
 public abstract class BaseWindow : MonoBehaviour, IWindow
 {
-    private bool inited = false;
+    protected bool inited = false;
     private UpgResWdoCtrl ctrl;
 
-    protected UpgResWdoCtrl Controller
+    protected UpgResWdoCtrl WDOCtrl
     {
         get { return ctrl ?? (ctrl = GetComponentInParent<UpgResWdoCtrl>()); }
     }
-    protected Sync SyncData { get { return Controller?.Sync; } }
+    protected Sync SyncData { get { return WDOCtrl?.Sync; } }
 
     protected virtual void Awake()
     {

@@ -232,6 +232,7 @@ namespace ManualTable.Row
                 {
                     UpgradeTime = 0;
                     baseUpgrade[UpgradeWait_ID].Level++;
+                    UpgradeWait_ID = 0;
                 }
             }
             if(ResearchTime > 0)
@@ -241,6 +242,7 @@ namespace ManualTable.Row
                 {
                     ResearchTime = 0;
                     baseUpgrade[ResearchWait_ID].Level++;
+                    ResearchWait_ID = 0;
                 }
             }
         }

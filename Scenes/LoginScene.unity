@@ -377,10 +377,11 @@ GameObject:
   - component: {fileID: 77327107}
   - component: {fileID: 77327102}
   - component: {fileID: 77327105}
-  - component: {fileID: 77327104}
   - component: {fileID: 77327106}
+  - component: {fileID: 77327104}
   - component: {fileID: 77327108}
   - component: {fileID: 77327109}
+  - component: {fileID: 77327110}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -493,6 +494,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Conn: {fileID: 77327102}
+--- !u!114 &77327110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95b276e7b15708f4e8de2b31ffce0f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitalizeDB:
+  - Key: 1
+    Value: {fileID: 11400000, guid: c29a9e8656513124ba1af8f29cf09ba7, type: 2}
+  - Key: 16
+    Value: {fileID: 11400000, guid: 5ed5adb73bc9e4948a69b968c8827d5b, type: 2}
+  - Key: 15
+    Value: {fileID: 11400000, guid: 7678bed0ebff6ba41a4fa0d3b926950e, type: 2}
 --- !u!1 &89660090
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,7 @@ TextureImporter:
     21300034: BuidingIcon_17
     21300036: BuidingIcon_18
     21300038: BuidingIcon_19
+    21300040: BuidingIcon_20
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -138,10 +139,10 @@ TextureImporter:
       name: BuidingIcon_1
       rect:
         serializedVersion: 2
-        x: 164
-        y: 583
-        width: 85
-        height: 85
+        x: 168
+        y: 593
+        width: 78
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,10 +159,10 @@ TextureImporter:
       name: BuidingIcon_2
       rect:
         serializedVersion: 2
-        x: 304
-        y: 583
-        width: 85
-        height: 85
+        x: 309
+        y: 591
+        width: 75
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,10 +179,10 @@ TextureImporter:
       name: BuidingIcon_3
       rect:
         serializedVersion: 2
-        x: 449
-        y: 584
-        width: 85
-        height: 84
+        x: 450
+        y: 591
+        width: 75
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -198,10 +199,10 @@ TextureImporter:
       name: BuidingIcon_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 401.4
-        width: 141.25
-        height: 133.6
+        x: 27
+        y: 450
+        width: 75
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,10 +219,10 @@ TextureImporter:
       name: BuidingIcon_5
       rect:
         serializedVersion: 2
-        x: 141
-        y: 401.4
-        width: 141.25
-        height: 133.6
+        x: 168
+        y: 450
+        width: 75
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,10 +259,10 @@ TextureImporter:
       name: BuidingIcon_7
       rect:
         serializedVersion: 2
-        x: 423
-        y: 401.4
-        width: 141.25
-        height: 133.6
+        x: 450
+        y: 450
+        width: 75
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +279,10 @@ TextureImporter:
       name: BuidingIcon_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 268.4
-        width: 141.25
-        height: 133.6
+        x: 27
+        y: 309
+        width: 75
+        height: 47
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -298,10 +299,10 @@ TextureImporter:
       name: BuidingIcon_9
       rect:
         serializedVersion: 2
-        x: 141
-        y: 268.4
-        width: 141.25
-        height: 133.6
+        x: 168
+        y: 309
+        width: 75
+        height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,10 +319,10 @@ TextureImporter:
       name: BuidingIcon_10
       rect:
         serializedVersion: 2
-        x: 282
-        y: 268.4
-        width: 141.25
-        height: 133.6
+        x: 309
+        y: 309
+        width: 75
+        height: 54
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -338,10 +339,10 @@ TextureImporter:
       name: BuidingIcon_11
       rect:
         serializedVersion: 2
-        x: 423
-        y: 268.4
-        width: 141.25
-        height: 133.6
+        x: 450
+        y: 309
+        width: 75
+        height: 53
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -358,10 +359,10 @@ TextureImporter:
       name: BuidingIcon_12
       rect:
         serializedVersion: 2
-        x: 0
-        y: 135.4
-        width: 141.25
-        height: 133.6
+        x: 27
+        y: 168
+        width: 75
+        height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -378,10 +379,10 @@ TextureImporter:
       name: BuidingIcon_13
       rect:
         serializedVersion: 2
-        x: 141
-        y: 135.4
-        width: 141.25
-        height: 133.6
+        x: 168
+        y: 168
+        width: 75
+        height: 59
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -398,10 +399,10 @@ TextureImporter:
       name: BuidingIcon_14
       rect:
         serializedVersion: 2
-        x: 282
-        y: 135.4
-        width: 141.25
-        height: 133.6
+        x: 309
+        y: 168
+        width: 75
+        height: 59
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -418,10 +419,10 @@ TextureImporter:
       name: BuidingIcon_15
       rect:
         serializedVersion: 2
-        x: 423
-        y: 135.4
-        width: 141.25
-        height: 133.6
+        x: 450
+        y: 168
+        width: 75
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -438,10 +439,10 @@ TextureImporter:
       name: BuidingIcon_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 2.399994
-        width: 141.25
-        height: 133.6
+        x: 24
+        y: 26
+        width: 84
+        height: 46
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -458,10 +459,10 @@ TextureImporter:
       name: BuidingIcon_17
       rect:
         serializedVersion: 2
-        x: 141
-        y: 2.399994
-        width: 141.25
-        height: 133.6
+        x: 165
+        y: 27
+        width: 81
+        height: 49
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -478,10 +479,10 @@ TextureImporter:
       name: BuidingIcon_18
       rect:
         serializedVersion: 2
-        x: 282
-        y: 2.399994
-        width: 141.25
-        height: 133.6
+        x: 308
+        y: 27
+        width: 79
+        height: 41
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -498,10 +499,10 @@ TextureImporter:
       name: BuidingIcon_19
       rect:
         serializedVersion: 2
-        x: 423
-        y: 2.399994
-        width: 141.25
-        height: 133.6
+        x: 447
+        y: 26
+        width: 82
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -510,6 +511,26 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 8626959882860c5438d9899f34f8ad65
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BuidingIcon_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 565
+        height: 668
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52dae7f18d35bd5408ecb53e470a80c9
       vertices: []
       indices: 
       edges: []

@@ -29,7 +29,7 @@ namespace UI.Widget
             {
                 return placeholder ?? (placeholder = transform.GetChild(0).GetComponent<TextMeshProUGUI>());
             }
-            protected set { placeholder = value; }
+            set { placeholder = value; }
         }
 
         public override Image MaskImage

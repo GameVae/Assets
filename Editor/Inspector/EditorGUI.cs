@@ -6,103 +6,81 @@ namespace UI.CustomInspector
 {
     public sealed class EditorCustomUI : MonoBehaviour
     {
-        [MenuItem("GameObject/UI/GUI/Slider")]
-        public static void CreateSlider(MenuCommand menuCmd)
+        private static void Create(MenuCommand menuCmd, string path)
         {
-            string path = @"Assets/Prefabs/GUISlider.prefab";
             Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
             if (asset != null)
             {
-                GameObject slider = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(slider, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(slider, "Create " + slider.name);
-                Selection.activeObject = slider;
+                GameObject obj = Instantiate(asset) as GameObject;
+                GameObjectUtility.SetParentAndAlign(obj, menuCmd.context as GameObject);
+                Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+                Selection.activeObject = obj;
             }
         }
 
-        [MenuItem("GameObject/UI/GUI/InteractableIcon")]
+        [MenuItem("GameObject/UI/GUI/GUIVerticalList")]
+        public static void CreateVerticalList(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUIVerticalList.prefab";
+            Create(menuCmd, path);
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUITextWithIcon")]
+        public static void CreateTextWithIcon(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUITextWithIcon.prefab";
+            Create(menuCmd, path);
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUISlider")]
+        public static void CreateSlider(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUISlider.prefab";
+            Create(menuCmd, path);
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUIInteractableIcon")]
         public static void CreateInteractableIcon(MenuCommand menuCmd)
         {
 
             string path = @"Assets/Prefabs/GUIInteractableIcon.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject icon = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(icon, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(icon, "Create " + icon.name);
-                Selection.activeObject = icon;
-            }
+            Create(menuCmd, path);
         }
 
-        [MenuItem("GameObject/UI/GUI/CheckMask")]
+        [MenuItem("GameObject/UI/GUI/GUICheckMask")]
         public static void CreateCheckMask(MenuCommand menuCmd)
         {
             string path = @"Assets/Prefabs/GUICheckMask.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject checkMark = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(checkMark, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(checkMark, "Create " + checkMark.name);
-                Selection.activeObject = checkMark;
-            }
+            Create(menuCmd, path);
         }
 
-        [MenuItem("GameObject/UI/GUI/Toggle")]
+        [MenuItem("GameObject/UI/GUI/GUIToggle")]
         public static void CreateToggle(MenuCommand menuCmd)
         {
             string path = @"Assets/Prefabs/GUIToggle.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject toggle = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(toggle, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(toggle, "Create " + toggle.name);
-                Selection.activeObject = toggle;
-            }
+            Create(menuCmd, path);
         }
 
-        [MenuItem("GameObject/UI/GUI/OnOffSwitch")]
+        [MenuItem("GameObject/UI/GUI/GUIOnOffSwitch")]
         public static void CreateSwitch(MenuCommand menuCmd)
         {
             string path = @"Assets/Prefabs/GUIOnOffSwitch.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject onOffSwitch = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(onOffSwitch, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(onOffSwitch, "Create " + onOffSwitch.name);
-                Selection.activeObject = onOffSwitch;
-            }
+            Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUISliderWithBtn")]
         public static void CreateSliderWithBtn(MenuCommand menuCmd)
         {
             string path = @"Assets/Prefabs/GUISliderWithBtn.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject sliderWithBtn = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(sliderWithBtn, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(sliderWithBtn, "Create " + sliderWithBtn.name);
-                Selection.activeObject = sliderWithBtn;
-            }
+            Create(menuCmd, path);
+
         }
 
         [MenuItem("GameObject/UI/GUI/GUIHorizontalBarInfo")]
         public static void CreateHorizontalBarInfo(MenuCommand menuCmd)
         {
             string path = @"Assets/Prefabs/GUIHorizontalBarInfo.prefab";
-            Object asset = AssetDatabase.LoadAssetAtPath(path, typeof(GameObject));
-            if (asset != null)
-            {
-                GameObject infoBar = Instantiate(asset) as GameObject;
-                GameObjectUtility.SetParentAndAlign(infoBar, menuCmd.context as GameObject);
-                Undo.RegisterCreatedObjectUndo(infoBar, "Create " + infoBar.name);
-                Selection.activeObject = infoBar;
-            }
+            Create(menuCmd, path);
         }
     }
 }

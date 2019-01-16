@@ -35,8 +35,8 @@ public class TradeWindow : BaseWindow
             marketResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    Controller.Open(UgrResWindow.UpgradeResearch);
-                    Controller[UgrResWindow.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
+                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+                    WDOCtrl[UgrResWindow.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
                 };
         }
     }
@@ -56,8 +56,8 @@ public class TradeWindow : BaseWindow
             PHShipResearchElements[i].Icon.OnClickEvents
                 += delegate 
                 {
-                    Controller.Open(UgrResWindow.UpgradeResearch);
-                    Controller[UgrResWindow.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
+                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+                    WDOCtrl[UgrResWindow.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
                 };
         }
     }

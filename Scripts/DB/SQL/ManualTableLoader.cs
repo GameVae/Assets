@@ -53,7 +53,6 @@ namespace ManualTable.Loader
             CurrentVersion = versionTask?.Content;
 
             bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
-            Debug.Log(result + ServerVersion + " - " + CurrentVersion);
             return result;
         }
 

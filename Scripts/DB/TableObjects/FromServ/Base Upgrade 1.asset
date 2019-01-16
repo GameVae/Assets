@@ -14,7 +14,7 @@ MonoBehaviour:
   Rows:
   - ID: 1
     Name_Upgrade: MainBase
-    Level: 1
+    Level: 2
     UpgradeType: 1
   - ID: 2
     Name_Upgrade: Farm
@@ -70,7 +70,7 @@ MonoBehaviour:
     UpgradeType: 1
   - ID: 15
     Name_Upgrade: Infantry
-    Level: 0
+    Level: 2
     UpgradeType: 1
   - ID: 16
     Name_Upgrade: Solider

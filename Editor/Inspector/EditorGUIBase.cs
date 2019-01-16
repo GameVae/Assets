@@ -54,7 +54,7 @@ namespace UI.CustomInspector
                     BaseOwner.IsPlaceholderChange(showPlaceholder);
                 if (showPlaceholder)
                 {
-                    placeholder = EditorGUILayout.DelayedTextField("Placeholder", BaseOwner.Placeholder.text);
+                    placeholder = EditorGUILayout.DelayedTextField("Placeholder", BaseOwner.Placeholder?.text);
                     BaseOwner.PlaceholderText(placeholder);
 
                     placeholderColor = EditorGUILayout.ColorField("Color", BaseOwner.PlaceholderColor);

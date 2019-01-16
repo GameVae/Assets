@@ -90,7 +90,7 @@ public class ArmyWindow : BaseWindow
             elements[i].Icon.OnClickEvents +=
                 delegate
                 {
-                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
                     OnElementBtn(ArmyTypes[Toggle.ActiveIndex].Types[captureIndex]);
                 };
         }
@@ -108,7 +108,7 @@ public class ArmyWindow : BaseWindow
             need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };
         else need = new int[4];
 
-        Controller[UgrResWindow.UpgradeResearch].Load(
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load(
             type,
             need,
             row?.MightBonus,
@@ -123,11 +123,11 @@ public class ArmyWindow : BaseWindow
         ListUpgrade type = armyType.BaseType;
 
         // open
-        Controller.Open(UgrResWindow.UpgradeResearch);
+        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
         // server data 
         int level = SyncData.BaseUpgrade[type].Level;
   
-        MainBaseTable table = Controller[type] as MainBaseTable;
+        MainBaseTable table = WDOCtrl[type] as MainBaseTable;
 
         int[] need;
         MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == level);
@@ -142,7 +142,7 @@ public class ArmyWindow : BaseWindow
         /// 3: time min - string
         /// 4: time int - int
         /// </summary>
-        Controller[UgrResWindow.UpgradeResearch].Load
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load
             (type,
             need,
             row?.MightBonus,

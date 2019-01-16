@@ -56,7 +56,7 @@ public class StartupWindow : BaseWindow
         UpgProgBar.gameObject.SetActive(SyncData.CurrentMainBase.UpgradeTime > 0.0f);
         ResProgBar.gameObject.SetActive(SyncData.CurrentMainBase.ResearchTime > 0.0f);
 
-        MainBaseTable mainbaseDB = Controller[ListUpgrade.MainBase] as MainBaseTable; // dependence by CurrentMainBase Upg - Res
+        MainBaseTable mainbaseDB = WDOCtrl[ListUpgrade.MainBase] as MainBaseTable; // dependence by CurrentMainBase Upg - Res
 
         MainBaseRow resRef = mainbaseDB.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentResearch?.Level);
         MainBaseRow upgRef = mainbaseDB.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade?.Level);
@@ -68,10 +68,10 @@ public class StartupWindow : BaseWindow
     protected override void Init()
     {
         Mainbase.OnClickEvents  += OnMainbaseBtn;
-        Resource.OnClickEvents  += delegate { Controller.Open(UgrResWindow.Resource); };
-        Defense.OnClickEvents   += delegate { Controller.Open(UgrResWindow.Defense); };
-        Trade.OnClickEvents     += delegate { Controller.Open(UgrResWindow.Trade); };
-        Army.OnClickEvents      += delegate { Controller.Open(UgrResWindow.Army); };
+        Resource.OnClickEvents  += delegate { WDOCtrl.Open(UgrResWindow.Resource); };
+        Defense.OnClickEvents   += delegate { WDOCtrl.Open(UgrResWindow.Defense); };
+        Trade.OnClickEvents     += delegate { WDOCtrl.Open(UgrResWindow.Trade); };
+        Army.OnClickEvents      += delegate { WDOCtrl.Open(UgrResWindow.Army); };
 
     }
 
@@ -79,14 +79,14 @@ public class StartupWindow : BaseWindow
     {
         int mainLevel = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
 
-        MainBaseTable mainbaseDB = Controller[ListUpgrade.MainBase] as MainBaseTable;
+        MainBaseTable mainbaseDB = WDOCtrl[ListUpgrade.MainBase] as MainBaseTable;
         MainBaseRow row = mainbaseDB.Rows.FirstOrDefault(x => x.Level == mainLevel);
 
         int[] need = (row == null) ? new int[4] :
             new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
 
-        Controller.Open(UgrResWindow.UpgradeResearch);
-        Controller[UgrResWindow.UpgradeResearch].Load
+        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load
             (ListUpgrade.MainBase,
             need,
             row?.MightBonus,

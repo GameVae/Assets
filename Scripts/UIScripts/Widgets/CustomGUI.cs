@@ -18,8 +18,8 @@ namespace UI.Widget
 
         public float FontSize
         {
-            get { return Placeholder.fontSize; }
-            protected set { Placeholder.fontSize = value; }
+            get { return  Placeholder ? Placeholder.fontSize : 0; }
+            protected set { if(Placeholder) Placeholder.fontSize = value; }
         }
 
         public Color PlaceholderColor
@@ -47,7 +47,7 @@ namespace UI.Widget
         public virtual TextMeshProUGUI Placeholder
         {
             get { return placeholder ?? (placeholder = GetComponentInChildren<TextMeshProUGUI>()); }
-            protected set { placeholder = value; }
+            set { placeholder = value; }
         }
 
         public bool Maskable

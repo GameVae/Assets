@@ -90,6 +90,11 @@ namespace UI.Widget
             IsOn = true;
         }
 
+        public void SetIsOn(bool value)
+        {
+            IsOn = value;
+        }
+
         public override void InteractableChange(bool value)
         {
             Interactable = value;

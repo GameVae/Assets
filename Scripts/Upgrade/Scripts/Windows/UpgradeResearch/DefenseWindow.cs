@@ -30,7 +30,7 @@ public class DefenseWindow : BaseWindow
             constructElements[i].Icon.OnClickEvents +=
                 delegate 
                 {
-                    Controller.Open(UgrResWindow.UpgradeResearch);
+                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
                     OnBtnElement(Types[captureIndex]);
                 };
         }
@@ -58,7 +58,7 @@ public class DefenseWindow : BaseWindow
             need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
         else need = new int[4];
 
-        Controller[UgrResWindow.UpgradeResearch].Load(
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load(
             type,
             need,
             row?.MightBonus,

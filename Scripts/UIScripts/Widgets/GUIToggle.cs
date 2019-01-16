@@ -44,7 +44,7 @@ namespace UI.Widget
         public override TextMeshProUGUI Placeholder
         {
             get { return (placeholder = null); }
-            protected set { return; }
+            set { return; }
         }
     
         protected override void Awake()

@@ -14,14 +14,14 @@ MonoBehaviour:
   Rows:
   - ID_User: 42
     BaseNumber: 1
-    Position: 500,80,0
-    Farm: 6500
-    Wood: 5620
-    Stone: 3000
-    Metal: 7380
-    UpgradeWait_ID: 16
+    Position: 
+    Farm: 0
+    Wood: 0
+    Stone: 0
+    Metal: 0
+    UpgradeWait_ID: 15
     UpgradeWait_Might: 
-    UpgradeTime: 0
+    UpgradeTime: 2600.58
     ResearchWait_ID: 0
     ResearchWait_Might: 
     ResearchTime: 0

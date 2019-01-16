@@ -41,7 +41,7 @@ namespace UI.Widget
         public override TextMeshProUGUI Placeholder
         {
             get { return placeholder ?? (placeholder = Slider.Placeholder); }
-            protected set { placeholder = value; }
+            set { placeholder = value; }
         }
 
         protected override void Start()
