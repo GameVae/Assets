@@ -9,7 +9,7 @@ namespace UI.Widget
 
     public class GUIToggle : CustomGUI
     {
-        public enum ToggleType
+        public enum AxisType
         {
             Vertical,
             Horizontal,
@@ -17,9 +17,9 @@ namespace UI.Widget
 
         public event CheckMarkCallback CheckMarkEvents;
         [SerializeField, HideInInspector] private List<GUICheckMark> checkMarks;
-        [SerializeField, HideInInspector] private ToggleType type;
+        [SerializeField, HideInInspector] private AxisType type;
 
-        public ToggleType Type
+        public AxisType Type
         {
             get { return type; }
             protected set { type = value; }
@@ -63,8 +63,8 @@ namespace UI.Widget
             for (int i = 0; i < count; i++)
             {
                 trans = checkMarks[i].transform as RectTransform;
-                trans.anchorMin = (type == ToggleType.Vertical) ? new Vector2(0, lastAnchor) : new Vector2(lastAnchor, 0);
-                trans.anchorMax = (type == ToggleType.Vertical) ? new Vector2(1, lastAnchor + dist) : new Vector2(lastAnchor + dist, 1);
+                trans.anchorMin = (type == AxisType.Vertical) ? new Vector2(0, lastAnchor) : new Vector2(lastAnchor, 0);
+                trans.anchorMax = (type == AxisType.Vertical) ? new Vector2(1, lastAnchor + dist) : new Vector2(lastAnchor + dist, 1);
                 trans.offsetMax = trans.offsetMin = Vector2.zero;
                 lastAnchor += dist;
             }
@@ -115,7 +115,7 @@ namespace UI.Widget
             }
         }
 
-        public void TypeChange(ToggleType argType)
+        public void TypeChange(AxisType argType)
         {
             Type = argType;
             Refresh();

@@ -9,7 +9,7 @@ namespace ManualTable.Row
     {
         MainBase,
         Version,
-        Soldier
+        Military
     }
 
     [System.Serializable]
@@ -101,7 +101,7 @@ namespace ManualTable.Row
     }   
 
     [System.Serializable]
-    public class SoldierRow : IManualRow
+    public class MilitaryRow : IManualRow
     {
         public int FieldCount { get { return 12; } }
 

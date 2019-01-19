@@ -99,10 +99,10 @@ public class ArmyWindow : BaseWindow
 
     private void OnElementBtn(ListUpgrade type)
     {
-        SoldierTable table = DBReference.Instance[type] as SoldierTable;
+        MilitaryTable table = DBReference.Instance[type] as MilitaryTable;
 
         int[] need;
-        SoldierRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade.Level);
+        MilitaryRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade.Level);
 
         if (row != null)
             need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };

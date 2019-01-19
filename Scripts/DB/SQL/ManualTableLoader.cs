@@ -63,8 +63,8 @@ namespace ManualTable.Loader
                 case DBRowType.MainBase:
                     SQLDataConnection.LoadTable(Cast<MainBaseTable>(TableData));
                     break;
-                case DBRowType.Soldier:
-                    SQLDataConnection.LoadTable(Cast<SoldierTable>(TableData));
+                case DBRowType.Military:
+                    SQLDataConnection.LoadTable(Cast<MilitaryTable>(TableData));
                     break;
                 case DBRowType.Version:
                     SQLVersionConnection.LoadTable(Cast<VersionTable>(TableData));
