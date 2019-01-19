@@ -18,18 +18,16 @@ namespace UI
         public GUITextWithIcon DontHasUpgrade;
 
         public GUIOnOffSwitch OpenTaskBtn;
-        public List<ListUpgrade> CurrentUpgradeTypes;
+        private List<ListUpgrade> curUpgTypes;
 
         protected override void Awake()
         {
-            CurrentUpgradeTypes = new List<ListUpgrade>();
+            curUpgTypes = new List<ListUpgrade>();
             Init();
         }
         protected override void Start()
         {
             OpenTaskBtn.SwitchOff();
-
-
         }
         public override void Close()
         {
@@ -69,7 +67,6 @@ namespace UI
 
         public override void Load(params object[] input)
         {
-
             ListUpgrade upgType = SyncData.CurrentMainBase.UpgradeWait_ID;
             ListUpgrade resType = SyncData.CurrentMainBase.ResearchWait_ID;
             bool hasUpgRes = upgType.IsDefined() || resType.IsDefined();
@@ -79,8 +76,8 @@ namespace UI
             }
             else
             {
-                AddNewInfoBar(SyncData.CurrentMainBase.UpgradeWait_ID);
-                AddNewInfoBar(SyncData.CurrentMainBase.ResearchWait_ID);
+                Add(SyncData.CurrentMainBase.UpgradeWait_ID);
+                Add(SyncData.CurrentMainBase.ResearchWait_ID);
             }
         }
 
@@ -101,16 +98,16 @@ namespace UI
                 {
                     Destroy(inOut.gameObject);
                     verticalList.RemoveElement(id);
-                    CurrentUpgradeTypes.Remove(type);
+                    curUpgTypes.Remove(type);
                 }
             }
         }
 
-        private void AddNewInfoBar(ListUpgrade type)
+        private void Add(ListUpgrade type)
         {
             if (type.IsDefined())
             {
-                if (CurrentUpgradeTypes.Contains(type)) return;
+                if (curUpgTypes.Contains(type)) return;
 
                 GUISliderWithBtn element = verticalList.AddElement<GUISliderWithBtn>(HasUpgrade.transform as RectTransform, out int id);
                 element.InteractableChange(true);
@@ -124,7 +121,7 @@ namespace UI
                 fader.StartFadingAction += delegate { SwitchText(fader, element, type, id); };
                 element.gameObject.SetActive(true);
 
-                CurrentUpgradeTypes.Add(type);
+                curUpgTypes.Add(type);
             }
         }
     }

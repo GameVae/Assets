@@ -19,13 +19,16 @@ MonoBehaviour:
   - Attack
   - Defend
   - Health
-  - Food
-  - Wood
-  - Stone
-  - Metal
-  - ResearchTime
+  - FoodCost
+  - WoodCost
+  - StoneCost
+  - MetalCost
+  - TimeMin
   - TimeInt
   - Required
+  - Required_ID
+  - RequiredLevel
+  - Unlock_ID
   Rows:
   - Level: 1
     TrainingTime: 90
@@ -33,257 +36,317 @@ MonoBehaviour:
     Attack: 2.15
     Defend: 1.1
     Health: 5.2
-    Food: 1120
-    Wood: 2240
-    Stone: 1400
-    Metal: 840
-    ResearchTime: 0:06:00
+    FoodCost: 1120
+    WoodCost: 2240
+    StoneCost: 1400
+    MetalCost: 840
+    TimeMin: 0:06:00
     TimeInt: 360
     Required: 
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 2
     TrainingTime: 86
     MightBonus: 4000
     Attack: 2.3
     Defend: 1.15
     Health: 5.45
-    Food: 23864
-    Wood: 27688
-    Stone: 15667
-    Metal: 32748
-    ResearchTime: 0:15:00
+    FoodCost: 23864
+    WoodCost: 27688
+    StoneCost: 15667
+    MetalCost: 32748
+    TimeMin: 0:15:00
     TimeInt: 900
     Required: 
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 3
     TrainingTime: 82
     MightBonus: 7770
     Attack: 2.45
     Defend: 1.2
     Health: 5.65
-    Food: 46608
-    Wood: 53136
-    Stone: 29934
-    Metal: 64656
-    ResearchTime: 0:24:00
+    FoodCost: 46608
+    WoodCost: 53136
+    StoneCost: 29934
+    MetalCost: 64656
+    TimeMin: 0:24:00
     TimeInt: 1440
     Required: 
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 4
     TrainingTime: 78
     MightBonus: 11550
     Attack: 2.6
     Defend: 1.25
     Health: 5.85
-    Food: 69352
-    Wood: 78584
-    Stone: 44201
-    Metal: 96564
-    ResearchTime: 1:00:00
+    FoodCost: 69352
+    WoodCost: 78584
+    StoneCost: 44201
+    MetalCost: 96564
+    TimeMin: 1:00:00
     TimeInt: 3600
     Required: 
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 5
     TrainingTime: 74
     MightBonus: 15320
     Attack: 2.75
     Defend: 1.3
     Health: 6.05
-    Food: 92096
-    Wood: 104032
-    Stone: 58468
-    Metal: 128472
-    ResearchTime: 1:36:00
+    FoodCost: 92096
+    WoodCost: 104032
+    StoneCost: 58468
+    MetalCost: 128472
+    TimeMin: 1:36:00
     TimeInt: 5760
     Required: Wood Lv5
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 6
     TrainingTime: 70
     MightBonus: 19100
     Attack: 2.9
     Defend: 1.35
     Health: 6.25
-    Food: 114840
-    Wood: 129480
-    Stone: 72735
-    Metal: 160380
-    ResearchTime: 3:40:48
+    FoodCost: 114840
+    WoodCost: 129480
+    StoneCost: 72735
+    MetalCost: 160380
+    TimeMin: 3:40:48
     TimeInt: 13248
     Required: Wood Lv6
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 7
     TrainingTime: 66
     MightBonus: 22870
     Attack: 3.05
     Defend: 1.4
     Health: 6.45
-    Food: 137584
-    Wood: 154928
-    Stone: 87002
-    Metal: 192288
-    ResearchTime: 5:45:36
+    FoodCost: 137584
+    WoodCost: 154928
+    StoneCost: 87002
+    MetalCost: 192288
+    TimeMin: 5:45:36
     TimeInt: 20736
     Required: Wood Lv7
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 8
     TrainingTime: 62
     MightBonus: 26650
     Attack: 3.2
     Defend: 1.45
     Health: 6.65
-    Food: 160328
-    Wood: 180376
-    Stone: 101269
-    Metal: 224196
-    ResearchTime: 6:33:15
+    FoodCost: 160328
+    WoodCost: 180376
+    StoneCost: 101269
+    MetalCost: 224196
+    TimeMin: 6:33:15
     TimeInt: 23596
     Required: Wood Lv8
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 9
     TrainingTime: 58
     MightBonus: 30420
     Attack: 3.35
     Defend: 1.5
     Health: 6.85
-    Food: 183072
-    Wood: 205824
-    Stone: 115536
-    Metal: 256104
-    ResearchTime: 7:20:55
+    FoodCost: 183072
+    WoodCost: 205824
+    StoneCost: 115536
+    MetalCost: 256104
+    TimeMin: 7:20:55
     TimeInt: 26455
     Required: Wood Lv9
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 10
     TrainingTime: 54
     MightBonus: 34200
     Attack: 3.5
     Defend: 1.55
     Health: 7.05
-    Food: 205816
-    Wood: 231272
-    Stone: 129803
-    Metal: 288012
-    ResearchTime: 8:32:00
+    FoodCost: 205816
+    WoodCost: 231272
+    StoneCost: 129803
+    MetalCost: 288012
+    TimeMin: 8:32:00
     TimeInt: 30720
     Required: Wood Lv10
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 11
     TrainingTime: 50
     MightBonus: 37970
     Attack: 3.65
     Defend: 1.6
     Health: 7.25
-    Food: 228560
-    Wood: 256720
-    Stone: 144070
-    Metal: 319920
-    ResearchTime: 9:43:05
+    FoodCost: 228560
+    WoodCost: 256720
+    StoneCost: 144070
+    MetalCost: 319920
+    TimeMin: 9:43:05
     TimeInt: 34985
     Required: Wood Lv11
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 12
     TrainingTime: 46
     MightBonus: 41750
     Attack: 3.8
     Defend: 1.65
     Health: 7.45
-    Food: 251304
-    Wood: 282168
-    Stone: 158337
-    Metal: 351828
-    ResearchTime: 11:17:06
+    FoodCost: 251304
+    WoodCost: 282168
+    StoneCost: 158337
+    MetalCost: 351828
+    TimeMin: 11:17:06
     TimeInt: 40627
     Required: Wood Lv12
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 13
     TrainingTime: 42
     MightBonus: 45520
     Attack: 3.95
     Defend: 1.7
     Health: 7.65
-    Food: 274048
-    Wood: 307616
-    Stone: 172604
-    Metal: 383736
-    ResearchTime: 12:51:08
+    FoodCost: 274048
+    WoodCost: 307616
+    StoneCost: 172604
+    MetalCost: 383736
+    TimeMin: 12:51:08
     TimeInt: 46268
     Required: Wood Lv13
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 14
     TrainingTime: 38
     MightBonus: 49290
     Attack: 4.1
     Defend: 1.75
     Health: 7.85
-    Food: 296792
-    Wood: 333064
-    Stone: 186871
-    Metal: 415644
-    ResearchTime: 1d 5h:48m:14
+    FoodCost: 296792
+    WoodCost: 333064
+    StoneCost: 186871
+    MetalCost: 415644
+    TimeMin: 1d 5h:48m:14
     TimeInt: 107294
     Required: Wood Lv14
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 15
     TrainingTime: 34
     MightBonus: 53070
     Attack: 4.25
     Defend: 1.8
     Health: 8.05
-    Food: 319536
-    Wood: 358512
-    Stone: 201138
-    Metal: 447552
-    ResearchTime: 1d 22h:45m:19
+    FoodCost: 319536
+    WoodCost: 358512
+    StoneCost: 201138
+    MetalCost: 447552
+    TimeMin: 1d 22h:45m:19
     TimeInt: 168319
     Required: Wood Lv15
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 16
     TrainingTime: 30
     MightBonus: 56840
     Attack: 4.4
     Defend: 1.85
     Health: 8.25
-    Food: 342280
-    Wood: 383960
-    Stone: 215405
-    Metal: 479460
-    ResearchTime: 4d 3h:07m:15
+    FoodCost: 342280
+    WoodCost: 383960
+    StoneCost: 215405
+    MetalCost: 479460
+    TimeMin: 4d 3h:07m:15
     TimeInt: 356835
     Required: Wood Lv16
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 17
     TrainingTime: 26
     MightBonus: 60620
     Attack: 4.55
     Defend: 1.9
     Health: 8.45
-    Food: 365024
-    Wood: 409408
-    Stone: 229672
-    Metal: 511368
-    ResearchTime: 6d 7h:29m:11
+    FoodCost: 365024
+    WoodCost: 409408
+    StoneCost: 229672
+    MetalCost: 511368
+    TimeMin: 6d 7h:29m:11
     TimeInt: 545351
     Required: Wood Lv17
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 18
     TrainingTime: 22
     MightBonus: 64390
     Attack: 4.7
     Defend: 1.95
     Health: 8.65
-    Food: 387768
-    Wood: 434856
-    Stone: 243939
-    Metal: 543276
-    ResearchTime: 14d 4h:50m:39
+    FoodCost: 387768
+    WoodCost: 434856
+    StoneCost: 243939
+    MetalCost: 543276
+    TimeMin: 14d 4h:50m:39
     TimeInt: 1227040
     Required: Wood Lv18
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 19
     TrainingTime: 18
     MightBonus: 68170
     Attack: 4.85
     Defend: 2
     Health: 8.85
-    Food: 410512
-    Wood: 460304
-    Stone: 258206
-    Metal: 575184
-    ResearchTime: 22d 2h:12m:08
+    FoodCost: 410512
+    WoodCost: 460304
+    StoneCost: 258206
+    MetalCost: 575184
+    TimeMin: 22d 2h:12m:08
     TimeInt: 1908728
     Required: Wood Lv19
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0
   - Level: 20
     TrainingTime: 9
     MightBonus: 75720
     Attack: 5
     Defend: 2.2
     Health: 10
-    Food: 456000
-    Wood: 511200
-    Stone: 286740
-    Metal: 639000
-    ResearchTime: 29d 23h:33m:37
+    FoodCost: 456000
+    WoodCost: 511200
+    StoneCost: 286740
+    MetalCost: 639000
+    TimeMin: 29d 23h:33m:37
     TimeInt: 2590417
     Required: Wood Lv20
+    Required_ID: 0
+    RequiredLevel: 0
+    Unlock_ID: 0

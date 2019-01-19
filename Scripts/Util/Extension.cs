@@ -4,6 +4,7 @@ using Json;
 using Json.Interface;
 using Network.Sync;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -92,5 +93,14 @@ public static class Extension
     public static Vector2 RealSize(this RectTransform trans)
     {
         return new Vector2(trans.rect.width, trans.rect.height);
+    }
+
+    public static void RemoveNull<T>(this T ilist) where T : IList
+    {
+        for (int i = ilist.Count - 1; i >= 0; i--)
+        {
+            if (ilist[i] == null)
+                ilist.RemoveAt(i);
+        }
     }
 }

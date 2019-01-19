@@ -9,7 +9,7 @@ namespace UI.CustomInspector
     public class EditorToggle : EditorGUIBase
     {
         private GUIToggle Owner;
-        public GUIToggle.ToggleType Type;
+        public GUIToggle.AxisType Type;
 
 
         protected override void OnEnable()
@@ -26,7 +26,7 @@ namespace UI.CustomInspector
             base.OnInspectorGUI();
             if (!Owner.UIDependent && !Application.isPlaying)
             {
-                Type = (GUIToggle.ToggleType)EditorGUILayout.EnumPopup(Type, GUILayout.MaxWidth(150));
+                Type = (GUIToggle.AxisType)EditorGUILayout.EnumPopup(Type, GUILayout.MaxWidth(150));
                 if (Type != Owner.Type)
                 {
                     Owner.TypeChange(Type);
