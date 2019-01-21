@@ -11,7 +11,7 @@ namespace Network.Sync
 
         public BaseInfoRow CurrentMainBase
         {
-            get { return BaseInfo[CurBaseIndex]; }
+            get { return (BaseInfoRow)BaseInfo[CurBaseIndex]; }
         }
         public BaseUpgradeRow CurrentUpgrade
         {
@@ -39,7 +39,7 @@ namespace Network.Sync
         {
             for (int i = 0; i < BaseInfo.Rows.Count; i++)
             {
-                BaseInfo[i].RecordElapsedTime(deltaTime, BaseUpgrade); // test --> every BaseInfo corresponding with a BaseUpgrade
+                ((BaseInfoRow)BaseInfo[i]).RecordElapsedTime(deltaTime, BaseUpgrade,(UserInfoRow)UserInfo[0]); // test --> every BaseInfo corresponding with a BaseUpgrade
             }
         }
     }

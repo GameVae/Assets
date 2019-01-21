@@ -13,12 +13,15 @@ public class LoadingUICtrl : MonoBehaviour
     public GUIProgressSlider ProgressBar;
 
     public float Progress { get; set; }
+
+
     public bool IsDone
     {
         get
         { return isDone && ProgressBar.Value == ProgressBar.MaxValue; }
     }
 
+    private string placeholder = "";
     private bool isLoadingScene;
     private bool isDone;
     private UnityAction doneAction;
@@ -61,6 +64,7 @@ public class LoadingUICtrl : MonoBehaviour
                 }
             }
             ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, Progress, Time.deltaTime);
+            ProgressBar.Placeholder.text = placeholder;
         }
     }
 
@@ -97,5 +101,10 @@ public class LoadingUICtrl : MonoBehaviour
     public void ClosePanel()
     {
         Panel.SetActive(false);
+    }
+
+    public void SetText(string text)
+    {
+        placeholder = text;
     }
 }

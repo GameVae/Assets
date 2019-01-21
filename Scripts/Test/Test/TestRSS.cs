@@ -36,12 +36,12 @@ public class TestRSS : MonoBehaviour {
     private void Start()
     {
         // parse position
-        Data = ResourceManager.Instance.Datas[ID];
+        Data = (RSS_PositionRow)ResourceManager.Instance.Datas[ID];
         LoadObject();
     }
     public void LoadData()
     {
-        RSS_info.RSS_Type = table[ID].RssType;
+        RSS_info.RSS_Type = ((RSS_PositionRow)table[ID]).RssType;
     }
     public void LoadObject()
     {

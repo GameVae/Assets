@@ -56,6 +56,7 @@ public class ArmyWindow : BaseWindow
         SetupOrderElements();
         Toggle.CheckMarkEvents += delegate
         {
+            typeName.text = ArmyTypes[Toggle.ActiveIndex].BaseType.ToString().InsertSpace();
             Load();
         };
 
@@ -90,7 +91,6 @@ public class ArmyWindow : BaseWindow
             elements[i].Icon.OnClickEvents +=
                 delegate
                 {
-                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
                     OnElementBtn(ArmyTypes[Toggle.ActiveIndex].Types[captureIndex]);
                 };
         }
@@ -99,22 +99,8 @@ public class ArmyWindow : BaseWindow
 
     private void OnElementBtn(ListUpgrade type)
     {
-        MilitaryTable table = DBReference.Instance[type] as MilitaryTable;
-
-        int[] need;
-        MilitaryRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade.Level);
-
-        if (row != null)
-            need = new int[] { row.Food, row.Wood, row.Stone, row.Metal };
-        else need = new int[4];
-
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(
-            type,
-            need,
-            row?.MightBonus,
-            row?.ResearchTime,
-            row?.TimeInt
-            );
+        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load(type);
     }
 
     private void OnUpgradeBtn()
@@ -124,31 +110,7 @@ public class ArmyWindow : BaseWindow
 
         // open
         WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-        // server data 
-        int level = SyncData.BaseUpgrade[type].Level;
-  
-        MainBaseTable table = WDOCtrl[type] as MainBaseTable;
-
-        int[] need;
-        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == level);
-        if (row != null)
-            need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
-        else need = new int[4];
-
-        /// <summary>
-        /// 0: type - ListUpgrade
-        /// 1: need material - int[4]
-        /// 2: might bonus - int
-        /// 3: time min - string
-        /// 4: time int - int
-        /// </summary>
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load
-            (type,
-            need,
-            row?.MightBonus,
-            row?.TimeMin,
-            row?.TimeInt
-            );
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load(type);
     }
 
     public override void Load(params object[] data)
@@ -160,13 +122,13 @@ public class ArmyWindow : BaseWindow
         int mainbaseLv = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
         int selTypeLv = SyncData.BaseUpgrade[type].Level;
 
-        for (int i = 0,level = 0; i < armyType.Types.Length; i++)
+        for (int i = 0, level = 0; i < armyType.Types.Length; i++)
         {
             level = SyncData.BaseUpgrade[armyType.Types[i]].Level;
             elements[i].Icon.InteractableChange(level > 0);
             elements[i].LevelBar.Value = level;
         }
-        
+
         // check active or not for upgrade btn
         upgradeBtn.InteractableChange(mainbaseLv > selTypeLv);
 
@@ -176,5 +138,11 @@ public class ArmyWindow : BaseWindow
         {
             elements[i].Icon.Placeholder.text = armyType.Titles[i];
         }
+    }
+
+    public override void Open()
+    {
+        base.Open();
+        Toggle.ActiveToggle(0);
     }
 }

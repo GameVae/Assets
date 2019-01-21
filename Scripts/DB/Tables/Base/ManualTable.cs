@@ -1,4 +1,6 @@
-﻿using ManualTable.Interface;
+﻿using Json;
+using Json.Interface;
+using ManualTable.Interface;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -6,15 +8,29 @@ using Utils;
 
 namespace ManualTable
 {
-    public class ManualTableBase<T> : ScriptableObject, ITable where T : IManualRow
+    public class ManualTableBase<T> : ScriptableObject, ITable where T : IJSON, IManualRow, new()
     {
         [SerializeField] public string TableName;
         [SerializeField] public List<string> Columns;
         [SerializeField] public List<T> Rows;
 
+        public System.Type RowType
+        { get { return typeof(T); } }
 
-        public void LoadRow(T newRow)
+        public int Count
         {
+            get { return (int)Rows?.Count; }
+        }
+
+        public IJSON this[int rowID]
+        {
+            get { return Rows[rowID]; }
+            set { Rows[rowID] = (T)value; }
+        }
+
+        public void LoadRow(string json)
+        {
+            T newRow = Json.JSONBase.FromJSON<T>(json);
             if (Rows == null)
                 Rows = new List<T>();
             Rows.Add(newRow);
@@ -29,12 +45,6 @@ namespace ManualTable
         public int FieldCount
         {
             get { return Columns != null ? Columns.Count : 0; }
-        }
-
-        public T this[int rowID]
-        {
-            get { return Rows[rowID]; }
-            set { Rows[rowID] = value; }
         }
 
         public void Clear()

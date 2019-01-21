@@ -13,7 +13,21 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class MainBaseRow : IManualRow
+    public sealed class GenericUpgradeInfo
+    {
+        public int Level;
+        public int MightBonus;
+        public int FoodCost;
+        public int WoodCost;
+        public int StoneCost;
+        public int MetalCost;
+        public string TimeMin;
+        public int TimeInt;
+        public int Required;
+    }
+
+    [System.Serializable]
+    public class MainBaseRow : JSONBase, IManualRow
     {
         public int Level;
         public int MightBonus;
@@ -66,7 +80,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class VersionRow : IManualRow
+    public class VersionRow : JSONBase, IManualRow
     {
         public int Id;
         public string Task;
@@ -101,7 +115,7 @@ namespace ManualTable.Row
     }   
 
     [System.Serializable]
-    public class MilitaryRow : IManualRow
+    public class MilitaryRow : JSONBase, IManualRow
     {
         public int FieldCount { get { return 12; } }
 
@@ -115,18 +129,31 @@ namespace ManualTable.Row
         public float Attack;
         public float Defend;
         public float Health;
-        public int Food;
-        public int Wood;
-        public int Stone;
-        public int Metal;
-        public string ResearchTime;
+        public int  FoodCost;
+        public int  WoodCost;
+        public int StoneCost;
+        public int MetalCost;
+        public string TimeMin;
         public int TimeInt;
         public string Required;
+        public int Required_ID;
+        public int RequiredLevel;
+        public int Unlock_ID;
     }
 
     //======================================//
     [System.Serializable]
-    public class RSS_PositionRow : JSONBase, IManualRow
+    public abstract class JsonRow : JSONBase, IManualRow
+    {
+        public abstract int FieldCount { get; }
+
+        public string ValuesSequence { get { return ""; } }
+
+        public string KeyValuePairs { get { return ""; } }
+    }
+
+    [System.Serializable]
+    public class RSS_PositionRow : JsonRow
     {
         public int ID;
         public int RssType;
@@ -141,21 +168,17 @@ namespace ManualTable.Row
         public string TimeHarvestFinish;
         public string TimeRemove;
 
-        public int FieldCount
+        public override int FieldCount
         {
             get
             {
                 return 12;
             }
         }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
     }
 
     [System.Serializable]
-    public class PositionRow : JSONBase, IManualRow
+    public class PositionRow : JsonRow
     {
         public int ID;
         public string Position_Transform;
@@ -163,21 +186,13 @@ namespace ManualTable.Row
         public string ID_Type;
         public string Comment;
 
-        public int FieldCount { get { return 5; } }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
+        public override int FieldCount { get { return 5; } }      
     }
 
     [System.Serializable]
-    public class BaseUpgradeRow : JSONBase, IManualRow
+    public class BaseUpgradeRow : JsonRow
     {
-        public int FieldCount { get { return 4; } }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
+        public override int FieldCount { get { return 4; } }
 
         public ListUpgrade ID;
         public string Name_Upgrade;
@@ -186,14 +201,9 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseInfoRow : JSONBase, IManualRow
+    public class BaseInfoRow : JsonRow
     {
-        public int FieldCount { get { return 22; } }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
-
+        public override int FieldCount { get { return 22; } }
 
         public int ID_User;
         public int BaseNumber;
@@ -205,11 +215,11 @@ namespace ManualTable.Row
         public int Metal;
 
         public ListUpgrade UpgradeWait_ID;
-        public string UpgradeWait_Might;
+        public int UpgradeWait_Might;
         public float UpgradeTime;
 
         public ListUpgrade ResearchWait_ID;
-        public string ResearchWait_Might;
+        public int ResearchWait_Might;
         public float ResearchTime;
 
         public string UnitTransferType;
@@ -223,7 +233,7 @@ namespace ManualTable.Row
         public int SumUnitQuality;
 
         ///*===============Util Funs==================*/
-        public void RecordElapsedTime(float elapsedTime, BaseUpgradeJSONTable baseUpgrade)
+        public void RecordElapsedTime(float elapsedTime, BaseUpgradeJSONTable baseUpgrade, UserInfoRow user)
         {
             if (UpgradeTime > 0)
             {
@@ -232,6 +242,7 @@ namespace ManualTable.Row
                 {
                     UpgradeTime = 0;
                     baseUpgrade[UpgradeWait_ID].Level++;
+                    user.Might += UpgradeWait_Might;
                     UpgradeWait_ID = 0;
                 }
             }
@@ -242,6 +253,7 @@ namespace ManualTable.Row
                 {
                     ResearchTime = 0;
                     baseUpgrade[ResearchWait_ID].Level++;
+                    user.Might += ResearchWait_Might;
                     ResearchWait_ID = 0;
                 }
             }
@@ -267,13 +279,9 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UserInfoRow : JSONBase, IManualRow
+    public class UserInfoRow : JsonRow
     {
-        public int FieldCount { get { return 9; } }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
+        public override int FieldCount { get { return 9; } }
 
         public int ID_User;
         public string Server_ID;

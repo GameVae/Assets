@@ -4,6 +4,7 @@ using Mono.Data.Sqlite;
 using System.IO;
 using System;
 using ManualTable.Interface;
+using Json.Interface;
 
 namespace ManualTable.SQL
 {
@@ -29,7 +30,7 @@ namespace ManualTable.SQL
             }
         }
 
-        public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, new()
+        public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, IJSON, new()
         {
             try
             {
@@ -53,7 +54,8 @@ namespace ManualTable.SQL
                                     json += MakeJSONValue(reader.GetName(i), reader.GetValue(i)) + ((i < fieldCount - 1) ? "," : "");
                                 }
                                 json = FormatJSON(json);
-                                table.LoadRow((T)JsonUtility.FromJson(json, typeof(T)));
+                                //table.LoadRow((T)JsonUtility.FromJson(json, typeof(T)));
+                                table.LoadRow(json);
                             } while (reader.Read());
                         }
                         reader.Close();
@@ -69,7 +71,7 @@ namespace ManualTable.SQL
             }
         }
 
-        private void LoadColumns<T>(IDataReader reader, ManualTableBase<T> table) where T : IManualRow
+        private void LoadColumns<T>(IDataReader reader, ManualTableBase<T> table) where T : IManualRow, IJSON, new()
         {
             for (int i = 0; i < reader.FieldCount; i++)
             {

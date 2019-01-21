@@ -67,8 +67,8 @@ public sealed class Connection : MonoBehaviour
         timer.Start();
         StartCoroutine("CheckVersion");
 
-        //GameProgress.Instance.AddTask("check version", () => { LoadingUICtrl.Instance.Done(); });
-        //LoadingUICtrl.Instance.StartProgress(1);
+        GameProgress.Instance.AddTask("check version", () => { LoadingUICtrl.Instance.Done(); });
+        LoadingUICtrl.Instance.StartProgress(1);
     }
 
   

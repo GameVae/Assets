@@ -1,5 +1,6 @@
 ﻿using DB;
 using EnumCollect;
+using Json.Interface;
 using ManualTable;
 using ManualTable.Interface;
 using ManualTable.Row;
@@ -69,37 +70,77 @@ public class UpgResWindow : BaseWindow
     public override void Load(params object[] data)
     {
         ListUpgrade type = data.TryGet<ListUpgrade>(0);
-        int[] needMaterials = data.TryGet<int[]>(1);
-        int mightBonus = data.TryGet<int>(2);
-        string timeMin = data.TryGet<string>(3);
-        int timeInt = data.TryGet<int>(4);
+
+        ITable table = DBReference.Instance[type];
+        int level = SyncData.BaseUpgrade[type].Level;
+        string jsonData = table[level - 1].ToJSON();
+        GenericUpgradeInfo needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+
+        int[] needMaterials = new int[] {
+            needInfo.FoodCost,
+            needInfo.WoodCost,
+            needInfo.StoneCost,
+            needInfo.MetalCost };
+        int mightBonus = needInfo.MightBonus;
 
         curMaterials[0] = SyncData.CurrentMainBase.Farm;
         curMaterials[1] = SyncData.CurrentMainBase.Wood;
         curMaterials[2] = SyncData.CurrentMainBase.Stone;
         curMaterials[3] = SyncData.CurrentMainBase.Metal;
 
-        refType = SyncData.BaseUpgrade[type];
         isUpgradeType = type.IsUpgrade();
-
-        bool isBuildingRequire = false;
-        bool isResearchRequire = false;
 
         bool activeProgressBar = isUpgradeType ? SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined()
                                                             : SyncData.CurrentMainBase.ResearchWait_ID.IsDefined();
 
         bool activeBtnGroup = !activeProgressBar;
         activeBtnGroup = activeBtnGroup && IsEnoughtMeterial(needMaterials);
-
-        Title.text = type.ToString().InsertSpace();
-
-        ActiveProgressBar(activeProgressBar && timeInt > 0);
         ActiveBtnGroup(activeBtnGroup);
 
+
+        bool isSimilarType = true;
+        if (isUpgradeType)
+        {
+            if (SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined() &&
+                type != SyncData.CurrentMainBase.UpgradeWait_ID)
+            {
+                type = SyncData.CurrentMainBase.UpgradeWait_ID;
+                isSimilarType = false;
+            }
+        }
+        else
+        {
+            if (SyncData.CurrentMainBase.ResearchWait_ID.IsDefined() &&
+                type != SyncData.CurrentMainBase.ResearchWait_ID)
+            {
+                type = SyncData.CurrentMainBase.ResearchWait_ID;
+                isSimilarType = false;
+            }
+        }
+
+        if (isSimilarType)
+        {            
+            table = DBReference.Instance[type];
+            level = SyncData.BaseUpgrade[type].Level;
+            jsonData = table[level - 1].ToJSON();
+            needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+        }
+        refType = SyncData.BaseUpgrade[type];
+
+        string timeMin = needInfo.TimeMin;
+        int timeInt = needInfo.TimeInt;
+
+        ActiveProgressBar(activeProgressBar && timeInt > 0);
         ProgressSlider.Slider.MaxValue = timeInt;
 
+
+        bool isBuildingRequire = false;
+        bool isResearchRequire = false;
         BuildingLevel.transform.parent.gameObject.SetActive(isBuildingRequire);
         ResearchLevel.transform.parent.gameObject.SetActive(isResearchRequire);
+
+        #region display info
+        Title.text = type.ToString().InsertSpace();
 
         if (curMaterials != null && needMaterials != null)
         {
@@ -123,6 +164,7 @@ public class UpgResWindow : BaseWindow
         Amount.text = string.Format("{0}", mightBonus);
 
         DurationText.text = "Duration: " + timeMin;
+        #endregion
     }
 
     private void SetMaterialRequirement(int index, int cur, int need)
@@ -176,10 +218,11 @@ public class UpgResWindow : BaseWindow
 
     private JSONObject CreateUpgData()
     {
+        UserInfoRow userInfo = (UserInfoRow)SyncData.UserInfo[0];
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
-            {"ID_Server"   ,SyncData.UserInfo[0].Server_ID },
-            {"ID_User"     ,SyncData.UserInfo[0].ID_User.ToString()},
+            {"ID_Server"   ,userInfo.Server_ID },
+            {"ID_User"     ,userInfo.ID_User.ToString()},
             {"BaseNumber"  ,SyncData.CurrentMainBase.BaseNumber.ToString() },
             {"ID_Upgrade"  ,((int)refType.ID).ToString()},
             {"UpgradeType" ,refType.UpgradeType.ToString() },
@@ -191,16 +234,17 @@ public class UpgResWindow : BaseWindow
     private void OnUpgradeBtn()
     {
 
-        MainBaseTable t = DBReference.Instance[refType.ID] as MainBaseTable;
-        MainBaseRow r = t[refType.Level - 1];
+        ITable table = DBReference.Instance[refType.ID];
+        string jsonData = table[refType.Level - 1].ToJSON();
+        GenericUpgradeInfo needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
 
-        SyncData.CurrentMainBase.Farm -= t.Rows[refType.Level - 1].FoodCost;
-        SyncData.CurrentMainBase.Wood -= t.Rows[refType.Level - 1].WoodCost;
-        SyncData.CurrentMainBase.Metal -= t.Rows[refType.Level - 1].MetalCost;
-        SyncData.CurrentMainBase.Stone -= t.Rows[refType.Level - 1].StoneCost;
+        SyncData.CurrentMainBase.Farm -= needInfo.FoodCost;
+        SyncData.CurrentMainBase.Wood -= needInfo.WoodCost;
+        SyncData.CurrentMainBase.Metal -= needInfo.MetalCost;
+        SyncData.CurrentMainBase.Stone -= needInfo.StoneCost;
 
         SyncData.CurrentMainBase.UpgradeWait_ID = refType.ID;
-        SyncData.CurrentMainBase.UpgradeTime = t.Rows[refType.Level - 1].TimeInt;
+        SyncData.CurrentMainBase.UpgradeTime = needInfo.TimeInt;
 
         EventListenersController.Instance.Emit("S_UPGRADE");
         WDOCtrl.Close();

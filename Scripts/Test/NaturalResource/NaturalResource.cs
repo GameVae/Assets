@@ -32,7 +32,7 @@ public class NaturalResource : MonoBehaviour
 
     private void Start()
     {
-        Data = ResourceManager.Instance.Datas[Id - 1];
+        Data = (RSS_PositionRow)ResourceManager.Instance.Datas[Id - 1];
         ResourceManager.Instance[Id] = this;
 
         InitData();

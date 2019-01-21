@@ -5,7 +5,7 @@ namespace Json
 {
     public abstract class JSONBase : IJSON
     {
-        public static T FromJSON<T>(string json) where T : IJSON, new()
+        public static T FromJSON<T>(string json) where T : new()
         {
             return JsonUtility.FromJson<T>(json);
         }

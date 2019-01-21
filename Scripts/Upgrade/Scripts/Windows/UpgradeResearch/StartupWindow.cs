@@ -1,5 +1,6 @@
 ﻿using EnumCollect;
 using ManualTable;
+using ManualTable.Interface;
 using ManualTable.Row;
 using System;
 using System.Linq;
@@ -52,47 +53,49 @@ public class StartupWindow : BaseWindow
     public override void Load(params object[] input)
     {
         MainbaseLevelBar.Value = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
+        BaseUpgradeRow resRef = SyncData.CurrentResearch;
+        BaseUpgradeRow upgRef = SyncData.CurrentUpgrade;
 
-        UpgProgBar.gameObject.SetActive(SyncData.CurrentMainBase.UpgradeTime > 0.0f);
-        ResProgBar.gameObject.SetActive(SyncData.CurrentMainBase.ResearchTime > 0.0f);
+        bool isUpgrade = upgRef != null ? upgRef.ID.IsDefined() : false;
+        bool isResearch = resRef != null ? resRef.ID.IsDefined() : false;
 
-        MainBaseTable mainbaseDB = WDOCtrl[ListUpgrade.MainBase] as MainBaseTable; // dependence by CurrentMainBase Upg - Res
+        Debug.Log(isUpgrade + " - " + isResearch);
+        ITable table = null;
 
-        MainBaseRow resRef = mainbaseDB.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentResearch?.Level);
-        MainBaseRow upgRef = mainbaseDB.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentUpgrade?.Level);
+        if (isUpgrade)
+        {
+            table = WDOCtrl[upgRef.ID];
+            string jsonData = table[upgRef.Level - 1].ToJSON();
+            GenericUpgradeInfo upgInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+            UpgProgBar.Slider.MaxValue = upgInfo != null ? upgInfo.TimeInt : 0;
+        }
 
-        UpgProgBar.Slider.MaxValue = upgRef != null ? upgRef.TimeInt : 0;
-        ResProgBar.Slider.MaxValue = resRef != null ? resRef.TimeInt : 0;
+        if (isResearch)
+        {
+            table = WDOCtrl[resRef.ID];
+            string jsonData = table[resRef.Level - 1].ToJSON();
+            GenericUpgradeInfo resInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+            ResProgBar.Slider.MaxValue = resInfo != null ? resInfo.TimeInt : 0;
+        }
+
+        UpgProgBar.gameObject.SetActive(isUpgrade);
+        ResProgBar.gameObject.SetActive(isResearch);
     }
 
     protected override void Init()
     {
-        Mainbase.OnClickEvents  += OnMainbaseBtn;
-        Resource.OnClickEvents  += delegate { WDOCtrl.Open(UgrResWindow.Resource); };
-        Defense.OnClickEvents   += delegate { WDOCtrl.Open(UgrResWindow.Defense); };
-        Trade.OnClickEvents     += delegate { WDOCtrl.Open(UgrResWindow.Trade); };
-        Army.OnClickEvents      += delegate { WDOCtrl.Open(UgrResWindow.Army); };
+        Mainbase.OnClickEvents += OnMainbaseBtn;
+        Resource.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Resource); };
+        Defense.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Defense); };
+        Trade.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Trade); };
+        Army.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Army); };
 
     }
 
     private void OnMainbaseBtn()
     {
-        int mainLevel = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
-
-        MainBaseTable mainbaseDB = WDOCtrl[ListUpgrade.MainBase] as MainBaseTable;
-        MainBaseRow row = mainbaseDB.Rows.FirstOrDefault(x => x.Level == mainLevel);
-
-        int[] need = (row == null) ? new int[4] :
-            new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
-
         WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load
-            (ListUpgrade.MainBase,
-            need,
-            row?.MightBonus,
-            row?.TimeMin,
-            row?.TimeInt
-            );
+        WDOCtrl[UgrResWindow.UpgradeResearch].Load(ListUpgrade.MainBase);
     }
 
     public override void Open()

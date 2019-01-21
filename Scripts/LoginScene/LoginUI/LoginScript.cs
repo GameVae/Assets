@@ -150,6 +150,7 @@ public class LoginScript : MonoBehaviour
             LoadingUICtrl.Instance.Done(() =>
             {
                 LoadingUICtrl.Instance.LoadScene(1);
+                LoadingUICtrl.Instance.SetText("Loading scene ...");
             });
         }
         else

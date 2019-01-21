@@ -1,26 +1,37 @@
 ﻿using Json;
 using Json.Interface;
 using ManualTable.Interface;
+using ManualTable.Row;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ManualTable
 {
-    public class ManualTableJSON<T> : ScriptableObject, ITable where T : IJSON, IManualRow, new()
+    public class ManualTableJSON<T> : ScriptableObject, ITable where T : JsonRow, new()
     {
         [SerializeField] public List<T> Rows;
 
-        public T this[int index]
+        public IJSON this[int index]
         {
             get
             {
                 if (index >= Rows.Count) return default(T);
                 return Rows[index];
             }
+            set
+            {
+                if (index < Rows.Count)
+                    Rows[index] = (T)value;
+            }
         }
 
-        public System.Type RowType()
-        { return typeof(T); }
+        public int Count
+        {
+            get { return Rows.Count; }
+        }
+
+        public System.Type RowType
+        { get { return typeof(T); } }
 
         public void LoadRow(string json)
         {

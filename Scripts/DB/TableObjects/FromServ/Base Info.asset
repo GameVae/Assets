@@ -17,11 +17,11 @@ MonoBehaviour:
     Position: 
     Farm: 0
     Wood: 0
-    Stone: 0
+    Stone: 10000
     Metal: 0
     UpgradeWait_ID: 15
     UpgradeWait_Might: 
-    UpgradeTime: 2600.58
+    UpgradeTime: 2341.6047
     ResearchWait_ID: 0
     ResearchWait_Might: 
     ResearchTime: 0
