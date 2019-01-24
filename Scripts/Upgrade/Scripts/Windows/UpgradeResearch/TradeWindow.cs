@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UI.Widget;
-using static UpgResWdoCtrl;
+using static WindowManager;
 using EnumCollect;
 
-public class TradeWindow : BaseWindow
+public class TradeWindow : BaseWindow, IWindowGroup
 {
     [Header("Constructs"), Space]
     public ArmyWindow.Element Market;
@@ -20,6 +20,16 @@ public class TradeWindow : BaseWindow
     private ArmyWindow.Element[] marketResearchElements;
     private ArmyWindow.Element[] PHShipResearchElements;
 
+    public WindowGroup Group
+    {
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
+    }
+
     private void SetupMarketResearch()
     {
         int count = MarketResearchs.Length;
@@ -33,10 +43,10 @@ public class TradeWindow : BaseWindow
                 LevelBar = MarketResearchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             marketResearchElements[i].Icon.OnClickEvents
-                += delegate 
+                += delegate
                 {
-                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-                    WDOCtrl[UgrResWindow.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
+                    Group.Open(WindowType.UpgradeResearch);
+                    Group[WindowType.UpgradeResearch].Load(MarketResearchTypes[captureIndex]);
                 };
         }
     }
@@ -54,10 +64,10 @@ public class TradeWindow : BaseWindow
                 LevelBar = PHShiptResearchs[i].GetComponentInChildren<GUIProgressSlider>(),
             };
             PHShipResearchElements[i].Icon.OnClickEvents
-                += delegate 
+                += delegate
                 {
-                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-                    WDOCtrl[UgrResWindow.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
+                    Group.Open(WindowType.UpgradeResearch);
+                    Group[WindowType.UpgradeResearch].Load(PHShiptResearchTypes[captureIndex]);
                 };
         }
     }

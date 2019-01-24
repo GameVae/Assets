@@ -5,9 +5,9 @@ using ManualTable.Row;
 using System.Linq;
 using UI.Widget;
 using UnityEngine;
-using static UpgResWdoCtrl;
+using static WindowManager;
 
-public class ResourceWindow : BaseWindow
+public class ResourceWindow : BaseWindow,IWindowGroup
 {
     [Header("Constructs"), Space]
     public Transform[] Constructs;
@@ -19,6 +19,16 @@ public class ResourceWindow : BaseWindow
 
     public ListUpgrade[] ResearchTypes;
     public ListUpgrade[] ConstructTypes;
+
+    public WindowGroup Group
+    {
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
+    }
 
     private void SetupConstructElement()
     {
@@ -35,7 +45,7 @@ public class ResourceWindow : BaseWindow
             constructElements[i].Icon.OnClickEvents +=
                 delegate
                 {
-                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+                    Group.Open(WindowType.UpgradeResearch);
                     OnBtnElement(ConstructTypes[captureIndex]);
                 };
         }
@@ -56,7 +66,7 @@ public class ResourceWindow : BaseWindow
             researchElements[i].Icon.OnClickEvents +=
                delegate
                {
-                   WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+                   Group.Open(WindowType.UpgradeResearch);
                    OnBtnElement(ResearchTypes[captureIndex]);
                };
         }
@@ -85,7 +95,7 @@ public class ResourceWindow : BaseWindow
             need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
         else need = new int[4];
 
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(
+        Group[WindowType.UpgradeResearch].Load(
             type,
             need,
             row?.MightBonus,

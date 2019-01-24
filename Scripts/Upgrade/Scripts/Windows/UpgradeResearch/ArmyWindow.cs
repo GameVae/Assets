@@ -3,14 +3,14 @@ using TMPro;
 using UnityEngine;
 using UI.Widget;
 using System.Collections.Generic;
-using static UpgResWdoCtrl;
+using static WindowManager;
 using ManualTable;
 using ManualTable.Row;
 using System.Linq;
 using EnumCollect;
 using DB;
 
-public class ArmyWindow : BaseWindow
+public class ArmyWindow : BaseWindow, IWindowGroup
 {
     [Serializable]
     public struct Element
@@ -45,9 +45,14 @@ public class ArmyWindow : BaseWindow
     [Header("Army Type's Name")]
     public ElementTypeInfo[] ArmyTypes;
 
-    protected override void Start()
+    public WindowGroup Group
     {
-        Toggle.ActiveToggle(0);
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
     }
 
     protected override void Init()
@@ -99,8 +104,8 @@ public class ArmyWindow : BaseWindow
 
     private void OnElementBtn(ListUpgrade type)
     {
-        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(type);
+        Group.Open(WindowType.UpgradeResearch);
+        Group[WindowType.UpgradeResearch].Load(type);
     }
 
     private void OnUpgradeBtn()
@@ -109,8 +114,8 @@ public class ArmyWindow : BaseWindow
         ListUpgrade type = armyType.BaseType;
 
         // open
-        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(type);
+        Group.Open(WindowType.UpgradeResearch);
+        Group[WindowType.UpgradeResearch].Load(type);
     }
 
     public override void Load(params object[] data)

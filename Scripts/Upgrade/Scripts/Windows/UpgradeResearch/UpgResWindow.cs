@@ -10,12 +10,15 @@ using System.Collections.Generic;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
+using static WindowManager;
 
-public class UpgResWindow : BaseWindow
+public class UpgResWindow : BaseWindow,IWindowGroup
 {
     private int[] curMaterials;
     private bool isUpgradeType;
     private BaseUpgradeRow refType;
+
+    
 
     public TextMeshProUGUI Title;
 
@@ -41,10 +44,21 @@ public class UpgResWindow : BaseWindow
     [Header("Button Group"), Space]
     public GUIInteractableIcon InstantBtn;
     public GUIInteractableIcon LevelUpBtn;
+
+    public WindowGroup Group
+    {
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
+    }
+
     protected override void Awake()
     {
         base.Awake();
-        EventListenersController.Instance.AddEmiter("S_UPGRADE", CreateUpgData);
+       // EventListenersController.Instance.AddEmiter("S_UPGRADE", CreateUpgData);
     }
 
     protected override void Update()
@@ -70,7 +84,7 @@ public class UpgResWindow : BaseWindow
     public override void Load(params object[] data)
     {
         ListUpgrade type = data.TryGet<ListUpgrade>(0);
-
+        string title = type.ToString().InsertSpace();
         ITable table = DBReference.Instance[type];
         int level = SyncData.BaseUpgrade[type].Level;
         string jsonData = table[level - 1].ToJSON();
@@ -140,7 +154,7 @@ public class UpgResWindow : BaseWindow
         ResearchLevel.transform.parent.gameObject.SetActive(isResearchRequire);
 
         #region display info
-        Title.text = type.ToString().InsertSpace();
+        Title.text = title;
 
         if (curMaterials != null && needMaterials != null)
         {
@@ -247,7 +261,7 @@ public class UpgResWindow : BaseWindow
         SyncData.CurrentMainBase.UpgradeTime = needInfo.TimeInt;
 
         EventListenersController.Instance.Emit("S_UPGRADE");
-        WDOCtrl.Close();
+        Group.Close();
     }
 
     private bool IsEnoughtMeterial(int[] needMaterials)

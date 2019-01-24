@@ -1,20 +1,25 @@
 ﻿using Network.Sync;
 using UnityEngine;
+using static WindowManager;
 
 public abstract class BaseWindow : MonoBehaviour, IWindow
 {
-    protected bool inited = false;
-    private UpgResWdoCtrl ctrl;
+    [SerializeField] protected WindowType type;
+    [SerializeField] protected GameObject Window;
 
-    protected UpgResWdoCtrl WDOCtrl
+    protected bool inited = false;
+    private WindowManager ctrl;
+
+    protected WindowManager WDOCtrl
     {
-        get { return ctrl ?? (ctrl = GetComponentInParent<UpgResWdoCtrl>()); }
+        get { return ctrl ?? (ctrl = GetComponentInParent<WindowManager>()); }
     }
+
     protected Sync SyncData { get { return WDOCtrl?.Sync; } }
 
     protected virtual void Awake()
     {
-       
+        WDOCtrl.AddWindow(type, this);
     }
 
     protected virtual void Start() { }
@@ -27,7 +32,7 @@ public abstract class BaseWindow : MonoBehaviour, IWindow
 
     public virtual void Close()
     {
-        gameObject.SetActive(false);
+        Window.SetActive(false);
     }
 
     public virtual void Open()
@@ -37,6 +42,6 @@ public abstract class BaseWindow : MonoBehaviour, IWindow
             Init();
             inited = true;
         }
-        gameObject.SetActive(true);
+        Window.SetActive(true);
     }  
 }

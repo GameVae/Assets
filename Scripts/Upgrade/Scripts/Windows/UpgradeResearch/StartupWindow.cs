@@ -1,14 +1,10 @@
 ﻿using EnumCollect;
-using ManualTable;
 using ManualTable.Interface;
 using ManualTable.Row;
-using System;
-using System.Linq;
 using UI.Widget;
-using UnityEngine;
-using static UpgResWdoCtrl;
+using static WindowManager;
 
-public class StartupWindow : BaseWindow
+public class StartupWindow : BaseWindow, IWindowGroup
 {
     public GUISliderWithBtn UpgProgBar;
     public GUISliderWithBtn ResProgBar;
@@ -20,6 +16,15 @@ public class StartupWindow : BaseWindow
     public GUIInteractableIcon Army;
     public GUIInteractableIcon Trade;
 
+    public WindowGroup Group
+    {
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
+    }
 
     protected override void Update()
     {
@@ -59,7 +64,7 @@ public class StartupWindow : BaseWindow
         bool isUpgrade = upgRef != null ? upgRef.ID.IsDefined() : false;
         bool isResearch = resRef != null ? resRef.ID.IsDefined() : false;
 
-        Debug.Log(isUpgrade + " - " + isResearch);
+        //Debug.Log(isUpgrade + " - " + isResearch);
         ITable table = null;
 
         if (isUpgrade)
@@ -85,17 +90,17 @@ public class StartupWindow : BaseWindow
     protected override void Init()
     {
         Mainbase.OnClickEvents += OnMainbaseBtn;
-        Resource.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Resource); };
-        Defense.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Defense); };
-        Trade.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Trade); };
-        Army.OnClickEvents += delegate { WDOCtrl.Open(UgrResWindow.Army); };
+        Resource.OnClickEvents += delegate { Group.Open(WindowType.Resource); };
+        Defense.OnClickEvents += delegate { Group.Open(WindowType.Defense); };
+        Trade.OnClickEvents += delegate { Group.Open(WindowType.Trade); };
+        Army.OnClickEvents += delegate { Group.Open(WindowType.Army); };
 
     }
 
     private void OnMainbaseBtn()
     {
-        WDOCtrl.Open(UgrResWindow.UpgradeResearch);
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(ListUpgrade.MainBase);
+        Group.Open(WindowType.UpgradeResearch);
+        Group[WindowType.UpgradeResearch].Load(ListUpgrade.MainBase);
     }
 
     public override void Open()

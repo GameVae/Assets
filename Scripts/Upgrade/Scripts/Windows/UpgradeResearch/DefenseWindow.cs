@@ -1,17 +1,27 @@
 ﻿using UnityEngine;
 using UI.Widget;
-using static UpgResWdoCtrl;
+using static WindowManager;
 using EnumCollect;
 using ManualTable;
 using DB;
 using ManualTable.Row;
 using System.Linq;
 
-public class DefenseWindow : BaseWindow
+public class DefenseWindow : BaseWindow,IWindowGroup
 {
     [Header("Constructs"), Space]
     public Transform[] Constructs;
     public ListUpgrade[] Types;
+
+    public WindowGroup Group
+    {
+        get { return WDOCtrl[GroupType]; }
+    }
+
+    public WindowGroupType GroupType
+    {
+        get { return WindowGroupType.UpgradeResearchGroup; }
+    }
 
     private ArmyWindow.Element[] constructElements;
 
@@ -30,7 +40,7 @@ public class DefenseWindow : BaseWindow
             constructElements[i].Icon.OnClickEvents +=
                 delegate 
                 {
-                    WDOCtrl.Open(UgrResWindow.UpgradeResearch);
+                    Group.Open(WindowType.UpgradeResearch);
                     OnBtnElement(Types[captureIndex]);
                 };
         }
@@ -58,7 +68,7 @@ public class DefenseWindow : BaseWindow
             need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };
         else need = new int[4];
 
-        WDOCtrl[UgrResWindow.UpgradeResearch].Load(
+        Group[WindowType.UpgradeResearch].Load(
             type,
             need,
             row?.MightBonus,

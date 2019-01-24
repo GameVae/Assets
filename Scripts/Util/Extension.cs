@@ -103,4 +103,15 @@ public static class Extension
                 ilist.RemoveAt(i);
         }
     }
+
+    public static T[] IgnoreInstanceComponent<T>(this T[] arr, T comp) where T : Component
+    {
+        System.Collections.Generic.List<T> newArr = new System.Collections.Generic.List<T>();
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i].gameObject.GetInstanceID() != comp.gameObject.GetInstanceID())
+                newArr.Add(arr[i]);
+        }
+        return newArr.ToArray();
+    }
 }

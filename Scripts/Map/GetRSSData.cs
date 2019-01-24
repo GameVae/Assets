@@ -1,4 +1,5 @@
 ﻿using SocketIO;
+using UnityEngine;
 
 public sealed class GetRSSData : Listener
 {
@@ -26,7 +27,7 @@ public sealed class GetRSSData : Listener
     {
         string data = obj.data["R_USER_INFO"].ToString();
         SyncData.UserInfo.LoadTable(obj.data["R_USER_INFO"]);
-
+        Debug.Log(obj);
         getDataProgress.Done("get user info");
     }
 

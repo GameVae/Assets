@@ -22,7 +22,8 @@ namespace UI
 
         protected override void Awake()
         {
-            curUpgTypes = new List<ListUpgrade>();
+            base.Awake();
+            inited = true;
             Init();
         }
         protected override void Start()
@@ -55,9 +56,10 @@ namespace UI
 
         protected override void Init()
         {
+            curUpgTypes = new List<ListUpgrade>();
             HasUpgrade.Slider.Placeholder = HasUpgrade.GetComponentInChildren<GUITextWithIcon>().Placeholder;
             HasUpgrade.Placeholder = HasUpgrade.Slider.Placeholder;
-            verticalList = GetComponentInChildren<GUIVerticalList>();
+            verticalList = Window.GetComponentInChildren<GUIVerticalList>();
 
             OpenTaskBtn.SetIsOn(true);
             OpenTaskBtn.On += On;
