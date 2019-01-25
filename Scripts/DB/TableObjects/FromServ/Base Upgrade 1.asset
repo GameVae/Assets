@@ -74,19 +74,19 @@ MonoBehaviour:
     UpgradeType: 1
   - ID: 16
     Name_Upgrade: Solider
-    Level: 0
+    Level: 1
     UpgradeType: 1
   - ID: 17
     Name_Upgrade: TraninedSolider
-    Level: 0
+    Level: 1
     UpgradeType: 1
   - ID: 18
     Name_Upgrade: ForbiddenGuard
-    Level: 0
+    Level: 1
     UpgradeType: 1
   - ID: 19
     Name_Upgrade: Heroic
-    Level: 0
+    Level: 1
     UpgradeType: 1
   - ID: 20
     Name_Upgrade: Ranged

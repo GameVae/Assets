@@ -39,7 +39,41 @@ namespace Network.Sync
         {
             for (int i = 0; i < BaseInfo.Rows.Count; i++)
             {
-                ((BaseInfoRow)BaseInfo[i]).RecordElapsedTime(deltaTime, BaseUpgrade,(UserInfoRow)UserInfo[0]); // test --> every BaseInfo corresponding with a BaseUpgrade
+                UpdateBaseInfo(deltaTime, (BaseInfoRow)BaseInfo[i], (UserInfoRow)UserInfo[0]);
+            }
+        }
+
+        private void UpdateBaseInfo(float elapsedTime, BaseInfoRow baseInfo, UserInfoRow user)
+        {
+            if (baseInfo.UpgradeTime > 0.0f)
+            {
+                baseInfo.UpgradeTime -= elapsedTime;
+                if (baseInfo.UpgradeTime <= 0)
+                {
+                    baseInfo.UpgradeTime = 0;
+                    BaseUpgrade[baseInfo.UpgradeWait_ID].Level++;
+                    user.Might += baseInfo.UpgradeWait_Might;
+                    baseInfo.UpgradeWait_ID = 0;
+                }
+            }
+            if (baseInfo.ResearchTime > 0.0f)
+            {
+                baseInfo.ResearchTime -= elapsedTime;
+                if (baseInfo.ResearchTime <= 0)
+                {
+                    baseInfo.ResearchTime = 0;
+                    BaseUpgrade[baseInfo.ResearchWait_ID].Level++;
+                    user.Might += baseInfo.ResearchWait_Might;
+                    baseInfo.ResearchWait_ID = 0;
+                }
+            }
+            if (baseInfo.TrainingTime > 0.0f)
+            {
+                baseInfo.TrainingTime -= elapsedTime;
+                if (baseInfo.TrainingTime <= 0)
+                {
+                    baseInfo.TrainingTime = 0.0f;
+                }
             }
         }
     }

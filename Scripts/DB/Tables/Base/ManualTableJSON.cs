@@ -45,8 +45,8 @@ namespace ManualTable
         {
             if (Rows == null)
                 Rows = new List<T>();
-            Rows.Clear();
-            Debug.Log(Rows.Count);
+            else Rows.Clear();
+            //Debug.Log(Rows.Count);
 
             int count = data.Count;
             for (int i = 0; i < count; i++)

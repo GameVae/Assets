@@ -227,38 +227,12 @@ namespace ManualTable.Row
         public string UnitTransferTime;
         public string UnitTransfer_ID_Base;
         public string TrainingUnit_ID;
-        public string TrainingTime;
+        public float TrainingTime;
         public string TrainingQuality;
         public string Training_Might;
         public int SumUnitQuality;
 
         ///*===============Util Funs==================*/
-        public void RecordElapsedTime(float elapsedTime, BaseUpgradeJSONTable baseUpgrade, UserInfoRow user)
-        {
-            if (UpgradeTime > 0)
-            {
-                UpgradeTime -= elapsedTime;
-                if (UpgradeTime <= 0)
-                {
-                    UpgradeTime = 0;
-                    baseUpgrade[UpgradeWait_ID].Level++;
-                    user.Might += UpgradeWait_Might;
-                    UpgradeWait_ID = 0;
-                }
-            }
-            if(ResearchTime > 0)
-            {
-                ResearchTime -= elapsedTime;
-                if (ResearchTime <= 0)
-                {
-                    ResearchTime = 0;
-                    baseUpgrade[ResearchWait_ID].Level++;
-                    user.Might += ResearchWait_Might;
-                    ResearchWait_ID = 0;
-                }
-            }
-        }
-
         public string GetResTimeString()
         {
             return ResearchWait_ID.ToString().InsertSpace() + " " +
@@ -276,6 +250,11 @@ namespace ManualTable.Row
 
         public bool UpgIsDone()
         { return UpgradeTime <= 0; }
+
+        public bool IsEnoughtResource(int farm,int wood,int stone,int metal)
+        {
+            return (Farm >= farm && Wood >= wood && Stone >= stone && Metal >= metal);
+        }
     }
 
     [System.Serializable]

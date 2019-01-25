@@ -58,7 +58,7 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     protected override void Awake()
     {
         base.Awake();
-       // EventListenersController.Instance.AddEmiter("S_UPGRADE", CreateUpgData);
+        EventListenersController.Instance.AddEmiter("S_UPGRADE", CreateUpgData);
     }
 
     protected override void Update()
