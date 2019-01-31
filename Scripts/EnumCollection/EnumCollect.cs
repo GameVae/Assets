@@ -64,4 +64,9 @@ namespace EnumCollect
         [Upgrade] ArrowTower = 46,
         [Upgrade] BaseWall = 47,
     }
+
+    public enum DBType
+    {
+        TrainningCost,
+    }
 }

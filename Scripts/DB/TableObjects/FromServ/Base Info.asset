@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Name: Base Info
   m_EditorClassIdentifier: 
   Rows:
-  - ID_User: 42
+  - ID_User: 43
     BaseNumber: 1
-    Position: 
-    Farm: 10000
-    Wood: 10000
-    Stone: 9060
-    Metal: 1000
-    UpgradeWait_ID: 15
+    Position: 299,0,0
+    Farm: 0
+    Wood: 2890
+    Stone: 3350
+    Metal: 6050
+    UpgradeWait_ID: 0
     UpgradeWait_Might: 0
-    UpgradeTime: 180
+    UpgradeTime: 0
     ResearchWait_ID: 0
     ResearchWait_Might: 0
     ResearchTime: 0
@@ -29,8 +29,8 @@ MonoBehaviour:
     UnitTransferQuality: 
     UnitTransferTime: 
     UnitTransfer_ID_Base: 
-    TrainingUnit_ID: 
-    TrainingTime: 
-    TrainingQuality: 
-    Training_Might: 
+    TrainingUnit_ID: 16
+    TrainingTime: -134784.8
+    TrainingQuality: 79
+    Training_Might: 158
     SumUnitQuality: 0

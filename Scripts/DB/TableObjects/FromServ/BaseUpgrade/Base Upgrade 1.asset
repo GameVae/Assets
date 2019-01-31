@@ -14,7 +14,7 @@ MonoBehaviour:
   Rows:
   - ID: 1
     Name_Upgrade: MainBase
-    Level: 2
+    Level: 7
     UpgradeType: 1
   - ID: 2
     Name_Upgrade: Farm
@@ -70,23 +70,23 @@ MonoBehaviour:
     UpgradeType: 1
   - ID: 15
     Name_Upgrade: Infantry
-    Level: 1
+    Level: 6
     UpgradeType: 1
   - ID: 16
     Name_Upgrade: Solider
-    Level: 1
+    Level: 2
     UpgradeType: 1
   - ID: 17
-    Name_Upgrade: TraninedSolider
-    Level: 1
+    Name_Upgrade: TrainedSolider
+    Level: 3
     UpgradeType: 1
   - ID: 18
     Name_Upgrade: ForbiddenGuard
-    Level: 1
+    Level: 0
     UpgradeType: 1
   - ID: 19
     Name_Upgrade: Heroic
-    Level: 1
+    Level: 0
     UpgradeType: 1
   - ID: 20
     Name_Upgrade: Ranged

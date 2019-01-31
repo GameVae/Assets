@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ManualTable
 {
-    public class ManualTableJSON<T> : ScriptableObject, ITable where T : JsonRow, new()
+    public class ManualTableJSON<T> : ScriptableObject, ITable where T : ServerMessage, new()
     {
         [SerializeField] public List<T> Rows;
 
@@ -37,7 +37,7 @@ namespace ManualTable
         {
             if (Rows == null)
                 Rows = new List<T>();
-            T row = JSONBase.FromJSON<T>(json);
+            T row = JsonUtility.FromJson<T>(json);
             Rows.Add(row);
         }
 

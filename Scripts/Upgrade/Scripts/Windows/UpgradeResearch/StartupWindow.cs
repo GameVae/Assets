@@ -2,6 +2,7 @@
 using ManualTable.Interface;
 using ManualTable.Row;
 using UI.Widget;
+using UnityEngine;
 using static WindowManager;
 
 public class StartupWindow : BaseWindow, IWindowGroup
@@ -57,7 +58,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
 
     public override void Load(params object[] input)
     {
-        MainbaseLevelBar.Value = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
+        MainbaseLevelBar.Value = SyncData.CurrentBaseUpgrade[ListUpgrade.MainBase].Level;
         BaseUpgradeRow resRef = SyncData.CurrentResearch;
         BaseUpgradeRow upgRef = SyncData.CurrentUpgrade;
 
@@ -71,7 +72,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[upgRef.ID];
             string jsonData = table[upgRef.Level - 1].ToJSON();
-            GenericUpgradeInfo upgInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+            GenericUpgradeInfo upgInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
             UpgProgBar.Slider.MaxValue = upgInfo != null ? upgInfo.TimeInt : 0;
         }
 
@@ -79,7 +80,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[resRef.ID];
             string jsonData = table[resRef.Level - 1].ToJSON();
-            GenericUpgradeInfo resInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+            GenericUpgradeInfo resInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
             ResProgBar.Slider.MaxValue = resInfo != null ? resInfo.TimeInt : 0;
         }
 

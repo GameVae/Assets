@@ -89,7 +89,7 @@ public class ResourceWindow : BaseWindow,IWindowGroup
         if (table == null) return;
 
         int[] need;
-        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.BaseUpgrade[type].Level);
+        MainBaseRow row = table.Rows.FirstOrDefault(x => x.Level == SyncData.CurrentBaseUpgrade[type].Level);
 
         if (row != null)
             need = new int[] { row.FoodCost, row.WoodCost, row.StoneCost, row.MetalCost };

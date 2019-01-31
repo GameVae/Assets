@@ -90,10 +90,19 @@ public static class Extension
         catch { return Vector3.zero; }
     }
 
+    #region RectTransform
     public static Vector2 RealSize(this RectTransform trans)
     {
         return new Vector2(trans.rect.width, trans.rect.height);
     }
+
+    public static void SetPivotWithoutChangePosition(this RectTransform trabs, Vector2 pivot)
+    {
+        Vector3 deltaPosition = (trabs.pivot - pivot) * trabs.RealSize();
+        trabs.pivot = pivot;
+        trabs.localPosition = trabs.localPosition - deltaPosition;
+    }
+    #endregion
 
     public static void RemoveNull<T>(this T ilist) where T : IList
     {

@@ -1,4 +1,5 @@
-﻿using SocketIO;
+﻿using ManualTable.Row;
+using SocketIO;
 using UnityEngine;
 
 public sealed class GetTranningData : Listener
@@ -18,6 +19,10 @@ public sealed class GetTranningData : Listener
     public void R_BASE_DEFEND(SocketIOEvent obj)
     {
         Debug.Log("R_BASE_DEFEND");
-        Debug.Log(obj);
+        //Debug.Log(obj);
+
+        int baseNum = 0;
+        obj.data["R_BASE_DEFEND"].GetField(ref baseNum,"BaseNumber");
+        SyncData.BaseDefend[baseNum].LoadTable(obj.data["R_BASE_DEFEND"]);
     }
 }

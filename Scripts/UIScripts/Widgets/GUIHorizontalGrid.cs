@@ -57,6 +57,9 @@ namespace UI.Widget
             {
                 rects[i].SetParent(transform);
                 rects[i].localScale = Vector3.one;
+                Vector3 pos = rects[i].localPosition;
+                pos.z = 0;
+                rects[i].localPosition = pos;
             }
             CalculateElementSize();
         }

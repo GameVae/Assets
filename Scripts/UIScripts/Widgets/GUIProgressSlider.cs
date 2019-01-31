@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.UI.Slider;
 
 namespace UI.Widget
 {
@@ -8,6 +9,11 @@ namespace UI.Widget
     public class GUIProgressSlider : CustomGUI
     {
         [SerializeField, HideInInspector] private Slider slider;
+
+        public SliderEvent OnValueChanged
+        {
+            get { return slider.onValueChanged; }
+        }
 
         public Slider Slider
         {

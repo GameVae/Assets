@@ -12,33 +12,30 @@ namespace UI
 {
     public class MiniTaskBarWindow : BaseWindow, IWindow
     {
-        private GUIVerticalList verticalList;
+        private GUIVerticalGird verticalGrid;
 
         public GUISliderWithBtn HasUpgrade;
         public GUITextWithIcon DontHasUpgrade;
-
         public GUIOnOffSwitch OpenTaskBtn;
+
         private List<ListUpgrade> curUpgTypes;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            inited = true;
-            Init();
-        }
         protected override void Start()
         {
-            OpenTaskBtn.SwitchOff();
+            OpenTaskBtn.InteractableChange(true);
+            OpenTaskBtn.On += On;
+            OpenTaskBtn.Off += Off;
         }
         public override void Close()
         {
             DontHasUpgrade.gameObject.SetActive(false);
-            verticalList.gameObject.SetActive(false);
+            base.Close();
         }
 
         public override void Open()
         {
-            verticalList.gameObject.SetActive(true);
+            Debug.Log("open");
+            base.Open();
             Load();
         }
 
@@ -59,72 +56,117 @@ namespace UI
             curUpgTypes = new List<ListUpgrade>();
             HasUpgrade.Slider.Placeholder = HasUpgrade.GetComponentInChildren<GUITextWithIcon>().Placeholder;
             HasUpgrade.Placeholder = HasUpgrade.Slider.Placeholder;
-            verticalList = Window.GetComponentInChildren<GUIVerticalList>();
+            verticalGrid = Window.GetComponent<GUIVerticalGird>();
 
             OpenTaskBtn.SetIsOn(true);
             OpenTaskBtn.On += On;
             OpenTaskBtn.Off += Off;
             OpenTaskBtn.InteractableChange(true);
+
+            AddTrainningBar("Trainning");
+            AddUpgradeBar("Upgrade");
+            AddResearchBar("Research");
         }
 
         public override void Load(params object[] input)
         {
-            ListUpgrade upgType = SyncData.CurrentMainBase.UpgradeWait_ID;
-            ListUpgrade resType = SyncData.CurrentMainBase.ResearchWait_ID;
-            bool hasUpgRes = upgType.IsDefined() || resType.IsDefined();
-            if (!hasUpgRes)
-            {
-                DontHasUpgrade.gameObject.SetActive(true);
-            }
-            else
-            {
-                Add(SyncData.CurrentMainBase.UpgradeWait_ID);
-                Add(SyncData.CurrentMainBase.ResearchWait_ID);
-            }
+            if (!verticalGrid.Containts("Trainning") && SyncData.CurrentMainBase.TrainingUnit_ID.IsDefined())
+                AddTrainningBar("Trainning");
+            if (!verticalGrid.Containts("Upgrade") && SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined())
+                AddTrainningBar("Upgrade");
+            if (!verticalGrid.Containts("Research") && SyncData.CurrentMainBase.ResearchWait_ID.IsDefined())
+                AddTrainningBar("Research");
         }
 
-        private void SwitchText(AFadeInOut inOut, GUISliderWithBtn infoBar, ListUpgrade type, int id)
+        private bool AddUpgradeBar(string name)
         {
-            float time = type.IsUpgrade() ? SyncData.CurrentMainBase.UpgradeTime : SyncData.CurrentMainBase.ResearchTime;
-            infoBar.Slider.Value = infoBar.Slider.MaxValue - time;
-
-            if (inOut.LoopCounter % 2 == 0)
-            {
-                infoBar.Placeholder.text = type.ToString().InsertSpace() + " ...";
-            }
-            else
-            {
-                infoBar.Placeholder.text = System.TimeSpan.FromSeconds(time).ToString(@"h\:m\:s");
-
-                if (time <= 0)
-                {
-                    Destroy(inOut.gameObject);
-                    verticalList.RemoveElement(id);
-                    curUpgTypes.Remove(type);
-                }
-            }
-        }
-
-        private void Add(ListUpgrade type)
-        {
+            ListUpgrade type = SyncData.CurrentMainBase.UpgradeWait_ID;
             if (type.IsDefined())
             {
-                if (curUpgTypes.Contains(type)) return;
-
-                GUISliderWithBtn element = verticalList.AddElement<GUISliderWithBtn>(HasUpgrade.transform as RectTransform, out int id);
-                element.InteractableChange(true);
-
-                MainBaseTable table = DBReference.Instance[type] as MainBaseTable;
-                MainBaseRow r = table.Rows.FirstOrDefault(x => x.Level == SyncData.BaseUpgrade[type].Level);
-                element.Slider.MaxValue = r.TimeInt;
-
-
-                AFadeInOut fader = element.GetComponent<AFadeInOut>();
-                fader.StartFadingAction += delegate { SwitchText(fader, element, type, id); };
-                element.gameObject.SetActive(true);
-
-                curUpgTypes.Add(type);
+                RectTransform rect = Instantiate(HasUpgrade.transform as RectTransform);
+                AFadeInOut fader = rect.GetComponent<AFadeInOut>();
+                GUISliderWithBtn element = rect.GetComponent<GUISliderWithBtn>();
+                element.Button.InteractableChange(true);
+                fader.StartFadingAction += delegate
+                {
+                    if (fader.LoopCounter % 2 != 0)
+                    {
+                        element.Slider.Placeholder.text = "Upgrading " + type.ToString().InsertSpace();
+                    }
+                    else
+                    {
+                        int time = (int)SyncData.CurrentMainBase.UpgradeTime;
+                        element.Slider.Placeholder.text = System.TimeSpan.FromSeconds(time).ToString().Replace(".", "d ");
+                        if (time <= 0)
+                        {
+                            verticalGrid.Remove(name );
+                        }
+                    }
+                };
+                verticalGrid.Add(name , rect);
+                return true;
             }
+            return false;
+        }
+
+        private bool AddResearchBar(string name)
+        {
+            ListUpgrade type = SyncData.CurrentMainBase.ResearchWait_ID;
+            if (type.IsDefined())
+            {
+                RectTransform rect = Instantiate(HasUpgrade.transform as RectTransform);
+                AFadeInOut fader = rect.GetComponent<AFadeInOut>();
+                GUISliderWithBtn element = rect.GetComponent<GUISliderWithBtn>();
+                fader.StartFadingAction += delegate
+                {
+                    if (fader.LoopCounter % 2 != 0)
+                    {
+                        element.Slider.Placeholder.text = "Researching " + type.ToString().InsertSpace();
+                    }
+                    else
+                    {
+                        int time = (int)SyncData.CurrentMainBase.ResearchTime;
+                        element.Slider.Placeholder.text = System.TimeSpan.FromSeconds(time).ToString().Replace(".", "d ");
+                        if (time <= 0)
+                        {
+                            verticalGrid.Remove(name );
+                        }
+                    }
+                };
+                verticalGrid.Add(name , rect);
+                return true;
+            }
+            return false;
+        }
+
+        private bool AddTrainningBar(string name)
+        {
+            ListUpgrade type = SyncData.CurrentMainBase.TrainingUnit_ID;
+            if (type.IsDefined())
+            {
+                RectTransform rect = Instantiate(HasUpgrade.transform as RectTransform);
+                AFadeInOut fader = rect.GetComponent<AFadeInOut>();
+                GUISliderWithBtn element = rect.GetComponent<GUISliderWithBtn>();
+                fader.StartFadingAction += delegate
+                {
+                    if (fader.LoopCounter % 2 != 0)
+                    {
+                        element.Slider.Placeholder.text = "Trainning " + type.ToString().InsertSpace();
+                    }
+                    else
+                    {
+                        int time = (int)SyncData.CurrentMainBase.TrainingTime;
+                        element.Slider.Placeholder.text = System.TimeSpan.FromSeconds(time).ToString().Replace(".", "d ");
+                        if (time <= 0)
+                        {
+                            verticalGrid.Remove(name );
+                        }
+                    }
+                };
+                verticalGrid.Add(name , rect);
+                return true;
+            }
+            return false;
         }
     }
 }

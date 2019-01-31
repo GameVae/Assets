@@ -30,7 +30,7 @@ namespace ManualTable
 
         public void LoadRow(string json)
         {
-            T newRow = Json.JSONBase.FromJSON<T>(json);
+            T newRow = JsonUtility.FromJson<T>(json);
             if (Rows == null)
                 Rows = new List<T>();
             Rows.Add(newRow);

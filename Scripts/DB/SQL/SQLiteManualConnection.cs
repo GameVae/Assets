@@ -37,7 +37,7 @@ namespace ManualTable.SQL
                 DbConnection.Open();
                 using (IDbCommand dbCmd = DbConnection.CreateCommand())
                 {
-                    string cmd = string.Format("SELECT * FROM {0} ", table.TableName);
+                    string cmd = string.Format("SELECT * FROM {0}", table.TableName);
                     dbCmd.CommandText = cmd;
                     using (IDataReader reader = dbCmd.ExecuteReader())
                     {
@@ -57,6 +57,13 @@ namespace ManualTable.SQL
                                 //table.LoadRow((T)JsonUtility.FromJson(json, typeof(T)));
                                 table.LoadRow(json);
                             } while (reader.Read());
+
+                        }
+                        else
+                        {
+#if UNITY_EDITOR
+                            Debug.Log("Read failed ! " + table.TableName + " field count: " + reader.FieldCount);
+#endif
                         }
                         reader.Close();
                         dbCmd.Dispose();

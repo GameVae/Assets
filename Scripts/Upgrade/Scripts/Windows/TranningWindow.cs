@@ -1,13 +1,16 @@
 ﻿using DB;
 using EnumCollect;
-using Json;
+using ManualTable;
 using ManualTable.Interface;
 using ManualTable.Row;
 using Network.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UI.Widget;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TranningWindow : BaseWindow
 {
@@ -16,22 +19,50 @@ public class TranningWindow : BaseWindow
     private List<GUIHorizontalGrid> rows;
     private GUIHorizontalGrid curRow;
     private int elementCount;
-    private BaseUpgradeRow refType;
-    private int quality;
 
-    public GUIOnOffSwitch OpentBtn;
+    private TrainningCostRow refCostInfo;
+    private MilitaryRow refTrainInfo;
+
+    private BaseUpgradeRow refType;
+    private ListUpgrade selectedType;
+
     public GUIScrollView ScrollView;
     public GUIInteractableIcon Element;
     public int ColumnNum;
+
+
+    [Header("Cost Infomation")]
+    public TextMeshProUGUI QualityNum;
+    public TextMeshProUGUI FoodInfo;
+    public TextMeshProUGUI WoodInfo;
+    public TextMeshProUGUI StoneInfo;
+    public TextMeshProUGUI MetalInfo;
+
+    [Header("Selected group")]
+    public GUIInteractableIcon CurrentSelect;
+    public Slider QualitySlider;
+    public GUIInteractableIcon AcceptBtn;
+    public InputField QualityInput;
+
+    [Header("Main group")]
+    public GUISliderWithBtn TranningProgress;
+    public GUIOnOffSwitch OpenBtn;
+
+
     [Range(0f, 1f)]
     public float ElementSize;
+    private int quality;
 
     protected override void Awake()
     {
         base.Awake();
-        OpentBtn.On += On;
-        OpentBtn.Off += Off;
-        OpentBtn.InteractableChange(true);
+        QualitySlider.onValueChanged.AddListener((float value) => OnQualitySliderChanged(value));
+
+        OpenBtn.InteractableChange(true);
+        OpenBtn.OnClick.AddListener(OpenWindow);
+
+        AcceptBtn.OnClickEvents += OnAccept;
+        QualityInput.onValueChanged.AddListener((string value) => OnQualityInputChanged());
     }
 
     protected override void Start()
@@ -42,7 +73,25 @@ public class TranningWindow : BaseWindow
 
     public override void Load(params object[] input)
     {
+        BaseInfoRow baseInfo = SyncData.CurrentMainBase as BaseInfoRow;
+        ListUpgrade tranningType = baseInfo.TrainingUnit_ID;
+        if (tranningType.IsDefined())
+        {
+            ITable table = DBReference.Instance[tranningType];
+            int level = SyncData.CurrentBaseUpgrade[tranningType].Level;
+            string jsonData = table[level - 1].ToJSON();
+            MilitaryRow typeInfo = JsonUtility.FromJson<MilitaryRow>(jsonData);
+            TranningProgress.Slider.MaxValue = typeInfo.TrainingTime * baseInfo.TrainingQuality;
 
+            AcceptBtn.InteractableChange(false);
+            TranningProgress.gameObject.SetActive(true);
+        }
+        else
+        {
+            AcceptBtn.InteractableChange(true);
+            TranningProgress.gameObject.SetActive(false);
+            Debug.Log("false");
+        }
     }
 
     protected override void Init()
@@ -55,16 +104,15 @@ public class TranningWindow : BaseWindow
             curRow.ElementSize = ElementSize;
             rows.Add(curRow);
         }
-        elementCount = 0;
 
+        elementCount = 0;
         List<ListUpgrade> types = new List<ListUpgrade>()
         {
             ListUpgrade.Solider,
-            ListUpgrade.ForbiddenGuard,
             ListUpgrade.TraninedSolider,
+            ListUpgrade.ForbiddenGuard,
             ListUpgrade.Heroic
         };
-
         AddElement(types);
     }
 
@@ -77,14 +125,10 @@ public class TranningWindow : BaseWindow
             GUIInteractableIcon e = Instantiate(Element);
             rectList.Add(e.transform as RectTransform);
             e.Placeholder.text = types[i].ToString().InsertSpace();
-            e.InteractableChange(true);
-            GUIProgressSlider slider = e.GetComponentInChildren<GUIProgressSlider>();
+            e.InteractableChange(SyncData.CurrentBaseUpgrade[types[capture]].Level > 0);
             e.OnClickEvents += delegate
             {
-                if (OnElementChoose(types[capture]))
-                {
-                    EventListenersController.Instance.Emit("S_TRAINING");
-                }
+                OnSelected(types[capture]);
             };
 
             elementCount = (elementCount + 1) % ColumnNum;
@@ -100,49 +144,15 @@ public class TranningWindow : BaseWindow
         }
     }
 
-    //private void AddElement(ListUpgrade type)
-    //{
-    //    GUIInteractableIcon e = Instantiate(Element);
-    //    curRow.Add(e.transform as RectTransform);
-    //    e.Placeholder.text = type.ToString().InsertSpace();
-    //    e.InteractableChange(true);
-    //    e.OnClickEvents += delegate
-    //    {
-    //        OnElementChoose(type);
-    //        tranningDataListner.Emit("S_TRANNING");
-    //    };
-
-    //    elementCount = (elementCount + 1) % ColumnNum;
-    //    if (elementCount == 0)
-    //    {
-    //        curRow = Instantiate(rowLayoutPrefab, ScrollView.Content);
-    //        curRow.ElementSize = ElementSize;
-    //        rows.Add(curRow);
-    //    }
-    //}
-
-    private bool OnElementChoose(ListUpgrade type)
+    private bool CheckEnoughtResource()
     {
         try
         {
-            refType = SyncData.BaseUpgrade[type];
-            ITable table = DBReference.Instance[type];
-            GenericUpgradeInfo info = JSONBase.FromJSON<GenericUpgradeInfo>(table[refType.Level - 1].ToJSON());
-
-            if (SyncData.BaseInfo.Rows[0].IsEnoughtResource
-                (info.FoodCost,
-                info.WoodCost,
-                info.StoneCost,
-                info.MetalCost))
-            {
-                SyncData.BaseInfo.Rows[0].Farm -= info.FoodCost;
-                SyncData.BaseInfo.Rows[0].Wood -= info.WoodCost;
-                SyncData.BaseInfo.Rows[0].Stone -= info.StoneCost;
-                SyncData.BaseInfo.Rows[0].Metal -= info.MetalCost;
-            }
-            else return false;
-
-            return true;
+            return (SyncData.CurrentMainBase.IsEnoughtResource
+                (refCostInfo.FoodCost * quality,
+                refCostInfo.WoodCost * quality,
+                refCostInfo.StoneCost * quality,
+                refCostInfo.MetalCost * quality));
         }
         catch (Exception e)
         {
@@ -151,16 +161,10 @@ public class TranningWindow : BaseWindow
         }
     }
 
-    private void On(GUIOnOffSwitch onOff)
+    private void OpenWindow()
     {
         Open();
-        onOff.Placeholder.text = "Off";
-    }
-
-    private void Off(GUIOnOffSwitch onOff)
-    {
-        Close();
-        onOff.Placeholder.text = "On";
+        Load();
     }
 
     private JSONObject S_TRAINING()
@@ -175,10 +179,133 @@ public class TranningWindow : BaseWindow
             {"BaseNumber"   ,baseInfo.BaseNumber.ToString()},
             {"ID_Unit"      ,((int)refType.ID).ToString()},
             {"Level"        ,refType.Level.ToString()},
-            {"Quality"      ,"1"},
+            {"Quality"      ,quality.ToString()},
         };
         JSONObject result = new JSONObject(data);
         Debug.Log(result.ToString());
         return result;
+    }
+
+    protected override void Update()
+    {
+        SetText();
+    }
+
+    private void SetText()
+    {
+        if (TranningProgress.gameObject.activeInHierarchy)
+        {
+            //Debug.Log(SyncData.CurrentMainBase.TrainingTime);
+            if (SyncData.CurrentMainBase.TrainingTime > 0)
+            {
+                TranningProgress.Slider.Value = TranningProgress.Slider.MaxValue - (int)SyncData.CurrentMainBase.TrainingTime;
+                TranningProgress.Placeholder.text =
+                    TimeSpan.FromSeconds((int)SyncData.CurrentMainBase.TrainingTime).ToString().Replace(".", "d ");
+            }
+            else
+            {
+                TranningProgress.gameObject.SetActive(false);
+            }
+        }
+        //Debug.Log("update");
+    }
+
+    private void OnQualitySliderChanged(float value)
+    {
+        if (!selectedType.IsDefined())
+        {
+            quality = 0;
+            QualitySlider.value = 0;
+            return;
+        }
+
+        quality = (int)value;
+        QualityInput.text = quality.ToString();
+
+        bool isEnoughResource = CheckEnoughtResource();
+        if (isEnoughResource)
+        {
+            AcceptBtn.InteractableChange(true);
+            QualityNum.text = quality + "/" + QualitySlider.maxValue;
+        }
+        else
+        {
+            AcceptBtn.InteractableChange(false);
+            QualityNum.text = string.Format("<color=red>{0}</color>/{1}", quality, QualitySlider.maxValue);
+        }
+        SetCostInfo();
+
+        if (SyncData.CurrentMainBase.TrainingUnit_ID.IsDefined())
+        {
+            AcceptBtn.InteractableChange(false);
+        }
+
+    }
+
+    private void SetCostInfo()
+    {
+        string norFormat = "{0}/{1}";
+        string warFormat = "<color=red>{0}</color>/{1}";
+
+        bool enoughtFood = refCostInfo.FoodCost * quality <= SyncData.CurrentMainBase.Farm;
+        bool enoughtWood = refCostInfo.WoodCost * quality <= SyncData.CurrentMainBase.Wood;
+        bool enoughtStone = refCostInfo.StoneCost * quality <= SyncData.CurrentMainBase.Stone;
+        bool enoughtMetal = refCostInfo.MetalCost * quality <= SyncData.CurrentMainBase.Metal;
+
+        FoodInfo.text = string.Format(enoughtFood ? norFormat : warFormat, refCostInfo.FoodCost * quality,
+            SyncData.CurrentMainBase.Farm);
+        WoodInfo.text = string.Format(enoughtWood ? norFormat : warFormat, refCostInfo.WoodCost * quality,
+            SyncData.CurrentMainBase.Wood);
+        StoneInfo.text = string.Format(enoughtStone ? norFormat : warFormat, refCostInfo.StoneCost * quality,
+            SyncData.CurrentMainBase.Stone);
+        MetalInfo.text = string.Format(enoughtMetal ? norFormat : warFormat, refCostInfo.MetalCost * quality,
+            SyncData.CurrentMainBase.Metal);
+    }
+
+    private void OnSelected(ListUpgrade type)
+    {
+        selectedType = type;
+        refType = SyncData.CurrentBaseUpgrade[type];
+        ITable dbTable = DBReference.Instance[selectedType];
+        string data = dbTable[SyncData.CurrentBaseUpgrade[selectedType].Level - 1].ToJSON();
+        TrainningCostTable table = DBReference.Instance[DBType.TrainningCost] as TrainningCostTable;
+        refTrainInfo = JsonUtility.FromJson<MilitaryRow>(data);
+        refCostInfo = table.Rows.FirstOrDefault(r => r.ID_Unit == selectedType);
+
+        CurrentSelect.Placeholder.text = selectedType.ToString().InsertSpace();
+    }
+
+    private void OnAccept()
+    {
+        if (CheckEnoughtResource())
+        {
+            SyncData.CurrentMainBase.Farm -= refCostInfo.FoodCost * quality;
+            SyncData.CurrentMainBase.Wood -= refCostInfo.WoodCost * quality;
+            SyncData.CurrentMainBase.Stone -= refCostInfo.StoneCost * quality;
+            SyncData.CurrentMainBase.Metal -= refCostInfo.MetalCost * quality;
+
+            SyncData.CurrentMainBase.TrainingTime = refTrainInfo.TrainingTime * quality;
+            SyncData.CurrentMainBase.Training_Might = refTrainInfo.MightBonus * quality;
+            SyncData.CurrentMainBase.TrainingUnit_ID = selectedType;
+            SyncData.CurrentMainBase.TrainingQuality = quality;
+
+            Close();
+            EventListenersController.Instance.Emit("S_TRAINING");
+        }
+    }
+
+    private void OnQualityInputChanged()
+    {
+        if (!selectedType.IsDefined())
+        {
+            QualityInput.text = "0";
+            return;
+        }
+
+        int value = int.Parse(QualityInput.text);
+        int clampValue = (int)Mathf.Clamp(value, 0, QualitySlider.maxValue);
+        QualityInput.text = clampValue.ToString();
+        QualitySlider.value = clampValue;
+        OnQualitySliderChanged(clampValue);
     }
 }

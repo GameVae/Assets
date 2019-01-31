@@ -18,8 +18,6 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     private bool isUpgradeType;
     private BaseUpgradeRow refType;
 
-    
-
     public TextMeshProUGUI Title;
 
     [Header("Progess Bar"), Space]
@@ -86,9 +84,9 @@ public class UpgResWindow : BaseWindow,IWindowGroup
         ListUpgrade type = data.TryGet<ListUpgrade>(0);
         string title = type.ToString().InsertSpace();
         ITable table = DBReference.Instance[type];
-        int level = SyncData.BaseUpgrade[type].Level;
+        int level = SyncData.CurrentBaseUpgrade[type].Level;
         string jsonData = table[level - 1].ToJSON();
-        GenericUpgradeInfo needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+        GenericUpgradeInfo needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
 
         int[] needMaterials = new int[] {
             needInfo.FoodCost,
@@ -135,11 +133,11 @@ public class UpgResWindow : BaseWindow,IWindowGroup
         if (isSimilarType)
         {            
             table = DBReference.Instance[type];
-            level = SyncData.BaseUpgrade[type].Level;
+            level = SyncData.CurrentBaseUpgrade[type].Level;
             jsonData = table[level - 1].ToJSON();
-            needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+            needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
         }
-        refType = SyncData.BaseUpgrade[type];
+        refType = SyncData.CurrentBaseUpgrade[type];
 
         string timeMin = needInfo.TimeMin;
         int timeInt = needInfo.TimeInt;
@@ -250,7 +248,7 @@ public class UpgResWindow : BaseWindow,IWindowGroup
 
         ITable table = DBReference.Instance[refType.ID];
         string jsonData = table[refType.Level - 1].ToJSON();
-        GenericUpgradeInfo needInfo = Json.JSONBase.FromJSON<GenericUpgradeInfo>(jsonData);
+        GenericUpgradeInfo needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
 
         SyncData.CurrentMainBase.Farm -= needInfo.FoodCost;
         SyncData.CurrentMainBase.Wood -= needInfo.WoodCost;

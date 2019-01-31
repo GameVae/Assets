@@ -382,6 +382,7 @@ GameObject:
   - component: {fileID: 77327108}
   - component: {fileID: 77327109}
   - component: {fileID: 77327110}
+  - component: {fileID: 77327111}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -464,6 +465,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 62d7725b7d072904aa78764164cee63d, type: 2}
   - {fileID: 11400000, guid: 336d91ffa0c968644bb56d3afd49b9d7, type: 2}
   - {fileID: 11400000, guid: 24df000b1accdc8439a9efc3b2230689, type: 2}
+  - {fileID: 11400000, guid: 97dc0be9c87b1f44098c6f164e4713ef, type: 2}
 --- !u!114 &77327107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +524,21 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 5b006a4a2b968ce4bacf31dbbbe5e2c2, type: 2}
   - Key: 19
     Value: {fileID: 11400000, guid: d18fc6b0b42dd11469025449e41808d5, type: 2}
+  InitalizeDBO:
+  - Key: 0
+    Value: {fileID: 11400000, guid: 94279d21dc538df4f837c4ae7e4ecf32, type: 2}
+--- !u!114 &77327111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c4c7b3da18dc4419b38b4967d162ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Texture: {fileID: 8400000, guid: bfbb80d02af8254479fb1560f144abfb, type: 2}
 --- !u!1 &89660090
 GameObject:
   m_ObjectHideFlags: 0

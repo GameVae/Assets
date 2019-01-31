@@ -69,7 +69,9 @@ namespace ManualTable.Loader
                 case DBRowType.Version:
                     SQLVersionConnection.LoadTable(Cast<VersionTable>(TableData));
                     break;
-
+                case DBRowType.TrainningCost:
+                    SQLDataConnection.LoadTable(Cast<TrainningCostTable>(TableData));
+                    break;
             }
         }
 

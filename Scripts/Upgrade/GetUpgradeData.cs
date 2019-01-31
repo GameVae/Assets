@@ -10,7 +10,7 @@ public sealed class GetUpgradeData : Listener
 
     public void R_BASE_UPGRADE(SocketIOEvent obj)
     {
-        SyncData.BaseUpgrade.LoadTable(obj.data["R_BASE_UPGRADE"]);
+        SyncData.CurrentBaseUpgrade.LoadTable(obj.data["R_BASE_UPGRADE"]);
     }
 
     public override void RegisterCallback()

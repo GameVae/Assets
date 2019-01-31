@@ -124,12 +124,12 @@ public class ArmyWindow : BaseWindow, IWindowGroup
         ListUpgrade type = armyType.BaseType;
 
         // sv data
-        int mainbaseLv = SyncData.BaseUpgrade[ListUpgrade.MainBase].Level;
-        int selTypeLv = SyncData.BaseUpgrade[type].Level;
+        int mainbaseLv = SyncData.CurrentBaseUpgrade[ListUpgrade.MainBase].Level;
+        int selTypeLv = SyncData.CurrentBaseUpgrade[type].Level;
 
         for (int i = 0, level = 0; i < armyType.Types.Length; i++)
         {
-            level = SyncData.BaseUpgrade[armyType.Types[i]].Level;
+            level = SyncData.CurrentBaseUpgrade[armyType.Types[i]].Level;
             elements[i].Icon.InteractableChange(level > 0);
             elements[i].LevelBar.Value = level;
         }

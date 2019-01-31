@@ -9,7 +9,6 @@ namespace UI.Widget
 {
     public sealed class GUITableElement : CustomGUI
     {
-        [SerializeField, HideInInspector] private TextMeshProUGUI Prefab;
         [SerializeField, HideInInspector] private TextMeshProUGUI prefab;
         [SerializeField, HideInInspector] private List<TextMeshProUGUI> cells;
         [SerializeField, HideInInspector] private AxisType axisType;

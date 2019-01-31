@@ -9,11 +9,38 @@ namespace ManualTable.Row
     {
         MainBase,
         Version,
-        Military
+        Military,
+        TrainningCost
     }
 
     [System.Serializable]
-    public sealed class GenericUpgradeInfo
+    public sealed class TrainningCostRow : JSONBase, IManualRow
+    {
+        public int ID;
+        public ListUpgrade ID_Unit;
+        public string Unit;
+        public float Range;
+        public float Speed;
+        public int MightBonus;
+        public int Storage;
+        public int FoodCost;
+        public int WoodCost;
+        public int StoneCost;
+        public int MetalCost;
+
+        public int FieldCount
+        {
+            get { return 11; }
+        }
+
+        public string ValuesSequence { get { return ""; } }
+
+        public string KeyValuePairs { get { return ""; } }
+    }
+
+
+    [System.Serializable]
+    public sealed class GenericUpgradeInfo : JSONBase
     {
         public int Level;
         public int MightBonus;
@@ -26,6 +53,7 @@ namespace ManualTable.Row
         public int Required;
     }
 
+    #region DB row
     [System.Serializable]
     public class MainBaseRow : JSONBase, IManualRow
     {
@@ -52,7 +80,7 @@ namespace ManualTable.Row
             {
                 string result = "";
                 result += string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
-                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin ?? "0", TimeInt, Required, Unlock ?? "0",Unlock_ID);
+                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin ?? "0", TimeInt, Required, Unlock ?? "0", Unlock_ID);
                 return result;
             }
         }
@@ -73,7 +101,7 @@ namespace ManualTable.Row
                                         "Required = {8}," +
                                         "Unlock = \"{9}\"," +
                                         "Unlock_ID = {10}",
-                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin, TimeInt, Required, Unlock,Unlock_ID);
+                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin, TimeInt, Required, Unlock, Unlock_ID);
                 return result;
             }
         }
@@ -112,7 +140,7 @@ namespace ManualTable.Row
                 return result;
             }
         }
-    }   
+    }
 
     [System.Serializable]
     public class MilitaryRow : JSONBase, IManualRow
@@ -129,8 +157,8 @@ namespace ManualTable.Row
         public float Attack;
         public float Defend;
         public float Health;
-        public int  FoodCost;
-        public int  WoodCost;
+        public int FoodCost;
+        public int WoodCost;
         public int StoneCost;
         public int MetalCost;
         public string TimeMin;
@@ -140,10 +168,12 @@ namespace ManualTable.Row
         public int RequiredLevel;
         public int Unlock_ID;
     }
+    #endregion
 
     //======================================//
+
     [System.Serializable]
-    public abstract class JsonRow : JSONBase, IManualRow
+    public abstract class ServerMessage : JSONBase, IManualRow
     {
         public abstract int FieldCount { get; }
 
@@ -153,7 +183,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class RSS_PositionRow : JsonRow
+    public class RSS_PositionRow : ServerMessage
     {
         public int ID;
         public int RssType;
@@ -178,7 +208,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class PositionRow : JsonRow
+    public class PositionRow : ServerMessage
     {
         public int ID;
         public string Position_Transform;
@@ -186,11 +216,11 @@ namespace ManualTable.Row
         public string ID_Type;
         public string Comment;
 
-        public override int FieldCount { get { return 5; } }      
+        public override int FieldCount { get { return 5; } }
     }
 
     [System.Serializable]
-    public class BaseUpgradeRow : JsonRow
+    public class BaseUpgradeRow : ServerMessage
     {
         public override int FieldCount { get { return 4; } }
 
@@ -201,7 +231,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseInfoRow : JsonRow
+    public class BaseInfoRow : ServerMessage
     {
         public override int FieldCount { get { return 22; } }
 
@@ -226,23 +256,23 @@ namespace ManualTable.Row
         public string UnitTransferQuality;
         public string UnitTransferTime;
         public string UnitTransfer_ID_Base;
-        public string TrainingUnit_ID;
-        public float TrainingTime;
-        public string TrainingQuality;
-        public string Training_Might;
+        public ListUpgrade TrainingUnit_ID;
+        public double TrainingTime;
+        public int TrainingQuality;
+        public int Training_Might;
         public int SumUnitQuality;
 
         ///*===============Util Funs==================*/
         public string GetResTimeString()
         {
             return ResearchWait_ID.ToString().InsertSpace() + " " +
-                System.TimeSpan.FromSeconds(Mathf.RoundToInt(ResearchTime)).ToString();
+                System.TimeSpan.FromSeconds(Mathf.RoundToInt(ResearchTime)).ToString().Replace(".", "d ");
         }
 
         public string GetUpgTimeString()
         {
             return UpgradeWait_ID.ToString().InsertSpace() + " " +
-                System.TimeSpan.FromSeconds(Mathf.RoundToInt(UpgradeTime)).ToString();
+                System.TimeSpan.FromSeconds(Mathf.RoundToInt(UpgradeTime)).ToString().Replace(".", "d ");
         }
 
         public bool ResIsDone()
@@ -251,14 +281,19 @@ namespace ManualTable.Row
         public bool UpgIsDone()
         { return UpgradeTime <= 0; }
 
-        public bool IsEnoughtResource(int farm,int wood,int stone,int metal)
+        public bool IsEnoughtResource(int farm, int wood, int stone, int metal)
         {
+            //Debug.Log(farm + "/" + Farm + "\n" +
+            //    wood + "/" + Wood + "\n" +
+            //    stone + "/" + Stone + "\n" +
+            //    metal + "/" + Metal + "\n");
             return (Farm >= farm && Wood >= wood && Stone >= stone && Metal >= metal);
         }
+
     }
 
     [System.Serializable]
-    public class UserInfoRow : JsonRow
+    public class UserInfoRow : ServerMessage
     {
         public override int FieldCount { get { return 9; } }
 
@@ -271,5 +306,16 @@ namespace ManualTable.Row
         public string LastGuildID;
         public int Might;
         public int Killed;
+    }
+
+    [System.Serializable]
+    public class BaseDefendRow : ServerMessage
+    {
+        public override int FieldCount { get { return 4; } }
+
+        public int ID;
+        public int BaseNumber;
+        public ListUpgrade ID_Unit;
+        public int Quality;
     }
 }

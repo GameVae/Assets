@@ -1,4 +1,6 @@
-﻿using ManualTable;
+﻿using System;
+using System.Linq;
+using ManualTable;
 using ManualTable.Row;
 using UnityEngine;
 
@@ -9,6 +11,14 @@ namespace Network.Sync
     {
         public int CurBaseIndex = 0;
 
+        public BaseUpgradeJSONTable CurrentBaseUpgrade
+        {
+            get { return BaseUpgrade[CurBaseIndex]; }
+        }
+        public BaseDefendJSONTable CurrentBaseDefend
+        {
+            get { return BaseDefend[CurBaseIndex]; }
+        }
         public BaseInfoRow CurrentMainBase
         {
             get { return (BaseInfoRow)BaseInfo[CurBaseIndex]; }
@@ -17,14 +27,14 @@ namespace Network.Sync
         {
             get
             {
-                return BaseUpgrade[CurrentMainBase.UpgradeWait_ID];
+                return CurrentBaseUpgrade[CurrentMainBase.UpgradeWait_ID];
             }
         }
         public BaseUpgradeRow CurrentResearch
         {
             get
             {
-                return BaseUpgrade[CurrentMainBase.ResearchWait_ID];
+                return CurrentBaseUpgrade[CurrentMainBase.ResearchWait_ID];
             }
         }
 
@@ -33,48 +43,82 @@ namespace Network.Sync
 
         public UserInfoJSONTable UserInfo;
         public BaseInfoJSONTable BaseInfo;
-        public BaseUpgradeJSONTable BaseUpgrade; //  base 1
+
+        public BaseUpgradeJSONTable[] BaseUpgrade;
+        public BaseDefendJSONTable[] BaseDefend;
 
         public void SyncUpdate(float deltaTime)
         {
             for (int i = 0; i < BaseInfo.Rows.Count; i++)
             {
-                UpdateBaseInfo(deltaTime, (BaseInfoRow)BaseInfo[i], (UserInfoRow)UserInfo[0]);
+                UpdateBaseInfo(deltaTime,i, (UserInfoRow)UserInfo[0]);
             }
         }
-
-        private void UpdateBaseInfo(float elapsedTime, BaseInfoRow baseInfo, UserInfoRow user)
+        private void UpdateBaseInfo(float elapsedTime,int i, UserInfoRow user)
         {
-            if (baseInfo.UpgradeTime > 0.0f)
+            BaseInfoRow baseInfo = (BaseInfoRow)BaseInfo[i];
+            BaseUpgradeJSONTable baseUpgrade = BaseUpgrade[i];
+
+            if (baseInfo?.UpgradeTime > 0.0f)
             {
                 baseInfo.UpgradeTime -= elapsedTime;
                 if (baseInfo.UpgradeTime <= 0)
                 {
                     baseInfo.UpgradeTime = 0;
-                    BaseUpgrade[baseInfo.UpgradeWait_ID].Level++;
+                    baseUpgrade[baseInfo.UpgradeWait_ID].Level++;
                     user.Might += baseInfo.UpgradeWait_Might;
                     baseInfo.UpgradeWait_ID = 0;
                 }
             }
-            if (baseInfo.ResearchTime > 0.0f)
+            if (baseInfo?.ResearchTime > 0.0f)
             {
                 baseInfo.ResearchTime -= elapsedTime;
                 if (baseInfo.ResearchTime <= 0)
                 {
                     baseInfo.ResearchTime = 0;
-                    BaseUpgrade[baseInfo.ResearchWait_ID].Level++;
+                    baseUpgrade[baseInfo.ResearchWait_ID].Level++;
                     user.Might += baseInfo.ResearchWait_Might;
                     baseInfo.ResearchWait_ID = 0;
                 }
             }
-            if (baseInfo.TrainingTime > 0.0f)
+            if (baseInfo?.TrainingTime > 0.0f)
             {
+                // Debug.Log("bef: " + baseInfo?.TrainingTime + " -  e" + elapsedTime);
                 baseInfo.TrainingTime -= elapsedTime;
                 if (baseInfo.TrainingTime <= 0)
                 {
-                    baseInfo.TrainingTime = 0.0f;
+                    TranningDone(i,user);
                 }
+                //Debug.Log("af: " + baseInfo?.TrainingTime);
+
             }
+        }
+
+        private void TranningDone(int baseIndex, UserInfoRow user)
+        {
+            BaseInfoRow baseInfo = (BaseInfoRow)BaseInfo[baseIndex];
+            
+            BaseDefendJSONTable baseDefend = BaseDefend[baseIndex];
+            BaseDefendRow defendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == baseInfo.TrainingUnit_ID);
+            if(defendRow == null)
+            {
+                baseDefend.Rows.Add(new BaseDefendRow()
+                {
+                    BaseNumber = baseInfo.BaseNumber,
+                    ID_Unit = baseInfo.TrainingUnit_ID,
+                    Quality = baseInfo.TrainingQuality,
+                });
+            }
+            else
+            {
+                defendRow.Quality += baseInfo.TrainingQuality;
+            }
+
+            user.Might += baseInfo.Training_Might;
+            baseInfo.TrainingTime = 0.0f;
+            baseInfo.TrainingUnit_ID = 0;
+            baseInfo.TrainingQuality = 0;
+            baseInfo.Training_Might = 0;
         }
     }
 
