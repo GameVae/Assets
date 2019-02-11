@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SocketIO;
+using Generic.Singleton;
 
 [Serializable]
 public class ConnectRegion
@@ -59,7 +60,7 @@ public class LoginScript : MonoBehaviour
 
     private void Start()
     {
-        socketIO = Connection.Instance.Socket;
+        socketIO = Singleton.Instance<Connection>().Socket;
         socketIO.On("R_LOGIN", R_LOGIN);
     }
 

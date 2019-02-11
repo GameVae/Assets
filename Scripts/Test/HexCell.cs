@@ -1,4 +1,5 @@
 ﻿
+using Generic.Singleton;
 using UnityEngine;
 
 public class HexCell
@@ -17,10 +18,8 @@ public class HexCell
 
 }
 
-public class PoolHexCell
+public sealed class PoolHexCell : ISingleton
 {
-    public static PoolHexCell Instance = new PoolHexCell();
-
     private const int MaxSize = 1000;
 
     private HexCell[] pool;

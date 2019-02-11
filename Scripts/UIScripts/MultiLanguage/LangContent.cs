@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Generic.Singleton;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ namespace MultiLang
         private void Awake()
         {
             MeshText.text = Language.ChangeLanguage();
-            MultiLangManager.Instance.Add(() =>
+            Singleton.Instance<MultiLangManager>().Add(() =>
             {
                 MeshText.text = Language.ChangeLanguage();
             });

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Generic.Singleton;
 
 [Serializable]
 public class Base_User_Info
@@ -60,7 +61,7 @@ public class PlayerInformation : MonoBehaviour {
     void Awake () {
         if (instance == null) { instance = this; }
         else { Destroy(gameObject); }
-        Connection = Connection.Instance;
+        Connection = Singleton.Instance<Connection>();
     }
     private void Start()
     {

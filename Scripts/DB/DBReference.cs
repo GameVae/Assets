@@ -1,11 +1,12 @@
 ﻿using EnumCollect;
+using Generic.Singleton;
 using ManualTable.Interface;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DB
 {
-    public sealed class DBReference : MonoBehaviour
+    public sealed class DBReference : MonoSingle<DBReference>
     {
         [System.Serializable]
         public class DBKeyValuePair
@@ -20,8 +21,6 @@ namespace DB
             public DBType Key;
             public ScriptableObject Value;
         }
-
-        public static DBReference Instance { get; private set; }
 
         private Dictionary<ListUpgrade, ITable> dbs;
         private Dictionary<DBType, ITable> dbos;
@@ -46,12 +45,9 @@ namespace DB
         public DBKeyValuePair[] InitalizeDB;
         public DBKeyValuePairOther[] InitalizeDBO;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance == null)
-                Instance = this;
-            else Destroy(gameObject);
-
+            base.Awake();
             dbs = new Dictionary<ListUpgrade, ITable>();
             for (int i = 0; i < InitalizeDB?.Length; i++)
             {

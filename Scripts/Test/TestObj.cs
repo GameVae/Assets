@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Generic.Singleton;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,5 +42,9 @@ public class TestObj : MonoBehaviour {
                     Debug.Log("hit Cube");
             }
         }
+    }
+
+    private void Start()
+    {
     }
 }

@@ -1,23 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Generic.Singleton;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Network.Data
 {
-    public sealed class EventListenersController : MonoBehaviour
+    public sealed class EventListenersController : MonoSingle<EventListenersController>
     {
-        public static EventListenersController Instance { get; private set; }
 
         public Sync.Sync SyncData { get { return Conn?.Sync; } }
         public Connection Conn;
 
         private Dictionary<string, System.Func<JSONObject>> emitter;
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance == null)
-                Instance = this;
-            else Destroy(gameObject);
-
+            base.Awake();
             emitter = new Dictionary<string, System.Func<JSONObject>>();
         }
 

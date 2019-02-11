@@ -1,4 +1,5 @@
-﻿using Network.Data;
+﻿using Generic.Singleton;
+using Network.Data;
 using UnityEngine;
 
 public abstract class Listener : MonoBehaviour, Network.Interface.IListener
@@ -11,7 +12,7 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
     protected Connection Conn { get { return evCtrl.Conn; } }
     protected virtual void Start()
     {
-        evCtrl = EventListenersController.Instance;
+        evCtrl = Singleton.Instance<EventListenersController>();
         SyncData = evCtrl.SyncData;
         RegisterCallback();
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Generic.Singleton;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -31,7 +32,7 @@ public class CursorController : MonoBehaviour
             if (raycastHitted && !onClickUI)
             {
                 Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
-                if(CellInfoManager.Instance.GetCellInfo(selectCell.ZToZero(),out CellInfomation result))
+                if(Singleton.Instance<CellInfoManager>().GetCellInfo(selectCell.ZToZero(),out CellInfomation result))
                 {
                     selectCell = grid.WorldToCell(result.GameObject.transform.position);                    
                     cursorPos.updateCursor(result.GameObject.transform.position);

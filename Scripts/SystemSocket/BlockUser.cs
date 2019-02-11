@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using SocketIO;
+using Generic.Singleton;
 
 public class BlockUser : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class BlockUser : MonoBehaviour
 
     void Start()
     {
-        socketIO = Connection.Instance.Socket;
+        socketIO = Singleton.Instance<Connection>().Socket;
         socketIO.On("R_BLOCKED", R_BLOCKED);
     }
 

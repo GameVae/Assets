@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SocketIO;
 using System;
+using Generic.Singleton;
 //[Serializable]
 //public class RegisterUI
 //{
@@ -95,7 +96,7 @@ public class Registerv3 : MonoBehaviour
         registerUI.PasswordConfirm.onEndEdit.AddListener(delegate { checkPasswordConfirmInput(registerUI.PasswordConfirm.text); });
         registerUI.Email.onEndEdit.AddListener(delegate { checkEmailInput(registerUI.Email.text); });
 
-        socketIO = Connection.Instance.Socket;
+        socketIO = Singleton.Instance<Connection>().Socket;
     }
 
     private void Start()

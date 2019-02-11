@@ -1,24 +1,18 @@
-﻿using System.Collections;
+﻿using Generic.Singleton;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Dialogue
 {
-    public class DialogueManager : MonoBehaviour, IPointerDownHandler
+    public class DialogueManager : MonoSingle<DialogueManager>, IPointerDownHandler
     {
         public Dialogue CurrentConversation;
-        public DialogueManager Instance { get; private set; }
 
         [Header("UI")]
         public Text DisplayText;
         public Animator Animator;
-
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(this.gameObject);
-        }
 
         private void EndConversation()
         {

@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Generic.Singleton;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public sealed class Popup : MonoBehaviour
+public sealed class Popup : MonoSingle<Popup>
 {
-    public static Popup Instance { get; private set; }
-
     private EventSystem events;
 
     public CursorPos Cursor;
@@ -18,10 +15,9 @@ public sealed class Popup : MonoBehaviour
 
     private bool enable;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        base.Awake();
         Panel.gameObject.SetActive(false);
         events = FindObjectOfType<EventSystem>();
     }
@@ -42,7 +38,7 @@ public sealed class Popup : MonoBehaviour
 
     public void SetCursor(Vector3Int cell)
     {
-        Cursor.updateCursor(HexMap.Instance.CellToWorld(cell));
+        Cursor.updateCursor(Singleton.Instance<HexMap>().CellToWorld(cell));
         Cursor.PositionCursor.SetPosTxt(cell.x.ToString(), cell.y.ToString());
     }
 }

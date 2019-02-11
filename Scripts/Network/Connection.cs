@@ -1,15 +1,13 @@
-﻿using Network.Sync;
+﻿using Generic.Singleton;
+using Network.Sync;
 using SocketIO;
-using System;
 using System.Collections;
 using System.Threading;
 using UnityEngine;
 using WebSocketSharp;
 
-public sealed class Connection : MonoBehaviour
+public sealed class Connection : MonoSingle<Connection>
 {
-    public static Connection Instance;
-
     public Sync Sync;
 
     public SocketIOComponent SocketComponent;
@@ -38,9 +36,9 @@ public sealed class Connection : MonoBehaviour
     private Decoder decoder;
     private Thread timer;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
+        base.Awake();
         decoder = new Decoder();
     }
 
