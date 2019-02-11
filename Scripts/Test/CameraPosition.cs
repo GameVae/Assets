@@ -18,6 +18,7 @@ public class CameraPosition : MonoBehaviour
         cellIndex.z = cellIndex.y;
         cellIndex += new Vector3Int(5, 0, 5);
         Vector3 worldPoint = Singleton.Instance<HexMap>().CellToWorld(cellIndex);
+        worldPoint.y = Cam.transform.position.y;         // current height
         Cam.transform.position = worldPoint;
 
         Debug.Log(cellIndex + " - " + worldPoint);

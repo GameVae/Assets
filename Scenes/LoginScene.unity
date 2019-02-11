@@ -2742,12 +2742,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 340176688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5656b6455a9e51740abaf5dcce487541, type: 3}
+  m_Script: {fileID: 11500000, guid: 38b088ea542955f45a41fae884d4c10a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Background: {fileID: 2008972022}
-  Panel: {fileID: 822416002}
-  ProgressBar: {fileID: 153457406}
+  progressSlider: {fileID: 153457406}
 --- !u!114 &340176690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2756,9 +2754,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 340176688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0cff4cc7e883f041ae556f93daae815, type: 3}
+  m_Script: {fileID: 11500000, guid: cffc81397b5690244aeeac169f7ef4a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LoadingSlider: {fileID: 153457410}
 --- !u!114 &340176691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2827,10 +2826,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 340176688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5be8f9942fba6154ea9940db992dcee7, type: 3}
+  m_Script: {fileID: 11500000, guid: f98b4dd11de160745a088b68ed4ad867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  progressSlider: {fileID: 153457406}
+  Background: {fileID: 2008972022}
+  Panel: {fileID: 822416002}
+  ProgressBar: {fileID: 153457406}
 --- !u!1 &350118077
 GameObject:
   m_ObjectHideFlags: 0

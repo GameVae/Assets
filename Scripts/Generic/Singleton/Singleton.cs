@@ -17,6 +17,7 @@ namespace Generic.Singleton
             if (singletons == null)
                 singletons = new Dictionary<int, ISingleton>();
             singletons.TryGetValue(typeof(T).GetHashCode(), out ISingleton value);
+
             if (value == null)
             {
                 System.Type type = typeof(T);
@@ -28,6 +29,7 @@ namespace Generic.Singleton
                 {
                     value = NormalInstance<T>();
                 }
+                singletons[type.GetHashCode()] = value;
             }
             return (T)value;
         }
@@ -54,9 +56,8 @@ namespace Generic.Singleton
             {
                 ISingleton value = (ISingleton)property.GetValue(null, null);
 #if UNITY_EDITOR
-                UnityEngine.Debug.Log(value + " found");
+                UnityEngine.Debug.Log(value + " found: " + type.GetHashCode());
 #endif
-                singletons[type.GetHashCode()] = value;
                 return (T)value;
             }
         }
@@ -79,7 +80,6 @@ namespace Generic.Singleton
             else
             {
                 ISingleton value = (ISingleton)constructors[0].Invoke(new object[] { });
-                singletons[type.GetHashCode()] = value;
                 return (T)value;
             }
         }
