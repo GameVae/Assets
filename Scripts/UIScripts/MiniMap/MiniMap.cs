@@ -1,12 +1,10 @@
 ﻿using Generic.Singleton;
 using System.Collections.Generic;
+using UI.Widget;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class MiniMap : MonoBehaviour
+public class MiniMap : BaseWindow
 {
-
-    private bool onMiniMap;
     private bool isClosing;
     private float closeCounter;
 
@@ -14,57 +12,44 @@ public class MiniMap : MonoBehaviour
     private Vector3Int preSelectedCell;
 
     public float DelayCloseMiniMap;
-    public Button MapBtn;
-    public Button DescriptionBtn;
+    public GUIOnOffSwitch MapBtn;
+    public GUIOnOffSwitch DescriptionBtn;
 
-    public GameObject Panel;
-    public GameObject LevelDescription;
-
+    public CameraPosition CamPosition;
     public CursorPos cursor;
     [Header("Dimention map base on grid")]
     public int Width;
     public int Height;
     public RectTransform MiniMapImage;
     public NavigateIcon MapSelectIcon;
-    public GameObject BuildingIcon;
+    public RectTransform BuildingIcon;
 
     public Rect MiniMapRect { get; private set; }
 
-    private void OnEnable()
+    protected override void Awake()
     {
+        base.Awake();
+        MapBtn.OnClick.AddListener(Open);
+    }
 
-        GetComponentInChildren<Button>().onClick.AddListener(ManualClose);
-
-        MapBtn.onClick.AddListener(ShowMiniMap);
-
-        DescriptionBtn.onClick.AddListener(ShowMiniMap);
-        DescriptionBtn.onClick.AddListener(ShowDescription);
-
-        LevelDescription.gameObject.SetActive(false);
-        Panel.gameObject.SetActive(false);
+    protected override void Start()
+    {
+        base.Start();
 
         float miniMapWidth = (MiniMapImage.anchorMax.x - MiniMapImage.anchorMin.x) * Screen.width;
         float miniMapHeight = (MiniMapImage.anchorMax.y - MiniMapImage.anchorMin.y) * Screen.height;
         float xPos = MiniMapImage.anchorMin.x * Screen.width;
         float yPos = MiniMapImage.anchorMin.y * Screen.height;
+
         MiniMapRect = new Rect(xPos, yPos, miniMapWidth, miniMapHeight);
-
-        ResetSelectedCell();
     }
 
-    private void Start()
-    {
-        SetupBuildingIcon();
-    }
 
-    private void Update()
+    protected override void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && MiniMapImage.gameObject.activeInHierarchy)
         {
-            if (onMiniMap)
-            {
-                SetNavigateIcon(Input.mousePosition);
-            }
+            SetNavigateIcon(Input.mousePosition);
         }
 
         if (isClosing)
@@ -72,40 +57,26 @@ public class MiniMap : MonoBehaviour
             closeCounter += Time.deltaTime;
             if (closeCounter >= DelayCloseMiniMap)
             {
-
                 Close();
             }
         }
     }
 
-    private void Close()
+    public override void Close()
     {
         if (isClosing)
         {
-            onMiniMap = false;
             isClosing = false;
-            MapSelectIcon.Disable();
             MoveCameraToCell(selectedCell);
-            Panel.gameObject.SetActive(false);
             cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));
-
-            // refresh 
-            ResetSelectedCell();
         }
-    }
-
-    private void ManualClose()
-    {
-        isClosing = false;
-        onMiniMap = false;
-        MapSelectIcon.Disable();
-        Panel.gameObject.SetActive(false);
-        ResetSelectedCell();
+        base.Close();
     }
 
     private bool TrySetNavOnBuild(Rect area, out Vector3Int cell)
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BuildingCell;
+        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BaseCell;
+
         for (int i = 0; i < buildingCell.Count; i++)
         {
             Vector3 miniMapPos = CellToMiniMap(buildingCell[i]);
@@ -129,13 +100,14 @@ public class MiniMap : MonoBehaviour
 
     private void SetupBuildingIcon()
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BuildingCell;
+        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BaseCell;
+
         for (int i = 0; i < buildingCell.Count; i++)
         {
             Vector3 miniMapPos = CellToMiniMap(buildingCell[i]);
-            GameObject build = Instantiate(BuildingIcon, MiniMapImage);
-            build.SetActive(true);
-            build.GetComponent<RectTransform>().position = miniMapPos;
+            RectTransform build = Instantiate(BuildingIcon, MiniMapImage);
+            build.localPosition = miniMapPos;
+            build.gameObject.SetActive(true);
         }
     }
 
@@ -167,19 +139,7 @@ public class MiniMap : MonoBehaviour
 
     private void MoveCameraToCell(Vector3Int cell)
     {
-        Vector3 worldPoint = Vector3.zero;
-        worldPoint = cursor.CellToWorldPoint(cell);
-        worldPoint.y = Camera.main.transform.position.y;
-        Camera.main.transform.position = worldPoint;
-    }
-
-    private void ShowMiniMap()
-    {
-        if (onMiniMap) return;
-        onMiniMap = true;
-        LevelDescription.gameObject.SetActive(false);
-        Panel.gameObject.SetActive(true);
-        MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
+        CamPosition.Set(cell);
     }
 
     private void StartClose()
@@ -191,20 +151,25 @@ public class MiniMap : MonoBehaviour
     public Vector3 CellToMiniMap(Vector3Int cellPos)
     {
         Vector3 result = Vector3.zero;
-        result.x = cellPos.x * (MiniMapRect.width / Width) + MiniMapRect.x;
-        result.y = cellPos.y * (MiniMapRect.height / Height) + MiniMapRect.y;
+        result.x = cellPos.x * (MiniMapRect.width / Width);
+        result.y = cellPos.y * (MiniMapRect.height / Height);
+        result -= (Vector3)MiniMapImage.RealSize() / 2; // pivot 0.5 - 0.5
         return result;
     }
 
-    private void ShowDescription()
+    public override void Open()
     {
-        if (!LevelDescription.activeInHierarchy)
-        {
-            LevelDescription.gameObject.SetActive(true);
-        }
-        else
-        {
-            LevelDescription.gameObject.SetActive(false);
-        }
+        base.Open();
+        MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
+    }
+
+    protected override void Init()
+    {
+        SetupBuildingIcon();
+    }
+
+    public override void Load(params object[] input)
+    {
+        throw new System.NotImplementedException();
     }
 }

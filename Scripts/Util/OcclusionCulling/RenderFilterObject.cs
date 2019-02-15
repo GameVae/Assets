@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Generic.Singleton;
+using UnityEngine;
 
 public class RenderFilterObject : MonoBehaviour
 {
@@ -11,11 +12,11 @@ public class RenderFilterObject : MonoBehaviour
 
     private void OnBecameVisible()
     {
-        RenderFilterManager.Instance.BecomeVisible(navAgent.Info);
+        Singleton.Instance<RenderFilterManager>().BecomeVisible(navAgent.WayPoint.CellInfo);
     }
 
     private void OnBecameInvisible()
     {
-        RenderFilterManager.Instance.BecomeInvisible(navAgent.Info);
+        Singleton.Instance<RenderFilterManager>().BecomeInvisible(navAgent.WayPoint.CellInfo);
     }
 }

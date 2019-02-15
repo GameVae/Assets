@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using EnumCollect;
-
+using Generic.Contants;
+using Generic.Singleton;
 
 public class AndroidCameraCtrl : MonoBehaviour
 {
@@ -83,7 +84,7 @@ public class AndroidCameraCtrl : MonoBehaviour
     }
     private void Start()
     {
-        debugger = Debugger.instance;
+        //debugger = Debugger.instance;
     }
 
     private void /*Update() // */FixedUpdate()
@@ -108,9 +109,9 @@ public class AndroidCameraCtrl : MonoBehaviour
         }
         if (!isLockedAxis)
         {
-            hRotTarget = (hRotTarget + h * Constants.PixelDependencyDevice * DegreePerInch);
+            hRotTarget = (hRotTarget + h * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch);
         }
-        vRotTarget = Mathf.Clamp(vRotTarget - v * Constants.PixelDependencyDevice * DegreePerInch,
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch,
                                  WrapRotationValue.x,
                                  WrapRotationValue.y);
 
@@ -123,8 +124,8 @@ public class AndroidCameraCtrl : MonoBehaviour
         //horizontalDir = VerticalAxis.right;
         //horizontalDir.y = 0; verticalDir.y = 0;
 
-        //move = (horizontalDir * Input.GetAxis("Horizontal") * Constants.PixelDependencyDevice * DragSpeed)
-        //    + (verticalDir * Input.GetAxis("Vertical") * Constants.PixelDependencyDevice * DragSpeed);
+        //move = (horizontalDir * Input.GetAxis("Horizontal") * Singleton.Instance<GConstants>().PixelDependencyDevice * DragSpeed)
+        //    + (verticalDir * Input.GetAxis("Vertical") * Singleton.Instance<GConstants>().PixelDependencyDevice * DragSpeed);
         //cameraObject.Translate(move);
         #endregion
         // check out of range
@@ -207,11 +208,11 @@ public class AndroidCameraCtrl : MonoBehaviour
 
         move = (horizontalDir * moveForce.x + verticalDir * moveForce.y)
                 * DragSpeed
-                * Constants.PixelDependencyDevice;
+                * Singleton.Instance<GConstants>().PixelDependencyDevice;
 
 
         cameraObject.Translate(move);
-        // debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position + " Dpi unit: " + Constants.PixelDependencyDevice);
+        // debugger.Log("Delta position:" + move + "camera pos: " + cameraObject.transform.position + " Dpi unit: " + Singleton.Instance<GConstants>().PixelDependencyDevice);
     }
 
     private void ZoomHandle()
@@ -231,7 +232,7 @@ public class AndroidCameraCtrl : MonoBehaviour
             // apply zoom force
             if (!thisCamera.orthographic)
             {
-                thisCamera.fieldOfView = Mathf.Clamp(zoomForce * ZoomSpeed * Constants.PixelDependencyDevice + thisCamera.fieldOfView,
+                thisCamera.fieldOfView = Mathf.Clamp(zoomForce * ZoomSpeed * Singleton.Instance<GConstants>().PixelDependencyDevice + thisCamera.fieldOfView,
                                         MaxZoomIn,
                                         MaxZoomOut);
             }
@@ -256,9 +257,9 @@ public class AndroidCameraCtrl : MonoBehaviour
         }
         if (!isLockedAxis)
         {
-            hRotTarget = (hRotTarget + h * Constants.PixelDependencyDevice * DegreePerInch);
+            hRotTarget = (hRotTarget + h * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch);
         }
-        vRotTarget = Mathf.Clamp(vRotTarget - v * Constants.PixelDependencyDevice * DegreePerInch,
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch,
                                  WrapRotationValue.x,
                                  WrapRotationValue.y);
         //LockAxis();

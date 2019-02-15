@@ -26,7 +26,7 @@ public class NavAgentInspector : Editor
 
             if(GUILayout.Button("Offset Move"))
             {
-                owner.StartMove();
+                owner.StartOffsetMove();
             }
             // mask end vertical layout group
             EditorGUILayout.EndVertical();

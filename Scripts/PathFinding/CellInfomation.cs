@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CellInfomation
+public class CellInfo
 {
     public GameObject GameObject    { get; set; }
     public int Id                   { get; set; }

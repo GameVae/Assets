@@ -231,7 +231,9 @@ namespace Utils
             catch (Exception e)
             {
                 dbConnection.Close();
+#if UNITY_EDITOR
                 Debug.Log(e.ToString());
+#endif
                 return false;
             }
         }
@@ -254,7 +256,9 @@ namespace Utils
             catch (Exception e)
             {
                 dbConnection.Close();
+#if UNITY_EDITOR
                 Debug.Log(e.ToString());
+#endif
                 return false;
             }
         }

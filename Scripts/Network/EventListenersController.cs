@@ -15,6 +15,7 @@ namespace Network.Data
         protected override void Awake()
         {
             base.Awake();
+            Conn = Singleton.Instance<Connection>();
             emitter = new Dictionary<string, System.Func<JSONObject>>();
         }
 

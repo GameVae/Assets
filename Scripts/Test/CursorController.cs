@@ -32,7 +32,7 @@ public class CursorController : MonoBehaviour
             if (raycastHitted && !onClickUI)
             {
                 Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
-                if(Singleton.Instance<CellInfoManager>().GetCellInfo(selectCell.ZToZero(),out CellInfomation result))
+                if(Singleton.Instance<CellInfoManager>().GetCellInfo(selectCell.ZToZero(),out CellInfo result))
                 {
                     selectCell = grid.WorldToCell(result.GameObject.transform.position);                    
                     cursorPos.updateCursor(result.GameObject.transform.position);

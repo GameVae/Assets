@@ -59,9 +59,9 @@ GameObject:
   - component: {fileID: 23450986236330516}
   - component: {fileID: 65127768262597426}
   - component: {fileID: 114749783277590876}
-  - component: {fileID: 120435231951966388}
-  - component: {fileID: 114877903256315728}
-  - component: {fileID: 114832534014838230}
+  - component: {fileID: 120034980493991060}
+  - component: {fileID: 114493043662266800}
+  - component: {fileID: 114232476635551554}
   m_Layer: 0
   m_Name: CubeAgent
   m_TagString: Untagged
@@ -98,7 +98,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 8d2981dbdd8b7b34ea9a45d9af5033b9, type: 2}
+  - {fileID: 2100000, guid: d755889bef8f3524c86f7ce072ba786e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -137,6 +137,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114232476635551554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1672627903159876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734512cae043b9a4e8a27f5e40700ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114384072903168316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -250,6 +261,24 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114493043662266800
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1672627903159876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea8b10e54f04e024d81ff53da316bbf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSearchLevel: 100
+  maxMoveStep: 20
+  speed: 5
+  OffsetMovement: []
+  CurrentOffsetStep: 0
+  MovingTime: 0
+  counter: 0
 --- !u!114 &114749783277590876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -261,33 +290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6b6b4d814c1024480d7e1e3612ec4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114832534014838230
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1672627903159876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f6b6b4d814c1024480d7e1e3612ec4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114877903256315728
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1672627903159876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea8b10e54f04e024d81ff53da316bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxSearchLevel: 500
-  MaxMoveStep: 15
-  Speed: 10
-  OffsetMovement: []
-  CurrentOffsetStep: 0
 --- !u!114 &114900910772693344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -321,7 +323,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!120 &120435231951966388
+--- !u!120 &120034980493991060
 LineRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

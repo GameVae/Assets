@@ -2,23 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class Vector3IntExtension
-{
-    public static Vector3Int ZToZero(this Vector3Int vectorInt)
-    {
-        vectorInt.z = 0;
-        return vectorInt;
-    }
-}
-
-public static class Vector3Extension
-{
-    public static Vector3 AddY(this Vector3 vector3,float y)
-    {
-        vector3.y += y;
-        return vector3;
-    }
-}
 
 public class GreedySearch : MonoBehaviour
 {

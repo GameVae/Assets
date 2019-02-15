@@ -22,8 +22,8 @@ public class NavigateIcon : MonoBehaviour
     {
         get
         {
-            rectangle.x = trans.position.x - (rectangle.width / 2);
-            rectangle.y = trans.position.y - (rectangle.height / 2);
+            rectangle.x = trans.localPosition.x - (rectangle.width / 2);
+            rectangle.y = trans.localPosition.y - (rectangle.height / 2);
             return rectangle;
         }
         private set { rectangle = value; }
@@ -47,7 +47,6 @@ public class NavigateIcon : MonoBehaviour
 
     private void Update()
     {
-
         if (image.enabled)
         {
             alphaCounter = Mathf.PingPong(Time.time * ColorAniamtionSpeed, maxValue) * 0.01f + MinAlpha;
@@ -65,6 +64,6 @@ public class NavigateIcon : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         if (!image.enabled) image.enabled = true;
-        trans.position = position;
+        trans.localPosition = position;
     }
 }

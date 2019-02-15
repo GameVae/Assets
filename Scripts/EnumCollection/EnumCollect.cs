@@ -69,4 +69,12 @@ namespace EnumCollect
     {
         TrainningCost,
     }
+
+    public enum AnimState
+    {
+        Walking = 1,
+        Dead,
+        Attack1,
+        Attack2
+    }
 }

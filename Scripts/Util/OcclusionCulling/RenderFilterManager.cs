@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using Generic.Singleton;
+using System.Collections.Generic;
 
-public class RenderFilterManager
+
+public class RenderFilterManager : ISingleton
 {
-    private static RenderFilterManager instance = new RenderFilterManager();
-    private List<CellInfomation> visibleObjects;
+    private List<CellInfo> visibleObjects;
 
-    public static RenderFilterManager Instance { get { return instance; } }
-    public List<CellInfomation> VisibleObjects { get { return visibleObjects; } }
+    public List<CellInfo> VisibleObjects { get { return visibleObjects; } }
 
     private RenderFilterManager()
     {
-        visibleObjects = new List<CellInfomation>();
+        visibleObjects = new List<CellInfo>();
     }
 
-    public void BecomeVisible(CellInfomation value)
+    public void BecomeVisible(CellInfo value)
     {
         if (!visibleObjects.Contains(value))
         {
@@ -22,13 +21,12 @@ public class RenderFilterManager
         }
     }
 
-    public void BecomeInvisible(CellInfomation value)
+    public void BecomeInvisible(CellInfo value)
     {
         int index = visibleObjects.IndexOf(value);
         if (index >= 0)
         {
             visibleObjects.RemoveAt(index);
-
         }
     }
 }

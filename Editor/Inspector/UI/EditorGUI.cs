@@ -82,6 +82,13 @@ namespace UI.CustomInspector
             string path = @"Assets/Prefabs/GUIHorizontalBarInfo.prefab";
             Create(menuCmd, path);
         }
+
+        [MenuItem("GameObject/UI/GUI/GUIScrollView")]
+        public static void CreateScrollView(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/GUIScrollView.prefab";
+            Create(menuCmd, path);
+        }
     }
 }
 #endif

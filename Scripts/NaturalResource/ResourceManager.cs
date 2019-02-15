@@ -5,6 +5,7 @@ using UnityEngine;
 
 public sealed class ResourceManager : MonoSingle<ResourceManager>
 {
+    private GameObject ResourceContainer;
     private GameObject[] resourceTypes;
     private GameObject[] flags;
 
@@ -45,6 +46,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         };
 
         Resources = new Dictionary<int, NaturalResource>();
+        ResourceContainer = new GameObject("RESOURCE_CONTAINER");
     }
 
     private void Start()
@@ -68,7 +70,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         Instantiate(resourceTypes[((int)rssType - 1)], newGO.transform);    // resource
         Instantiate(flags[(int)group], newGO.transform);                         // flag
 
-        newGO.transform.SetParent(transform);
+        newGO.transform.SetParent(ResourceContainer.transform);
 
         BoxCollider colli = newGO.gameObject.AddComponent<BoxCollider>();
         colli.center = new Vector3(0, 1, 0);
@@ -95,7 +97,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         {
             NaturalResource newGO = new GameObject(i.ToString()).AddComponent<NaturalResource>();
             Instantiate(resourceTypes[3], newGO.transform);
-            newGO.transform.SetParent(transform);
+            newGO.transform.SetParent(ResourceContainer.transform);
         }
     }
 

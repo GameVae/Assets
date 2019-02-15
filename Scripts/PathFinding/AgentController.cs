@@ -2,29 +2,27 @@
 using UnityEngine.EventSystems;
 using UI.Widget;
 using Generic.Singleton;
+using System.Collections.Generic;
 
-public class AgentController : MonoBehaviour
+public class AgentController : MonoSingle<AgentController>
 {
-    public static AgentController Instance { get; private set; }
-
     private EventSystem eventSystem;
     private HexMap HexMap;
     private NavAgent curAgent;
+    private MoveEvent moveEvent;
 
     public GUIOnOffSwitch SwitchButton;
     public Camera CameraRaycaster;
-    public NavAgent[] Agents;
+    public List<NavAgent> Agents;
 
     public AStartAlgorithm  AStarCalculator { get; private set; }
     public Vector3Int StartCell { get; private set; }
     public Vector3Int EndCell { get; private set; }
     public bool IsDisable { get; private set; }
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(Instance.gameObject);
-       
+        base.Awake();
         curAgent = Agents[0];
 
         SwitchButton.On += On;
@@ -35,6 +33,7 @@ public class AgentController : MonoBehaviour
     {
         eventSystem = FindObjectOfType<EventSystem>();
         HexMap = Singleton.Instance<HexMap>();
+        moveEvent = GetComponent<MoveEvent>();
     }
 
     private void Update()
@@ -65,14 +64,20 @@ public class AgentController : MonoBehaviour
 
     private void FindPath(Vector3Int start,Vector3Int end)
     {
-        curAgent.StartMove(start,end);
+        bool foundPath = curAgent.StartMove(start,end);
+        if(foundPath)
+        {
+            moveEvent.Move(curAgent.GetMovePath(), curAgent.Offset.AverageMoveTime);
+        }
     }
 
     public void SwitchToAgent(int index)
     {
-        if (index > Agents.Length)
+        if (index > Agents.Count)
         {
+#if UNITY_EDITOR
             Debug.LogError("OUT OF RANGE: switch index failure" + index);
+#endif
             return;
         }
         curAgent = Agents[index];
@@ -86,5 +91,28 @@ public class AgentController : MonoBehaviour
     private void Off(GUIOnOffSwitch onOff)
     {
         IsDisable = false;
+    }
+
+    public void MoveAgent(JSONObject data)
+    {
+        JSONObject path = data["PATH"];
+
+        List<Vector3Int> offSetPath = ConvertFromServerData(path);
+        float averageTime = data["AVERAGE_TIME"].n;
+
+        //for (int i = 0; i < offSetPath.Count; i++)
+        //{
+        //    Debug.Log("Data position: " + offSetPath[i]);
+        //}
+    }
+
+    private List<Vector3Int> ConvertFromServerData(JSONObject path)
+    {
+        List<Vector3Int> result = new List<Vector3Int>();
+        for (int i = 0; i < path.Count; i++)
+        {
+            result.Add(path[i].str.Parse3Int());
+        }
+        return result;
     }
 }

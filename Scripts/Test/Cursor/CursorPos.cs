@@ -11,14 +11,14 @@ public class PositionCursor
     public Text PositionXTxt;
     public Text PositionYTxt;
 
-    public void SetPosTxt(string cellX,string cellY)
+    public void SetPosTxt(string cellX, string cellY)
     {
-        PositionXTxt.text = "X: " +cellX;
-        PositionYTxt.text = "Y: "+cellY;
+        PositionXTxt.text = "X: " + (int.Parse(cellX) - 5);
+        PositionYTxt.text = "Y: " + (int.Parse(cellY) - 5);
     }
     public void SetKingdomTxt(string kingdom)
     {
-        KingdomTxt.text = kingdom; 
+        KingdomTxt.text = kingdom;
     }
 }
 public class CursorPos : MonoBehaviour
@@ -56,7 +56,7 @@ public class CursorPos : MonoBehaviour
         //    }
         //}
     }
-   
+
     public void updateCursor(Vector3 hitPoint)
     {
         cursorCellPosition = grid.WorldToCell(hitPoint);
@@ -74,7 +74,8 @@ public class CursorPos : MonoBehaviour
     {
         MapPosition.x = cursorCellPos.x - 5;
         MapPosition.y = cursorCellPos.y - 5;
-        PositionCursor.SetPosTxt(MapPosition.x+"", MapPosition.y+"");
+        //PositionCursor.SetPosTxt(MapPosition.x+"", MapPosition.y+"");
+        PositionCursor.SetPosTxt(cursorCellPos.x.ToString(), cursorCellPos.y.ToString());
     }
 
     public Vector3 CellToWorldPoint(Vector3Int cellPos)

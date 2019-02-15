@@ -37,6 +37,7 @@ public class AStartAlgorithm
             HexCell targetCell = FindHexCellInClosedList(end);
             Tracking(targetCell, false);
         }
+        //Debug.Log(result + " - " + Path.Count);
         return result;
     }
 

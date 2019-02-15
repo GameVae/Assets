@@ -46,5 +46,6 @@ public class TestObj : MonoBehaviour {
 
     private void Start()
     {
+        //Debugger.Log("This is a log from Debugger");
     }
 }

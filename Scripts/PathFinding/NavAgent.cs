@@ -1,50 +1,70 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using Animation;
+using EnumCollect;
+using Generic.Contants;
 using Generic.Singleton;
+using Map;
 using PathFinding;
 using UnityEngine;
 
 
-[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(LineRenderer), typeof(WayPoint))]
 public class NavAgent : MonoBehaviour
 {
     private bool isLineAnimation;
     private float animLineCounter;
-    
-    private HexMap map;
+
+    private HexMap mapIns;
     private AStartAlgorithm aStar;
     private List<Vector3Int> path;
+    private BreathFirstSearch breathFirstSearch;
 
     private Gradient colors;
     private GradientColorKey[] graColorKeys;
     private GradientAlphaKey[] graAlKeys;
     private LineRenderer movingLineRenderer;
 
+    public MoveOffset Offset;
+
     [SerializeField] private int maxSearchLevel;
-    [SerializeField] private int maxMoveStep;
-    [SerializeField] private float speed;
+    private int maxMoveStep;
+    private float speed;
 
     public List<Vector3Int> OffsetMovement;
     public int CurrentOffsetStep;
     public bool IsOffsetMoving { get; private set; }
+    public WayPoint WayPoint { get; private set; }
 
     public int CurrentMoveStep { get; private set; }
     public bool IsMoving { get; private set; }
 
-    public Vector3Int EndCell   { get; private set; }
+    public Vector3Int EndCell { get; private set; }
     public Vector3Int StartCell { get; private set; }
     public Vector3Int CurrentCell
     {
         get
         {
-            if (map != null)
-                return map.WorldToCell(transform.position);
+            if (mapIns != null)
+                return mapIns.WorldToCell(transform.position);
             return Vector3Int.zero;
         }
     }
-    public CellInfomation Info { get; private set; }
 
+
+    public AnimatorController Anim;
+
+    #region Initalize
     private void Awake()
     {
+        LineRendererInit();
+
+        OffsetInit();
+    }
+
+    private void LineRendererInit()
+    {
+
         movingLineRenderer = GetComponent<LineRenderer>();
         movingLineRenderer.allowOcclusionWhenDynamic = true;
 
@@ -69,27 +89,30 @@ public class NavAgent : MonoBehaviour
         };
     }
 
+    private void OffsetInit()
+    {
+        maxMoveStep = Offset.MaxMoveStep;
+    }
+
     private void Start()
     {
-        map = Singleton.Instance<HexMap>();
-
-        Info = new CellInfomation()
-        {
-            GameObject = gameObject,
-            Id = CellInfoManager.ID(),
-        };
+        mapIns = Singleton.Instance<HexMap>();
+        WayPoint = GetComponent<WayPoint>();
+        breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
 
         aStar = new AStartAlgorithm()
         {
-            HexMap = map,
+            HexMap = mapIns,
             MaxLevel = maxSearchLevel,
         };
 
         MoveFinish();
     }
+    #endregion
 
     private void Update()
     {
+        //print("delta time: " + Time.deltaTime);
         MoveToTarget();
 
         MoveFollowOffset();
@@ -102,6 +125,7 @@ public class NavAgent : MonoBehaviour
         if (IsMoving)
         {
             RefreshLineRenderer();
+            CalculateGradiantColor();
         }
         else
         {
@@ -109,49 +133,38 @@ public class NavAgent : MonoBehaviour
         }
     }
 
+    private float elapsedTime = 0.0f;
     private void AStarMoveToTarget()
     {
         if (IsMoving)
         {
+            elapsedTime += Time.deltaTime;
             if (path.Count > 0)
             {
-                Vector3 currentTarget = map.CellToWorld(path[path.Count - 1]);
+                Vector3 currentTarget = mapIns.CellToWorld(path[path.Count - 1]);
                 transform.position = Vector3.MoveTowards(
                     current: transform.position,
                     target: currentTarget,
                     maxDistanceDelta: Time.deltaTime * speed);
+                LookAtTarget(currentTarget);
 
-                if ((transform.position - currentTarget).magnitude <= 0.1f)
+                if ((transform.position - currentTarget).magnitude <= GConstants.TINY_VALUE)
                 {
+
+                    // print("elapsed: " + elapsedTime + "- elapsed: " + stopwatch.Elapsed + " reached: " + path[path.Count - 1]);
+                    elapsedTime = 0.0f;
+
                     path.RemoveAt(path.Count - 1);
                     RemoveLineRendererWayPoint();
+
                 }
             }
             else
             {
+                elapsedTime = 0.0f;
                 IsMoving = false;
                 MoveFinish();
-            }
-        }
-    }
-
-    private void GreedyMoveToTarget()
-    {
-        if (IsMoving)
-        {
-            if (path.Count > 0)
-            {
-                Vector3 currentWayPoint = map.CellToWorld(path[0]);
-                transform.position = Vector3.MoveTowards(transform.position, currentWayPoint, Time.deltaTime * speed);
-                if ((currentWayPoint - transform.position).magnitude <= 0.1f)
-                {
-                    path.RemoveAt(0);
-                    RemoveLineRendererWayPoint();
-                }
-            }
-            else
-            {
-                IsMoving = false;
+                Anim.Stop(AnimState.Walking);
             }
         }
     }
@@ -174,7 +187,7 @@ public class NavAgent : MonoBehaviour
             movingLineRenderer.positionCount = count;
             for (int i = 0; i < count; i++)
             {
-                movingLineRenderer.SetPosition(count - i - 1, map.CellToWorld(path[count - i - 1]).AddY(0.2f));
+                movingLineRenderer.SetPosition(count - i - 1, mapIns.CellToWorld(path[count - i - 1]).AddY(0.2f));
             }
         }
     }
@@ -196,7 +209,7 @@ public class NavAgent : MonoBehaviour
     {
         if (path.Count != 0)
         {
-            float time = (float)(path.Count - (maxMoveStep - CurrentMoveStep)) / (float)path.Count;
+            float time = (path.Count - (maxMoveStep - CurrentMoveStep)) * 1.0f / path.Count;
             graColorKeys[0].time = time;
             graAlKeys[0].time = graColorKeys[0].time;
             if (time <= 0)
@@ -223,7 +236,7 @@ public class NavAgent : MonoBehaviour
     {
         movingLineRenderer.positionCount = 2;
         movingLineRenderer.SetPosition(0, transform.position);
-        movingLineRenderer.SetPosition(1, map.CellToWorld(EndCell));
+        movingLineRenderer.SetPosition(1, mapIns.CellToWorld(EndCell));
         CalculateGradiantColor();
         isLineAnimation = true;
     }
@@ -233,7 +246,7 @@ public class NavAgent : MonoBehaviour
         if (isLineAnimation)
         {
             animLineCounter += Time.deltaTime;
-            if (animLineCounter >= 0.3f)
+            if (animLineCounter >= 0.25f)
             {
                 isLineAnimation = false;
                 animLineCounter = 0.0f;
@@ -260,10 +273,13 @@ public class NavAgent : MonoBehaviour
 
     private void MoveFinish()
     {
-        Vector3Int currentCell = map.WorldToCell(transform.position).ZToZero();
-        if (!Singleton.Instance<CellInfoManager>().AddToDict(currentCell, Info))
+        stopwatch.Stop();
+        //print("elapsed time: " + stopwatch.Elapsed);
+
+        Vector3Int currentCell = mapIns.WorldToCell(transform.position).ZToZero();
+        if (!WayPoint.Binding())
         {
-            if (BreathFirstSearch.Instance.GetNearestCell(currentCell, out Vector3Int result))
+            if (breathFirstSearch.GetNearestCell(currentCell, out Vector3Int result))
             {
                 FindPath(currentCell, result);
                 CurrentMoveStep = 0;
@@ -271,28 +287,45 @@ public class NavAgent : MonoBehaviour
         }
     }
 
-    public void StartMove(Vector3Int start, Vector3Int end)
+    private Stopwatch stopwatch = new Stopwatch();
+    public bool StartMove(Vector3Int start, Vector3Int end)
     {
         if (IsMoving == false)
         {
-            Singleton.Instance<CellInfoManager>().RemoveDict(start);
+            WayPoint.Unbinding();
         }
-        FindPath(start, end);
+        bool foundPath = FindPath(start, end);
+        if (foundPath)
+        {
+            speed = Offset.GetSpeed(path, transform.position);
+            // print("distance: " + " speed: " + speed + " total time: " + path.Count * Offset.AverageMoveTime);
+            stopwatch.Restart();
+
+            Anim.Play(AnimState.Walking);
+
+        }
+        return foundPath;
     }
 
+    public List<Vector3Int> GetMovePath()
+    {
+        return Offset.TruncatePath(path);
+    }
+
+    #region Move follow offset
     private void MoveFollowOffset()
     {
         if (IsOffsetMoving)
         {
             if (CurrentOffsetStep < OffsetMovement.Count)
             {
-                Vector3 currentTarget = map.CellToWorld(OffsetMovement[CurrentOffsetStep]);
+                Vector3 currentTarget = mapIns.CellToWorld(OffsetMovement[CurrentOffsetStep]);
                 transform.position = Vector3.MoveTowards(
                     current: transform.position,
                     target: currentTarget,
                     maxDistanceDelta: Time.deltaTime * speed);
 
-                if ((transform.position - currentTarget).magnitude <= 0.1f)
+                if ((transform.position - currentTarget).magnitude <= GConstants.TINY_VALUE)
                 {
                     CurrentOffsetStep++;
                 }
@@ -305,22 +338,24 @@ public class NavAgent : MonoBehaviour
         }
     }
 
-    public void StartMove()
+    public void StartOffsetMove()
     {
         CurrentOffsetStep = 0;
         IsOffsetMoving = true;
         if (OffsetMovement.Count > 0)
         {
-            Singleton.Instance<CellInfoManager>().RemoveDict(map.WorldToCell(transform.position).ZToZero());
-            transform.position = map.CellToWorld(OffsetMovement[0]);
+            WayPoint.Unbinding();
+            // transform.position = map.CellToWorld(OffsetMovement[0]);
         }
     }
+    #endregion
 
+    #region Dead & On destroy
     private void Dead()
     {
-        if(!IsMoving)
+        if (!IsMoving)
         {
-            Singleton.Instance<CellInfoManager>().RemoveDict(map.WorldToCell(transform.position).ZToZero());
+            WayPoint.Unbinding();
         }
     }
 
@@ -328,5 +363,38 @@ public class NavAgent : MonoBehaviour
     {
         Dead();
     }
+    #endregion
+
+    #region not use
+    private void GreedyMoveToTarget()
+    {
+        if (IsMoving)
+        {
+            if (path.Count > 0)
+            {
+                Vector3 currentWayPoint = mapIns.CellToWorld(path[0]);
+                transform.position = Vector3.MoveTowards(transform.position, currentWayPoint, Time.deltaTime * speed);
+                if ((currentWayPoint - transform.position).magnitude <= 0.1f)
+                {
+                    path.RemoveAt(0);
+                    RemoveLineRendererWayPoint();
+                }
+            }
+            else
+            {
+                IsMoving = false;
+            }
+        }
+    }
+    #endregion
+
+    #region Animation
+    public float maxAngular = 5;
+    private void LookAtTarget(Vector3 target)
+    {
+        Vector3 direction = (target - transform.position) * maxAngular;
+        transform.forward += direction * Time.deltaTime;
+    }
+    #endregion
 
 }

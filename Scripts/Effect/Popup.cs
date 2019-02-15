@@ -39,6 +39,6 @@ public sealed class Popup : MonoSingle<Popup>
     public void SetCursor(Vector3Int cell)
     {
         Cursor.updateCursor(Singleton.Instance<HexMap>().CellToWorld(cell));
-        Cursor.PositionCursor.SetPosTxt(cell.x.ToString(), cell.y.ToString());
+        Cursor.PositionCursor.SetPosTxt((cell.x).ToString(), (cell.y).ToString());
     }
 }

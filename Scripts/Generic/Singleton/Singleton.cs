@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Generic.Singleton
 {
-    public class Singleton
+    public static class Singleton
     {
         private static Dictionary<int, ISingleton> singletons;
 

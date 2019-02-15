@@ -74,7 +74,9 @@ namespace ManualTable.SQL
             catch (Exception e)
             {
                 DbConnection.Close();
+#if UNITY_EDITOR
                 Debug.Log(e.ToString());
+#endif
             }
         }
 

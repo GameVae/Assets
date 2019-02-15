@@ -1,9 +1,5 @@
-﻿using DB;
-using EnumCollect;
-using ManualTable;
-using ManualTable.Row;
+﻿using EnumCollect;
 using System.Collections.Generic;
-using System.Linq;
 using UI.Animation;
 using UI.Widget;
 using UnityEngine;
@@ -34,7 +30,6 @@ namespace UI
 
         public override void Open()
         {
-            Debug.Log("open");
             base.Open();
             Load();
         }

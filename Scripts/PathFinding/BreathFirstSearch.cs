@@ -4,15 +4,11 @@ using UnityEngine;
 
 namespace PathFinding
 {
-    public class BreathFirstSearch
+    public class BreathFirstSearch : ISingleton
     {
-        public static BreathFirstSearch Instance
-        {
-            get { return instance ?? (instance = new BreathFirstSearch()); }
-            private set { instance = value; }
-        }
+        private HexMap mapIns;
+        private CellInfoManager cellInfoManagerIns;
 
-        private static BreathFirstSearch instance;
         private List<Vector3Int> open;
         private List<Vector3Int> closed;
 
@@ -20,6 +16,8 @@ namespace PathFinding
         {
             open = new List<Vector3Int>();
             closed = new List<Vector3Int>();
+            mapIns = Singleton.Instance<HexMap>();
+            cellInfoManagerIns = Singleton.Instance<CellInfoManager>();
         }
 
         public bool GetNearestCell(Vector3Int center, out Vector3Int result)
@@ -46,11 +44,11 @@ namespace PathFinding
             open.RemoveAt(0);
             closed.Add(currentCell);
 
-            Vector3Int[] neighbours = Singleton.Instance<HexMap>().GetNeighbours(currentCell);
+            Vector3Int[] neighbours = mapIns.GetNeighbours(currentCell);
 
             for (int i = 0; i < neighbours.Length; i++)
             {
-                if (!Singleton.Instance<CellInfoManager>().ContainsKey(neighbours[i]))
+                if (!cellInfoManagerIns.ContainsKey(neighbours[i]))
                 {
                     result = neighbours[i];
                     return;

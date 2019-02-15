@@ -81,11 +81,4 @@ namespace ManualTable
                 Rows.RemoveAt(rowId);
         }
     }
-
-    //[CreateAssetMenu(fileName = "New MainBase Table", menuName = "SQLiteTable/MainBase", order = 2)]
-    //public class MainBaseTable : ManualTableBase<MainBaseRow> { }
-
-    //[CreateAssetMenu(fileName = "New Version Table", menuName = "SQLiteTable/Version", order = 3)]
-    //public class VersionTable : ManualTableBase<VersionRow> { }
-
 }

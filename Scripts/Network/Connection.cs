@@ -27,7 +27,11 @@ public sealed class Connection : MonoSingle<Connection>
 
     public bool IsClose
     {
-        get { return !SocketComponent.IsConnected; }
+        get
+        {
+            try { return !SocketComponent.IsConnected; }
+            catch { return true; }
+        }
     }
 
     public float PingTimeOut { get { return SocketComponent.pingTimeout; } }
@@ -40,6 +44,8 @@ public sealed class Connection : MonoSingle<Connection>
     {
         base.Awake();
         decoder = new Decoder();
+        if (SocketComponent)
+            SocketComponent = FindObjectOfType<SocketIOComponent>();
     }
 
     private void Start()
@@ -87,8 +93,8 @@ public sealed class Connection : MonoSingle<Connection>
 
     private void OnApplicationQuit()
     {
-        timer.Abort();
-        SocketComponent.Close();
+        timer?.Abort();
+        SocketComponent?.Close();
     }
 
     private IEnumerator CheckVersion()

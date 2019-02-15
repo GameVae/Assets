@@ -5,16 +5,10 @@ using UnityEngine;
 
 public sealed class HexMap : MonoSingle<HexMap>
 {
-    private Vector3Int[] HexaPatternEven1
-    { get { return GConstants.NeightbourHexCell.HexaPatternEven1; } }
-
-    private Vector3Int[] HexaPatternOdd1
-    { get { return GConstants.NeightbourHexCell.HexaPatternOdd1; } }
-
-
     public Grid HexGrid;
-    public int TotalCol;
-    public int TotalRow;
+
+    public const int TotalCol = GConstants.TOTAL_COL;
+    public const int TotalRow = GConstants.TOTAL_ROW;
 
     public int ConvertToIndex(int x, int y)
     {
@@ -33,25 +27,31 @@ public sealed class HexMap : MonoSingle<HexMap>
 
     public Vector3Int[] GetNeighbours(Vector3Int cell)
     {
-        List<Vector3Int> neighbours = new List<Vector3Int>();
-        Vector3Int neighbour;
-        Vector3Int[] pattern = (cell.y % 2 == 0) ? HexaPatternEven1 : HexaPatternOdd1;
-        for (int i = 0; i < pattern.Length; i++)
-        {
-            neighbour = pattern[i] + cell;
-            if (IsValidCell(neighbour.x, neighbour.y))
-            {
-                neighbours.Add(neighbour);
-            }
-        }
-        return neighbours.ToArray();
+        #region old
+        //List<Vector3Int> neighbours = new List<Vector3Int>();
+        //Vector3Int neighbour;
+        //Vector3Int[] pattern = (cell.y % 2 == 0) ? HexaPatternEven1 : HexaPatternOdd1;
+        //for (int i = 0; i < pattern.Length; i++)
+        //{
+        //    neighbour = pattern[i] + cell;
+        //    if (IsValidCell(neighbour.x, neighbour.y))
+        //    {
+        //        neighbours.Add(neighbour);
+        //    }
+        //}
+        //return neighbours.ToArray();
+        #endregion
+
+        return GConstants.GetNeighboursRange(cell, 1);
     }
 
+    #region Not use
     public Vector3Int[] GetNeighboursEmpty(Vector3Int cell)
     {
         List<Vector3Int> neighbours = new List<Vector3Int>();
         Vector3Int neighbour;
-        Vector3Int[] pattern = (cell.y % 2 == 0) ? HexaPatternEven1 : HexaPatternOdd1;
+        Vector3Int[] pattern = (cell.y % 2 == 0) ?
+            GConstants.NeighbourHexCell.HexaPatternEven1 : GConstants.NeighbourHexCell.HexaPatternOdd1;
         for (int i = 0; i < pattern.Length; i++)
         {
             neighbour = pattern[i] + cell;
@@ -66,8 +66,9 @@ public sealed class HexMap : MonoSingle<HexMap>
 
     public bool IsValidCell(int x, int y)
     {
-        return x >= 5 && x <= TotalCol - 5 && y >= 5 && y <= TotalRow - 5;
+        return GConstants.IsValidCell(x, y);
     }
+    #endregion
 
     public Vector3 CellToWorld(Vector3Int cell)
     {

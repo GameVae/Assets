@@ -1,68 +1,116 @@
-﻿using System;
+﻿using Generic.Singleton;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UI.Widget;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// Require at least 1 EventSystem
 /// </summary>
-public class Debugger : MonoBehaviour
+public sealed class Debugger : MonoSingle<Debugger>
 {
-    public static Debugger instance;
-    private GameObject content;
-    private Text message;
-    private Scrollbar verticleBar;
-    private List<Text> logs;
+    private static Debugger ins = null;
+    [SerializeField]
+    private int MaxSentence = 300;
+    private int LogCount;
 
-    private void Awake()
+    private RectTransform content;
+    private TextMeshProUGUI logPrefab;
+    private Queue<TextMeshProUGUI> logs;
+
+    public GUIScrollView ScrollView;
+
+    private Queue<TextMeshProUGUI> Logs
     {
-        if (instance == null) instance = this;
-        else if (instance != null) Destroy(instance);
-        logs = new List<Text>();
-
-        message = GetComponentInChildren<Text>();
-        verticleBar = GetComponentInChildren<Scrollbar>();
-        ContentSizeFitter contentObj = GetComponentInChildren<ContentSizeFitter>();
-        if (contentObj != null) content = contentObj.gameObject;
-
-        if (message != null)
-            message.gameObject.SetActive(false); // prefab
+        get { return logs ?? (logs = new Queue<TextMeshProUGUI>()); }
     }
-    private void Start()
+
+    protected override void Awake()
     {
-        Clear();
+        base.Awake();
+
+        ScrollView = GetComponent<GUIScrollView>();
+
+        content = ScrollView.ScrollRect.content;
+        MaxSentence = MaxSentence == 0 ? 300 : MaxSentence;
+
+        CreatePrefab();
     }
+
+    private TextMeshProUGUI CreateSentence()
+    {
+        TextMeshProUGUI text = null;
+        if (LogCount < MaxSentence)
+        {
+            text = Instantiate(logPrefab, content);
+            LogCount++;
+        }
+        else
+        {
+            text = Logs.Dequeue();
+            text.text = "";
+            text.rectTransform.SetAsLastSibling();
+        }
+
+        ScrollView.ScrollRect.verticalNormalizedPosition = 0.0f;
+        Logs.Enqueue(text);
+        text.gameObject.SetActive(true);
+        return text;
+    }
+
     public void Clear()
     {
-        for (int i = 0; i < logs.Count; i++)
+        foreach (TextMeshProUGUI item in Logs)
         {
-            Destroy(logs[i].gameObject);
+            item.gameObject.SetActive(false);
         }
-        logs.Clear();
     }
 
-    public void Log(object obj)
+    #region TEST
+    private IEnumerator PrintMessage()
     {
-#if UNITY_ANDROID
-        if (message != null && content != null && verticleBar != null)
+        int i = 0;
+        while (i < 300)
         {
-            if (logs.Count > 300)
-            {
-                for (int i = 0; i < 150; i++)
-                {
-                    Destroy(logs[i].gameObject);
-                }
-                logs.RemoveRange(0, 150);
-                System.GC.Collect();
-            }
-
-            Text log = Instantiate(message, content.transform);
-            log.text = DateTime.Now + " : " + obj.ToString();
-            log.gameObject.SetActive(true);
-            logs.Add(log);
-            verticleBar.value = 0;
+            CreateSentence().text = i + DateTime.Now.ToString();
+            yield return null;
+            i++;
         }
+        yield break;
+    }
+    #endregion
 
+    private void CreatePrefab()
+    {
+        RectTransform sentence = new GameObject("Prefab", typeof(TextMeshProUGUI), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
+        sentence.SetParent(content);
+        sentence.pivot = new Vector2(0, 1);
+        sentence.localPosition = Vector3.zero;
+        sentence.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, content.RealSize().x);
+
+        TextMeshProUGUI text = sentence.GetComponent<TextMeshProUGUI>();
+        text.raycastTarget = false;
+        text.enableAutoSizing = true;
+        text.fontSizeMax = 32;
+        text.fontSizeMin = 20;
+
+        ContentSizeFitter sizeFitter = sentence.GetComponent<ContentSizeFitter>();
+        sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        logPrefab = text;
+        logPrefab.gameObject.SetActive(false);
+    }
+
+    public static void Log(object obj)
+    {
+        
+        if (ins == null)
+            ins = Singleton.Instance<Debugger>();
+#if UNITY_ANDROID
+        ins.CreateSentence().text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString(); ;
 #endif
 #if UNITY_EDITOR
         Debug.Log(obj);

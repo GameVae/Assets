@@ -5,14 +5,6 @@ using UnityEngine;
 
 public class CellInfoManager : ISingleton
 {
-    private static readonly CellInfoManager instance = new CellInfoManager();
-    // y round
-    private readonly Vector3Int[] HexaPatternEven1 = GConstants.NeightbourHexCell.HexaPatternEven1;
-    private readonly Vector3Int[] HexaPatternEven2 = GConstants.NeightbourHexCell.HexaPatternEven2;
-    // y odd
-    private readonly Vector3Int[] HexaPatternOdd1 = GConstants.NeightbourHexCell.HexaPatternOdd1;
-    private readonly Vector3Int[] HexaPatternOdd2 = GConstants.NeightbourHexCell.HexaPatternOdd2;
-
     private static int Id = 0;
 
     public static int ID()
@@ -20,16 +12,16 @@ public class CellInfoManager : ISingleton
         return Id++;
     }
 
-    private Dictionary<Vector3Int, CellInfomation> dict;
-    public List<Vector3Int> BuildingCell { get; private set; }
+    private Dictionary<Vector3Int, CellInfo> dict;
+    public List<Vector3Int> BaseCell { get; private set; }
 
     private CellInfoManager()
     {
-        dict = new Dictionary<Vector3Int, CellInfomation>();
-        BuildingCell = new List<Vector3Int>();
+        dict = new Dictionary<Vector3Int, CellInfo>();
+        BaseCell = new List<Vector3Int>();
     }
 
-    public bool AddToDict(Vector3Int key, CellInfomation value)
+    public bool AddToDict(Vector3Int key, CellInfo value)
     {
         if (dict.ContainsKey(key))
         {
@@ -39,9 +31,10 @@ public class CellInfoManager : ISingleton
         return true;
     }
 
-    public void AddBuilding(Vector3Int cellPos,CellInfomation info, bool isExpand)
+    public void AddBase(Vector3Int cellPos,CellInfo info, bool isExpand)
     {
-        Vector3Int[] pattern = cellPos.y % 2 == 0 ? HexaPatternEven1 : HexaPatternOdd1;
+        //Vector3Int[] pattern = cellPos.y % 2 == 0 ? HexaPatternEven1 : HexaPatternOdd1;
+        Vector3Int[] pattern = GConstants.GetNeighboursRange(cellPos, 1);
         for (int i = 0; i < pattern.Length; i++)
         {
             Vector3Int temp = cellPos + pattern[i];
@@ -49,7 +42,9 @@ public class CellInfoManager : ISingleton
         }
         if (isExpand)
         {
-            pattern = cellPos.y % 2 == 0 ? HexaPatternEven2 : HexaPatternOdd2;
+            //pattern = cellPos.y % 2 == 0 ? HexaPatternEven2 : HexaPatternOdd2;
+            pattern = GConstants.GetNeighboursRange(cellPos, 2);
+
             for (int i = 0; i < pattern.Length; i++)
             {
                 Vector3Int temp = cellPos + pattern[i];
@@ -57,7 +52,8 @@ public class CellInfoManager : ISingleton
             }
         }
 
-        if (!BuildingCell.Contains(cellPos)) BuildingCell.Add(cellPos);
+        if (!BaseCell.Contains(cellPos)) BaseCell.Add(cellPos);
+        //Debug.Log(info.GameObject.name + " - " + cellPos);
     }
 
     public bool RemoveDict(Vector3Int key)
@@ -75,19 +71,21 @@ public class CellInfoManager : ISingleton
         return dict.ContainsKey(key);
     }
 
-    public bool GetCellInfo(Vector3Int key, out CellInfomation result)
+    public bool GetCellInfo(Vector3Int key, out CellInfo result)
     {
         return dict.TryGetValue(key, out result);
     }
 
-    public CellInfomation GetCellInfo(Vector3Int key)
+    public CellInfo GetCellInfo(Vector3Int key)
     {
-        dict.TryGetValue(key, out CellInfomation result);
+        dict.TryGetValue(key, out CellInfo result);
         return result;
     }
 
-    public CellInfomation GetCellInfo(Transform transGameObject)
+    #region not use
+    public CellInfo GetCellInfo(Transform transGameObject)
     {
         return GetCellInfo(Singleton.Instance<HexMap>().WorldToCell(transGameObject.position).ZToZero());
     }
+    #endregion
 }
