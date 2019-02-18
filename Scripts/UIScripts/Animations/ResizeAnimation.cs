@@ -27,7 +27,7 @@ namespace UI.Animation
 
         private void Awake()
         {
-            defaultSize = RefRect.RealSize();
+            defaultSize = RefRect.Size();
             InitPivot();
 
         }
@@ -43,9 +43,9 @@ namespace UI.Animation
             {
                 timmer += Time.deltaTime;
                 RefRect.SetSizeWithCurrentAnchors
-                    (RectTransform.Axis.Horizontal, RefRect.RealSize().x + deltaSize.x * Time.deltaTime);
+                    (RectTransform.Axis.Horizontal, RefRect.Size().x + deltaSize.x * Time.deltaTime);
                 RefRect.SetSizeWithCurrentAnchors
-                    (RectTransform.Axis.Vertical, RefRect.RealSize().y + deltaSize.y * Time.deltaTime);
+                    (RectTransform.Axis.Vertical, RefRect.Size().y + deltaSize.y * Time.deltaTime);
                 if (timmer >= Duration)
                 {
                     timmer = 0;
@@ -70,7 +70,7 @@ namespace UI.Animation
         {
             if (!isAnimating)
             {
-                deltaSize = (MaxSize - RefRect.RealSize()) / Duration;
+                deltaSize = (MaxSize - RefRect.Size()) / Duration;
                 isAnimating = true;
             }
         }

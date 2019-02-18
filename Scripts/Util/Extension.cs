@@ -165,14 +165,14 @@ public static class Extension
     #endregion
 
     #region RectTransform
-    public static Vector2 RealSize(this RectTransform trans)
+    public static Vector2 Size(this RectTransform trans)
     {
         return new Vector2(trans.rect.width, trans.rect.height);
     }
 
     public static void SetPivotWithoutChangePosition(this RectTransform trabs, Vector2 pivot)
     {
-        Vector3 deltaPosition = (trabs.pivot - pivot) * trabs.RealSize();
+        Vector3 deltaPosition = (trabs.pivot - pivot) * trabs.Size();
         trabs.pivot = pivot;
         trabs.localPosition = trabs.localPosition - deltaPosition;
     }

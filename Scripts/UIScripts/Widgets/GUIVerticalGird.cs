@@ -53,7 +53,7 @@ namespace UI.Widget
             rect.localScale = Vector3.one;
             rect.gameObject.SetActive(true);
 
-            Vector2 size = rect.RealSize();
+            Vector2 size = rect.Size();
             if (size.x > MaxWidth)
             {
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MaxWidth);

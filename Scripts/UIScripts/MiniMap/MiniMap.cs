@@ -1,4 +1,5 @@
-﻿using Generic.Singleton;
+﻿using Generic.Contants;
+using Generic.Singleton;
 using System.Collections.Generic;
 using UI.Widget;
 using UnityEngine;
@@ -7,49 +8,34 @@ public class MiniMap : BaseWindow
 {
     private bool isClosing;
     private float closeCounter;
+    [SerializeField]
+    private float DelayCloseMiniMap;
 
     private Vector3Int selectedCell;
-    private Vector3Int preSelectedCell;
 
-    public float DelayCloseMiniMap;
-    public GUIOnOffSwitch MapBtn;
-    public GUIOnOffSwitch DescriptionBtn;
+    public GUIOnOffSwitch OpenBtn;
 
-    public CameraPosition CamPosition;
+    public CameraPosition CameraCtrl;
     public CursorPos cursor;
-    [Header("Dimention map base on grid")]
-    public int Width;
-    public int Height;
+
     public RectTransform MiniMapImage;
     public NavigateIcon MapSelectIcon;
     public RectTransform BuildingIcon;
-
-    public Rect MiniMapRect { get; private set; }
+    public Camera UICamera;
 
     protected override void Awake()
     {
         base.Awake();
-        MapBtn.OnClick.AddListener(Open);
+        OpenBtn.OnClick.AddListener(Open);
+
     }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        float miniMapWidth = (MiniMapImage.anchorMax.x - MiniMapImage.anchorMin.x) * Screen.width;
-        float miniMapHeight = (MiniMapImage.anchorMax.y - MiniMapImage.anchorMin.y) * Screen.height;
-        float xPos = MiniMapImage.anchorMin.x * Screen.width;
-        float yPos = MiniMapImage.anchorMin.y * Screen.height;
-
-        MiniMapRect = new Rect(xPos, yPos, miniMapWidth, miniMapHeight);
-    }
-
 
     protected override void Update()
     {
         if (Input.GetMouseButtonDown(0) && MiniMapImage.gameObject.activeInHierarchy)
         {
-            SetNavigateIcon(Input.mousePosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(MiniMapImage, Input.mousePosition, UICamera, out Vector2 local);
+            SetNavigateIcon(local);
         }
 
         if (isClosing)
@@ -90,11 +76,12 @@ public class MiniMap : BaseWindow
         return false;
     }
 
-    private Vector3Int GetCellOnMiniMap(Vector3 mousePos)
+    private Vector3Int GetCellOnMiniMap(Vector3 position)
     {
         Vector3Int result = Vector3Int.zero;
-        result.x = (int)(((mousePos.x - MiniMapRect.x) / MiniMapRect.width) * Width);
-        result.y = (int)(((mousePos.y - MiniMapRect.y) / MiniMapRect.height) * Height);
+        Vector2 realMiniMapSize = MiniMapImage.Size();
+        result.x = (int)(position.x * ( GConstants.TOTAL_COL / realMiniMapSize.x));
+        result.y = (int)(position.y * (GConstants.TOTAL_ROW / realMiniMapSize.y));
         return result;
     }
 
@@ -111,13 +98,12 @@ public class MiniMap : BaseWindow
         }
     }
 
-    private void SetNavigateIcon(Vector3 mousePos)
+    private void SetNavigateIcon(Vector3 position)
     {
-        if (MiniMapRect.Contains(mousePos))
+        if (MiniMapImage.rect.Contains(position))
         {
-            Vector3Int currentSelectCell = GetCellOnMiniMap(mousePos);
-            MapSelectIcon.SetPosition(CellToMiniMap(currentSelectCell));
-
+            Vector3Int currentSelectCell = GetCellOnMiniMap(position);
+            MapSelectIcon.SetPosition(position);
             if (TrySetNavOnBuild(MapSelectIcon.Rectangle, out Vector3Int cell))
             {
                 selectedCell = cell;
@@ -131,15 +117,10 @@ public class MiniMap : BaseWindow
         }
     }
 
-    private void ResetSelectedCell()
-    {
-        selectedCell = Vector3Int.zero;
-        preSelectedCell = Vector3Int.zero;
-    }
 
     private void MoveCameraToCell(Vector3Int cell)
     {
-        CamPosition.Set(cell);
+        CameraCtrl.Set(cell);
     }
 
     private void StartClose()
@@ -151,9 +132,15 @@ public class MiniMap : BaseWindow
     public Vector3 CellToMiniMap(Vector3Int cellPos)
     {
         Vector3 result = Vector3.zero;
-        result.x = cellPos.x * (MiniMapRect.width / Width);
-        result.y = cellPos.y * (MiniMapRect.height / Height);
-        result -= (Vector3)MiniMapImage.RealSize() / 2; // pivot 0.5 - 0.5
+
+        Vector2 realMiniMapSize = MiniMapImage.Size();
+
+        result.x = (int)realMiniMapSize.x / GConstants.TOTAL_COL;
+        result.y = (int)realMiniMapSize.y / GConstants.TOTAL_ROW;
+
+        result.x *= cellPos.x;
+        result.y *= cellPos.y;
+
         return result;
     }
 
@@ -170,6 +157,6 @@ public class MiniMap : BaseWindow
 
     public override void Load(params object[] input)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

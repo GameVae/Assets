@@ -88,14 +88,15 @@ public sealed class Debugger : MonoSingle<Debugger>
         RectTransform sentence = new GameObject("Prefab", typeof(TextMeshProUGUI), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
         sentence.SetParent(content);
         sentence.pivot = new Vector2(0, 1);
+        sentence.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, content.Size().x);
         sentence.localPosition = Vector3.zero;
-        sentence.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, content.RealSize().x);
 
         TextMeshProUGUI text = sentence.GetComponent<TextMeshProUGUI>();
         text.raycastTarget = false;
         text.enableAutoSizing = true;
         text.fontSizeMax = 32;
         text.fontSizeMin = 20;
+        text.color = Color.black;
 
         ContentSizeFitter sizeFitter = sentence.GetComponent<ContentSizeFitter>();
         sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -106,14 +107,27 @@ public sealed class Debugger : MonoSingle<Debugger>
 
     public static void Log(object obj)
     {
-        
+
         if (ins == null)
             ins = Singleton.Instance<Debugger>();
 #if UNITY_ANDROID
-        ins.CreateSentence().text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString(); ;
+        ins.CreateSentence().text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString();
 #endif
 #if UNITY_EDITOR
         Debug.Log(obj);
 #endif
     }
+
+    public static void WarningLog(object obj)
+    {
+        string format = "<color={0}>{1}</color>";
+        Log(string.Format(format, "yellow", obj.ToString()));
+    }
+
+    public static void ErrorLog(object obj)
+    {
+        string format = "<color={0}>{1}</color>";
+        Log(string.Format(format, "red", obj.ToString()));
+    }
+
 }

@@ -1,19 +1,46 @@
-﻿using Generic.Singleton;
+﻿using Generic.CustomInput;
+using Generic.Singleton;
+using System.Collections;
 using UnityEngine;
 
 public class CameraPosition : MonoBehaviour
 {
+    public CameraOption Option;
+
     public float Height = 25;
     public Camera Cam;
     public Connection Conn;
+    public CrossInput CrossInput;
+
+    public Vector2 Direction;
+    public float Velocity;
 
     private void Start()
     {
         if (Conn == null)
             Conn = Singleton.Instance<Connection>();
+        if (CrossInput == null)
+            CrossInput = Singleton.Instance<CrossInput>();
 
         SetStartupPosition();
     }
+
+    private void Update()
+    {
+        float swipe = CrossInput.DeltaSwipe().magnitude;
+        if (swipe > 0 && Input.GetMouseButtonDown(0))
+        {
+            Direction = CrossInput.DeltaSwipe().normalized;
+            Velocity = CrossInput.SwipeSpeed > Option.SwipeMaxSpeed ? Option.SwipeMaxSpeed : CrossInput.SwipeSpeed;
+
+        }
+        Vector3 vel = new Vector3(Direction.x, 0, Direction.y) * Velocity * Time.deltaTime;
+        Velocity -= Option.SwipeDecelerate * Time.deltaTime;
+        Cam.transform.position += vel;
+
+    }
+
+
 
     /// <summary>
     /// Cell in Real map 522 - 522
@@ -40,7 +67,7 @@ public class CameraPosition : MonoBehaviour
     /// <returns></returns>
     private float HaftCrossLineViewFustum(float projection)
     {
-        if(Physics.Raycast(
+        if (Physics.Raycast(
             origin: Cam.transform.position,
             direction: Cam.transform.forward,
             maxDistance: Cam.farClipPlane,
@@ -56,4 +83,6 @@ public class CameraPosition : MonoBehaviour
         worldPoint.z -= HaftCrossLineViewFustum(worldPoint.z);
         Cam.transform.position = worldPoint;
     }
+
+
 }

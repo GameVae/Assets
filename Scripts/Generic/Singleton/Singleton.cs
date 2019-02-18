@@ -56,7 +56,7 @@ namespace Generic.Singleton
             {
                 ISingleton value = (ISingleton)property.GetValue(null, null);
 #if UNITY_EDITOR
-                UnityEngine.Debug.Log(value + " found: " + type.GetHashCode());
+                // UnityEngine.Debug.Log(value + " found: " + type.GetHashCode());
 #endif
                 return (T)value;
             }

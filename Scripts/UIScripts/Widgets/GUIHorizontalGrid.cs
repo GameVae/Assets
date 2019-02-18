@@ -37,7 +37,7 @@ namespace UI.Widget
             RectTransform parent = transform.parent as RectTransform;
             RectTransform[] childrent = GetComponentsInChildren<RectTransform>().IgnoreInstanceComponent(transform as RectTransform);
 
-            float parentWidth = parent.RealSize().x;
+            float parentWidth = parent.Size().x;
             float size = parentWidth * ElementSize;
             int count = childrent.Length;
             for (int i = 0; i < count; i++)
@@ -46,7 +46,7 @@ namespace UI.Widget
                 childrent[i].SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
             }
 
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parent.RealSize().x);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parent.Size().x);
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size);
         }
 

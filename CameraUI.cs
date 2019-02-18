@@ -7,7 +7,7 @@ public sealed class CameraUI : MonoBehaviour
     public RawImage RawImage;
     private void Awake()
     {
-        RenderTexture texture = new RenderTexture(Screen.width, Screen.height, 1)
+        RenderTexture texture = new RenderTexture(Screen.width, Screen.height, 24)
         {
             wrapMode = TextureWrapMode.Clamp,
             filterMode = FilterMode.Bilinear
