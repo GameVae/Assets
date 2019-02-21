@@ -27,7 +27,7 @@ public class AndroidCameraCtrl : MonoBehaviour
 
     private Text txtSwitchCamera;
     [SerializeField]
-    private EnumCameraType currentCameraType = EnumCameraType.Zoom;
+    private CameraGesture currentCameraType = CameraGesture.Zoom;
 
     // camera fields
     private bool isLockedAxis;
@@ -109,9 +109,9 @@ public class AndroidCameraCtrl : MonoBehaviour
         }
         if (!isLockedAxis)
         {
-            hRotTarget = (hRotTarget + h * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch);
+            hRotTarget = (hRotTarget + h * Singleton.Instance<Constants>().PixelDependencyDevice * DegreePerInch);
         }
-        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch,
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<Constants>().PixelDependencyDevice * DegreePerInch,
                                  WrapRotationValue.x,
                                  WrapRotationValue.y);
 
@@ -136,15 +136,15 @@ public class AndroidCameraCtrl : MonoBehaviour
 #endif
     }
 
-    private void SwitchCameraType(EnumCameraType enumCamera)
+    private void SwitchCameraType(CameraGesture enumCamera)
     {
         switch (enumCamera)
         {
-            case EnumCameraType.Zoom:
-                currentCameraType = EnumCameraType.Rotate;
+            case CameraGesture.Zoom:
+                currentCameraType = CameraGesture.Rotate;
                 break;
-            case EnumCameraType.Rotate:
-                currentCameraType = EnumCameraType.Zoom;
+            case CameraGesture.Rotate:
+                currentCameraType = CameraGesture.Zoom;
                 break;
             default:
                 break;
@@ -168,10 +168,10 @@ public class AndroidCameraCtrl : MonoBehaviour
                  */
                 switch (currentCameraType)
                 {
-                    case EnumCameraType.Zoom:
+                    case CameraGesture.Zoom:
                         ZoomHandle();
                         break;
-                    case EnumCameraType.Rotate:
+                    case CameraGesture.Rotate:
                         CalculateRotation();
                         break;
                     default:
@@ -208,7 +208,7 @@ public class AndroidCameraCtrl : MonoBehaviour
 
         move = (horizontalDir * moveForce.x + verticalDir * moveForce.y)
                 * DragSpeed
-                * Singleton.Instance<GConstants>().PixelDependencyDevice;
+                * Singleton.Instance<Constants>().PixelDependencyDevice;
 
 
         cameraObject.Translate(move);
@@ -232,7 +232,7 @@ public class AndroidCameraCtrl : MonoBehaviour
             // apply zoom force
             if (!thisCamera.orthographic)
             {
-                thisCamera.fieldOfView = Mathf.Clamp(zoomForce * ZoomSpeed * Singleton.Instance<GConstants>().PixelDependencyDevice + thisCamera.fieldOfView,
+                thisCamera.fieldOfView = Mathf.Clamp(zoomForce * ZoomSpeed * Singleton.Instance<Constants>().PixelDependencyDevice + thisCamera.fieldOfView,
                                         MaxZoomIn,
                                         MaxZoomOut);
             }
@@ -257,9 +257,9 @@ public class AndroidCameraCtrl : MonoBehaviour
         }
         if (!isLockedAxis)
         {
-            hRotTarget = (hRotTarget + h * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch);
+            hRotTarget = (hRotTarget + h * Singleton.Instance<Constants>().PixelDependencyDevice * DegreePerInch);
         }
-        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<GConstants>().PixelDependencyDevice * DegreePerInch,
+        vRotTarget = Mathf.Clamp(vRotTarget - v * Singleton.Instance<Constants>().PixelDependencyDevice * DegreePerInch,
                                  WrapRotationValue.x,
                                  WrapRotationValue.y);
         //LockAxis();

@@ -41,6 +41,7 @@ public class GameProgress : MonoBehaviour
             UnityAction temp = progressSequence[task];
             progressSequence.Remove(task);
             temp?.Invoke();
+            Debugger.Log("Done: " + task);
         }
         LoadingUICtrl.Instance.SetText(task);
     }

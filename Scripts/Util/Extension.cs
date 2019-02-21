@@ -123,7 +123,7 @@ public static class Extension
             string[] xyz = value.Split(',');
             return new Vector3Int(int.Parse(xyz[0]), int.Parse(xyz[1]), int.Parse(xyz[2]));
         }
-        catch(Exception e)
+        catch (Exception e)
         {
 #if UNITY_EDITOR
             Debug.Log(e.ToString());
@@ -162,6 +162,13 @@ public static class Extension
         vector3.y += y;
         return vector3;
     }
+
+    public static Vector3 Truncate(this Vector3 vector3, float maxMagnitude)
+    {
+        return vector3.magnitude < maxMagnitude ? vector3 : vector3.normalized * maxMagnitude;
+    }
+
+
     #endregion
 
     #region RectTransform
@@ -188,6 +195,53 @@ public static class Extension
         }
     }
 
+    public static T Wrap<T>(this T value, T min, T max)
+        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+    {
+        if(value.CompareTo(min) < 0) return min;
+        if(value.CompareTo(max) > 0) return max;
+        return value;
+    }
+    #endregion+
+
+    #region Camera
+    public static bool CalculateFrustumOnPlane(this Camera Cam,
+        ref Vector3[] conners,
+        ref Vector3 center,
+        ref float width,
+        ref float height)
+    {
+        if (Physics.Raycast(
+            origin: Cam.transform.position,
+            direction: Cam.transform.forward,
+            hitInfo: out RaycastHit hitInfo,
+            maxDistance: Cam.farClipPlane))
+        {
+            float distance = Vector3.Distance(hitInfo.point, Cam.transform.position);
+            float frustumHeight = 2.0f * distance * Mathf.Tan(Cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            float frustumWidth = frustumHeight * Cam.aspect;
+
+            Vector3 botLeft = hitInfo.point - new Vector3(frustumWidth * 0.5f, 0, frustumHeight * 0.5f);
+            Vector3 topLeft = botLeft + new Vector3(0, 0, frustumHeight);
+            Vector3 topRight = topLeft + new Vector3(frustumWidth, 0, 0);
+            Vector3 botRight = topRight - new Vector3(0, 0, frustumHeight);
+
+            conners = new Vector3[]
+            { botLeft,
+             topLeft,
+             topRight,
+             botRight };
+
+            width = frustumWidth;
+            height = frustumHeight;
+            center = hitInfo.point;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     #endregion
 
 }

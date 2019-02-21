@@ -148,7 +148,7 @@ public class NavAgent : MonoBehaviour
                     maxDistanceDelta: Time.deltaTime * speed);
                 LookAtTarget(currentTarget);
 
-                if ((transform.position - currentTarget).magnitude <= GConstants.TINY_VALUE)
+                if ((transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
                 {
 
                     // print("elapsed: " + elapsedTime + "- elapsed: " + stopwatch.Elapsed + " reached: " + path[path.Count - 1]);
@@ -325,7 +325,7 @@ public class NavAgent : MonoBehaviour
                     target: currentTarget,
                     maxDistanceDelta: Time.deltaTime * speed);
 
-                if ((transform.position - currentTarget).magnitude <= GConstants.TINY_VALUE)
+                if ((transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
                 {
                     CurrentOffsetStep++;
                 }

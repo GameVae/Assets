@@ -12,7 +12,7 @@ public class Range2 : Range
         else cellInfors.Clear();
 
         Vector3Int currentCell = Singleton.Instance<HexMap>().WorldToCell(Owner.position).ZToZero(); ;
-        Vector3Int[] pattern = GConstants.GetNeighboursRange(currentCell, 2);
+        Vector3Int[] pattern = Constants.GetNeighboursRange(currentCell, 2);
 
         CellInfo def = default(CellInfo);
         for (int i = 0; i < pattern.Length; i++)

@@ -8,8 +8,10 @@ namespace EnumCollect
         Vietnamese,
         English,
     }
-    public enum EnumCameraType
+    public enum CameraGesture
     {
+        None,
+        Swipe,
         Zoom,
         Rotate,
     }

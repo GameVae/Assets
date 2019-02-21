@@ -4,23 +4,72 @@ using UnityEngine;
 
 namespace Generic.CustomInput
 {
-    public delegate void CrossInputAction();
     public sealed class CrossInput : MonoSingle<CrossInput>
     {
-        private Vector2 lastMousePosition;
-        private Vector2 deltaSwipe;
-        private float swipeSpeed;
-
-        private int fingerID = -1;
-        private GConstants Constants;
-
-        public event CrossInputAction OnBegan;
-        public event CrossInputAction OnEnded;
-
-        public float SwipeSpeed
+        private Vector3 lastPosition;
+        private Vector2 axises;
+        private Constants constants;
+        private Constants Constants
         {
-            get { return swipeSpeed; }
+            get
+            {
+                return constants ?? (constants = Singleton.Singleton.Instance<Constants>());
+            }
         }
+
+        public Vector2 Axises
+        {
+            get
+            {
+#if !UNITY_EDITOR && UNITY_ANDROID
+                if (TouchCount == 1)
+                {
+                    axises = GetTouch(0).deltaPosition;                    
+                } else axises = Vector2.zero;
+                return axises * Constants.PixelDependencyDevice;
+#endif
+
+#if UNITY_EDITOR || UNITY_STANDALONE
+                return axises * Constants.PixelDependencyDevice;
+#endif
+            }
+        }
+
+        public Vector2 SwipeDirection
+        {
+            get
+            {
+                return Axises == Vector2.zero ? Vector2.zero : Axises.normalized;
+            }
+        }
+
+        #region Touch Properties
+        public int TouchCount
+        {
+#if !UNITY_EDITOR && UNITY_ANDROID
+            get { return Input.touchCount; }
+#endif
+#if UNITY_EDITOR || UNITY_STANDALONE
+            get { return Input.GetMouseButton(0) ? 1 : 0; }
+#endif
+        }
+
+        public Touch GetTouch(int index)
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE
+            Debugger.WarningLog("Editor not support touch");
+            return default(Touch);
+#endif
+#if !UNITY_EDITOR && UNITY_ANDROID
+            if (TouchCount > index)
+                return Input.GetTouch(index);
+
+            Debugger.ErrorLog("Out of Range of Touching");
+            return default(Touch);
+#endif
+        }
+
+        #endregion
 
         protected override void Awake()
         {
@@ -28,63 +77,35 @@ namespace Generic.CustomInput
             Input.multiTouchEnabled = true;
         }
 
-        private void Start()
-        {
-            Constants = Singleton.Singleton.Instance<GConstants>();
-        }
-
-        private void Update()
-        {
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-            if (Input.GetMouseButtonDown(0))
-                OnBegan?.Invoke();
-            if (Input.GetMouseButtonUp(0))
-                OnEnded?.Invoke();
-            SwipeCalulate();
-#endif
-#if !UNITY_EDITOR && UNITY_ANDROID
-            FirstTouchHandle();
-#endif
-        }
-      
-        private void SwipeCalulate()
-        {
-            deltaSwipe = (Vector2)Input.mousePosition - lastMousePosition;
-            swipeSpeed = deltaSwipe.magnitude / Time.deltaTime;
-        }
-
         private void LateUpdate()
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
-            lastMousePosition = Input.mousePosition;
-#endif
-        }
-
-        public Vector2 DeltaSwipe()
-        {
-#if !UNITY_EDITOR && UNITY_ANDROID
-            if(Input.touchCount > 0)
-               return Input.GetTouch(0).deltaPosition
-                  * Constants.PixelDependencyDevice;
-            return Vector2.zero;
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
-            return deltaSwipe;
+            RecordMouseState();
 #endif
         }
 
         public float ZoomValue()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            return GetMobileZoomValue() * Constants.PixelDependencyDevice;
+            return GetMobileZoomValue();
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE
             return Input.mouseScrollDelta.y;
 #endif
         }
 
-        #region Mobile
+
+        #region Editor
+        private void RecordMouseState()
+        {
+            axises = Input.mousePosition - lastPosition;
+            lastPosition = Input.mousePosition;
+        }
+
+        #endregion
+
+        #region  Mobile
+
         private float GetMobileZoomValue()
         {
             float zoomValue = 0;
@@ -101,39 +122,7 @@ namespace Generic.CustomInput
 
                 zoomValue = deltaTouchMag - deltaPreMag;
             }
-            return zoomValue;
-        }
-        private void FirstTouchHandle()
-        {
-            if (fingerID == -1 && Input.touchCount > 0)
-            {
-                fingerID = Input.GetTouch(0).fingerId;
-                OnBegan?.Invoke();
-            }
-            else if (fingerID != -1)
-            {
-                if (Input.touchCount == 0)
-                {
-                    fingerID = -1;
-                }
-                else
-                {
-                    bool isLife = false;
-                    for (int i = 0; i < Input.touchCount; i++)
-                    {
-                        if (Input.GetTouch(i).fingerId == fingerID)
-                        {
-                            isLife = true;
-                            break;
-                        }
-                    }
-                    if (!isLife)
-                    {
-                        fingerID = -1;
-                    }
-                }
-                if (fingerID == -1) OnEnded?.Invoke();
-            }
+            return (zoomValue * Constants.PixelDependencyDevice) / Time.deltaTime;
         }
         #endregion
     }

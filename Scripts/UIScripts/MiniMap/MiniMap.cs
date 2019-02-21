@@ -80,8 +80,8 @@ public class MiniMap : BaseWindow
     {
         Vector3Int result = Vector3Int.zero;
         Vector2 realMiniMapSize = MiniMapImage.Size();
-        result.x = (int)(position.x * ( GConstants.TOTAL_COL / realMiniMapSize.x));
-        result.y = (int)(position.y * (GConstants.TOTAL_ROW / realMiniMapSize.y));
+        result.x = (int)(position.x * ( Constants.TOTAL_COL / realMiniMapSize.x));
+        result.y = (int)(position.y * (Constants.TOTAL_ROW / realMiniMapSize.y));
         return result;
     }
 
@@ -135,8 +135,8 @@ public class MiniMap : BaseWindow
 
         Vector2 realMiniMapSize = MiniMapImage.Size();
 
-        result.x = (int)realMiniMapSize.x / GConstants.TOTAL_COL;
-        result.y = (int)realMiniMapSize.y / GConstants.TOTAL_ROW;
+        result.x = (int)realMiniMapSize.x / Constants.TOTAL_COL;
+        result.y = (int)realMiniMapSize.y / Constants.TOTAL_ROW;
 
         result.x *= cellPos.x;
         result.y *= cellPos.y;

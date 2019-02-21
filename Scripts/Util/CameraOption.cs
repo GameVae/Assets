@@ -3,14 +3,15 @@
 [System.Serializable]
 public sealed class CameraOption
 {
+    public float Height;
     [Header("Swipe")]
-    public float SwipeDecelerate;
+    public float SwipeMinSpeed;
     public float SwipeMaxSpeed;
-    public float Duration;
 
     [Header("Zoom")]
+    public float MaxZoomValue;
     public float ZoomSmoothValue;
-    public float ZoomMaxSpeed;
+
     [Header("Fov")]
     public float Default;
     public Vector2 FovClampValue;

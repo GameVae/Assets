@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Generic.Contants
 {
 
-    public sealed class GConstants : MonoSingle<GConstants>
+    public sealed class Constants : MonoSingle<Constants>
     {
         /// <summary>
         /// Length base on cell
@@ -21,9 +21,10 @@ namespace Generic.Contants
         public const float TINY_VALUE = 0.0001f;
 
 
-        // DPI ratio
+        // 1 / DPI
         public float PixelDependencyDevice { get; private set; }
 
+        public float ScreenRatio { get; private set; }
         // neighbour cell patterns
         public static class NeighbourHexCell
         {
@@ -204,11 +205,12 @@ namespace Generic.Contants
         {
             base.Awake();
             PixelDependencyDevice = 1.0f / Screen.dpi;
+            ScreenRatio = Screen.width * 1.0f / Screen.height;
         }
 
         private void Start()
         {
-            //Debugger.instance.Log("DPI: " + Screen.dpi);
+            Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
         }
         #endregion
     }

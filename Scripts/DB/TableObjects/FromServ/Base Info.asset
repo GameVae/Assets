@@ -14,7 +14,7 @@ MonoBehaviour:
   Rows:
   - ID_User: 42
     BaseNumber: 1
-    Position: 294,00,0
+    Position: 0,00,0
     Farm: 890845
     Wood: 667860
     Stone: 306561

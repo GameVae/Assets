@@ -34,7 +34,7 @@ public class CellInfoManager : ISingleton
     public void AddBase(Vector3Int cellPos,CellInfo info, bool isExpand)
     {
         //Vector3Int[] pattern = cellPos.y % 2 == 0 ? HexaPatternEven1 : HexaPatternOdd1;
-        Vector3Int[] pattern = GConstants.GetNeighboursRange(cellPos, 1);
+        Vector3Int[] pattern = Constants.GetNeighboursRange(cellPos, 1);
         for (int i = 0; i < pattern.Length; i++)
         {
             Vector3Int temp = cellPos + pattern[i];
@@ -43,7 +43,7 @@ public class CellInfoManager : ISingleton
         if (isExpand)
         {
             //pattern = cellPos.y % 2 == 0 ? HexaPatternEven2 : HexaPatternOdd2;
-            pattern = GConstants.GetNeighboursRange(cellPos, 2);
+            pattern = Constants.GetNeighboursRange(cellPos, 2);
 
             for (int i = 0; i < pattern.Length; i++)
             {

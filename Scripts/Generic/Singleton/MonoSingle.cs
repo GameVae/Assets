@@ -1,4 +1,6 @@
 ﻿
+using Utils;
+
 namespace Generic.Singleton
 {
     public abstract class MonoSingle<T> : UnityEngine.MonoBehaviour, ISingleton where T : UnityEngine.Component
@@ -12,7 +14,7 @@ namespace Generic.Singleton
                 {
                     UnityEngine.Object ins = FindObjectOfType(typeof(T));
                     if (ins == null)
-                        instance = (ISingleton)new UnityEngine.GameObject(typeof(T).ToString() + "Singleton").AddComponent<T>();
+                        instance = (ISingleton)new UnityEngine.GameObject(typeof(T).ToString() + "Singleton",typeof(DontDestroyGO)).AddComponent<T>();
                     else
                         instance = (ISingleton)ins;
                 }
@@ -33,6 +35,14 @@ namespace Generic.Singleton
         protected virtual void Awake()
         {
             GuaranteeOnlyIns();
+        }
+
+
+        protected virtual void OnDestroy()
+        {
+#if UNITY_EDITOR
+            UnityEngine.Debug.LogWarning("Singleton: " + GetType().ToString() + " destroyed");
+#endif
         }
     }
 }

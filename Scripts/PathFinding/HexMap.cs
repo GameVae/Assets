@@ -7,8 +7,8 @@ public sealed class HexMap : MonoSingle<HexMap>
 {
     public Grid HexGrid;
 
-    public const int TotalCol = GConstants.TOTAL_COL;
-    public const int TotalRow = GConstants.TOTAL_ROW;
+    public const int TotalCol = Constants.TOTAL_COL;
+    public const int TotalRow = Constants.TOTAL_ROW;
 
     public int ConvertToIndex(int x, int y)
     {
@@ -42,7 +42,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         //return neighbours.ToArray();
         #endregion
 
-        return GConstants.GetNeighboursRange(cell, 1);
+        return Constants.GetNeighboursRange(cell, 1);
     }
 
     #region Not use
@@ -51,7 +51,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         List<Vector3Int> neighbours = new List<Vector3Int>();
         Vector3Int neighbour;
         Vector3Int[] pattern = (cell.y % 2 == 0) ?
-            GConstants.NeighbourHexCell.HexaPatternEven1 : GConstants.NeighbourHexCell.HexaPatternOdd1;
+            Constants.NeighbourHexCell.HexaPatternEven1 : Constants.NeighbourHexCell.HexaPatternOdd1;
         for (int i = 0; i < pattern.Length; i++)
         {
             neighbour = pattern[i] + cell;
@@ -66,7 +66,7 @@ public sealed class HexMap : MonoSingle<HexMap>
 
     public bool IsValidCell(int x, int y)
     {
-        return GConstants.IsValidCell(x, y);
+        return Constants.IsValidCell(x, y);
     }
     #endregion
 
