@@ -18,7 +18,7 @@ public sealed class GetRSSData : Listener
 
     public void R_BASE_INFO(SocketIOEvent obj)
     {
-        Debug.Log(obj);
+        Debugger.Log(obj);
         Conn.Sync.BaseInfo.LoadTable(obj.data["R_BASE_INFO"]);
         getDataProgress.Done("get base info");
     }

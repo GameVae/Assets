@@ -20,6 +20,7 @@ public class AgentController : MonoSingle<AgentController>
     public Vector3Int EndCell { get; private set; }
     public bool IsDisable { get; private set; }
 
+    private List<System.Func<bool>> canMoveConditions; 
     protected override void Awake()
     {
         base.Awake();
@@ -34,11 +35,16 @@ public class AgentController : MonoSingle<AgentController>
         eventSystem = FindObjectOfType<EventSystem>();
         HexMap = Singleton.Instance<HexMap>();
         moveEvent = GetComponent<MoveEvent>();
+
+        AddMoveCondition(delegate 
+        {
+            return Input.GetMouseButtonUp(0) && !IsDisable && !eventSystem.IsPointerOverGameObject();
+        });
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !IsDisable)
+        if (CheckCantMoveAgent())
         {
             if (eventSystem.IsPointerOverGameObject()) return;
 
@@ -114,5 +120,23 @@ public class AgentController : MonoSingle<AgentController>
             result.Add(path[i].str.Parse3Int());
         }
         return result;
+    }
+
+    private bool CheckCantMoveAgent()
+    {
+        for (int i = 0; i < canMoveConditions.Count; i++)
+        {
+            if (!canMoveConditions[i].Invoke())
+                return false;
+        }
+        return true;
+    }
+
+    public void AddMoveCondition(System.Func<bool> func)
+    {
+        if (canMoveConditions == null)
+            canMoveConditions = new List<System.Func<bool>>();
+        if (!canMoveConditions.Contains(func))
+            canMoveConditions.Add(func);
     }
 }

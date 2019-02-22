@@ -58,7 +58,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
             GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, i + 1);
         }
 
-        Debug.Log("instaniate done: " + (Time.realtimeSinceStartup - start));
+        Debugger.Log("instaniate done: " + (Time.realtimeSinceStartup - start));
     }
 
 

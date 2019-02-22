@@ -7,7 +7,7 @@ public class TestCanvas : MonoBehaviour
 {
     public GUIInteractableIcon ZoomSpeedUp;
     public GUIInteractableIcon ZoomSpeedDown;
-    public CameraPosition CameraCtrl;
+    public CameraController CameraCtrl;
 
     private void Awake()
     {

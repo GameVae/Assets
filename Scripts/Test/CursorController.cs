@@ -10,6 +10,7 @@ public class CursorController : MonoBehaviour
     public Grid grid;
     public CursorPos cursorPos;
     public Camera cameraRaycaster;
+    public CameraController CameraCtrl;
   
     private void Awake()
     {
@@ -18,7 +19,9 @@ public class CursorController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0) &&
+            CameraCtrl.IsTouch() && 
+            !eventSystem.IsPointerOverGameObject())
         {
             Vector3 mousePos = Input.mousePosition;
 

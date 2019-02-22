@@ -15,7 +15,7 @@ public class MiniMap : BaseWindow
 
     public GUIOnOffSwitch OpenBtn;
 
-    public CameraPosition CameraCtrl;
+    public CameraController CameraCtrl;
     public CursorPos cursor;
 
     public RectTransform MiniMapImage;

@@ -1,4 +1,5 @@
 ﻿using Generic.Singleton;
+using ManualTable.Row;
 using UnityEngine;
 
 namespace Map
@@ -14,16 +15,21 @@ namespace Map
         }
 
         public bool IsExpand;
+        public bool IsDependentServer;
+        public int BaseId;
         public Vector3Int CellPosision;
 
+        private Connection Conn;
         private void Awake()
         {
-            WayPoint = GetComponent<WayPoint>();    
+            WayPoint = GetComponent<WayPoint>();
+
         }
 
         private void Start()
         {
-            Singleton.Instance<CellInfoManager>().AddBase(WayPoint.CellPosition, WayPoint.CellInfo, IsExpand);
+            if (SetupPositionBaseOnServerData() || !IsDependentServer)
+                Singleton.Instance<CellInfoManager>().AddBase(WayPoint.CellPosition, WayPoint.CellInfo, IsExpand);
         }
 
         [ContextMenu("Set Position")]
@@ -36,6 +42,26 @@ namespace Map
         public void GetPosition()
         {
             CellPosision = Singleton.Instance<HexMap>().WorldToCell(transform.position);
+        }
+
+        private bool SetupPositionBaseOnServerData()
+        {
+            if (IsDependentServer)
+            {
+                Conn = Singleton.Instance<Connection>();
+                int count = Conn.Sync.BaseInfo.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    BaseInfoRow baseInfo = Conn.Sync.BaseInfo[i] as BaseInfoRow;
+                    if (baseInfo.BaseNumber == BaseId)
+                    {
+                        CellPosision = baseInfo.Position.Parse3Int() + new Vector3Int(5, 5, 0);
+                        return true;
+                    }
+                }
+            }
+            gameObject.SetActive(false); // setup failure
+            return false;
         }
     }
 }

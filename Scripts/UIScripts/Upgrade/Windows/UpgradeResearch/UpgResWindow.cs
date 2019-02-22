@@ -57,7 +57,7 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     protected override void Awake()
     {
         base.Awake();
-        Singleton.Instance<EventListenersController>().AddEmiter("S_UPGRADE", CreateUpgData);
+        Singleton.Instance<EventListenersController>().AddEmiter("S_UPGRADE", S_UPGRADE);
     }
 
     protected override void Update()
@@ -229,7 +229,7 @@ public class UpgResWindow : BaseWindow,IWindowGroup
         }
     }
 
-    private JSONObject CreateUpgData()
+    private JSONObject S_UPGRADE()
     {
         UserInfoRow userInfo = (UserInfoRow)SyncData.UserInfo[0];
         Dictionary<string, string> data = new Dictionary<string, string>()
