@@ -120,7 +120,8 @@ public sealed class MoveOffset
             distance += Vector3.Distance(currentPosition, nextPosition);
             currentPosition = nextPosition;
         }
-        result = distance / (currentPath.Count * AverageMoveTime);
+        result = distance / (currentPath.Count * AverageMoveTime);// van toc trung binh qua tat ca cac cell
+		// khoang cach, AverageMoveTime => van toc => khi qua cell do 
         return result <= 0 ? 0 : result;
     }
 
