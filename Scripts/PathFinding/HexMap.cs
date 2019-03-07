@@ -10,6 +10,15 @@ public sealed class HexMap : MonoSingle<HexMap>
     public const int TotalCol = Constants.TOTAL_COL;
     public const int TotalRow = Constants.TOTAL_ROW;
 
+    private GlobalNodeManager nodeManager;
+    private AgentNodeManager agentNodeManager;
+
+    private void Start()
+    {
+        nodeManager = Singleton.Instance<GlobalNodeManager>();
+        agentNodeManager = nodeManager.AgentNode;
+    }
+
     public int ConvertToIndex(int x, int y)
     {
         return y * TotalCol + x;
@@ -56,7 +65,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         {
             neighbour = pattern[i] + cell;
             if (IsValidCell(neighbour.x, neighbour.y) &&
-                !Singleton.Instance<CellInfoManager>().ContainsKey(neighbour.ZToZero()))
+                !agentNodeManager.IsHolding(neighbour.ZToZero()))
             {
                 neighbours.Add(neighbour);
             }

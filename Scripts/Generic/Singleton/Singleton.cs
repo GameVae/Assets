@@ -29,7 +29,8 @@ namespace Generic.Singleton
                 {
                     value = NormalInstance<T>();
                 }
-                singletons[type.GetHashCode()] = value;
+                if (value != null)
+                    singletons[type.GetHashCode()] = value;
             }
             return (T)value;
         }

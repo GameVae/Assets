@@ -1,7 +1,9 @@
-﻿using ManualTable;
+﻿using Generic.Singleton;
+using ManualTable;
 using ManualTable.Loader;
 using SocketIO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -9,38 +11,29 @@ using System.Net;
 using UnityEngine;
 using Utils;
 
-public class VersionGame : MonoBehaviour
+public class VersionGame : MonoSingle<VersionGame>
 {
-    public static VersionGame Instance;
     public Connection Connection;
     public ManualTableLoader Loader;
-    public RSS_PositionJSONTable RSS_Table;
 
-    private GameProgress taskSequences;
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
-    void Start()
+    private bool checkVersionDone;
+    private LoadingPanel gameTask;
+  
+    private void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
-        Connection.Socket.On("R_GET_RSS", R_GET_RSS);
 
-        taskSequences = GameProgress.Instance;
-    }
-
-    private void R_GET_RSS(SocketIOEvent obj)
-    {
-        RSS_Table.LoadTable(obj.data["R_GET_RSS"]);
+        checkVersionDone = false;
+        InitProg();
+        StartCoroutine(CheckVersion());
     }
 
     public void S_CHECK_VERSION()
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Version"] = "1";
-        Connection.Socket.Emit("S_CHECK_VERSION", new JSONObject(data));
+        data["Version"] = "1"; // Loader.ClientVersion;
+       
+        Connection.Emit("S_CHECK_VERSION", new JSONObject(data));
     }
 
     private void R_CHECK_VERSION(SocketIOEvent obj)
@@ -56,26 +49,27 @@ public class VersionGame : MonoBehaviour
                 if (File.Exists(saveAt))
                 {
                     File.Delete(saveAt);
-                    Debug.Log("DELETED FILE: " + saveAt);
+                    Debugger.Log("DELETED FILE: " + saveAt);
                 }
                 DownloadFile(link, saveAt);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Debug.Log(e.ToString());
+                Debugger.ErrorLog(e.ToString());
             }
         }
         else
         {
-            taskSequences.Done("check version");
+            ReloadDB();
+            checkVersionDone = true;
         }
     }
 
-    private void DownloadFile(string link,string saveAt)
+    private void DownloadFile(string link, string saveAt)
     {
         // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"),Application.dataPath + @"\Infantry.sqlite"
-        WebClient client =  DownloadFileAsync.Instance.DownloadFile(link, saveAt);
-        if(client != null)
+        WebClient client = DownloadFileAsync.Instance.DownloadFile(link, saveAt);
+        if (client != null)
         {
             client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChange);
             client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
@@ -88,10 +82,45 @@ public class VersionGame : MonoBehaviour
     }
 
     private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
-    {        
+    {
+        ReloadDB();
+        checkVersionDone = true;
+        Debugger.Log("Download file complete");
+    }
+
+    private void ReloadDB()
+    {
         Loader.InitSQLConnection();
         Loader.ReloadData();
-        Debug.Log("reload data");
-        taskSequences.Done("check version");
+    }
+
+    private IEnumerator CheckVersion()
+    {
+        while (!Connection.IsServerConnected)
+        {
+            yield return null;
+        }
+
+        Debugger.Log("Server connected: " + Connection.IsServerConnected);
+        S_CHECK_VERSION();
+        yield break;
+    }
+
+    private void InitProg()
+    {
+        gameTask = Singleton.Instance<LoadingPanel>();
+        GameProgress prog = new GameProgress
+            (
+                doneAct: null,
+                t: new GameProgress.Task()
+                {
+                    Name = "check version",
+                    GetProgress = delegate { return 1; },
+                    IsDone = delegate{ return checkVersionDone; },
+                    Start = delegate { StartCoroutine(CheckVersion()); },
+                    Title = "Checking version ..."
+                }
+            );
+        gameTask.AddTask(prog);
     }
 }

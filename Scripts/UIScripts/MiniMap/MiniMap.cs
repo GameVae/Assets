@@ -61,7 +61,7 @@ public class MiniMap : BaseWindow
 
     private bool TrySetNavOnBuild(Rect area, out Vector3Int cell)
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BaseCell;
+        List<Vector3Int> buildingCell = Singleton.Instance<GlobalNodeManager>().TowerPositions;
 
         for (int i = 0; i < buildingCell.Count; i++)
         {
@@ -87,7 +87,7 @@ public class MiniMap : BaseWindow
 
     private void SetupBuildingIcon()
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<CellInfoManager>().BaseCell;
+        List<Vector3Int> buildingCell = Singleton.Instance<GlobalNodeManager>().TowerPositions;
 
         for (int i = 0; i < buildingCell.Count; i++)
         {

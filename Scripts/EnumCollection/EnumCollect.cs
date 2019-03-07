@@ -34,7 +34,7 @@ namespace EnumCollect
         MetalGathering = 13,
         [Upgrade] Storage = 14,
         [Upgrade] Infantry = 15,
-        [Upgrade] Solider = 16,
+        [Upgrade] Soldier = 16,
         [Upgrade] TraninedSolider = 17,
         [Upgrade] ForbiddenGuard = 18,
         [Upgrade] Heroic = 19,

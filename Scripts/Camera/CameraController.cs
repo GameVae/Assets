@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
     public Camera TargetCamera;
     public Connection Conn;
     public CrossInput CrossInput;
-    public AgentController AgentCtrl;
+    public NavAgentController AgentCtrl;
 
     public CameraGesture Gesture
     {
@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
         Conn = Singleton.Instance<Connection>();
         CrossInput = Singleton.Instance<CrossInput>();
 
-        AgentCtrl = Singleton.Instance<AgentController>();
+        AgentCtrl = Singleton.Instance<NavAgentController>();
         AgentCtrl.AddMoveCondition(IsTouch);
 
         SetStartupPosition();
@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
         CameraGestureHandle();
 #if UNITY_EDITOR
         ZoomHandle();
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && CrossInput.SwipeDirection != Vector2.zero)
         {
             SwipeHandle();
         }

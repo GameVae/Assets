@@ -1,6 +1,7 @@
 ﻿using Generic.Singleton;
 using Network.Sync;
 using SocketIO;
+using System;
 using System.Collections;
 using System.Threading;
 using UnityEngine;
@@ -44,7 +45,7 @@ public sealed class Connection : MonoSingle<Connection>
     {
         base.Awake();
         decoder = new Decoder();
-        if (SocketComponent)
+        if (SocketComponent == null)
             SocketComponent = FindObjectOfType<SocketIOComponent>();
     }
 
@@ -69,12 +70,7 @@ public sealed class Connection : MonoSingle<Connection>
             }
         });
         timer.Start();
-        StartCoroutine("CheckVersion");
-
-        GameProgress.Instance.AddTask("check version", () => { LoadingUICtrl.Instance.Done(); });
-        LoadingUICtrl.Instance.StartProgress(1);
     }
-
 
     private void Update()
     {
@@ -95,18 +91,6 @@ public sealed class Connection : MonoSingle<Connection>
     {
         timer?.Abort();
         SocketComponent?.Close();
-    }
-
-    private IEnumerator CheckVersion()
-    {
-        while (!IsServerConnected)
-        {
-            yield return null;
-        }
-
-        Debug.Log("Server: " + IsServerConnected);
-        VersionGame.Instance.S_CHECK_VERSION();
-        yield break;
     }
 
     private void OnMessage(object sender, MessageEventArgs e)

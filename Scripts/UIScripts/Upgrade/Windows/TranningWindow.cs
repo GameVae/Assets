@@ -109,7 +109,7 @@ public class TranningWindow : BaseWindow
         elementCount = 0;
         List<ListUpgrade> types = new List<ListUpgrade>()
         {
-            ListUpgrade.Solider,
+            ListUpgrade.Soldier,
             ListUpgrade.TraninedSolider,
             ListUpgrade.ForbiddenGuard,
             ListUpgrade.Heroic

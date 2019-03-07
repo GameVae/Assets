@@ -41,11 +41,15 @@ namespace ManualTable
             Rows.Add(row);
         }
 
-        public void LoadTable(JSONObject data)
+        public void LoadTable(JSONObject data, bool clearPre = true)
         {
             if (Rows == null)
                 Rows = new List<T>();
-            else Rows.Clear();
+            else
+            {
+                if (clearPre)
+                    Rows.Clear();
+            }
             //Debug.Log(Rows.Count);
 
             int count = data.Count;

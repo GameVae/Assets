@@ -1,5 +1,6 @@
 ﻿using Generic.Singleton;
 using Network.Data;
+using SocketIO;
 using UnityEngine;
 
 public abstract class Listener : MonoBehaviour, Network.Interface.IListener
@@ -25,5 +26,13 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
     public void Emit(string ev)
     {
         evCtrl.Emit(ev);
+    }
+
+    public void On(string ev,params System.Action<SocketIOEvent>[] callbacks)
+    {
+        for (int i = 0; i < callbacks.Length; i++)
+        {
+            Conn.On(ev, callbacks[i]);
+        }
     }
 }

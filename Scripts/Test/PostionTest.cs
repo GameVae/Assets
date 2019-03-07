@@ -9,7 +9,8 @@ public class PostionTest : MonoBehaviour
 
     private void Awake()
     {
-        grid = GetComponentInParent<Grid>();
+        if(grid == null)
+        grid = FindObjectOfType<Grid>();
     }
     void Start()
     {

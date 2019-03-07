@@ -11,7 +11,7 @@ namespace ManualTable.Loader
     {
         private VersionRow versionTask;
 
-        public string CurrentVersion;
+        public string ClientVersion;
         public string ServerVersion;
         public SQLiteManualConnection SQLDataConnection;
         public SQLiteManualConnection SQLVersionConnection;
@@ -20,11 +20,7 @@ namespace ManualTable.Loader
 
         private void Awake()
         {
-        }
-
-        private void Start()
-        {
-            SQLVersionConnection.Init();
+            GetCurrentVersion();
         }
 
         private void OnApplicationQuit()
@@ -45,14 +41,8 @@ namespace ManualTable.Loader
         }
 
         private bool IsUpdateVersion(ref VersionRow versionTask)
-        {
-            if (versionTask == null)
-                Load(DBRowType.Version, Version);
-
-            versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
-            CurrentVersion = versionTask?.Content;
-
-            bool result = CurrentVersion == null ? true : CurrentVersion.CompareTo(ServerVersion) != 0;
+        {           
+            bool result = ClientVersion == null ? true : ClientVersion.CompareTo(ServerVersion) != 0;
             return result;
         }
 
@@ -109,6 +99,16 @@ namespace ManualTable.Loader
         public void InitSQLConnection()
         {
             SQLDataConnection.Init();
+        }
+
+        private void GetCurrentVersion()
+        {
+            SQLVersionConnection.Init();
+            if (versionTask == null)
+                Load(DBRowType.Version, Version);
+
+            versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
+            ClientVersion = versionTask?.Content;
         }
     }
 }

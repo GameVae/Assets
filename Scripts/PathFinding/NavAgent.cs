@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Animation;
 using EnumCollect;
@@ -12,6 +13,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer), typeof(WayPoint))]
 public class NavAgent : MonoBehaviour
 {
+    private NavRemote remote;
     private bool isLineAnimation;
     private float animLineCounter;
 
@@ -25,7 +27,7 @@ public class NavAgent : MonoBehaviour
     private GradientAlphaKey[] graAlKeys;
     private LineRenderer movingLineRenderer;
 
-    public MoveOffset Offset;
+    public MovementOffset Offset;
 
     [SerializeField] private int maxSearchLevel;
     private int maxMoveStep;
@@ -51,6 +53,10 @@ public class NavAgent : MonoBehaviour
         }
     }
 
+    public ListUpgrade Type {
+
+        get { return remote.Type; }
+    }
 
     public AnimatorController Anim;
 
@@ -60,6 +66,8 @@ public class NavAgent : MonoBehaviour
         LineRendererInit();
 
         OffsetInit();
+
+        remote = GetComponent<NavRemote>();
     }
 
     private void LineRendererInit()
@@ -89,9 +97,11 @@ public class NavAgent : MonoBehaviour
         };
     }
 
+
     private void OffsetInit()
     {
         maxMoveStep = Offset.MaxMoveStep;
+        speed = Offset.MaxSpeed;
     }
 
     private void Start()
@@ -133,12 +143,10 @@ public class NavAgent : MonoBehaviour
         }
     }
 
-    private float elapsedTime = 0.0f;
     private void AStarMoveToTarget()
     {
         if (IsMoving)
         {
-            elapsedTime += Time.deltaTime;
             if (path.Count > 0)
             {
                 Vector3 currentTarget = mapIns.CellToWorld(path[path.Count - 1]);
@@ -150,18 +158,12 @@ public class NavAgent : MonoBehaviour
 
                 if ((transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
                 {
-
-                    // print("elapsed: " + elapsedTime + "- elapsed: " + stopwatch.Elapsed + " reached: " + path[path.Count - 1]);
-                    elapsedTime = 0.0f;
-
                     path.RemoveAt(path.Count - 1);
                     RemoveLineRendererWayPoint();
-
                 }
             }
             else
             {
-                elapsedTime = 0.0f;
                 IsMoving = false;
                 MoveFinish();
                 Anim.Stop(AnimState.Walking);
@@ -274,7 +276,6 @@ public class NavAgent : MonoBehaviour
     private void MoveFinish()
     {
         stopwatch.Stop();
-        //print("elapsed time: " + stopwatch.Elapsed);
 
         Vector3Int currentCell = mapIns.WorldToCell(transform.position).ZToZero();
         if (!WayPoint.Binding())
@@ -297,8 +298,6 @@ public class NavAgent : MonoBehaviour
         bool foundPath = FindPath(start, end);
         if (foundPath)
         {
-            speed = Offset.GetSpeed(path, transform.position);
-            // print("distance: " + " speed: " + speed + " total time: " + path.Count * Offset.AverageMoveTime);
             stopwatch.Restart();
 
             Anim.Play(AnimState.Walking);
@@ -306,6 +305,12 @@ public class NavAgent : MonoBehaviour
         }
         return foundPath;
     }
+
+    public List<float> GetTime()
+    {
+        return Offset.GetTime(GetMovePath(), transform.position);
+    }
+
 
     public List<Vector3Int> GetMovePath()
     {

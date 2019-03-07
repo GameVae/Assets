@@ -34,10 +34,6 @@ public class CursorPos : MonoBehaviour
     [Space]
     public PositionCursor PositionCursor;
 
-    void Awake()
-    {
-        grid = GetComponentInParent<Grid>();
-    }
     Ray ray;
     RaycastHit hit;
     private void Update()

@@ -6,46 +6,57 @@ namespace Map
     [DisallowMultipleComponent]
     public sealed class WayPoint : MonoBehaviour
     {
-        private CellInfo cellInfo;
+        private NodeInfo info;
+        private HexMap hexMap;
+        private GlobalNodeManager nodeManager;
+        private AgentNodeManager agentNodeManager;
 
-        public CellInfo CellInfo
+        public NodeInfo NodeInfo
         {
-            get { return cellInfo; }
-            private set { cellInfo = value; }
+            get { return info; }
+            private set { info = value; }
         }
 
-        public Vector3Int CellPosition
+        public Vector3Int Position
         {
-            get { return Singleton.Instance<HexMap>().WorldToCell(transform.position).ZToZero(); }
+            get
+            {
+                if (hexMap == null) hexMap = Singleton.Instance<HexMap>();
+                return hexMap.WorldToCell(transform.position).ZToZero();
+            }
         }
+
+        public bool IsTower;
 
         private void Awake()
         {
-            cellInfo = new CellInfo()
+            info = new NodeInfo()
             {
-                Id = CellInfoManager.ID(),
+                Id = GlobalNodeManager.ID(),
                 GameObject = gameObject,
             };
+            nodeManager = Singleton.Instance<GlobalNodeManager>();
+            agentNodeManager = nodeManager.AgentNode;
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            Binding();
-        }
-
-        private void OnDisable()
-        {
-            Unbinding();
+            if (hexMap == null) hexMap = Singleton.Instance<HexMap>();          
         }
 
         public bool Binding()
         {
-            return Singleton.Instance<CellInfoManager>().AddToDict(CellPosition, cellInfo);
+            if (!IsTower)
+            {
+                agentNodeManager.Add(Position, NodeInfo);
+                return true;
+            }
+            return false;
         }
 
         public bool Unbinding()
         {
-            return Singleton.Instance<CellInfoManager>().RemoveDict(CellPosition);
+            return agentNodeManager.Remove(Position);
         }
     }
 }

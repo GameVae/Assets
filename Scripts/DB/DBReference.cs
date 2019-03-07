@@ -43,7 +43,7 @@ namespace DB
         }
 
         public DBKeyValuePair[] InitalizeDB;
-        public DBKeyValuePairOther[] InitalizeDBO;
+        public DBKeyValuePairOther[] InitalizeDBOther;
 
         protected override void Awake()
         {
@@ -55,9 +55,9 @@ namespace DB
             }
 
             dbos = new Dictionary<DBType, ITable>();
-            for (int i = 0; i < InitalizeDBO?.Length; i++)
+            for (int i = 0; i < InitalizeDBOther?.Length; i++)
             {
-                dbos[InitalizeDBO[i].Key] = InitalizeDBO[i].Value as ITable;
+                dbos[InitalizeDBOther[i].Key] = InitalizeDBOther[i].Value as ITable;
             }
         }
 

@@ -18,12 +18,16 @@ namespace ManualTable.SQL
 
         private void Awake()
         {
-            DBPath = Application.dataPath + DBPath;
-            ConnectionString = "URI=file:" + DBPath;
+            Init();
         }
 
         public void Init()
         {
+            if(ConnectionString == null)
+            {
+                DBPath = Application.dataPath + DBPath;
+                ConnectionString = "URI=file:" + DBPath;
+            }
             if (DbConnection == null)
             {
                 DbConnection = new SqliteConnection(ConnectionString);

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7805e0765515a1c4ebda5299e12ecc3c, type: 3}
+  m_Name: Unit
+  m_EditorClassIdentifier: 
+  Rows:
+  - ID: 9
+    ID_Unit: 16
+    ID_User: 42
+    BaseNumber: 1
+    Level: 0
+    Quality: 0
+    Hea_cur: 3.5
+    Health: 5.6
+    Position_Cell: 
+    Next_Cell: 
+    End_Cell: 
+    TimeMoveNextCell: 0
+    TimeFinishMove: 0
+    ListMove: 
+    Status: 0
+    Attack_Base_ID: 0
+    Attack_Unit_ID: 0
+    AttackedBool: 0

@@ -1,15 +1,13 @@
-﻿using Generic.Singleton;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CursorController : MonoBehaviour
 {
     private EventSystem eventSystem;
    
-    public Grid grid;
-    public CursorPos cursorPos;
-    public Camera cameraRaycaster;
+    public HexMap Map;
+    public CursorPos Cursor;
+    public Camera CameraRaycaster;
     public CameraController CameraCtrl;
   
     private void Awake()
@@ -26,26 +24,27 @@ public class CursorController : MonoBehaviour
             Vector3 mousePos = Input.mousePosition;
 
             bool raycastHitted = Physics.Raycast(
-                cameraRaycaster.ScreenPointToRay(mousePos),
+                CameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
                 int.MaxValue);
-            bool onClickUI = eventSystem.IsPointerOverGameObject();
-
             
-            if (raycastHitted && !onClickUI)
+            if (raycastHitted)
             {
-                Vector3Int selectCell = grid.WorldToCell(hitInfo.point);
-                if(Singleton.Instance<CellInfoManager>().GetCellInfo(selectCell.ZToZero(),out CellInfo result))
-                {
-                    selectCell = grid.WorldToCell(result.GameObject.transform.position);                    
-                    cursorPos.updateCursor(result.GameObject.transform.position);
-                }
-                else
-                {
-                    cursorPos.updateCursor(hitInfo.point);
-                }
-                cursorPos.PositionCursor.SetPosTxt(selectCell.x.ToString(), selectCell.y.ToString());
+                Vector3Int selectCell = Map.WorldToCell(hitInfo.point);
+                #region old
+                //if(Singleton.Instance<CellInfoManager>().GetCellInfo(selectCell.ZToZero(),out CellInfo result))
+                //{
+                //    selectCell = grid.WorldToCell(result.GameObject.transform.position);                    
+                //    Cursor.updateCursor(result.GameObject.transform.position);
+                //}
+                //else
+                //{
+                //    Cursor.updateCursor(hitInfo.point);
+                //}
+                #endregion
 
+                Cursor.PositionCursor.SetPosTxt(selectCell.x.ToString(), selectCell.y.ToString());
+                Cursor.updateCursor(Map.CellToWorld(selectCell));
             }
         }
     }

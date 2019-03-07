@@ -21,21 +21,21 @@ namespace UI.CustomInspector
         [MenuItem("GameObject/UI/GUI/GUIVerticalList")]
         public static void CreateVerticalList(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUIVerticalList.prefab";
+            string path = @"Assets/Prefabs/UI/GUIVerticalList.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUITextWithIcon")]
         public static void CreateTextWithIcon(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUITextWithIcon.prefab";
+            string path = @"Assets/Prefabs/UI/GUITextWithIcon.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUISlider")]
         public static void CreateSlider(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUISlider.prefab";
+            string path = @"Assets/Prefabs/UI/GUISlider.prefab";
             Create(menuCmd, path);
         }
 
@@ -43,35 +43,35 @@ namespace UI.CustomInspector
         public static void CreateInteractableIcon(MenuCommand menuCmd)
         {
 
-            string path = @"Assets/Prefabs/GUIInteractableIcon.prefab";
+            string path = @"Assets/Prefabs/UI/GUIInteractableIcon.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUICheckMask")]
         public static void CreateCheckMask(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUICheckMask.prefab";
+            string path = @"Assets/Prefabs/UI/GUICheckMask.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUIToggle")]
         public static void CreateToggle(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUIToggle.prefab";
+            string path = @"Assets/Prefabs/UI/GUIToggle.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUIOnOffSwitch")]
         public static void CreateSwitch(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUIOnOffSwitch.prefab";
+            string path = @"Assets/Prefabs/UI/GUIOnOffSwitch.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUISliderWithBtn")]
         public static void CreateSliderWithBtn(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUISliderWithBtn.prefab";
+            string path = @"Assets/Prefabs/UI/GUISliderWithBtn.prefab";
             Create(menuCmd, path);
 
         }
@@ -79,14 +79,14 @@ namespace UI.CustomInspector
         [MenuItem("GameObject/UI/GUI/GUIHorizontalBarInfo")]
         public static void CreateHorizontalBarInfo(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUIHorizontalBarInfo.prefab";
+            string path = @"Assets/Prefabs/UI/GUIHorizontalBarInfo.prefab";
             Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUIScrollView")]
         public static void CreateScrollView(MenuCommand menuCmd)
         {
-            string path = @"Assets/Prefabs/GUIScrollView.prefab";
+            string path = @"Assets/Prefabs/UI/GUIScrollView.prefab";
             Create(menuCmd, path);
         }
     }

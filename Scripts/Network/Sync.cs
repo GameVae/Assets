@@ -17,7 +17,7 @@ namespace Network.Sync
         }
         public BaseDefendJSONTable CurrentBaseDefend
         {
-            get { return BaseDefend[CurBaseIndex]; }
+            get { return BaseDefends[CurBaseIndex]; }
         }
         public BaseInfoRow CurrentMainBase
         {
@@ -45,7 +45,9 @@ namespace Network.Sync
         public BaseInfoJSONTable BaseInfo;
 
         public BaseUpgradeJSONTable[] BaseUpgrade;
-        public BaseDefendJSONTable[] BaseDefend;
+        public BaseDefendJSONTable[] BaseDefends;
+
+        public UnitJSONTable UnitTable;
 
         public void SyncUpdate(float deltaTime)
         {
@@ -98,7 +100,7 @@ namespace Network.Sync
         {
             BaseInfoRow baseInfo = (BaseInfoRow)BaseInfo[baseIndex];
             
-            BaseDefendJSONTable baseDefend = BaseDefend[baseIndex];
+            BaseDefendJSONTable baseDefend = BaseDefends[baseIndex];
             BaseDefendRow defendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == baseInfo.TrainingUnit_ID);
             if(defendRow == null)
             {

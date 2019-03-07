@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UI.Widget;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.Events;
 
-public class GameProgress : MonoBehaviour
+public class GameProgress
 {
-    public static GameProgress Instance { get; private set; }
     /*
      * - Startup
 	    - Check game version
@@ -18,36 +14,59 @@ public class GameProgress : MonoBehaviour
 	    - Get Base Info
 	    - Get Position
      */
-    private Dictionary<string, UnityAction> progressSequence;
-    public bool IsEmpty { get { return progressSequence == null || progressSequence.Count == 0; } }
-
-
-    public GUIProgressSlider progressSlider;
-    private void Awake()
+    public class Task
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else Destroy(gameObject);
-        progressSequence = new Dictionary<string, UnityAction>();
-
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public System.Func<bool> IsDone { get; set; }
+        public System.Func<float> GetProgress { get; set; }
+        public UnityAction Start { get; set; }
     }
 
-    public void Done(string task)
+    public bool IsDone
     {
-        if (progressSequence.ContainsKey(task))
+        get { return tasks.Count == 0; }
+    }
+    private Queue<Task> tasks;
+    private Task currentTask;
+    private UnityAction doneAction;
+
+    public GameProgress(UnityAction doneAct, params Task[] t)
+    {
+        tasks = new Queue<Task>();
+        doneAction = doneAct;
+        for (int i = 0; i < t.Length; i++)
         {
-            UnityAction temp = progressSequence[task];
-            progressSequence.Remove(task);
-            temp?.Invoke();
-            Debugger.Log("Done: " + task);
+            tasks.Enqueue(t[i]);
         }
-        LoadingUICtrl.Instance.SetText(task);
     }
 
-    public void AddTask(string tasks, UnityAction doneAct = null)
+    public Task GetTask()
     {
-        progressSequence[tasks] = doneAct;
+        if (currentTask == null)
+        {
+            if (!IsDone)
+            {
+                currentTask = tasks.Dequeue();
+            }
+        }
+        else
+        {
+            if (currentTask.IsDone())
+            {
+                Debugger.Log(currentTask.Name + " done");
+                if (!IsDone)
+                {
+                    currentTask = tasks.Dequeue();
+                }
+                else currentTask = null;
+            }
+        }
+        return currentTask;
+    }
+
+    public void Done()
+    {
+        if (IsDone) doneAction?.Invoke();
     }
 }

@@ -31,6 +31,7 @@ public class FirstConnect
     public Button CreateAccountBtn;
     public GameObject CreateAccountPanel;
 }
+
 public class LoginScript : MonoBehaviour
 {
     public static LoginScript instances;
@@ -40,6 +41,8 @@ public class LoginScript : MonoBehaviour
     private ConnectRegion connectRegion;
     [Space]
     private SocketIOComponent socketIO;
+    [SerializeField]
+    private SIO_LoginListener SIO_LoginListener; 
 
     private void Awake()
     {
@@ -61,23 +64,23 @@ public class LoginScript : MonoBehaviour
     private void Start()
     {
         socketIO = Singleton.Instance<Connection>().Socket;
-        socketIO.On("R_LOGIN", R_LOGIN);
+        //socketIO.On("R_LOGIN", R_LOGIN);
     }
 
-    private void R_LOGIN(SocketIOEvent obj)
-    {
-        //Debug.Log("R_LOGIN: " + obj);
-        int successBool = int.Parse(obj.data["LoginBool"].ToString());
-        switch (successBool)
-        {
-            case 0:
-                Debug.Log("Login fail");
-                break;
-            case 1:
-                Debug.Log("Login success");
-                break;
-        }
-    }
+    //private void R_LOGIN(SocketIOEvent obj)
+    //{
+    //    //Debug.Log("R_LOGIN: " + obj);
+    //    int successBool = int.Parse(obj.data["LoginBool"].ToString());
+    //    switch (successBool)
+    //    {
+    //        case 0:
+    //            Debug.Log("Login fail");
+    //            break;
+    //        case 1:
+    //            Debug.Log("Login success");
+    //            break;
+    //    }
+    //}
 
     private void login()
     {
@@ -85,7 +88,8 @@ public class LoginScript : MonoBehaviour
         string Password = firstConnect.InputPassword.text.ToString();
         if (UserName.Length >= 6 && Password.Length >= 6)
         {
-            S_LOGIN(UserName, Password);
+            // S_LOGIN(UserName, Password);
+            SIO_LoginListener.Login(UserName, Password);
             if (firstConnect.ToggleRememberAccount.isOn == true)
             {
                 PlayerPrefs.SetString("UserName", UserName);
@@ -101,63 +105,50 @@ public class LoginScript : MonoBehaviour
         connectRegion.ConnectLoginRegion.SetActive(false);
         firstConnect.FirstConnectRegion.SetActive(true);
     }
+
     private void loginClick()
     {
         string UserName = PlayerPrefs.GetString("UserName");
         string Password = PlayerPrefs.GetString("Password");
-        S_LOGIN(UserName, Password);
-    }
-    #region Encrypt Password
-    private string md5String(string strToEncrypt)
-    {
-        System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
-        byte[] bytes = ue.GetBytes(strToEncrypt);
-
-        // encrypt bytes
-        System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-        byte[] hashBytes = md5.ComputeHash(bytes);
-
-        // Convert the encrypted bytes back to a string (base 16)
-        string hashString = "";
-
-        for (int i = 0; i < hashBytes.Length; i++)
-        {
-            hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
-        }
-
-        return hashString.PadLeft(32, '0');
-    }
-    #endregion
-    public void S_LOGIN(string UserName, string Password)
-    {
-        GameProgress.Instance.AddTask("get user info", CheckGetDataDone);
-        GameProgress.Instance.AddTask("get base info", CheckGetDataDone);
-        GameProgress.Instance.AddTask("get position", CheckGetDataDone);
-
-
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        data["UserName"] = UserName;
-        data["Password"] = md5String(Password);
-        data["Model_Device"] = SystemInfo.deviceModel;
-        data["Ram_Device"] = SystemInfo.systemMemorySize.ToString();
-        socketIO.Emit("S_LOGIN", new JSONObject(data));
-
+        //S_LOGIN(UserName, Password);
+        SIO_LoginListener.Login(UserName, Password);
     }
 
-    public void CheckGetDataDone()
-    {
-        if (GameProgress.Instance.IsEmpty)
-        {
-            LoadingUICtrl.Instance.Done(() =>
-            {
-                LoadingUICtrl.Instance.LoadScene(1);
-                LoadingUICtrl.Instance.SetText("Loading scene ...");
-            });
-        }
-        else
-        {
-            LoadingUICtrl.Instance.StartProgress(1);
+    //#region Encrypt Password
+    //private string md5String(string strToEncrypt)
+    //{
+    //    System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
+    //    byte[] bytes = ue.GetBytes(strToEncrypt);
 
-        }
-    }
+    //    // encrypt bytes
+    //    System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+    //    byte[] hashBytes = md5.ComputeHash(bytes);
+
+    //    // Convert the encrypted bytes back to a string (base 16)
+    //    string hashString = "";
+
+    //    for (int i = 0; i < hashBytes.Length; i++)
+    //    {
+    //        hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
+    //    }
+
+    //    return hashString.PadLeft(32, '0');
+    //}
+    //#endregion
+
+    //public void S_LOGIN(string UserName, string Password)
+    //{
+
+    //    //AddProgress();
+
+    //    Dictionary<string, string> data = new Dictionary<string, string>();
+    //    data["UserName"] = UserName;
+    //    data["Password"] = md5String(Password);
+    //    data["Model_Device"] = SystemInfo.deviceModel;
+    //    data["Ram_Device"] = SystemInfo.systemMemorySize.ToString();
+    //    socketIO.Emit("S_LOGIN", new JSONObject(data));
+
+    //}
+
+
 }

@@ -318,4 +318,32 @@ namespace ManualTable.Row
         public ListUpgrade ID_Unit;
         public int Quality;
     }
+
+    [System.Serializable]
+    public class UnitRow : ServerMessage
+    {
+        public override int FieldCount
+        {
+            get { return 10; }
+        }
+
+        public int ID;
+        public ListUpgrade ID_Unit;
+        public int ID_User;
+        public int BaseNumber;
+        public int Level;
+        public int Quality;
+        public float Hea_cur;
+        public float Health;
+        public string Position_Cell;
+        public string Next_Cell;
+        public string End_Cell;
+        public float TimeMoveNextCell;
+        public float TimeFinishMove;
+        public string ListMove;
+        public int Status;
+        public int Attack_Base_ID;
+        public int Attack_Unit_ID;
+        public bool AttackedBool;
+    }
 }

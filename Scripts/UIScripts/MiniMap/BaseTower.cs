@@ -7,7 +7,6 @@ namespace Map
     [RequireComponent(typeof(WayPoint))]
     public class BaseTower : MonoBehaviour
     {
-
         public WayPoint WayPoint
         {
             get;
@@ -19,17 +18,26 @@ namespace Map
         public int BaseId;
         public Vector3Int CellPosision;
 
+        private int maxRange;
         private Connection Conn;
+        private GlobalNodeManager nodeManager;
+        private TowerNodeManager towerNodeManager;
         private void Awake()
         {
             WayPoint = GetComponent<WayPoint>();
-
+            WayPoint.IsTower = true;
         }
 
         private void Start()
         {
-            if (SetupPositionBaseOnServerData() || !IsDependentServer)
-                Singleton.Instance<CellInfoManager>().AddBase(WayPoint.CellPosition, WayPoint.CellInfo, IsExpand);
+            SetupPositionBaseOnServerData();
+            SetPosition();
+
+            nodeManager = Singleton.Instance<GlobalNodeManager>();
+            towerNodeManager = nodeManager.TowerNode;
+
+            maxRange = IsExpand ? 2 : 1;
+            towerNodeManager.AddRange(WayPoint.Position, WayPoint.NodeInfo, maxRange);
         }
 
         [ContextMenu("Set Position")]
@@ -60,7 +68,6 @@ namespace Map
                     }
                 }
             }
-            gameObject.SetActive(false); // setup failure
             return false;
         }
     }
