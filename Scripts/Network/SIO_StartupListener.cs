@@ -67,8 +67,9 @@ public sealed class SIO_StartupListener : Listener
 
     private void R_BASE_PLAYER(SocketIOEvent obj)
     {
-        Debug.Log(obj);
-
+        Debug.Log(obj);        
+        string json = obj.data["R_BASE_PLAYER"].ToString().Replace("\\", "").Replace("\"{", "{").Replace("}\"", "}");
+        JSONObject R_BASE_PLAYER = new JSONObject(json); 
     }
 
     public override void RegisterCallback()

@@ -26,7 +26,7 @@ public class AgentController : MonoBehaviour
         Label.SetHp(Data.Hea_cur);
         Label.SetQuality(Data.Quality);
 
-        Label.SetNameInGame(currentUser.NameInGame);
+        Label.SetNameInGame(currentUser?.NameInGame);
 
     }
 

@@ -26,7 +26,7 @@ public class NavAgentInspector : Editor
 
             if(GUILayout.Button("Offset Move"))
             {
-                owner.StartOffsetMove();
+
             }
             // mask end vertical layout group
             EditorGUILayout.EndVertical();
@@ -38,9 +38,9 @@ public class NavAgentInspector : Editor
         // mask start vertical layout group
         EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
 
-        EditorGUILayout.LabelField("Star Cell: " + owner.StartCell.ToString());
-        EditorGUILayout.LabelField("End Cell : " + owner.EndCell.ToString());
-        EditorGUILayout.LabelField("Current Cell : " + owner.CurrentCell.ToString());
+        EditorGUILayout.LabelField("Star Cell: " + owner.StartPosition.ToString());
+        EditorGUILayout.LabelField("End Cell : " + owner.EndPosition.ToString());
+        EditorGUILayout.LabelField("Current Cell : " + owner.CurrentPosition.ToString());
 
         // mask end vertical layout group
         EditorGUILayout.EndVertical();

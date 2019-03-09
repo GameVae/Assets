@@ -1,4 +1,5 @@
-﻿using Generic.Singleton;
+﻿using EnumCollect;
+using Generic.Singleton;
 using ManualTable.Row;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace Map
         public bool IsDependentServer;
         public int BaseId;
         public Vector3Int CellPosision;
-
+        public TowerType Type;
         private int maxRange;
         private Connection Conn;
         private GlobalNodeManager nodeManager;

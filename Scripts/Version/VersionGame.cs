@@ -25,7 +25,6 @@ public class VersionGame : MonoSingle<VersionGame>
 
         checkVersionDone = false;
         InitProg();
-        StartCoroutine(CheckVersion());
     }
 
     public void S_CHECK_VERSION()

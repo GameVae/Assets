@@ -1808,8 +1808,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Offset:
     MaxSpeed: 2
-    MaxMoveStep: 50
-  maxSearchLevel: 200
+    MaxMoveStep: 10
+    MaxSearchLevel: 100
   OffsetMovement: []
   CurrentOffsetStep: 0
   Anim: {fileID: 1885978826}

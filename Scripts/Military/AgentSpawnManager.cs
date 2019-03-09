@@ -7,10 +7,11 @@ using Utils;
 
 public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
 {
-    private Dictionary<int,Queue<GameObject>> agentsPool;
+    private Dictionary<int, Queue<GameObject>> agentsPool;
 
     private Dictionary<int, Object> agents;
 
+    public Transform Container;
     public AssetUtils AssetUtil;
 
     protected override void Awake()
@@ -25,7 +26,7 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
     public GameObject GetMilitary(ListUpgrade type)
     {
         Queue<GameObject> pool;
-        if(agentsPool.TryGetValue(type.GetHashCode(),out pool))
+        if (agentsPool.TryGetValue(type.GetHashCode(), out pool))
         {
             if (pool.Count > 0)
                 return pool.Dequeue();
@@ -39,11 +40,11 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
         }
     }
 
-    public void ReturnSolider(ListUpgrade type,GameObject agent)
+    public void ReturnSolider(ListUpgrade type, GameObject agent)
     {
         agent.SetActive(false);
         Queue<GameObject> pool;
-        if(agentsPool.TryGetValue(type.GetHashCode(),out pool))
+        if (agentsPool.TryGetValue(type.GetHashCode(), out pool))
         {
             pool.Enqueue(agent);
         }
@@ -59,7 +60,6 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
         Object[] objs = AssetUtil.Load(@"Prefabs\Agents");
         for (int i = 0; i < objs.Length; i++)
         {
-
             GameObject go = objs[i] as GameObject;
             int hashCode = go.GetComponent<NavRemote>().Type.GetHashCode();
             agents[hashCode] = objs[i];
@@ -71,6 +71,6 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
         agents.TryGetValue(type.GetHashCode(), out Object res);
         if (res == null)
             return null;
-        return Instantiate(res as GameObject);
+        return Instantiate(res as GameObject, Container);
     }
 }

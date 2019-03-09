@@ -346,4 +346,27 @@ namespace ManualTable.Row
         public int Attack_Unit_ID;
         public bool AttackedBool;
     }
+
+    public class MoveStep : ServerMessage
+    {
+        public override int FieldCount { get { return 3; } }
+        public string Position_Cell;
+        public string Next_Cell;
+        public float TimeMoveNextCell;
+
+        public Vector3Int Position
+        {
+            get { return Position_Cell.Parse3Int(); }
+        }
+
+        public Vector3Int NextPosition
+        {
+            get { return Next_Cell.Parse3Int(); }
+        }
+
+        public float TimeSecond
+        {
+            get { return TimeMoveNextCell / 1000.0f; }
+        }
+    }
 }

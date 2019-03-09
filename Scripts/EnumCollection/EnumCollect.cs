@@ -80,4 +80,9 @@ namespace EnumCollect
         Attack1,
         Attack2
     }
+
+    public enum TowerType
+    {
+        Base,
+    }
 }

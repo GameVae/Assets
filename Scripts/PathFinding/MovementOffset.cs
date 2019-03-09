@@ -9,6 +9,7 @@ public sealed class MovementOffset
 
     public float MaxSpeed;
     public int MaxMoveStep;
+    public int MaxSearchLevel;
 
     public MovementOffset() { }
 

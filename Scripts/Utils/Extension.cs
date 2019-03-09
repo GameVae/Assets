@@ -78,6 +78,7 @@ public static class Extension
         return rs;
     }
     #endregion
+
     #region Attribute
     public static bool HasAttribute<T>(this Type type, object value) where T : Attribute
     {
@@ -180,8 +181,7 @@ public static class Extension
     {
         return vector3.magnitude < maxMagnitude ? vector3 : vector3.normalized * maxMagnitude;
     }
-
-
+    
     #endregion
 
     #region RectTransform

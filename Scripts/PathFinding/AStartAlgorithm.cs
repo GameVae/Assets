@@ -8,16 +8,19 @@ public class AStartAlgorithm
     private List<HexCell> closedCell;
     private List<int> closedIndex;
 
-    public int MaxLevel { get; set; }
-    public HexMap HexMap { get; set; }
+    private int maxLevel;
+    private HexMap mapIns;
+
     public List<Vector3Int> Path { get; protected set; }
 
-    public AStartAlgorithm()
+    public AStartAlgorithm(HexMap hexMap, int maxDeep)
     {
         Path = new List<Vector3Int>();
         openCell = new List<HexCell>();
         closedCell = new List<HexCell>();
         closedIndex = new List<int>();
+        mapIns = hexMap;
+        maxLevel = maxDeep;
     }
 
     public bool FindPath(Vector3Int start, Vector3Int end)
@@ -44,12 +47,12 @@ public class AStartAlgorithm
     private bool Calculate(HexCell currentCell, Vector3Int target, int level)
     {
         // termnial : Path not found
-        if (openCell.Count == 0 || level > MaxLevel) return false;
+        if (openCell.Count == 0 || level > maxLevel) return false;
 
         // store for tracking
         closedCell.Add(currentCell);
         // mask current cell visited
-        closedIndex.Add(HexMap.ConvertToIndex(currentCell.X, currentCell.Y));
+        closedIndex.Add(mapIns.ConvertToIndex(currentCell.X, currentCell.Y));
         openCell.RemoveAt(openCell.IndexOf(currentCell));
 
         // check goal
@@ -57,7 +60,7 @@ public class AStartAlgorithm
         if (currentPos == target) return true;
 
         // add neigbours to queue
-        Vector3Int[] neighbours = HexMap.GetNeighbours(currentPos);
+        Vector3Int[] neighbours = mapIns.GetNeighbours(currentPos);
         for (int i = 0; i < neighbours.Length; i++)
         {
             HexCell cell = Singleton.Instance<PoolHexCell>().CreateCell(neighbours[i].x, neighbours[i].y);
@@ -65,7 +68,7 @@ public class AStartAlgorithm
             {
                 continue; // pool empty
             }
-            if (!closedIndex.Contains(HexMap.ConvertToIndex(cell.X,cell.Y)))
+            if (!closedIndex.Contains(mapIns.ConvertToIndex(cell.X,cell.Y)))
             {
                 cell.G = currentCell.G + 1;
                 cell.H = Vector3Int.Distance(neighbours[i], target);

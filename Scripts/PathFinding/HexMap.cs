@@ -90,4 +90,14 @@ public sealed class HexMap : MonoSingle<HexMap>
             return HexGrid.WorldToCell(position);
         return Vector3Int.zero;
     }
+
+    public List<Vector3> CellToWorld(List<Vector3Int> cells)
+    {
+        List<Vector3> rs = new List<Vector3>();
+        for (int i = 0; i < cells.Count; i++)
+        {
+            rs.Add(CellToWorld(cells[i]));
+        }
+        return rs;
+    }
 }

@@ -11,29 +11,18 @@ public class SIO_MovementListener : Listener
     private JSONObject moveJSONObject;
     private string moveData;
 
-    private void Awake()
-    {
-        agentCtrl = GetComponent<NavAgentController>();
-    }
-
     protected override void Start()
     {
         base.Start();
+        agentCtrl = GetComponent<NavAgentController>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
     }
 
     public override void RegisterCallback()
     {
         AddEmiter("S_MOVE", S_MOVE);
-        On("R_MOVE", R_MOVE);
     }
 
-    private void R_MOVE(SocketIOEvent obj)
-    {
-        // Debugger.Log(obj);
-
-        agentCtrl.MoveAgent(obj.data);
-    }
 
     private JSONObject S_MOVE()
     {

@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
         CrossInput = Singleton.Instance<CrossInput>();
 
         AgentCtrl = Singleton.Instance<NavAgentController>();
-        AgentCtrl.AddMoveCondition(IsTouch);
+        AgentCtrl.MoveConditions += IsTouch;
 
         SetStartupPosition();
         targetFov = Option.DefaultFov;
