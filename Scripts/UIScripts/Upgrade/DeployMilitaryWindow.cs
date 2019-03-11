@@ -6,6 +6,8 @@ using ManualTable.Row;
 using Network.Data;
 using SocketIO;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UI.Widget;
 
 public class DeployMilitaryWindow : BaseWindow
@@ -16,9 +18,11 @@ public class DeployMilitaryWindow : BaseWindow
     public GUIInteractableIcon DeployButton;
     public GUIOnOffSwitch OpenWDO;
 
+    private FieldReflection fieldReflection;
     private DBReference dbRef;
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
+    private UnitDataReference unitDataReference;
 
     protected override void Start()
     {
@@ -33,6 +37,8 @@ public class DeployMilitaryWindow : BaseWindow
 
         OpenWDO.OnClick.AddListener(Open);
         dbRef = Singleton.Instance<DBReference>();
+        fieldReflection = Singleton.Instance<FieldReflection>();
+        unitDataReference = Singleton.Instance<UnitDataReference>();
     }
 
     private void R_DEPLOY(SocketIOEvent obj)
@@ -97,6 +103,7 @@ public class DeployMilitaryWindow : BaseWindow
     {
         base.Open();
         Load();
+        refTag?.SetValue(0);
     }
 
     protected override void Init()
@@ -135,9 +142,40 @@ public class DeployMilitaryWindow : BaseWindow
 
     private void AddUnit()
     {
+        UserInfoRow user = SyncData.UserInfo.Rows[0];
         UnitJSONTable units = SyncData.UnitTable;
         BaseInfoRow baseInfo = SyncData.CurrentMainBase;
+        BaseUpgradeJSONTable baseUpgrade = SyncData.CurrentBaseUpgrade;
+        BaseDefendJSONTable baseDefend = SyncData.CurrentBaseDefend;
 
+        int lv = baseUpgrade[refTag.Type].Level;
+        ListUpgrade type = refTag.Type;
+        int useId = user.ID_User;
+        int baseN = baseInfo.BaseNumber;
+        string position = baseInfo.Position;
+        int quality = (int)refTag.Slider.Value;
 
+        Json.Interface.IJSON militaryType = dbRef[type][lv - 1];
+        float health = fieldReflection.GetField<float>(militaryType, "Health", BindingFlags.Public | BindingFlags.Instance);
+        float cur_hea = health;
+
+        UnitRow newUnit = new UnitRow()
+        {
+            ID = 0,
+            ID_Unit = type,
+            ID_User = useId,
+            BaseNumber = baseN,
+            Level = lv,
+            Quality = quality,
+            Hea_cur = cur_hea,
+            Health = health,
+            Position_Cell = position
+        };
+        units.Rows.Add(newUnit);
+
+        unitDataReference.Create(newUnit, user);
+
+        BaseDefendRow baseDefendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == type);
+        baseDefendRow.Quality -= quality;
     }
 }

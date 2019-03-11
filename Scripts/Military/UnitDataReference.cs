@@ -36,17 +36,21 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         {
             r = UnitTable.Rows[i];
             user = Users.Rows.FirstOrDefault(u => u.ID_User == r.ID_User);
+            Create(r, user);
+        }
+    }
 
-            GameObject agent = AgentSpawner.GetMilitary(r.ID_Unit);
-            if (agent == null || user == default(UserInfoRow))
-                continue;
-            else
-            {
-                agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int() + new Vector3Int(5, 5, 0));
-                agent.GetComponent<AgentController>().SetData(r);
-                agent.GetComponent<AgentController>().SetCurrentUser(user);
-                agent.SetActive(true);
-            }
+    public void Create(UnitRow r,UserInfoRow user)
+    {
+        GameObject agent = AgentSpawner.GetMilitary(r.ID_Unit);
+        if (agent == null || user == default(UserInfoRow))
+            return;
+        else
+        {
+            agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int() + new Vector3Int(5, 5, 0));
+            agent.GetComponent<AgentController>().SetData(r);
+            agent.GetComponent<AgentController>().SetCurrentUser(user);
+            agent.SetActive(true);
         }
     }
 }
