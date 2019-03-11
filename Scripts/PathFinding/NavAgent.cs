@@ -81,7 +81,7 @@ public class NavAgent : MonoBehaviour
         breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
 
         aStar = new AStartAlgorithm(mapIns, maxSearchLevel);
-        fixedMove = new FixedMovement(this);
+        fixedMove = new FixedMovement(this, Anim);
 
         MoveFinish();
     }
@@ -195,9 +195,9 @@ public class NavAgent : MonoBehaviour
         return foundPath;
     }
 
-    public void StartMove(JSONObject listMove)
+    public void StartMove(JSONObject r_move)
     {
-        fixedMove.StartMove(listMove);
+        fixedMove.StartMove(r_move);
     }
 
     public List<float> GetTime()
@@ -228,7 +228,7 @@ public class NavAgent : MonoBehaviour
 
     #region Animation
     public float maxAngular = 5;
-    private void RotateToTarget(Vector3 target)
+    public void RotateToTarget(Vector3 target)
     {
         Vector3 direction = (target - transform.position) * maxAngular;
         transform.forward += direction * Time.deltaTime;

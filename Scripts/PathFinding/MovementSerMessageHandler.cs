@@ -6,16 +6,27 @@ public sealed class MovementSerMessageHandler
 {
     private List<MoveStep> moveSteps;
     
-    public List<MoveStep> HandlerEvent(JSONObject listMove)
+    public List<MoveStep> HandlerEvent(JSONObject r_move)
     {
         if (moveSteps == null) moveSteps = new List<MoveStep>();
         else moveSteps.Clear();
 
+        MoveStep firstStep = new MoveStep()
+        {
+            Position_Cell = r_move.GetField("Position_Cell").str,
+            Next_Cell = r_move.GetField("Next_Cell").str,
+            TimeMoveNextCell = r_move.GetField("TimeMoveNextCell").n
+        };
+
+        JSONObject listMove = r_move.GetField("ListMove");
+
+        moveSteps.Add(firstStep);
         for (int i = 0; i < listMove.Count; i++)
         {
             MoveStep step = JsonUtility.FromJson<MoveStep>(listMove[i].ToString());
             moveSteps.Add(step);
         }
+
         return moveSteps;
     }
 
@@ -24,9 +35,8 @@ public sealed class MovementSerMessageHandler
         List<Vector3Int> res = new List<Vector3Int>();
         for (int i = 0; i < moveSteps.Count; i++)
         {
-            if (i == 0) res.Add(moveSteps[i].Position);
             res.Add(moveSteps[i].NextPosition);
         }
-        return res;
+        return res.Invert();
     }
 }

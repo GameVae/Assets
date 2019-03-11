@@ -59,6 +59,6 @@ public class TestObj : MonoBehaviour {
 
     private void R_MOVE(SocketIO.SocketIOEvent ev)
     {
-        AgentTest.StartMove(ev.data["R_MOVE"].GetField("ListMove"));
+        AgentTest.StartMove(ev.data["R_MOVE"]);
     }
 }

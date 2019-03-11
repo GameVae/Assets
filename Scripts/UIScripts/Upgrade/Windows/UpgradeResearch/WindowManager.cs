@@ -23,7 +23,8 @@ public sealed class WindowManager : MonoBehaviour
         Trade,
         Trainning,
         MiniTask,
-        MiniMap
+        MiniMap,
+        Deploy
     }
 
     public enum WindowGroupType
@@ -49,10 +50,6 @@ public sealed class WindowManager : MonoBehaviour
             groups = new Dictionary<int, WindowGroup>();
         groups[groupType.GetHashCode()] = windowGroup;
     }
-
-    [Header("Construct Database")]
-    [SerializeField] private MainBaseTable MainbaseDB;
-    [SerializeField] private MainBaseTable InfantryDB;
 
     public Sync Sync { get { return Conn?.Sync; } }
 

@@ -31,11 +31,6 @@ namespace UI.Animation
             InitPivot();
 
         }
-        private void Start()
-        {
-
-
-        }
 
         private void Update()
         {

@@ -1,29 +1,27 @@
-﻿using Generic.Contants;
+﻿using Animation;
+using EnumCollect;
+using Generic.Contants;
 using Generic.Singleton;
 using ManualTable.Row;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FixedMovement
+public sealed class FixedMovement
 {
     private bool isMoving;
-    private Vector3 target;
     private HexMap mapIns;
     private float speed;
     private List<MoveStep> moveSteps;
     private List<Vector3Int> path;
     private NavAgent targetAgent;
     private MovementSerMessageHandler moveHandler;
-    private MoveStep lastStep;
+    private AnimatorController anim;
 
     public List<Vector3Int> Path
     { get { return path; } }
 
-    public Vector3 Target
-    { get { return target; } }
-
-    public FixedMovement(NavAgent agent)
+    public FixedMovement(NavAgent agent, AnimatorController animatorController)
     {
         isMoving = false;
 
@@ -31,50 +29,69 @@ public class FixedMovement
         mapIns = Singleton.Instance<HexMap>();
         moveHandler = new MovementSerMessageHandler();
         targetAgent = agent;
+        anim = animatorController;
     }
 
     public void Update()
     {
         if (isMoving)
         {
-            targetAgent.transform.position = Vector3.MoveTowards(
+            if (path.Count > 0)
+            {
+                Vector3 currentTarget = mapIns.CellToWorld(path[path.Count - 1]);
+
+                targetAgent.transform.position = Vector3.MoveTowards(
                     current: targetAgent.transform.position,
-                    target: target,
+                    target: currentTarget,
                     maxDistanceDelta: Time.deltaTime * speed);
 
-            if ((targetAgent.transform.position - target).magnitude <= Constants.TINY_VALUE)
+                targetAgent.RotateToTarget(currentTarget);
+
+                if ((targetAgent.transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
+                {
+                    NextStep();
+                }
+            }
+            else
             {
-                NextStep();
+                Stop();
             }
         }
     }
 
-    public void StartMove(JSONObject data)
+    public void StartMove(JSONObject r_move)
     {
-        moveSteps = moveHandler.HandlerEvent(data);
+        moveSteps = moveHandler.HandlerEvent(r_move);
         path = moveHandler.GetPath(moveSteps);
 
         isMoving = true;
-        NextStep();
+        Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
+        speed = CalculateSpeed(targetAgent.transform.position, target, 0, moveSteps[0].TimeSecond);
+        targetAgent.WayPoint.Unbinding();
+        anim.Play(AnimState.Walking);
     }
 
     private void NextStep()
     {
-        if (moveSteps.Count > 0)
-        {
-            MoveStep step = moveSteps[0];
-            target = mapIns.CellToWorld(step.NextPosition);
-            float lastTime = lastStep == null ? 0 : lastStep.TimeSecond;
-            speed = Vector3.Distance(target, targetAgent.transform.position) / (step.TimeSecond - lastTime);
+        float lastTime = moveSteps[0].TimeSecond;
 
-            lastStep = step;
-            moveSteps.RemoveAt(0);
-            Path.RemoveAt(0);
-        }
-        else
-            isMoving = false;
+        Path.RemoveAt(Path.Count - 1);
+        moveSteps.RemoveAt(0);
+
+        Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
+        speed = CalculateSpeed(targetAgent.transform.position, target, lastTime, moveSteps[0].TimeSecond);
 
     }
 
+    private float CalculateSpeed(Vector3 pos, Vector3 tar, float lastTime, float targetTime)
+    {
+        return Vector3.Distance(pos, tar) / (targetTime - lastTime);
+    }
+
+    private void Stop()
+    {
+        anim.Stop(AnimState.Walking);
+        targetAgent.WayPoint.Binding();
+    }
 
 }
