@@ -1790,10 +1790,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1885978819}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 734512cae043b9a4e8a27f5e40700ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8283fa622c591374e81e560506b91dae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsTower: 0
 --- !u!114 &1885978821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1810,8 +1809,6 @@ MonoBehaviour:
     MaxSpeed: 2
     MaxMoveStep: 10
     MaxSearchLevel: 100
-  OffsetMovement: []
-  CurrentOffsetStep: 0
   Anim: {fileID: 1885978826}
   maxAngular: 5
 --- !u!114 &1885978820

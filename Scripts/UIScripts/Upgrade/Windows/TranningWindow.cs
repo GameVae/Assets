@@ -269,9 +269,9 @@ public class TranningWindow : BaseWindow
         refType = SyncData.CurrentBaseUpgrade[type];
         ITable dbTable = Singleton.Instance<DBReference>()[selectedType];
         string data = dbTable[SyncData.CurrentBaseUpgrade[selectedType].Level - 1].ToJSON();
-        TrainningCostTable table = Singleton.Instance<DBReference>()[DBType.TrainningCost] as TrainningCostTable;
+        TrainningCostTable costTable = Singleton.Instance<DBReference>()[DBType.TrainningCost] as TrainningCostTable;
         refTrainInfo = JsonUtility.FromJson<MilitaryRow>(data);
-        refCostInfo = table.Rows.FirstOrDefault(r => r.ID_Unit == selectedType);
+        refCostInfo = costTable.Rows.FirstOrDefault(r => r.ID_Unit == selectedType);
 
         CurrentSelect.Placeholder.text = selectedType.ToString().InsertSpace();
     }

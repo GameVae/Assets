@@ -77,10 +77,11 @@ public sealed class FixedMovement
 
         Path.RemoveAt(Path.Count - 1);
         moveSteps.RemoveAt(0);
-
-        Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
-        speed = CalculateSpeed(targetAgent.transform.position, target, lastTime, moveSteps[0].TimeSecond);
-
+        if (moveSteps.Count > 0)
+        {
+            Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
+            speed = CalculateSpeed(targetAgent.transform.position, target, lastTime, moveSteps[0].TimeSecond);
+        }
     }
 
     private float CalculateSpeed(Vector3 pos, Vector3 tar, float lastTime, float targetTime)

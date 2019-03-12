@@ -369,4 +369,16 @@ namespace ManualTable.Row
             get { return TimeMoveNextCell / 1000.0f; }
         }
     }
+
+    [System.Serializable]
+    public class BasePlayerRow : ServerMessage
+    {
+        public override int FieldCount { get { return 5; } }
+
+        public int ID_User;
+        public string NameInGame;
+        public string Position;
+        public int BaseNumber;
+        public int Level;
+    }
 }

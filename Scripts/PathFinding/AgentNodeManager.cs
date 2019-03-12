@@ -11,11 +11,12 @@ public class AgentNodeManager
         infos = new Dictionary<Vector3Int, NodeInfo>();
     }
 
-    public void Add(Vector3Int pos, NodeInfo info)
+    public bool Add(Vector3Int pos, NodeInfo info)
     {
         if (IsHolding(pos))
-            return;
+            return false;
         infos[pos] = info;
+        return true;
     }
 
     public bool GetInfo(Vector3Int pos, out NodeInfo info)

@@ -22,17 +22,19 @@ public sealed class TowerNodeManager
         hexMap = Singleton.Instance<HexMap>();
     }
 
-    public void AddRange(Vector3Int center, NodeInfo info, int maxRange)
-    {
-        for (int range = 1; range <= maxRange; range++)
-        {
-            Add(center, info, range);
-        }
-        infos[center] = info;
-        if (!centers.Contains(center))
+    public bool AddRange(Vector3Int center, NodeInfo info, int maxRange)
+    {      
+        if (!centers.Contains(center) && maxRange > 0 && maxRange <= 3)
         {
             centers.Add(center);
+            for (int range = 1; range <= maxRange; range++)
+            {
+                Add(center, info, range);
+            }
+            infos[center] = info;
+            return true;
         }
+        return false;
     }
 
     public bool GetInfo(Vector3Int pos, out NodeInfo info)
@@ -47,7 +49,7 @@ public sealed class TowerNodeManager
 
     public bool Remove(Vector3Int center,int maxRange)
     {
-        if (infos.ContainsKey(center))
+        if (infos.ContainsKey(center) && maxRange > 0 && maxRange <= 3)
         {
             for (int range = 1; range <= maxRange; range++)
             {

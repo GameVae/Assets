@@ -15,6 +15,7 @@ public sealed class SIO_StartupListener : Listener
     {
         //Debugger.Log(obj);
         Conn.Sync.BaseInfo.LoadTable(obj.data["R_BASE_INFO"]);
+        Player.BaseInfo = Conn.Sync.BaseInfo.Rows[0];
     }
 
     public void R_USER_INFO(SocketIOEvent obj)
@@ -69,7 +70,8 @@ public sealed class SIO_StartupListener : Listener
     {
         Debug.Log(obj);        
         string json = obj.data["R_BASE_PLAYER"].ToString().Replace("\\", "").Replace("\"{", "{").Replace("}\"", "}");
-        JSONObject R_BASE_PLAYER = new JSONObject(json); 
+        JSONObject R_BASE_PLAYER = new JSONObject(json);
+        SyncData.BasePlayerTable.LoadTable(R_BASE_PLAYER);
     }
 
     public override void RegisterCallback()

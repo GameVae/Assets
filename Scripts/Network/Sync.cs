@@ -48,6 +48,7 @@ namespace Network.Sync
         public BaseDefendJSONTable[] BaseDefends;
 
         public UnitJSONTable UnitTable;
+        public BasePlayerJSONTable BasePlayerTable;
 
         public void SyncUpdate(float deltaTime)
         {

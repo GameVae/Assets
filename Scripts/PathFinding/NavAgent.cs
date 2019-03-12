@@ -11,7 +11,7 @@ using PathFinding;
 using UnityEngine;
 
 
-[RequireComponent(typeof(LineRenderer), typeof(WayPoint))]
+[RequireComponent(typeof(LineRenderer), typeof(AgentWayPoint))]
 public class NavAgent : MonoBehaviour
 {
     private NavRemote remote;
@@ -77,7 +77,7 @@ public class NavAgent : MonoBehaviour
     private void Start()
     {
         mapIns = Singleton.Instance<HexMap>();
-        WayPoint = GetComponent<WayPoint>();
+        WayPoint = GetComponent<AgentWayPoint>();
         breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
 
         aStar = new AStartAlgorithm(mapIns, maxSearchLevel);

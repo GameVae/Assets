@@ -1,11 +1,10 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
-using ManualTable.Row;
 using UnityEngine;
 
 namespace Map
 {
-    [RequireComponent(typeof(WayPoint))]
+    [RequireComponent(typeof(TowerWayPoint))]
     public class BaseTower : MonoBehaviour
     {
         public WayPoint WayPoint
@@ -14,62 +13,52 @@ namespace Map
             private set;
         }
 
-        public bool IsExpand;
-        public bool IsDependentServer;
-        public int BaseId;
-        public Vector3Int CellPosision;
+        [Header("Offset")]
         public TowerType Type;
-        private int maxRange;
-        private Connection Conn;
+        public Vector3Int ExactlyPosition;
+
         private GlobalNodeManager nodeManager;
         private TowerNodeManager towerNodeManager;
+
         private void Awake()
         {
-            WayPoint = GetComponent<WayPoint>();
-            WayPoint.IsTower = true;
+            WayPoint = GetComponent<TowerWayPoint>();
         }
 
         private void Start()
         {
-            SetupPositionBaseOnServerData();
-            SetPosition();
-
             nodeManager = Singleton.Instance<GlobalNodeManager>();
             towerNodeManager = nodeManager.TowerNode;
 
-            maxRange = IsExpand ? 2 : 1;
-            towerNodeManager.AddRange(WayPoint.Position, WayPoint.NodeInfo, maxRange);
+            WayPoint.Binding();
         }
 
         [ContextMenu("Set Position")]
         public void SetPosition()
         {
-            transform.position = Singleton.Instance<HexMap>().CellToWorld(CellPosision);
+            transform.position = WayPoint.MapIns.CellToWorld(ExactlyPosition);
         }
 
         [ContextMenu("Get Cell Position")]
         public void GetPosition()
         {
-            CellPosision = Singleton.Instance<HexMap>().WorldToCell(transform.position);
+            ExactlyPosition = WayPoint.MapIns.WorldToCell(transform.position);
         }
 
-        private bool SetupPositionBaseOnServerData()
+        public void SetPosition(Vector3Int exactlyPos)
         {
-            if (IsDependentServer)
-            {
-                Conn = Singleton.Instance<Connection>();
-                int count = Conn.Sync.BaseInfo.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    BaseInfoRow baseInfo = Conn.Sync.BaseInfo[i] as BaseInfoRow;
-                    if (baseInfo.BaseNumber == BaseId)
-                    {
-                        CellPosision = baseInfo.Position.Parse3Int() + new Vector3Int(5, 5, 0);
-                        return true;
-                    }
-                }
-            }
-            return false;
+            WayPoint.Unbinding();
+
+            ExactlyPosition = exactlyPos;
+            SetPosition();
+
+            WayPoint.Binding();
+        }
+
+        public Vector3Int GetExactlyPosition()
+        {
+            GetPosition();
+            return ExactlyPosition;
         }
     }
 }

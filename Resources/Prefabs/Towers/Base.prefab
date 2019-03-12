@@ -5378,13 +5378,14 @@ GameObject:
   - component: {fileID: 95436632590386350}
   - component: {fileID: 1562924391}
   - component: {fileID: 1562924392}
+  - component: {fileID: 3278199730223602854}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4425062033248520
 Transform:
   m_ObjectHideFlags: 0
@@ -5392,7 +5393,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824127128964776}
-  m_LocalRotation: {x: -0.5, y: -0.5, z: 0.5, w: 0.5}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 56, y: 42.000008, z: -0.5000038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5401,7 +5402,7 @@ Transform:
   - {fileID: 51863934}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!95 &95436632590386350
 Animator:
   serializedVersion: 3
@@ -5433,10 +5434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba64ce62be50fed44a7064b4acc1d7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsExpand: 0
-  IsDependentServer: 1
-  BaseId: 1
-  CellPosision: {x: 0, y: 0, z: 0}
+  ExactlyPosition: {x: 0, y: 0, z: 0}
   Type: 0
 --- !u!114 &1562924392
 MonoBehaviour:
@@ -5447,10 +5445,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1824127128964776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 734512cae043b9a4e8a27f5e40700ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a7d5ffb7b86cbd4bb4ea6ebbe5182b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsTower: 1
+  maxRange: 1
+--- !u!114 &3278199730223602854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824127128964776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68e3d7cb3edf0ed4c9337d43b719eabd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: {fileID: 1892598796}
+  Lv: {fileID: 96875822}
 --- !u!1 &1883357848094502
 GameObject:
   m_ObjectHideFlags: 0

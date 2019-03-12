@@ -4,12 +4,20 @@ using UnityEngine;
 namespace Map
 {
     [DisallowMultipleComponent]
-    public sealed class WayPoint : MonoBehaviour
+    public abstract class WayPoint : MonoBehaviour
     {
         private NodeInfo info;
         private HexMap hexMap;
-        private GlobalNodeManager nodeManager;
-        private AgentNodeManager agentNodeManager;
+
+        protected GlobalNodeManager nodeManager;
+
+        public HexMap MapIns
+        {
+            get
+            {
+                return hexMap ?? (hexMap = Singleton.Instance<HexMap>());
+            }
+        }
 
         public NodeInfo NodeInfo
         {
@@ -21,14 +29,11 @@ namespace Map
         {
             get
             {
-                if (hexMap == null) hexMap = Singleton.Instance<HexMap>();
-                return hexMap.WorldToCell(transform.position).ZToZero();
+                return (Vector3Int)MapIns?.WorldToCell(transform.position).ZToZero();
             }
         }
 
-        public bool IsTower;
-
-        private void Awake()
+        protected virtual void Awake()
         {
             info = new NodeInfo()
             {
@@ -36,27 +41,10 @@ namespace Map
                 GameObject = gameObject,
             };
             nodeManager = Singleton.Instance<GlobalNodeManager>();
-            agentNodeManager = nodeManager.AgentNode;
         }
 
-        private void Start()
-        {
-            if (hexMap == null) hexMap = Singleton.Instance<HexMap>();          
-        }
+        public abstract bool Binding();
 
-        public bool Binding()
-        {
-            if (!IsTower)
-            {
-                agentNodeManager.Add(Position, NodeInfo);
-                return true;
-            }
-            return false;
-        }
-
-        public bool Unbinding()
-        {
-            return agentNodeManager.Remove(Position);
-        }
+        public abstract bool Unbinding();
     }
 }
