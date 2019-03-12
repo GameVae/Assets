@@ -2,14 +2,13 @@
 using ManualTable;
 using ManualTable.Row;
 using Network.Sync;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class UnitDataReference : MonoSingle<UnitDataReference>
 {
     public AgentSpawnManager AgentSpawner;
+    public NonControlAgentManager NCAgentManager;
     public Sync SyncData; 
     public Player Player;
     public HexMap HexMap;
@@ -23,7 +22,12 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         Users = SyncData.UserInfo;
 
         Player = Singleton.Instance<Player>();
-        UnitAgents();
+        NCAgentManager = Singleton.Instance<NonControlAgentManager>();
+    }
+
+    private void Start()
+    {
+        UnitAgents();       
     }
 
     private void UnitAgents()
@@ -48,9 +52,18 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         else
         {
             agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int() + new Vector3Int(5, 5, 0));
-            agent.GetComponent<AgentController>().SetData(r);
-            agent.GetComponent<AgentController>().SetCurrentUser(user);
+
+            AgentController agentCtrl = agent.GetComponent<AgentController>();
+            agentCtrl.SetData(r);
+            agentCtrl.SetCurrentUser(user);
+            
             agent.SetActive(true);
+
+            if(r.ID_User != Player.Info.ID_User)
+            {
+                NavAgent nav = agent.GetComponent<NavAgent>();
+                NCAgentManager.Add(r.ID, nav);
+            }
         }
     }
 }

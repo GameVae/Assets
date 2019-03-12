@@ -1,4 +1,5 @@
 ﻿using EnumCollect;
+using Generic.Singleton;
 using ManualTable.Row;
 using SocketIO;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using UnityEngine;
 public class SIO_MovementListener : Listener
 {
     private NavAgentController agentCtrl;
+    private NonControlAgentManager nCtrlAgentManager;
     private JSONObject moveJSONObject;
     private string moveData;
 
@@ -15,12 +17,15 @@ public class SIO_MovementListener : Listener
     {
         base.Start();
         agentCtrl = GetComponent<NavAgentController>();
+        nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
     }
 
     public override void RegisterCallback()
     {
         AddEmiter("S_MOVE", S_MOVE);
+
+        On("R_MOVE", R_MOVE);
     }
 
 
@@ -30,7 +35,7 @@ public class SIO_MovementListener : Listener
         moveJSONObject.type = JSONObject.Type.BAKED;
         moveJSONObject.str = moveData;
 
-        //Debug.Log(moveJSONObject);
+        // Debug.Log(moveJSONObject);
         return moveJSONObject;
     }
 
@@ -102,6 +107,11 @@ public class SIO_MovementListener : Listener
         }
 
         return string.Format("[{0}]", result);
+    }
+
+    private void R_MOVE(SocketIOEvent obj)
+    {
+        nCtrlAgentManager.MoveAgent(obj.data["R_MOVE"]);
     }
 }
 
