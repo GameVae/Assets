@@ -69,7 +69,7 @@ namespace UI.Widget
 
         public bool Containts(string key)
         {
-            return contentDict.ContainsKey(key);
+            return (bool)contentDict?.ContainsKey(key);
         }
     }
 }

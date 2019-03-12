@@ -1,6 +1,9 @@
 ﻿using EnumCollect;
+using Generic.Singleton;
+using Json.Interface;
 using ManualTable.Interface;
 using ManualTable.Row;
+using System.Reflection;
 using UI.Widget;
 using UnityEngine;
 using static WindowManager;
@@ -17,6 +20,8 @@ public class StartupWindow : BaseWindow, IWindowGroup
     public GUIInteractableIcon Army;
     public GUIInteractableIcon Trade;
 
+    private FieldReflection fieldReflection;
+
     public WindowGroup Group
     {
         get { return WDOCtrl[GroupType]; }
@@ -27,6 +32,12 @@ public class StartupWindow : BaseWindow, IWindowGroup
         get { return WindowGroupType.UpgradeResearchGroup; }
     }
 
+
+    protected override void Start()
+    {
+        base.Start();
+        fieldReflection = Singleton.Instance<FieldReflection>();
+    }
     protected override void Update()
     {
         base.Update();
@@ -71,17 +82,23 @@ public class StartupWindow : BaseWindow, IWindowGroup
         if (isUpgrade)
         {
             table = WDOCtrl[upgRef.ID];
-            string jsonData = table[upgRef.Level - 1].ToJSON();
-            GenericUpgradeInfo upgInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
-            UpgProgBar.Slider.MaxValue = upgInfo != null ? upgInfo.TimeInt : 0;
+            //string jsonData = table[upgRef.Level - 1].ToJSON();
+            //GenericUpgradeInfo upgInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+
+            IJSON upgInfo = table[upgRef.Level - 1];
+            int timeInt = fieldReflection.GetFieldValue<int>(upgInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
+            UpgProgBar.Slider.MaxValue = timeInt;// upgInfo != null ? upgInfo.TimeInt : 0;
         }
 
         if (isResearch)
         {
             table = WDOCtrl[resRef.ID];
-            string jsonData = table[resRef.Level - 1].ToJSON();
-            GenericUpgradeInfo resInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
-            ResProgBar.Slider.MaxValue = resInfo != null ? resInfo.TimeInt : 0;
+            //string jsonData = table[resRef.Level - 1].ToJSON();
+            //GenericUpgradeInfo resInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+
+            IJSON resInfo = table[upgRef.Level - 1];
+            int timeInt = fieldReflection.GetFieldValue<int>(resInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
+            ResProgBar.Slider.MaxValue = timeInt;// resInfo != null ? resInfo.TimeInt : 0;
         }
 
         UpgProgBar.gameObject.SetActive(isUpgrade);

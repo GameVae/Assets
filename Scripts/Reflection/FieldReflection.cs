@@ -14,7 +14,7 @@ public sealed class FieldReflection : ISingleton
 
     private Dictionary<Type, Dictionary<string, FieldInfo>> catching;
 
-    public T GetField<T>(object obj, string fieldName, BindingFlags bindingFlags)
+    public T GetFieldValue<T>(object obj, string fieldName, BindingFlags bindingFlags)
     {
         Type type = obj.GetType();
         if (TryGet(type, fieldName, out FieldInfo info))

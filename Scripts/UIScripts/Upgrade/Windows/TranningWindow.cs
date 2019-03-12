@@ -1,6 +1,7 @@
 ﻿using DB;
 using EnumCollect;
 using Generic.Singleton;
+using Json.Interface;
 using ManualTable;
 using ManualTable.Interface;
 using ManualTable.Row;
@@ -8,6 +9,7 @@ using Network.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
@@ -17,12 +19,17 @@ public class TranningWindow : BaseWindow
 {
     [SerializeField] private GUIHorizontalGrid rowLayoutPrefab;
 
+    // Singleton
+    private DBReference dBReference;
+    private FieldReflection fieldReflection;
+    private EventListenersController listenersController;
+
     private List<GUIHorizontalGrid> rows;
     private GUIHorizontalGrid curRow;
     private int elementCount;
 
     private TrainningCostRow refCostInfo;
-    private MilitaryRow refTrainInfo;
+    private IJSON refTypeTraining;
 
     private BaseUpgradeRow refType;
     private ListUpgrade selectedType;
@@ -69,7 +76,12 @@ public class TranningWindow : BaseWindow
     protected override void Start()
     {
         base.Start();
-        Singleton.Instance<EventListenersController>().AddEmiter("S_TRAINING", S_TRAINING);
+
+        dBReference = Singleton.Instance<DBReference>();
+        fieldReflection = Singleton.Instance<FieldReflection>();
+        listenersController = Singleton.Instance<EventListenersController>();
+
+        listenersController.AddEmiter("S_TRAINING", S_TRAINING);
     }
 
     public override void Load(params object[] input)
@@ -78,11 +90,14 @@ public class TranningWindow : BaseWindow
         ListUpgrade tranningType = baseInfo.TrainingUnit_ID;
         if (tranningType.IsDefined())
         {
-            ITable table = Singleton.Instance<DBReference>()[tranningType];
+            ITable table = dBReference[tranningType];
             int level = SyncData.CurrentBaseUpgrade[tranningType].Level;
-            string jsonData = table[level - 1].ToJSON();
-            MilitaryRow typeInfo = JsonUtility.FromJson<MilitaryRow>(jsonData);
-            TranningProgress.Slider.MaxValue = typeInfo.TrainingTime * baseInfo.TrainingQuality;
+
+            IJSON typeInfo = table[level - 1];
+
+            TranningProgress.Slider.MaxValue =
+                fieldReflection.GetFieldValue<int>
+                (typeInfo, "TrainingTime", BindingFlags.Public | BindingFlags.Instance) * baseInfo.TrainingQuality;
 
             AcceptBtn.InteractableChange(false);
             TranningProgress.gameObject.SetActive(true);
@@ -267,11 +282,13 @@ public class TranningWindow : BaseWindow
     {
         selectedType = type;
         refType = SyncData.CurrentBaseUpgrade[type];
-        ITable dbTable = Singleton.Instance<DBReference>()[selectedType];
-        string data = dbTable[SyncData.CurrentBaseUpgrade[selectedType].Level - 1].ToJSON();
-        TrainningCostTable costTable = Singleton.Instance<DBReference>()[DBType.TrainningCost] as TrainningCostTable;
-        refTrainInfo = JsonUtility.FromJson<MilitaryRow>(data);
-        refCostInfo = costTable.Rows.FirstOrDefault(r => r.ID_Unit == selectedType);
+        ITable dbTable = dBReference[selectedType];
+
+        TrainningCostTable costTable = dBReference[DBType.TrainningCost] as TrainningCostTable;
+
+
+        refTypeTraining = dbTable[SyncData.CurrentBaseUpgrade[selectedType].Level - 1];
+        refCostInfo = costTable[selectedType];
 
         CurrentSelect.Placeholder.text = selectedType.ToString().InsertSpace();
     }
@@ -285,13 +302,16 @@ public class TranningWindow : BaseWindow
             SyncData.CurrentMainBase.Stone -= refCostInfo.StoneCost * quality;
             SyncData.CurrentMainBase.Metal -= refCostInfo.MetalCost * quality;
 
-            SyncData.CurrentMainBase.TrainingTime = refTrainInfo.TrainingTime * quality;
-            SyncData.CurrentMainBase.Training_Might = refTrainInfo.MightBonus * quality;
+            SyncData.CurrentMainBase.Training_Might = fieldReflection.GetFieldValue<int>
+                (refTypeTraining, "MightBonus", BindingFlags.Public | BindingFlags.Instance) * quality;
+            SyncData.CurrentMainBase.TrainingTime = fieldReflection.GetFieldValue<int>
+                (refTypeTraining, "TrainingTime", BindingFlags.Public | BindingFlags.Instance) * quality;
+
             SyncData.CurrentMainBase.TrainingUnit_ID = selectedType;
             SyncData.CurrentMainBase.TrainingQuality = quality;
 
             Close();
-            Singleton.Instance<EventListenersController>().Emit("S_TRAINING");
+            listenersController.Emit("S_TRAINING");
         }
     }
 
@@ -306,6 +326,7 @@ public class TranningWindow : BaseWindow
         int value = int.Parse(QualityInput.text);
         int clampValue = (int)Mathf.Clamp(value, 0, QualitySlider.maxValue);
         QualityInput.text = clampValue.ToString();
+
         QualitySlider.value = clampValue;
         OnQualitySliderChanged(clampValue);
     }

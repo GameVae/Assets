@@ -38,20 +38,21 @@ namespace ManualTable.Row
         public string KeyValuePairs { get { return ""; } }
     }
 
-
-    [System.Serializable]
-    public sealed class GenericUpgradeInfo : JSONBase
-    {
-        public int Level;
-        public int MightBonus;
-        public int FoodCost;
-        public int WoodCost;
-        public int StoneCost;
-        public int MetalCost;
-        public string TimeMin;
-        public int TimeInt;
-        public int Required;
-    }
+    #region old not use
+    //[System.Serializable]
+    //public sealed class GenericUpgradeInfo : JSONBase
+    //{
+    //    public int Level;
+    //    public int MightBonus;
+    //    public int FoodCost;
+    //    public int WoodCost;
+    //    public int StoneCost;
+    //    public int MetalCost;
+    //    public string TimeMin;
+    //    public int TimeInt;
+    //    public int Required;
+    //}
+    #endregion
 
     #region DB row
     [System.Serializable]

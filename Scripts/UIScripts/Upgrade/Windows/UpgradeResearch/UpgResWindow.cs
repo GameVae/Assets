@@ -8,16 +8,24 @@ using ManualTable.Row;
 using Network.Data;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
 using static WindowManager;
 
-public class UpgResWindow : BaseWindow,IWindowGroup
+public class UpgResWindow : BaseWindow, IWindowGroup
 {
+    /// singleton
+    private DBReference dbReference;
+    private FieldReflection fieldReflection;
+    private EventListenersController listenersController;
+    ///
+
     private int[] curMaterials;
     private bool isUpgradeType;
-    private BaseUpgradeRow refType;
+    private BaseUpgradeRow refUpgType;
+    private BaseInfoRow currentMainBase;
 
     public TextMeshProUGUI Title;
 
@@ -57,7 +65,10 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     protected override void Awake()
     {
         base.Awake();
-        Singleton.Instance<EventListenersController>().AddEmiter("S_UPGRADE", S_UPGRADE);
+        dbReference = Singleton.Instance<DBReference>();
+        fieldReflection = Singleton.Instance<FieldReflection>();
+        listenersController = Singleton.Instance<EventListenersController>();
+        listenersController.AddEmiter("S_UPGRADE", S_UPGRADE);
     }
 
     protected override void Update()
@@ -69,7 +80,7 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     protected override void Init()
     {
         curMaterials = new int[4];
-        LevelUpBtn.OnClickEvents += OnUpgradeBtn;
+        LevelUpBtn.OnOffSwitch.OnClick.AddListener(OnLevelBtn);
     }
 
     /// <summary>
@@ -82,66 +93,75 @@ public class UpgResWindow : BaseWindow,IWindowGroup
     /// <param name="data">Params object</param>
     public override void Load(params object[] data)
     {
-        ListUpgrade type = data.TryGet<ListUpgrade>(0);
-        string title = type.ToString().InsertSpace();
-        ITable table = Singleton.Instance<DBReference>()[type];
-        int level = SyncData.CurrentBaseUpgrade[type].Level;
-        string jsonData = table[level - 1].ToJSON();
-        GenericUpgradeInfo needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+        currentMainBase = SyncData.CurrentMainBase;
+
+        ListUpgrade loadType = data.TryGet<ListUpgrade>(0);
+        ITable table = dbReference[loadType];
+
+        string title = loadType.ToString().InsertSpace();
+        int level = SyncData.CurrentBaseUpgrade[loadType].Level;
+
+
+        IJSON needInfo = table[level - 1];
+
+        int foodCost = GetPublicValue<int>(needInfo, "FoodCost");
+        int woodCost = GetPublicValue<int>(needInfo, "WoodCost");
+        int metalCost = GetPublicValue<int>(needInfo, "MetalCost");
+        int stoneCost = GetPublicValue<int>(needInfo, "StoneCost");
+        int mightBonus = GetPublicValue<int>(needInfo, "MightBonus");
 
         int[] needMaterials = new int[] {
-            needInfo.FoodCost,
-            needInfo.WoodCost,
-            needInfo.StoneCost,
-            needInfo.MetalCost };
-        int mightBonus = needInfo.MightBonus;
+            foodCost,
+            woodCost,
+            stoneCost,
+            metalCost };
 
-        curMaterials[0] = SyncData.CurrentMainBase.Farm;
-        curMaterials[1] = SyncData.CurrentMainBase.Wood;
-        curMaterials[2] = SyncData.CurrentMainBase.Stone;
-        curMaterials[3] = SyncData.CurrentMainBase.Metal;
+        curMaterials[0] = currentMainBase.Farm;
+        curMaterials[1] = currentMainBase.Wood;
+        curMaterials[2] = currentMainBase.Stone;
+        curMaterials[3] = currentMainBase.Metal;
 
-        isUpgradeType = type.IsUpgrade();
+        isUpgradeType = loadType.IsUpgrade();
 
-        bool activeProgressBar = isUpgradeType ? SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined()
-                                                            : SyncData.CurrentMainBase.ResearchWait_ID.IsDefined();
+        bool activeProgressBar = isUpgradeType ? currentMainBase.UpgradeWait_ID.IsDefined()
+                                                            : currentMainBase.ResearchWait_ID.IsDefined();
 
         bool activeBtnGroup = !activeProgressBar;
         activeBtnGroup = activeBtnGroup && IsEnoughtMeterial(needMaterials);
         ActiveBtnGroup(activeBtnGroup);
 
 
-        bool isSimilarType = true;
+        bool isSimilarCurUpgResType = true;
         if (isUpgradeType)
         {
-            if (SyncData.CurrentMainBase.UpgradeWait_ID.IsDefined() &&
-                type != SyncData.CurrentMainBase.UpgradeWait_ID)
+            if (currentMainBase.UpgradeWait_ID.IsDefined() &&
+                loadType != currentMainBase.UpgradeWait_ID)
             {
-                type = SyncData.CurrentMainBase.UpgradeWait_ID;
-                isSimilarType = false;
+                loadType = currentMainBase.UpgradeWait_ID;
+                isSimilarCurUpgResType = false;
             }
         }
         else
         {
-            if (SyncData.CurrentMainBase.ResearchWait_ID.IsDefined() &&
-                type != SyncData.CurrentMainBase.ResearchWait_ID)
+            if (currentMainBase.ResearchWait_ID.IsDefined() &&
+                loadType != currentMainBase.ResearchWait_ID)
             {
-                type = SyncData.CurrentMainBase.ResearchWait_ID;
-                isSimilarType = false;
+                loadType = currentMainBase.ResearchWait_ID;
+                isSimilarCurUpgResType = false;
             }
         }
 
-        if (isSimilarType)
-        {            
-            table = Singleton.Instance<DBReference>()[type];
-            level = SyncData.CurrentBaseUpgrade[type].Level;
-            jsonData = table[level - 1].ToJSON();
-            needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+        refUpgType = SyncData.CurrentBaseUpgrade[loadType];
+        if (!isSimilarCurUpgResType)
+        {
+            table = dbReference[loadType];
+            level = refUpgType.Level;
+            needInfo = table[level - 1];
         }
-        refType = SyncData.CurrentBaseUpgrade[type];
 
-        string timeMin = needInfo.TimeMin;
-        int timeInt = needInfo.TimeInt;
+
+        string timeMin = GetPublicValue<string>(needInfo, "TimeMin");// needInfo.TimeMin;
+        int timeInt = GetPublicValue<int>(needInfo, "TimeInt"); //needInfo.TimeInt;
 
         ActiveProgressBar(activeProgressBar && timeInt > 0);
         ProgressSlider.Slider.MaxValue = timeInt;
@@ -207,10 +227,10 @@ public class UpgResWindow : BaseWindow,IWindowGroup
         {
             if (isUpgradeType)
             {
-                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - SyncData.CurrentMainBase.UpgradeTime;
-                ProgressSlider.Slider.Placeholder.text = SyncData.CurrentMainBase.GetUpgTimeString();
+                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - currentMainBase.UpgradeTime;
+                ProgressSlider.Slider.Placeholder.text = currentMainBase.GetUpgTimeString();
 
-                if (SyncData.CurrentMainBase.UpgIsDone())
+                if (currentMainBase.UpgIsDone())
                 {
                     ActiveProgressBar(false);
                     ActiveBtnGroup(true);
@@ -218,9 +238,9 @@ public class UpgResWindow : BaseWindow,IWindowGroup
             }
             else
             {
-                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - SyncData.CurrentMainBase.ResearchTime;
-                ProgressSlider.Slider.Placeholder.text = SyncData.CurrentMainBase.GetResTimeString();
-                if (SyncData.CurrentMainBase.ResIsDone())
+                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - currentMainBase.ResearchTime;
+                ProgressSlider.Slider.Placeholder.text = currentMainBase.GetResTimeString();
+                if (currentMainBase.ResIsDone())
                 {
                     ActiveProgressBar(false);
                     ActiveBtnGroup(true);
@@ -236,29 +256,39 @@ public class UpgResWindow : BaseWindow,IWindowGroup
         {
             {"ID_Server"   ,userInfo.Server_ID },
             {"ID_User"     ,userInfo.ID_User.ToString()},
-            {"BaseNumber"  ,SyncData.CurrentMainBase.BaseNumber.ToString() },
-            {"ID_Upgrade"  ,((int)refType.ID).ToString()},
-            {"UpgradeType" ,refType.UpgradeType.ToString() },
-            {"Level"       ,refType.Level.ToString()}
+            {"BaseNumber"  ,currentMainBase.BaseNumber.ToString() },
+            {"ID_Upgrade"  ,((int)refUpgType.ID).ToString()},
+            {"UpgradeType" ,refUpgType.UpgradeType.ToString() },
+            {"Level"       ,refUpgType.Level.ToString()}
         };
         return new JSONObject(data);
     }
 
-    private void OnUpgradeBtn()
-    {        
-        ITable table = Singleton.Instance<DBReference>()[refType.ID];
-        string jsonData = table[refType.Level - 1].ToJSON();
-        GenericUpgradeInfo needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+    private void OnLevelBtn()
+    {
+        ITable table = dbReference[refUpgType.ID];
+        IJSON needInfo = table[refUpgType.Level - 1];
 
-        SyncData.CurrentMainBase.Farm -= needInfo.FoodCost;
-        SyncData.CurrentMainBase.Wood -= needInfo.WoodCost;
-        SyncData.CurrentMainBase.Metal -= needInfo.MetalCost;
-        SyncData.CurrentMainBase.Stone -= needInfo.StoneCost;
+        #region old
+        //string jsonData = table[refUpgType.Level - 1].ToJSON();
+        //// GenericUpgradeInfo needInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
+        #endregion
 
-        SyncData.CurrentMainBase.UpgradeWait_ID = refType.ID;
-        SyncData.CurrentMainBase.UpgradeTime = needInfo.TimeInt;
+        int foodCost = GetPublicValue<int>(needInfo, "FoodCost");
+        int woodCost = GetPublicValue<int>(needInfo, "WoodCost");
+        int metalCost = GetPublicValue<int>(needInfo, "MetalCost");
+        int stoneCost = GetPublicValue<int>(needInfo, "StoneCost");
+        int timeInt = GetPublicValue<int>(needInfo, "TimeInt");
 
-        Singleton.Instance<EventListenersController>().Emit("S_UPGRADE");
+        currentMainBase.Farm -= foodCost;  // needInfo.FoodCost; 
+        currentMainBase.Wood -= woodCost;  //needInfo.WoodCost;
+        currentMainBase.Metal -= metalCost;// needInfo.MetalCost;
+        currentMainBase.Stone -= stoneCost;// needInfo.StoneCost;
+
+        currentMainBase.UpgradeWait_ID = refUpgType.ID;
+        currentMainBase.UpgradeTime = timeInt; // needInfo.TimeInt;
+
+        listenersController.Emit("S_UPGRADE");
         Group.Close();
     }
 
@@ -269,5 +299,11 @@ public class UpgResWindow : BaseWindow,IWindowGroup
             if (curMaterials[i] < needMaterials[i]) return false;
         }
         return true;
+    }
+
+    private T GetPublicValue<T>(object obj, string name)
+    {
+        BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+        return fieldReflection.GetFieldValue<T>(obj, name, flags);
     }
 }

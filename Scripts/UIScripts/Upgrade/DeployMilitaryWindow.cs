@@ -156,7 +156,7 @@ public class DeployMilitaryWindow : BaseWindow
         int quality = (int)refTag.Slider.Value;
 
         Json.Interface.IJSON militaryType = dbRef[type][lv - 1];
-        float health = fieldReflection.GetField<float>(militaryType, "Health", BindingFlags.Public | BindingFlags.Instance);
+        float health = fieldReflection.GetFieldValue<float>(militaryType, "Health", BindingFlags.Public | BindingFlags.Instance);
         float cur_hea = health;
 
         UnitRow newUnit = new UnitRow()

@@ -1,4 +1,5 @@
 ﻿using Generic.Singleton;
+using SocketIO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +7,9 @@ namespace Network.Data
 {
     public sealed class EventListenersController : MonoSingle<EventListenersController>
     {
-
         public Sync.Sync SyncData { get { return Conn?.Sync; } }
-        public Connection Conn;
+
+        private Connection Conn;
 
         private Dictionary<string, System.Func<JSONObject>> emitter;
 
@@ -28,7 +29,8 @@ namespace Network.Data
         {
             try
             {
-                Conn.Emit(ev, emitter[ev]?.Invoke());
+                if (emitter.ContainsKey(ev))
+                    Conn.Emit(ev, emitter[ev]?.Invoke());
             }
             catch (System.Exception ex)
             {
@@ -36,6 +38,11 @@ namespace Network.Data
                 Debug.Log(ex.ToString());
 #endif
             }
+        }
+
+        public void On(string ev, System.Action<SocketIOEvent> callback)
+        {
+            Conn.On(ev, callback);
         }
     }
 }

@@ -14,15 +14,16 @@ public sealed class SIO_StartupListener : Listener
     public void R_BASE_INFO(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
-        Conn.Sync.BaseInfo.LoadTable(obj.data["R_BASE_INFO"]);
-        Player.BaseInfo = Conn.Sync.BaseInfo.Rows[0];
+        SyncData.BaseInfo.LoadTable(obj.data["R_BASE_INFO"]);
+        Player.BaseInfo = SyncData.BaseInfo.Rows[0];
     }
 
     public void R_USER_INFO(SocketIOEvent obj)
     {
-        string data = obj.data["R_USER_INFO"].ToString();
         SyncData.UserInfo.LoadTable(obj.data["R_USER_INFO"]);
         Player.Info = SyncData.UserInfo.Rows[0];
+
+        //string data = obj.data["R_USER_INFO"].ToString();
         //Debugger.Log(obj);
     }
 
