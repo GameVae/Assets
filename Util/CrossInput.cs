@@ -17,6 +17,16 @@ namespace Generic.CustomInput
             }
         }
 
+#if !UNITY_EDITOR && UNITY_ANDROID
+        public bool IsTouchUp
+        {
+            get
+            {
+                return TouchCount == 1 &&
+                    (GetTouch(0).phase == TouchPhase.Ended || GetTouch(0).phase == TouchPhase.Canceled);
+            }
+        }
+#endif
         public Vector2 Axises
         {
             get
@@ -73,7 +83,7 @@ namespace Generic.CustomInput
 
         protected override void Awake()
         {
-            Input.simulateMouseWithTouches = true;
+            Input.simulateMouseWithTouches = false;
             Input.multiTouchEnabled = true;
         }
 

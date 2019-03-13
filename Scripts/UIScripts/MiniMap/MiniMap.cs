@@ -1,4 +1,5 @@
 ﻿using Generic.Contants;
+using Generic.CustomInput;
 using Generic.Singleton;
 using System.Collections.Generic;
 using UI.Widget;
@@ -12,6 +13,8 @@ public class MiniMap : BaseWindow
     private float DelayCloseMiniMap;
 
     private Vector3Int selectedCell;
+    private CrossInput crossInput;
+    private NestedCondition selectCondition;
 
     public GUIOnOffSwitch OpenBtn;
 
@@ -30,9 +33,19 @@ public class MiniMap : BaseWindow
 
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        selectCondition = new NestedCondition();
+        crossInput = Singleton.Instance<CrossInput>();
+
+        InitSelectCondition();
+
+    }
+
     protected override void Update()
     {
-        if (Input.GetMouseButtonDown(0) && MiniMapImage.gameObject.activeInHierarchy)
+        if (selectCondition.Evaluate())
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(MiniMapImage, Input.mousePosition, UICamera, out Vector2 local);
             SetNavigateIcon(local);
@@ -80,7 +93,7 @@ public class MiniMap : BaseWindow
     {
         Vector3Int result = Vector3Int.zero;
         Vector2 realMiniMapSize = MiniMapImage.Size();
-        result.x = (int)(position.x * ( Constants.TOTAL_COL / realMiniMapSize.x));
+        result.x = (int)(position.x * (Constants.TOTAL_COL / realMiniMapSize.x));
         result.y = (int)(position.y * (Constants.TOTAL_ROW / realMiniMapSize.y));
         return result;
     }
@@ -159,4 +172,19 @@ public class MiniMap : BaseWindow
     {
         //throw new System.NotImplementedException();
     }
+
+    private void InitSelectCondition()
+    {
+        selectCondition.Conditions += delegate { return Window.activeInHierarchy; };
+#if UNITY_EDITOR || UNITY_STANDALONE
+        selectCondition.Conditions += delegate 
+        {
+            return Input.GetMouseButtonUp(0);
+        };
+#endif
+#if UNITY_ANDROID && !UNITY_EDITOR
+        selectCondition.Conditions += delegate { return crossInput.IsTouchUp; };
+#endif
+    }
 }
+

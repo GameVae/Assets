@@ -35,7 +35,7 @@ public class SIO_MovementListener : Listener
         moveJSONObject.type = JSONObject.Type.BAKED;
         moveJSONObject.str = moveData;
 
-        // Debug.Log(moveJSONObject);
+        Debug.Log(moveJSONObject);
         return moveJSONObject;
     }
 
@@ -69,7 +69,7 @@ public class SIO_MovementListener : Listener
 
         moveData = string.Format(format,
             user.Server_ID,
-            13,
+            agentCtrl.CurrentAgent.GetComponent<AgentController>().Data.ID,
             (int)unit,
             user.ID_User,
             curCell.ToPositionString(),
@@ -111,6 +111,7 @@ public class SIO_MovementListener : Listener
 
     private void R_MOVE(SocketIOEvent obj)
     {
+        Debugger.Log(obj);
         nCtrlAgentManager.MoveAgent(obj.data["R_MOVE"]);
     }
 }

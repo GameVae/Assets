@@ -16,10 +16,6 @@ public sealed class NavRemote : MonoBehaviour
         ctrl = Singleton.Instance<NavAgentController>();
     }
 
-    private void Start()
-    {
-        ActiveNav();
-    }
     public void ActiveNav()
     {
         ctrl.SwitchToAgent(thisAgent);

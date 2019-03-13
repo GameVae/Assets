@@ -27,10 +27,10 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 
     private void Start()
     {
-        UnitAgents();       
+        CreateAgents();       
     }
 
-    private void UnitAgents()
+    private void CreateAgents()
     {
         int count = UnitTable.Count;
         UnitRow r;

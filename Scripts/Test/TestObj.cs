@@ -53,7 +53,7 @@ public class TestObj : MonoBehaviour {
     private void Start()
     {
         moveEvent = Singleton.Instance<Connection>();
-        moveEvent.On("R_MOVE", R_MOVE);
+        // moveEvent.On("R_MOVE", R_MOVE);
         //Debugger.Log("This is a log from Debugger");
     }
 

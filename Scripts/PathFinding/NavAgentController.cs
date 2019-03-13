@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UI.Widget;
 using Generic.Singleton;
 using System.Collections.Generic;
+using Generic.CustomInput;
 
 public class NavAgentController : MonoSingle<NavAgentController>
 {
@@ -10,6 +11,7 @@ public class NavAgentController : MonoSingle<NavAgentController>
     private HexMap HexMap;
     private NavAgent curAgent;
     private SIO_MovementListener moveEvent;
+    private CrossInput crossInput;
     
     private Vector3Int startCell;
     private Vector3Int endCell;
@@ -26,6 +28,11 @@ public class NavAgentController : MonoSingle<NavAgentController>
         remove  { moveConditions.Conditions -= value; }
     }
 
+    public NavAgent CurrentAgent
+    {
+        get { return curAgent; }
+    }
+
     protected override void Awake()
     {
         base.Awake();
@@ -40,6 +47,7 @@ public class NavAgentController : MonoSingle<NavAgentController>
         eventSystem = FindObjectOfType<EventSystem>();
         HexMap = Singleton.Instance<HexMap>();
         moveEvent = GetComponent<SIO_MovementListener>();
+        crossInput = Singleton.Instance<CrossInput>();
     }
 
     private void Update()
@@ -96,14 +104,25 @@ public class NavAgentController : MonoSingle<NavAgentController>
     private void InitMoveCondition()
     {
         moveConditions = new NestedCondition();
+#if !UNITY_EDITOR && UNITY_ANDROID
         MoveConditions += delegate
         {
             return !isDisable && !eventSystem.IsPointerOverGameObject() && curAgent != null;
         };
+
+        MoveConditions += delegate
+        {
+            return crossInput.IsTouchUp;
+        };
+#endif
 #if UNITY_EDITOR
         MoveConditions += delegate
         {
-            return Input.GetMouseButtonUp(0);
+            return Input.GetMouseButtonUp(0) && !eventSystem.IsPointerOverGameObject();
+        };
+        MoveConditions += delegate
+        {
+            return crossInput.Axises.magnitude / Time.deltaTime <= 0.5f;
         };
 #endif
     }

@@ -1,8 +1,5 @@
 ﻿using Generic.Singleton;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public sealed class NonControlAgentManager : MonoSingle<NonControlAgentManager>
 {
@@ -19,7 +16,7 @@ public sealed class NonControlAgentManager : MonoSingle<NonControlAgentManager>
         if(!nCtrlAgents.ContainsKey(id))
         {
             nCtrlAgents[id] = agent;
-            Debugger.Log("NCC " + nCtrlAgents.Count);
+            //Debugger.Log("NCC " + nCtrlAgents.Count);
         }
     }
 

@@ -35,6 +35,7 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
     public void Emit(string ev)
     {
         evCtrl.Emit(ev);
+        Debugger.Log("Emit: " + ev);
     }
 
     public void On(string ev,params System.Action<SocketIOEvent>[] callbacks)

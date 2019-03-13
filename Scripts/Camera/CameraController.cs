@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
         CameraGestureHandle();
 #if UNITY_EDITOR
         ZoomHandle();
-        if (Input.GetMouseButton(0) && CrossInput.SwipeDirection != Vector2.zero)
+        if (IsTouch() && CrossInput.SwipeDirection != Vector2.zero)
         {
             SwipeHandle();
         }

@@ -10,9 +10,15 @@ public class AgentController : MonoBehaviour
     public UnitRow Data;
 
     private UserInfoRow currentUser;
+    private NavRemote remote;
     private void Start()
     {
         Init();
+        remote = GetComponent<NavRemote>();
+        if(Data.ID_User == currentUser.ID_User)
+        {
+            remote.ActiveNav();
+        }
     }
 
     public void SetData(UnitRow data)
