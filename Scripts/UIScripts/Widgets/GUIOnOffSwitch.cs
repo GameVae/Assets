@@ -12,7 +12,6 @@ namespace UI.Widget
     public class GUIOnOffSwitch : CustomGUI
     {
         [SerializeField, HideInInspector] private Button button;
-        [SerializeField, HideInInspector] private Image backgroundImg;
 
         public Button Button
         {
@@ -20,21 +19,15 @@ namespace UI.Widget
             protected set { button = value; }
         }
 
-        public Image BackgroundImage
-        {
-            get
-            {
-                return backgroundImg ?? (backgroundImg = GetComponentsInChildren<Image>().
-                                                                  FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
-            }
-            protected set { backgroundImg = value; }
-        }
-
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = Button?.GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
+        //public Image BackgroundImage
+        //{
+        //    get
+        //    {
+        //        return backgroundImg ?? (backgroundImg = GetComponentsInChildren<Image>().
+        //                                                          FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
+        //    }
+        //    protected set { backgroundImg = value; }
+        //}
 
         public bool IsOn { get; protected set; }
 
@@ -44,26 +37,24 @@ namespace UI.Widget
 
         public Button.ButtonClickedEvent OnClick;
 
-        protected override void Awake()
+        protected void Awake()
         {
             if (Button)
             {
-                Button.targetGraphic = BackgroundImage;
+                Button.targetGraphic = BackgroundImg;
             }
 
             Button.onClick = OnClick;
             Button.onClick.AddListener(OnOffEffect);
-            base.Awake();
         }
 
-        protected override void Start()
+        protected void Start()
         {
-            if (On == null)
-                On += delegate { BackgroundImage.color = Color.white; };
-            if (Off == null)
-                Off += delegate { BackgroundImage.color = Color.gray; };
+            //if (On == null)
+            //    On += delegate { BackgroundImg.color = Color.white; };
+            //if (Off == null)
+            //    Off += delegate { BackgroundImg.color = Color.gray; };
             CanSwitch = CanSwitch ?? delegate { return true; };
-            base.Start();
         }
 
         private void OnOffEffect()
@@ -79,14 +70,14 @@ namespace UI.Widget
         {
             if (!IsOn)
                 return;
-            Off(this);
+            Off?.Invoke(this);
             IsOn = false;
         }
 
         public void SwitchOn()
         {
             if (IsOn) return;
-            On(this);
+            On?.Invoke(this);
             IsOn = true;
         }
 

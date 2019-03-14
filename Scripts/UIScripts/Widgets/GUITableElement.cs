@@ -19,12 +19,6 @@ namespace UI.Widget
             set { return; }
         }
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public override void InteractableChange(bool value) { }
 
         public override void SetChildrenDependence()
@@ -52,10 +46,6 @@ namespace UI.Widget
                 try { return cells[index]; }
                 catch { return null; }
             }
-        }
-
-        protected override void Awake()
-        {
         }
 
         public void AxisTypeChange(AxisType axisType)

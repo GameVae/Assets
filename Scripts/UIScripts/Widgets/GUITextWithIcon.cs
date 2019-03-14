@@ -15,12 +15,6 @@ namespace UI.Widget
             get { return icon ?? (icon = GetComponentInChildren<GUIInteractableIcon>()); }
         }
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public override TextMeshProUGUI Placeholder
         {
             get

@@ -10,12 +10,6 @@ namespace UI.Widget
         private Dictionary<string, RectTransform> contentDict;
         public float MaxWidth;
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public override void InteractableChange(bool value) { }
 
         public override void SetChildrenDependence() { }

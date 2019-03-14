@@ -47,17 +47,6 @@ namespace UI.Widget
             set { if (Slider != null) Slider.minValue = value; }
         }
 
-        public override Image MaskImage
-        {
-            get { return Slider?.image ?? (maskImage = GetComponent<Slider>()?.image); }
-            protected set { maskImage = value; }
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         public override void InteractableChange(bool value)
         {
             if (Slider != null)

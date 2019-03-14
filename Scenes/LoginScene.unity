@@ -1162,6 +1162,8 @@ MonoBehaviour:
   maskable: 1
   interactable: 0
   isPlaceholder: 0
+  backgroundImg: {fileID: 0}
+  isBackground: 0
   isUIDependent: 0
   slider: {fileID: 0}
 --- !u!114 &153457407
@@ -11399,7 +11401,7 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000041925905
+      value: 0.000011939797
       objectReference: {fileID: 0}
     - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}

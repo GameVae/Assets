@@ -22,7 +22,7 @@ namespace UI.CustomInspector
 
         public override void OnInspectorGUI()
         {
-            showPlaceholder = false;
+            isPlaceholder = false;
             base.OnInspectorGUI();
             if (!Owner.UIDependent && !Application.isPlaying)
             {

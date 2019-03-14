@@ -35,22 +35,15 @@ namespace UI.Widget
             get; set;
         }
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public override TextMeshProUGUI Placeholder
         {
             get { return (placeholder = null); }
             set { return; }
         }
     
-        protected override void Awake()
+        protected void Awake()
         {
             SetupGroup();
-            base.Awake();
         }
 
         private void ReCalculateAnchor()

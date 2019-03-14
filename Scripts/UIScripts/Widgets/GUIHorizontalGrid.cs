@@ -24,12 +24,6 @@ namespace UI.Widget
             set { sizePercent = Mathf.Clamp(value, 0, 1); }
         }
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         [ContextMenu("calculate (size percent)")]
         public void CalculateElementSize()
         {

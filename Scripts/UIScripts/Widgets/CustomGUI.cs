@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,12 +15,22 @@ namespace UI.Widget
         [SerializeField, HideInInspector] protected bool interactable;
         [SerializeField, HideInInspector] protected bool isPlaceholder;
 
+        [SerializeField, HideInInspector] protected Image backgroundImg;
+        [SerializeField, HideInInspector] protected bool isBackground;
+
         [SerializeField, HideInInspector] protected bool isUIDependent;
 
+        #region Placeholder
         public float FontSize
         {
-            get { return  Placeholder ? Placeholder.fontSize : 0; }
-            protected set { if(Placeholder) Placeholder.fontSize = value; }
+            get { return Placeholder ? Placeholder.fontSize : 0; }
+            protected set { if (Placeholder) Placeholder.fontSize = value; }
+        }
+
+        public bool IsPlaceholder
+        {
+            get { return isPlaceholder; }
+            set { isPlaceholder = value; }
         }
 
         public Color PlaceholderColor
@@ -32,69 +43,26 @@ namespace UI.Widget
             protected set { if (Placeholder) Placeholder.color = value; }
         }
 
-        public bool UIDependent
-        {
-            get { return isUIDependent; }
-            set { isUIDependent = value; }
-        }
-
-        public Mask Mask
-        {
-            get { return mask ?? GetComponent<Mask>(); }
-            protected set { mask = value; }
-        }
-
         public virtual TextMeshProUGUI Placeholder
         {
             get { return placeholder ?? (placeholder = GetComponentInChildren<TextMeshProUGUI>()); }
             set { placeholder = value; }
         }
 
-        public bool Maskable
-        {
-            get { return maskable; }
-            protected set { maskable = value; }
-        }
-
-        public bool IsPlaceholder
-        {
-            get { return isPlaceholder; }
-            set { isPlaceholder = value; }
-        }
-
-        public virtual bool Interactable
-        {
-            get { return interactable; }
-            protected set { interactable = value; }
-        }
-
-        public void PlaceholderText(string text)
+        public void PlaceholderValueChange(string text)
         {
             if (Placeholder != null)
                 Placeholder.text = text;
         }
 
-        public void MaskableChange(bool value)
-        {
-            Maskable = value;
-            if (Maskable)
-            {
-                Mask = GetComponent<Mask>();
-                if (Mask == null)
-                    Mask = gameObject.AddComponent<Mask>();
-                else Mask.enabled = true;
-            }
-            else
-            {
-                Mask = GetComponent<Mask>();
-                if (Mask != null)
-                    Mask.enabled = false;
-            }
-        }
-
         public void FontSizeChange(float fontSize)
         {
             FontSize = fontSize;
+        }
+
+        public void PlaceholderColorChange(Color newColor)
+        {
+            PlaceholderColor = newColor;
         }
 
         public void IsPlaceholderChange(bool value)
@@ -104,19 +72,139 @@ namespace UI.Widget
                 Placeholder.enabled = value;
         }
 
-        public abstract void InteractableChange(bool value);
+        #endregion
 
-        public abstract Image MaskImage { get; protected set; }
-
-        public abstract void SetChildrenDependence();
-
-        public void PlaceholderColorChange(Color newColor)
+        public bool UIDependent
         {
-            PlaceholderColor = newColor;
+            get { return isUIDependent; }
+            set { isUIDependent = value; }
         }
 
-        protected virtual void Awake() { }
+        #region Maskable
 
-        protected virtual void Start() { }
+        public Mask Mask
+        {
+            get { return mask ?? (mask = GetComponent<Mask>()); }
+            protected set { mask = value; }
+        }
+
+        public Image MaskImage
+        {
+            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
+            protected set { maskImage = value; }
+        }
+
+        public bool Maskable
+        {
+            get { return maskable; }
+            protected set { maskable = value; }
+        }
+
+        public virtual Sprite MaskSprite
+        {
+            get { return MaskImage?.sprite; }
+            protected set
+            {
+                if (MaskImage != null)
+                    MaskImage.sprite = value;
+            }
+        }
+
+        public void MaskableChange(bool value)
+        {
+            Maskable = value;
+            if (Maskable)
+            {
+                if (Mask == null)
+                    Mask = gameObject.AddComponent<Mask>();
+                else Mask.enabled = true;
+            }
+            else
+            {
+                if (Mask != null)
+                    Mask.enabled = false;
+            }
+        }
+
+        public void MaskSpriteChange(Sprite value)
+        {
+            MaskSprite = value;
+        }
+
+        #endregion
+
+        #region Backgroud
+        public bool IsBackground
+        {
+            get { return isBackground; }
+            protected set { isBackground = value; }
+        }
+
+        public Sprite BackgroudSprite
+        {
+            get
+            {
+                return BackgroundImg?.sprite;
+            }
+            protected set
+            {
+                if (BackgroundImg)
+                    BackgroundImg.sprite = value;
+            }
+        }
+
+        public virtual Image BackgroundImg
+        {
+            get
+            {
+                if (backgroundImg == null)
+                {
+                    return backgroundImg = FindTypeWithCustomMask<Image>(CustomLayerMask.CustomMask.Background);
+                }
+                else return backgroundImg;
+            }
+            protected set { backgroundImg = value; }
+        }
+
+        public void BackgroundChange(Sprite sprite)
+        {
+            BackgroudSprite = sprite;
+        }
+
+        public void IsBackgroudChange(bool value)
+        {
+            IsBackground = value;
+            if(BackgroundImg) BackgroundImg.enabled = value;
+        }
+        #endregion
+
+        public virtual bool Interactable
+        {
+            get { return interactable; }
+            protected set { interactable = value; }
+        }
+
+        public virtual void InteractableChange(bool value)
+        {
+            Interactable = value;
+        }
+
+        public virtual void SetChildrenDependence() { }
+
+        public T FindTypeWithCustomMask<T>(CustomLayerMask.CustomMask maskType)
+            where T : Component
+        {
+            CustomLayerMask[] marks = GetComponentsInChildren<CustomLayerMask>();
+            CustomLayerMask r;
+            int length = marks.Length;
+            r = length > 0 ? marks[0] : null;
+            for (int i = 1; i < length; i++)
+            {
+                if (r.SameTypePiority < marks[i].SameTypePiority)
+                    r = marks[i];
+            }            
+            return r?.GetComponent<T>();
+        }
+
     }
 }

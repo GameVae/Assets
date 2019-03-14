@@ -22,12 +22,6 @@ namespace UI.Widget
 
         public event SliderInteracted OnClickEvents;
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public GUIProgressSlider Slider
         {
             get { return slider ?? (slider = GetComponentInChildren<GUIProgressSlider>()); }
@@ -44,10 +38,9 @@ namespace UI.Widget
             set { placeholder = value; }
         }
 
-        protected override void Start()
+        protected void Start()
         {
             Button.OnClickEvents += delegate { OnClickEvents?.Invoke(slider); };
-            base.Start();
         }
 
         public override void InteractableChange(bool value)

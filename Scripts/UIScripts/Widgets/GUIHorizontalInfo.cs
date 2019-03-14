@@ -32,12 +32,6 @@ namespace UI.Widget
             set { placeholder = value; }
         }
 
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
         public float IconRatio
         {
             get { return iconRatio; }
@@ -50,9 +44,8 @@ namespace UI.Widget
             protected set { desribeRatio = value; }
         }
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             Icon.InteractableChange(false);
             Button.InteractableChange(true);
         }

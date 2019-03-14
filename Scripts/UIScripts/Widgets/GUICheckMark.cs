@@ -7,7 +7,6 @@ namespace UI.Widget
     public class GUICheckMark : CustomGUI
     {
         private GUIToggle group;
-        private Image backgroudImg;
         private GUIOnOffSwitch onOffSwitch;
 
         [Header("Check Animation")]
@@ -18,21 +17,6 @@ namespace UI.Widget
         {
             get { return onOffSwitch ?? (onOffSwitch = GetComponentInChildren<GUIOnOffSwitch>()); }
             private set { onOffSwitch = value; }
-        }
-
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
-        }
-
-        public Image BackgroundImage
-        {
-            get
-            {
-                return backgroudImg ?? (backgroudImg = GetComponentsInChildren<Image>().
-                                                                  FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
-            }
         }
 
         public override bool Interactable
@@ -47,7 +31,7 @@ namespace UI.Widget
             }
         }
 
-        protected override void Awake()
+        protected void Awake()
         {
             OnOffSwitch.CanSwitch = delegate 
             {
@@ -55,23 +39,18 @@ namespace UI.Widget
             };
             OnOffSwitch.On += delegate
             {
-                BackgroundImage.sprite = OnSprite;
+                BackgroundImg.sprite = OnSprite;
                 MaskImage.color = Color.cyan;
             };
             OnOffSwitch.Off += delegate
             {
-                BackgroundImage.sprite = OffSprite;
+                BackgroundImg.sprite = OffSprite;
                 MaskImage.color = Color.white;
             };
 
             OnOffSwitch.InteractableChange(Interactable);
-            base.Awake();
         }
 
-        protected override void Start()
-        {
-            base.Start();
-        }
 
         public override void InteractableChange(bool value)
         {

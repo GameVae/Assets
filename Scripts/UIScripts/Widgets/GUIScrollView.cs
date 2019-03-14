@@ -1,6 +1,4 @@
-﻿
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Widget
@@ -21,12 +19,6 @@ namespace UI.Widget
         {
             get { return scrollRect ?? (scrollRect = GetComponent<ScrollRect>()); }
             private set { scrollRect = value; }
-        }
-
-        public override Image MaskImage
-        {
-            get { return maskImage ?? (maskImage = GetComponent<Image>()); }
-            protected set { maskImage = value; }
         }
 
         public Image Background

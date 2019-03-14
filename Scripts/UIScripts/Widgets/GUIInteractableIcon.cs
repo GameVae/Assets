@@ -14,17 +14,6 @@ namespace UI.Widget
             get { return OnOffSwitch.Button; }
         }
 
-        public override Image MaskImage
-        {
-            get { return OnOffSwitch.MaskImage; }
-            protected set { return; }
-        }
-
-        public Image BackgroundImage
-        {
-            get { return OnOffSwitch.BackgroundImage; }
-        }
-
         public GUIOnOffSwitch OnOffSwitch
         {
             get { return onOffSwitch ?? (onOffSwitch = GetComponent<GUIOnOffSwitch>()); }
@@ -33,17 +22,15 @@ namespace UI.Widget
 
         public event UnityAction OnClickEvents;
 
-        protected override void Awake()
+        protected void Awake()
         {
             OnOffSwitch.Off += delegate { };
-            base.Awake();
         }
 
-        protected override void Start()
+        protected void Start()
         {
             if (OnClickEvents != null)
                 Button.onClick.AddListener(OnClickEvents);
-            base.Awake();
         }
 
         public override void InteractableChange(bool value)
