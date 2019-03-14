@@ -12,7 +12,7 @@ public struct GMath
         return(float)System.Math.Round(value, digits);
     }
 
-    public static float ToMilisecond(float second)
+    public static float SecondToMilisecond(float second)
     {
         return second * 1000f;
     }

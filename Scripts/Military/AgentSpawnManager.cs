@@ -1,4 +1,5 @@
-﻿using EnumCollect;
+﻿using Entities.Navigation;
+using EnumCollect;
 using Generic.Singleton;
 using System.Collections;
 using System.Collections.Generic;

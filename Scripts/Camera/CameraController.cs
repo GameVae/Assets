@@ -1,4 +1,5 @@
-﻿using EnumCollect;
+﻿using Entities.Navigation;
+using EnumCollect;
 using Generic.CustomInput;
 using Generic.Singleton;
 using UnityEngine;

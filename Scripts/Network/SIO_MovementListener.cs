@@ -1,4 +1,5 @@
-﻿using EnumCollect;
+﻿using Entities.Navigation;
+using EnumCollect;
 using Generic.Singleton;
 using ManualTable.Row;
 using SocketIO;
@@ -11,12 +12,12 @@ public class SIO_MovementListener : Listener
     private NavAgentController agentCtrl;
     private NonControlAgentManager nCtrlAgentManager;
     private JSONObject moveJSONObject;
-    private string moveData;
+    private string moveJson;
 
     protected override void Start()
     {
         base.Start();
-        agentCtrl = GetComponent<NavAgentController>();
+        agentCtrl = Singleton.Instance<NavAgentController>();
         nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
     }
@@ -33,7 +34,7 @@ public class SIO_MovementListener : Listener
     {
         moveJSONObject.Clear();
         moveJSONObject.type = JSONObject.Type.BAKED;
-        moveJSONObject.str = moveData;
+        moveJSONObject.str = moveJson;
 
         Debug.Log(moveJSONObject);
         return moveJSONObject;
@@ -67,20 +68,20 @@ public class SIO_MovementListener : Listener
 
         UserInfoRow user = SyncData.UserInfo.Rows[0];
 
-        moveData = string.Format(format,
+        moveJson = string.Format(format,
             user.Server_ID,
-            agentCtrl.CurrentAgent.GetComponent<AgentController>().Data.ID,
+            agentCtrl.CurrentAgent.ID,
             (int)unit,
             user.ID_User,
             curCell.ToPositionString(),
             path[0].ToPositionString(),
             path[path.Count - 1].ToPositionString(),
-            GMath.ToMilisecond(GMath.Round(separateTime[0], 3)),
-            GMath.ToMilisecond(GMath.Round(separateTime.Sum(), 3)),
+            GMath.SecondToMilisecond(GMath.Round(separateTime[0], 3)),
+            GMath.SecondToMilisecond(GMath.Round(separateTime.Sum(), 3)),
             GetJsonFrom1(path, separateTime, path[0])
             );
 
-        moveData = string.Format("{{\"S_MOVE\":{0}}}", moveData);
+        moveJson = string.Format("{{\"S_MOVE\":{0}}}", moveJson);
     }
 
     private string GetJsonFrom1(List<Vector3Int> path, List<float> times, Vector3Int curCell)
@@ -100,7 +101,7 @@ public class SIO_MovementListener : Listener
 
         for (int i = 1; i < count; i++)
         {
-            result += string.Format(format, curPos, path[i].ToPositionString(), GMath.ToMilisecond(GMath.Round(times[i] + lastTime, 3)));
+            result += string.Format(format, curPos, path[i].ToPositionString(), GMath.SecondToMilisecond(GMath.Round(times[i] + lastTime, 3)));
             if (i < count - 1) result += ",";
             curPos = path[i].ToPositionString();
             lastTime += times[i];

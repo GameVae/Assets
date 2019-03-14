@@ -1644,7 +1644,6 @@ GameObject:
   - component: {fileID: 1885978826}
   - component: {fileID: 8755347990513165770}
   - component: {fileID: 2846919174950901839}
-  - component: {fileID: 155380788189223655}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -1805,12 +1804,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8b10e54f04e024d81ff53da316bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Offset:
-    MaxSpeed: 2
-    MaxMoveStep: 10
-    MaxSearchLevel: 100
   Anim: {fileID: 1885978826}
-  maxAngular: 5
+  Offset:
+    MaxMoveStep: 20
+    MaxSearchLevel: 100
+    MaxSpeed: 2
+    MaxAngular: 5
 --- !u!114 &1885978820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1849,6 +1848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 16
+  Label: {fileID: 2846919174950901839}
 --- !u!114 &2846919174950901839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1861,45 +1861,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8438d83f2c3ce194698058729c044659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHP: 100
   Head: {fileID: 3952365730068608545}
   Label: {fileID: 1509149967}
   HPFiller: {fileID: 1200966803}
   Quality: {fileID: 867952975}
   NameInGame: {fileID: 3934474485301954627}
-  Lookat: {fileID: 5356728597638709837}
---- !u!114 &155380788189223655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885978819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 788aaf2962897f744b5fd7d4545dd942, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Label: {fileID: 2846919174950901839}
-  Data:
-    ID: 0
-    ID_Unit: 0
-    ID_User: 0
-    BaseNumber: 0
-    Level: 0
-    Quality: 0
-    Hea_cur: 0
-    Health: 0
-    Position_Cell: 
-    Next_Cell: 
-    End_Cell: 
-    TimeMoveNextCell: 0
-    TimeFinishMove: 0
-    ListMove: 
-    Status: 0
-    Attack_Base_ID: 0
-    Attack_Unit_ID: 0
-    AttackedBool: 0
 --- !u!1 &2010609893
 GameObject:
   m_ObjectHideFlags: 0

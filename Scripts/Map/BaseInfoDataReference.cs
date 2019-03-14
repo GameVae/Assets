@@ -33,7 +33,7 @@ public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
         TowerLabel label = tower.GetComponent<TowerLabel>();
 
         label.Name.text = name;
-        label.Lv.text = lv.ToString();
+        label.Lv.text = "Lv." + lv.ToString();
 
     }
 

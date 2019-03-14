@@ -1,4 +1,5 @@
-﻿using Generic.Singleton;
+﻿using Entities.Navigation;
+using Generic.Singleton;
 using ManualTable;
 using ManualTable.Row;
 using Network.Sync;
@@ -9,7 +10,9 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 {
     public AgentSpawnManager AgentSpawner;
     public NonControlAgentManager NCAgentManager;
-    public Sync SyncData; 
+    public OwnerNavAgentManager OwnerAgents;
+
+    public Sync SyncData;
     public Player Player;
     public HexMap HexMap;
 
@@ -23,11 +26,12 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 
         Player = Singleton.Instance<Player>();
         NCAgentManager = Singleton.Instance<NonControlAgentManager>();
+        OwnerAgents = Singleton.Instance<OwnerNavAgentManager>();
     }
 
     private void Start()
     {
-        CreateAgents();       
+        CreateAgents();
     }
 
     private void CreateAgents()
@@ -44,7 +48,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         }
     }
 
-    public void Create(UnitRow r,UserInfoRow user)
+    public void Create(UnitRow r, UserInfoRow user)
     {
         GameObject agent = AgentSpawner.GetMilitary(r.ID_Unit);
         if (agent == null || user == default(UserInfoRow))
@@ -53,17 +57,20 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         {
             agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int() + new Vector3Int(5, 5, 0));
 
-            AgentController agentCtrl = agent.GetComponent<AgentController>();
-            agentCtrl.SetData(r);
-            agentCtrl.SetCurrentUser(user);
-            
+            NavRemote agentRemote = agent.GetComponent<NavRemote>();
+            agentRemote.Init(r, user);
             agent.SetActive(true);
 
-            if(r.ID_User != Player.Info.ID_User)
+            if (r.ID_User != Player.Info.ID_User)
             {
                 NavAgent nav = agent.GetComponent<NavAgent>();
                 NCAgentManager.Add(r.ID, nav);
             }
+            else
+            {
+                OwnerAgents.Add(agentRemote);
+            }
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using Entities.Navigation;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,10 +24,9 @@ public class NavAgentInspector : Editor
             // mask start vertical layout group
             EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
             InfoGroup();
-
-            if(GUILayout.Button("Offset Move"))
+            if(GUILayout.Button("Active Nav") && Application.isPlaying)
             {
-
+                owner.ActiveNav();
             }
             // mask end vertical layout group
             EditorGUILayout.EndVertical();

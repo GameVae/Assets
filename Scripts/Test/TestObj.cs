@@ -1,4 +1,5 @@
-﻿using Generic.Singleton;
+﻿using Entities.Navigation;
+using Generic.Singleton;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
