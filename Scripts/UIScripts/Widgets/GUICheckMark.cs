@@ -4,20 +4,9 @@ using UnityEngine.UI;
 
 namespace UI.Widget
 {
-    public class GUICheckMark : CustomGUI
+    public class GUICheckMark : GUIOnOffSwitch
     {
         private GUIToggle group;
-        private GUIOnOffSwitch onOffSwitch;
-
-        [Header("Check Animation")]
-        public Sprite OnSprite;
-        public Sprite OffSprite;
-
-        public GUIOnOffSwitch OnOffSwitch
-        {
-            get { return onOffSwitch ?? (onOffSwitch = GetComponentInChildren<GUIOnOffSwitch>()); }
-            private set { onOffSwitch = value; }
-        }
 
         public override bool Interactable
         {
@@ -31,49 +20,43 @@ namespace UI.Widget
             }
         }
 
-        protected void Awake()
+        public override bool IsBackground
         {
-            OnOffSwitch.CanSwitch = delegate 
-            {
-                return Interactable && (group == null || group.ActiveMark != this);
-            };
-            OnOffSwitch.On += delegate
-            {
-                BackgroundImg.sprite = OnSprite;
-                MaskImage.color = Color.cyan;
-            };
-            OnOffSwitch.Off += delegate
-            {
-                BackgroundImg.sprite = OffSprite;
-                MaskImage.color = Color.white;
-            };
-
-            OnOffSwitch.InteractableChange(Interactable);
+            get { return false; }
+            protected set { base.IsBackground = value; }
         }
 
-
-        public override void InteractableChange(bool value)
+        protected override void Awake()
         {
-            Interactable = value;
-            OnOffSwitch.InteractableChange(value);
+            base.Awake();
+            SwitchConditions += delegate 
+            {
+                return (group == null || group.ActiveMark != this);
+            };
+            //OnOffSwitch.On += delegate
+            //{
+            //    BackgroundImg.sprite = onSprite;
+            //    MaskImage.color = Color.cyan;
+            //};
+            //OnOffSwitch.Off += delegate
+            //{
+            //    BackgroundImg.sprite = offSprite;
+            //    MaskImage.color = Color.white;
+            //};
         }
+     
 
         public void SetGroup(GUIToggle agroup)
         {
             group = agroup;
-            OnOffSwitch.On += delegate
+            On += delegate
             {
                 if (agroup.ActiveMark != this)
                 {
-                    agroup.ActiveMark?.OnOffSwitch.SwitchOff();
+                    agroup.ActiveMark?.SwitchOff();
                     agroup.ActiveMark = this;
                 }
             };
-        }
-
-        public override void SetChildrenDependence()
-        {
-            OnOffSwitch.UIDependent = true;
         }
 
         private void Disable()
@@ -81,7 +64,7 @@ namespace UI.Widget
             if (MaskImage != null)
             {
                 MaskImage.color = Color.gray;
-                OnOffSwitch.InteractableChange(true);
+                InteractableChange(true);
             }
         }
 
@@ -90,7 +73,7 @@ namespace UI.Widget
             if (MaskImage != null)
             {
                 MaskImage.color = Color.white;
-                OnOffSwitch.InteractableChange(false);
+                InteractableChange(false);
             }
         }
 

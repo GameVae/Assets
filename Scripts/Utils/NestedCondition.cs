@@ -18,13 +18,13 @@ public sealed class NestedCondition
         remove
         {
             int index = conditions.IndexOf(value);
-            if(index >= 0) conditions.RemoveAt(index);
+            if (index >= 0) conditions.RemoveAt(index);
         }
     }
 
     public bool Evaluate()
     {
-        if(conditions != null)
+        if (conditions != null)
         {
             for (int i = 0; i < conditions.Count; i++)
             {

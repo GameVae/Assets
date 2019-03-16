@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace UI.Animation
 {
@@ -19,11 +20,25 @@ namespace UI.Animation
         private Vector2 deltaSize;
         private Vector2 defaultSize;
 
+        private UnityAction openDoneAction;
+        private UnityAction closeDoneAction;
+
         public float Duration;
         public Vector2 MaxSize;
         public RectTransform RefRect;
         public Direction HorizontalDirection;
         public Direction VerticalDirection;
+
+        public event UnityAction OpenDoneEvt
+        {
+            add { openDoneAction += value; }
+            remove { openDoneAction -= value; }
+        }
+        public event UnityAction CloseDoneEvt
+        {
+            add { closeDoneAction += value; }
+            remove { closeDoneAction -= value; }
+        }
 
         private void Awake()
         {
@@ -56,6 +71,7 @@ namespace UI.Animation
                         RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultSize.y);
                         isOpen = false;
                     }
+                    AnimationDone(isOpen);
                     isAnimating = false;
                 }
             }
@@ -94,6 +110,18 @@ namespace UI.Animation
             if (VerticalDirection != Direction.None)
                 pivot.y = VerticalDirection == Direction.Up ? 0 : 1;
             RefRect.SetPivotWithoutChangePosition(pivot);
+        }
+
+        private void AnimationDone(bool opened)
+        {
+            if(opened)
+            {
+                openDoneAction?.Invoke();
+            }
+            else
+            {
+                closeDoneAction?.Invoke();
+            }
         }
     }
 }

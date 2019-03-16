@@ -25,7 +25,13 @@ namespace Entities.Navigation
 
         public event System.Func<bool> MoveConditions
         {
-            add { moveConditions.Conditions += value; }
+            add
+            {
+                if(moveConditions == null)
+                    moveConditions = new NestedCondition();
+
+                moveConditions.Conditions += value;
+            }
             remove { moveConditions.Conditions -= value; }
         }
 
@@ -105,7 +111,6 @@ namespace Entities.Navigation
 
         private void InitMoveCondition()
         {
-            moveConditions = new NestedCondition();
             MoveConditions += delegate
             {
                 return curAgent != null;

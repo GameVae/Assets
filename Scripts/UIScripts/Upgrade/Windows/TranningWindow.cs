@@ -54,7 +54,7 @@ public class TranningWindow : BaseWindow
 
     [Header("Main group")]
     public GUISliderWithBtn TranningProgress;
-    public GUIOnOffSwitch OpenBtn;
+    public GUIInteractableIcon OpenButton;
 
 
     [Range(0f, 1f)]
@@ -66,8 +66,7 @@ public class TranningWindow : BaseWindow
         base.Awake();
         QualitySlider.onValueChanged.AddListener((float value) => OnQualitySliderChanged(value));
 
-        OpenBtn.InteractableChange(true);
-        OpenBtn.OnClick.AddListener(OpenWindow);
+        OpenButton.OnClickEvents += Open;
 
         AcceptBtn.OnClickEvents += OnAccept;
         QualityInput.onValueChanged.AddListener((string value) => OnQualityInputChanged());
@@ -177,9 +176,9 @@ public class TranningWindow : BaseWindow
         }
     }
 
-    private void OpenWindow()
+    public override void Open()
     {
-        Open();
+        base.Open();
         Load();
     }
 

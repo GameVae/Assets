@@ -63,4 +63,9 @@ public class TestObj : MonoBehaviour {
         Debugger.Log(ev.data["R_MOVE"]);
         AgentTest.StartMove(ev.data["R_MOVE"]);
     }
+
+    public void Log()
+    {
+        Debug.Log("This is a message");
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Tooltip
@@ -7,27 +8,36 @@ namespace UI.Tooltip
     public class FadeInOut : MonoBehaviour
     {
         public bool AutoPlay;
+        public bool IsLoop;
         public bool IsFadeIn;
         public float FadeSpeed;
         public bool IsPlaying { get; protected set; }
 
+        [SerializeField] private Graphic uiGraphic;
         private Color tempColor;
         private Color defaultColor;
-        private Graphic uiGraphic;
+        private UnityAction lifeCycleDone;
 
+        public event UnityAction LifeCycleDone
+        {
+            add { lifeCycleDone += value; }
+            remove { lifeCycleDone -= value; }
+        }
+ 
         private void Awake()
         {
             IsPlaying = false;
-            uiGraphic = GetComponent<Graphic>();
+            //uiGraphic = GetComponent<Graphic>();
             defaultColor = uiGraphic.color;
         }
-        private void OnEnable()
+        private void Start()
         {
             if (AutoPlay)
             {
                 Play();
             }
         }
+
         public void SetDefaultColor(Color color)
         {
             defaultColor = color;
@@ -64,7 +74,8 @@ namespace UI.Tooltip
                     if (tempColor.a >= 0.9f)
                     {
                         tempColor.a = 1;
-                        IsPlaying = false;
+                        IsPlaying = IsLoop ? true : false;
+                        SwitchState();
                     }
                 }
                 else
@@ -72,13 +83,22 @@ namespace UI.Tooltip
                     tempColor.a = Mathf.Lerp(tempColor.a, 0, Time.deltaTime * FadeSpeed);
                     if (tempColor.a <= 0.1f)
                     {
-                        IsPlaying = false;
+                        IsPlaying = IsLoop ? true : false;
                         tempColor.a = 0;
+                        SwitchState();
                     }
                 }
                 uiGraphic.color = tempColor;
             }
         }
 
+        private void SwitchState()
+        {
+            IsFadeIn = !IsFadeIn;
+            if(IsFadeIn)
+            {
+                lifeCycleDone?.Invoke();
+            }
+        }
     }
 }

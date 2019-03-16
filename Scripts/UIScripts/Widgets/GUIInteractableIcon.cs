@@ -4,33 +4,36 @@ using UnityEngine.UI;
 
 namespace UI.Widget
 {
-    [RequireComponent(typeof(Button), typeof(Image), typeof(GUIOnOffSwitch))]
+    [RequireComponent(typeof(Button))]
     public class GUIInteractableIcon : CustomGUI
     {
-        [SerializeField, HideInInspector] private GUIOnOffSwitch onOffSwitch;
+        [SerializeField, HideInInspector]
+        private Button button;
+        [SerializeField, HideInInspector]
+        private Button.ButtonClickedEvent onClick;
 
         public Button Button
         {
-            get { return OnOffSwitch.Button; }
+            get { return button ?? (button = GetComponent<Button>()); }
+            protected set { button = value; }
         }
 
-        public GUIOnOffSwitch OnOffSwitch
+        public event UnityAction OnClickEvents
         {
-            get { return onOffSwitch ?? (onOffSwitch = GetComponent<GUIOnOffSwitch>()); }
-            protected set { onOffSwitch = value; }
+            add
+            {
+                onClick.AddListener(value);
+            }
+            remove
+            {
+                onClick.RemoveListener(value);
+            }
         }
 
-        public event UnityAction OnClickEvents;
-
-        protected void Awake()
+        private void Awake()
         {
-            OnOffSwitch.Off += delegate { };
-        }
-
-        protected void Start()
-        {
-            if (OnClickEvents != null)
-                Button.onClick.AddListener(OnClickEvents);
+            Button.onClick = onClick;
+            Button.targetGraphic = BackgroundImg;
         }
 
         public override void InteractableChange(bool value)
@@ -38,23 +41,8 @@ namespace UI.Widget
             if (Button != null)
             {
                 Interactable = value;
-                //if (value)
-                //    Button.transition = Selectable.Transition.ColorTint;
-                //else
-                //    Button.transition = Selectable.Transition.None;
                 Button.interactable = value;
-                OnOffSwitch.InteractableChange(value);
             }
-        }
-
-        public override void SetChildrenDependence()
-        {
-            OnOffSwitch.UIDependent = true;
-        }
-
-        public void ForceChangeEvent(UnityAction events)
-        {
-            OnClickEvents = events;
         }
     }
 

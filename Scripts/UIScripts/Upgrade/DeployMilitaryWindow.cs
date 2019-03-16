@@ -16,13 +16,19 @@ public class DeployMilitaryWindow : BaseWindow
     public DeployMilitaryTag TagPrefab;
     public GUIScrollView ScrollView;
     public GUIInteractableIcon DeployButton;
-    public GUIOnOffSwitch OpenWDO;
+    public GUIInteractableIcon OpenButton;
 
     private FieldReflection fieldReflection;
     private DBReference dbRef;
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
     private UnitDataReference unitDataReference;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        OpenButton.OnClickEvents += Open;
+    }
 
     protected override void Start()
     {
@@ -35,7 +41,7 @@ public class DeployMilitaryWindow : BaseWindow
             EmitDeployData();
         };
 
-        OpenWDO.OnClick.AddListener(Open);
+        //OpenWDO.OnClick.AddListener(Open);
         dbRef = Singleton.Instance<DBReference>();
         fieldReflection = Singleton.Instance<FieldReflection>();
         unitDataReference = Singleton.Instance<UnitDataReference>();

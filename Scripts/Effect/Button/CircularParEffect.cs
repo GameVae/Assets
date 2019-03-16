@@ -28,6 +28,7 @@ public class CircularParEffect : MonoBehaviour
 
     private void Start()
     {
+
         SwitchButton.SwitchOff();
     }
     private void On(GUIOnOffSwitch onOff)

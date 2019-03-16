@@ -11401,7 +11401,7 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000011939797
+      value: -0.000008246325
       objectReference: {fileID: 0}
     - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
@@ -16683,7 +16683,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Email support: @demanvi.com'
+  m_Text: ENABLE_CLOUD_SERVICES
 --- !u!222 &2042936085
 CanvasRenderer:
   m_ObjectHideFlags: 0

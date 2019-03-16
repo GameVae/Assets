@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,86 +11,114 @@ namespace UI.Widget
     {
         [SerializeField, HideInInspector] private Button button;
 
+        [SerializeField, HideInInspector] protected Sprite onSprite;
+        [SerializeField, HideInInspector] protected Sprite offSprite;
+
+
+        private NestedCondition switchConditions;
+        private OnOffAction on;
+        private OnOffAction off;
+
         public Button Button
         {
             get { return button ?? (button = GetComponent<Button>()); }
             protected set { button = value; }
         }
 
-        //public Image BackgroundImage
-        //{
-        //    get
-        //    {
-        //        return backgroundImg ?? (backgroundImg = GetComponentsInChildren<Image>().
-        //                                                          FirstOrDefault(img => img.gameObject.GetInstanceID() != gameObject.GetInstanceID()));
-        //    }
-        //    protected set { backgroundImg = value; }
-        //}
-
-        public bool IsOn { get; protected set; }
-
-        public Func<bool> CanSwitch;
-        public event OnOffAction On;
-        public event OnOffAction Off;
-
-        public Button.ButtonClickedEvent OnClick;
-
-        protected void Awake()
+        public event Func<bool> SwitchConditions
         {
-            if (Button)
+            add
             {
-                Button.targetGraphic = BackgroundImg;
+                if (switchConditions == null)
+                    switchConditions = new NestedCondition();
+                switchConditions.Conditions += value;
             }
-
-            Button.onClick = OnClick;
-            Button.onClick.AddListener(OnOffEffect);
+            remove
+            {
+                if (switchConditions != null)
+                    switchConditions.Conditions -= value;
+            }
         }
 
-        protected void Start()
+        public bool IsOn { get; set; }
+
+        public Sprite OnSprite
         {
-            //if (On == null)
-            //    On += delegate { BackgroundImg.color = Color.white; };
-            //if (Off == null)
-            //    Off += delegate { BackgroundImg.color = Color.gray; };
-            CanSwitch = CanSwitch ?? delegate { return true; };
+            get { return onSprite; }
+            protected set { onSprite = value; }
+        }
+        public Sprite OffSprite
+        {
+            get { return offSprite; }
+            protected set { offSprite = value; }
+        }
+
+        public event OnOffAction On
+        {
+            add { on += value; }
+            remove { on -= value; }
+        }
+        public event OnOffAction Off
+        {
+            add { off += value; }
+            remove { off -= value; }
+        }
+
+        protected virtual void Awake()
+        {
+            if (Button)
+                Button.targetGraphic = BackgroundImg;
+            SwitchConditions += delegate { return Interactable; };
+
+            SetSpriteForState();
+            Button.onClick.AddListener(OnOffEffect);
         }
 
         private void OnOffEffect()
         {
-            if (!CanSwitch() || !Interactable) return;
-            if (!IsOn)
-                SwitchOn();
-            else
-                SwitchOff();
+            if (switchConditions.Evaluate())
+            {
+                if (!IsOn)
+                    SwitchOn();
+                else
+                    SwitchOff();
+            }
+        }
+
+        private void SetSpriteForState()
+        {
+            On += delegate { BackgroundImg.sprite = onSprite; };
+            Off += delegate { BackgroundImg.sprite = offSprite; };
         }
 
         public void SwitchOff()
         {
-            if (!IsOn)
-                return;
-            Off?.Invoke(this);
+            if (!IsOn) return;
+            off?.Invoke(this);
             IsOn = false;
         }
 
         public void SwitchOn()
         {
             if (IsOn) return;
-            On?.Invoke(this);
+            on?.Invoke(this);
             IsOn = true;
-        }
-
-        public void SetIsOn(bool value)
-        {
-            IsOn = value;
         }
 
         public override void InteractableChange(bool value)
         {
-            Interactable = value;
+            interactable = value;
             Button.interactable = value;
         }
 
-        public override void SetChildrenDependence() { }
+        public void OnSpriteChange(Sprite sprite)
+        {
+            OnSprite = sprite;
+        }
 
+        public void OffSpriteChange(Sprite sprite)
+        {
+            OffSprite = sprite;
+        }
     }
 }

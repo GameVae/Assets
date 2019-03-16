@@ -134,7 +134,7 @@ namespace UI.Widget
         #endregion
 
         #region Backgroud
-        public bool IsBackground
+        public virtual bool IsBackground
         {
             get { return isBackground; }
             protected set { isBackground = value; }

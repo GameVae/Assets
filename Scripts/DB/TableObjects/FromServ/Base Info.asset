@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -14,23 +15,23 @@ MonoBehaviour:
   Rows:
   - ID_User: 42
     BaseNumber: 1
-    Position: 0,00,0
-    Farm: 890845
-    Wood: 667860
-    Stone: 306561
-    Metal: 409299
-    UpgradeWait_ID: 0
-    UpgradeWait_Might: 0
-    UpgradeTime: 0
-    ResearchWait_ID: 0
-    ResearchWait_Might: 0
-    ResearchTime: 0
+    Position: 7,7,0
+    Farm: 780227
+    Wood: 529104
+    Stone: 182159
+    Metal: 315375
+    UpgradeWait_ID: 12
+    UpgradeWait_Might: 2
+    UpgradeTime: -0.52
+    ResearchWait_ID: 15
+    ResearchWait_Might: 10
+    ResearchTime: 10
     UnitTransferType: 
     UnitTransferQuality: 
     UnitTransferTime: 
     UnitTransfer_ID_Base: 
-    TrainingUnit_ID: 0
-    TrainingTime: 0
+    TrainingUnit_ID: 16
+    TrainingTime: 9987.68
     TrainingQuality: 0
     Training_Might: 0
     SumUnitQuality: 0

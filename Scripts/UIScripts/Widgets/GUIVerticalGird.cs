@@ -10,9 +10,6 @@ namespace UI.Widget
         private Dictionary<string, RectTransform> contentDict;
         public float MaxWidth;
 
-        public override void InteractableChange(bool value) { }
-
-        public override void SetChildrenDependence() { }
 
         public void Remove(string name)
         {
@@ -30,14 +27,14 @@ namespace UI.Widget
 
         public void Clear()
         {
-            foreach (KeyValuePair<string,RectTransform> item in contentDict)
+            foreach (KeyValuePair<string, RectTransform> item in contentDict)
             {
                 Destroy(contentDict[item.Key]?.gameObject);
             }
             contentDict?.Clear();
         }
 
-        public void Add(string name,RectTransform rect)
+        public void Add(string name, RectTransform rect)
         {
             if (contentDict == null)
                 contentDict = new Dictionary<string, RectTransform>();
@@ -54,7 +51,7 @@ namespace UI.Widget
             }
 
             contentDict.TryGetValue(name, out RectTransform value);
-            if(value != null)
+            if (value != null)
             {
                 Destroy(value.gameObject);
             }
@@ -63,7 +60,9 @@ namespace UI.Widget
 
         public bool Containts(string key)
         {
-            return (bool)contentDict?.ContainsKey(key);
+            if (contentDict != null)
+                return contentDict.ContainsKey(key);
+            return false;
         }
     }
 }

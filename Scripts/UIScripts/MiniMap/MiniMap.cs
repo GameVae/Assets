@@ -16,7 +16,7 @@ public class MiniMap : BaseWindow
     private CrossInput crossInput;
     private NestedCondition selectCondition;
 
-    public GUIOnOffSwitch OpenBtn;
+    public GUIInteractableIcon OpenButton;
 
     public CameraController CameraCtrl;
     public CursorPos cursor;
@@ -29,7 +29,8 @@ public class MiniMap : BaseWindow
     protected override void Awake()
     {
         base.Awake();
-        OpenBtn.OnClick.AddListener(Open);
+        //OpenBtn.OnClick.AddListener(Open);
+        OpenButton.OnClickEvents += Open;
 
     }
 

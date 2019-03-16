@@ -18,7 +18,8 @@ namespace UI.Widget
         public event CheckMarkCallback CheckMarkEvents;
         [SerializeField, HideInInspector] private List<GUICheckMark> checkMarks;
         [SerializeField, HideInInspector] private AxisType type;
-
+        [SerializeField, HideInInspector] private Sprite activeSprite;
+        [SerializeField, HideInInspector] private Sprite unactiveSprite;
         public AxisType Type
         {
             get { return type; }
@@ -40,7 +41,18 @@ namespace UI.Widget
             get { return (placeholder = null); }
             set { return; }
         }
-    
+
+        public Sprite ActiveSprite
+        {
+            get { return activeSprite; }
+            protected set { activeSprite = value; }
+        }
+        public Sprite UnactiveSprite
+        {
+            get { return unactiveSprite; }
+            protected set { unactiveSprite = value; }
+        }
+
         protected void Awake()
         {
             SetupGroup();
@@ -68,7 +80,7 @@ namespace UI.Widget
             for (int i = 0; i < checkMarks.Count; i++)
             {
                 checkMarks[i].SetGroup(this);
-                checkMarks[i].OnOffSwitch.On +=
+                checkMarks[i].On +=
                     delegate { CheckActionCallback(); };
             }
         }
@@ -77,6 +89,7 @@ namespace UI.Widget
         {
             if (checkMarks == null)
                 checkMarks = new List<GUICheckMark>();
+            mark.UIDependent = true;
             checkMarks.Add(mark);
             Refresh();
         }
@@ -89,6 +102,11 @@ namespace UI.Widget
                 {
                     checkMarks.RemoveAt(i);
                     i--;
+                }
+                else
+                {
+                    checkMarks[i].OnSpriteChange(ActiveSprite);
+                    checkMarks[i].OffSpriteChange(UnactiveSprite);
                 }
             }
             ReCalculateAnchor();
@@ -116,7 +134,17 @@ namespace UI.Widget
 
         public void ActiveToggle(int index)
         {
-            checkMarks[index].OnOffSwitch.SwitchOn();
+            checkMarks[index].SwitchOn();
+        }
+
+        public void ActiveSpriteChange(Sprite sprite)
+        {
+            ActiveSprite = sprite;
+        }
+
+        public void UnactiveSpriteChange(Sprite sprite)
+        {
+            UnactiveSprite = sprite;
         }
 
         public override void InteractableChange(bool value)
@@ -127,7 +155,5 @@ namespace UI.Widget
                 checkMarks[i].InteractableChange(value);
             }
         }
-
-        public override void SetChildrenDependence() { }
     }
 }

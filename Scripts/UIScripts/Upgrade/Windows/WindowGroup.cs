@@ -11,6 +11,7 @@ public class WindowGroup : MonoBehaviour
     private WindowType curWindow;
     private WindowManager WDOCtrl;
 
+    public GUIInteractableIcon OpenButton;
     public WindowGroupType GroupType;
     public GameObject Panel;
     public GUIInteractableIcon BackButton;
@@ -25,6 +26,11 @@ public class WindowGroup : MonoBehaviour
             windows.TryGetValue(type.GetHashCode(), out IWindow window);
             return window;
         }
+    }
+
+    private void Awake()
+    {
+        OpenButton.OnClickEvents += Open;  
     }
 
     private void Start()

@@ -22,9 +22,6 @@ public sealed class WindowManager : MonoBehaviour
         Defense,
         Trade,
         Trainning,
-        MiniTask,
-        MiniMap,
-        Deploy
     }
 
     public enum WindowGroupType

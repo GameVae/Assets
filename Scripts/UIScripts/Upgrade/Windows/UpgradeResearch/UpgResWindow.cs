@@ -65,10 +65,13 @@ public class UpgResWindow : BaseWindow, IWindowGroup
     protected override void Awake()
     {
         base.Awake();
+
         dbReference = Singleton.Instance<DBReference>();
         fieldReflection = Singleton.Instance<FieldReflection>();
         listenersController = Singleton.Instance<EventListenersController>();
         listenersController.AddEmiter("S_UPGRADE", S_UPGRADE);
+
+        LevelUpBtn.OnClickEvents += OnLevelBtn;
     }
 
     protected override void Update()
@@ -80,7 +83,6 @@ public class UpgResWindow : BaseWindow, IWindowGroup
     protected override void Init()
     {
         curMaterials = new int[4];
-        LevelUpBtn.OnOffSwitch.OnClick.AddListener(OnLevelBtn);
     }
 
     /// <summary>

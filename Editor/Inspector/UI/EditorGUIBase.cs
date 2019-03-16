@@ -12,6 +12,7 @@ namespace UI.CustomInspector
     {
         private CustomGUI BaseOwner;
 
+        protected bool showMaskGrap;
         protected bool maskable;
         protected Sprite maskSprite;
 
@@ -24,8 +25,11 @@ namespace UI.CustomInspector
         protected string placeholder;
         protected Color placeholderColor;
 
-        [SerializeField]
-        public bool isCollapseOption;
+        protected readonly GUILayoutOption[] sizeOption = new GUILayoutOption[]
+        {
+            GUILayout.MaxWidth(200),
+            GUILayout.MaxHeight(50)
+        };
 
         protected virtual void OnEnable()
         {
@@ -43,11 +47,13 @@ namespace UI.CustomInspector
             // mask field setup
             maskable = BaseOwner.Maskable;
             maskSprite = BaseOwner.MaskSprite;
+            showMaskGrap = BaseOwner.Mask.showMaskGraphic;
 
             // placeholder field
             isPlaceholder = BaseOwner.IsPlaceholder;
             placeholder = BaseOwner.Placeholder?.text;
             placeholderColor = BaseOwner.PlaceholderColor;
+            fontSize = BaseOwner.FontSize;
         }
 
         public override void OnInspectorGUI()
@@ -70,14 +76,24 @@ namespace UI.CustomInspector
 
         protected virtual void MaskableGUI()
         {
-            maskable = EditorGUILayout.Toggle("Maskable", maskable);
+            GUILayout.BeginHorizontal();
+            maskable = EditorGUILayout.Toggle("Maskable", maskable, sizeOption);
             if (maskable != BaseOwner.Maskable)
             {
                 BaseOwner.MaskableChange(maskable);
             }
             if (maskable)
             {
-                maskSprite = EditorGUILayout.ObjectField("Mask Sprite", maskSprite, typeof(Sprite), false) as Sprite;
+                showMaskGrap = EditorGUILayout.Toggle("Show Mask Graphic", showMaskGrap);
+                BaseOwner.Mask.showMaskGraphic = showMaskGrap;
+            }
+            GUILayout.EndHorizontal();
+
+
+            if (maskable)
+            {
+                maskSprite = (Sprite)
+                   EditorGUILayout.ObjectField("Mask Sprite", maskSprite, typeof(Sprite), false, sizeOption);
                 if (BaseOwner.MaskSprite != maskSprite)
                 {
                     BaseOwner.MaskSpriteChange(maskSprite);
@@ -88,15 +104,15 @@ namespace UI.CustomInspector
 
         protected virtual void BackgroudGUI()
         {
-            useBackgroud = EditorGUILayout.Toggle("Is Use Backgroud", useBackgroud);
+            useBackgroud = EditorGUILayout.Toggle("Is Use Backgroud", BaseOwner.IsBackground);
             if (useBackgroud != BaseOwner.IsBackground)
             {
                 BaseOwner.IsBackgroudChange(useBackgroud);
             }
             if (useBackgroud)
             {
-                backgroudSprite = EditorGUILayout.ObjectField("Backgroud Sprite", backgroudSprite, typeof(Sprite), false) as Sprite;
-                if (BaseOwner.BackgroudSprite != backgroudSprite && backgroudSprite != null)
+                backgroudSprite = (Sprite)EditorGUILayout.ObjectField("Backgroud Sprite", backgroudSprite, typeof(Sprite), false, sizeOption);
+                if (BaseOwner.BackgroudSprite != backgroudSprite)
                 {
                     BaseOwner.BackgroundChange(backgroudSprite);
                     EditorUtility.SetDirty(BaseOwner.BackgroudSprite);
@@ -115,25 +131,33 @@ namespace UI.CustomInspector
 
         protected virtual void PlaceholderGUI()
         {
-            isPlaceholder = EditorGUILayout.Foldout(BaseOwner.IsPlaceholder, "Use Placeholder");
+            isPlaceholder = EditorGUILayout.Foldout(isPlaceholder, "Use Placeholder");
             if (isPlaceholder != BaseOwner.IsPlaceholder)
                 BaseOwner.IsPlaceholderChange(isPlaceholder);
             if (isPlaceholder)
             {
+                bool isChanged = false;
                 placeholder = EditorGUILayout.DelayedTextField("Placeholder", placeholder);
-                BaseOwner.PlaceholderValueChange(placeholder);
+                if (placeholder != BaseOwner.Placeholder.text)
+                {
+                    BaseOwner.PlaceholderValueChange(placeholder);
+                    isChanged = true;
+                }
 
                 placeholderColor = EditorGUILayout.ColorField("Color", placeholderColor);
                 if (placeholderColor != BaseOwner.PlaceholderColor)
                 {
                     BaseOwner.PlaceholderColorChange(placeholderColor);
+                    isChanged = true;
                 }
 
                 fontSize = EditorGUILayout.DelayedFloatField("Font Size", fontSize);
                 if (!Mathf.Approximately(fontSize, BaseOwner.FontSize))
                 {
                     BaseOwner.FontSizeChange(fontSize);
+                    isChanged = true;
                 }
+                if (isChanged) EditorUtility.SetDirty(BaseOwner.Placeholder);
             }
         }
     }

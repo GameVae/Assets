@@ -15,6 +15,7 @@ namespace UI.CustomInspector
                 GameObjectUtility.SetParentAndAlign(obj, menuCmd.context as GameObject);
                 Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
                 Selection.activeObject = obj;
+                obj.name = obj.name.Replace("(Clone)", "*");
             }
         }
 
