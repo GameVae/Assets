@@ -235,7 +235,7 @@ namespace Entities.Navigation
             }
             return separateTime;
         }
-
+        
         public List<Vector3Int> GetMovePath()
         {
             return aStar.Truncate(path, maxMoveStep);

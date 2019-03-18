@@ -42,16 +42,25 @@ public class SIO_MovementListener : Listener
 
     public void Move(List<Vector3Int> path,
         List<float> separateTime,
-        Vector3Int curCell,
+        Vector3Int curCellPosition,
         ListUpgrade unit)
     {
-        InitMessage(path, separateTime, curCell, unit);
+        InitMessage(path, separateTime, curCellPosition, unit);
         Emit("S_MOVE"); ;
     }
 
-    private void InitMessage(List<Vector3Int> path, List<float> separateTime, Vector3Int curCell, ListUpgrade unit)
+    private void InitMessage(List<Vector3Int> realPath, List<float> separateTime, Vector3Int curCellPosition, ListUpgrade unit)
     {
-        path = path.Invert();
+        Vector3Int substractBy = new Vector3Int(5, 5, 0);
+        curCellPosition -= substractBy;
+
+        List<Vector3Int> tempPath = new List<Vector3Int>(realPath);
+        for (int i = 0; i < tempPath.Count; i++)
+        {
+            tempPath[i] -= substractBy;
+        }
+        tempPath = tempPath.Invert();
+
         const string format =
             "{{" +
             "\"Server_ID\":" + "{0}," +
@@ -73,12 +82,12 @@ public class SIO_MovementListener : Listener
             agentCtrl.CurrentAgent.ID,
             (int)unit,
             user.ID_User,
-            curCell.ToPositionString(),
-            path[0].ToPositionString(),
-            path[path.Count - 1].ToPositionString(),
+            curCellPosition.ToPositionString(),
+            tempPath[0].ToPositionString(),
+            tempPath[tempPath.Count - 1].ToPositionString(),
             GMath.SecondToMilisecond(GMath.Round(separateTime[0], 3)),
             GMath.SecondToMilisecond(GMath.Round(separateTime.Sum(), 3)),
-            GetJsonFrom1(path, separateTime, path[0])
+            GetJsonFrom1(tempPath, separateTime, tempPath[0])
             );
 
         moveJson = string.Format("{{\"S_MOVE\":{0}}}", moveJson);

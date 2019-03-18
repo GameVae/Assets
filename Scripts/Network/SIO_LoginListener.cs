@@ -119,7 +119,7 @@ public class SIO_LoginListener : Listener
 
         GameProgress prog = new GameProgress(
             doneAct: GetDataProgressDoneAct,
-            t: new GameProgress.Task[] { task1, task2,/* task3*/ });
+            t: new GameProgress.Task[] { task1, task2, task3 });
 
         gameTask.AddTask(prog);
 

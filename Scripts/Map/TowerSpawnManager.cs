@@ -41,8 +41,7 @@ public sealed class TowerSpawnManager : MonoSingle<TowerSpawnManager>
 
     public GameObject GetTower(TowerType type)
     {
-        Queue<GameObject> pool;
-        if (towerPool.TryGetValue(type.GetHashCode(), out pool))
+        if (towerPool.TryGetValue(type.GetHashCode(), out Queue<GameObject> pool))
         {
             if (pool.Count > 0)
                 return pool.Dequeue();

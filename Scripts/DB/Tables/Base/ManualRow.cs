@@ -355,14 +355,15 @@ namespace ManualTable.Row
         public string Next_Cell;
         public float TimeMoveNextCell;
 
+        private readonly Vector3Int addBy = new Vector3Int(5, 5, 0);
         public Vector3Int Position
         {
-            get { return Position_Cell.Parse3Int(); }
+            get { return Position_Cell.Parse3Int() + addBy; }
         }
 
         public Vector3Int NextPosition
         {
-            get { return Next_Cell.Parse3Int(); }
+            get { return Next_Cell.Parse3Int() + addBy; }
         }
 
         public float TimeSecond
