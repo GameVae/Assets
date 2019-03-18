@@ -1,7 +1,6 @@
 ﻿using Entities.Navigation;
 using EnumCollect;
 using Generic.Singleton;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
@@ -12,16 +11,17 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
 
     private Dictionary<int, Object> agents;
 
+    private AssetUtils AssetUtil;
+
     public Transform Container;
-    public AssetUtils AssetUtil;
 
     protected override void Awake()
     {
         base.Awake();
+        AssetUtil = Singleton.Instance<AssetUtils>();
         agentsPool = new Dictionary<int, Queue<GameObject>>();
         agents = new Dictionary<int, Object>();
         LoadAgents();
-
     }
 
     public GameObject GetMilitary(ListUpgrade type)

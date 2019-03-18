@@ -12,12 +12,15 @@ public sealed class TowerSpawnManager : MonoSingle<TowerSpawnManager>
 
     private Dictionary<int, Object> towers;
 
+    private AssetUtils AssetUtil;
+
     public Transform Container;
-    public AssetUtils AssetUtil;
 
     protected override void Awake()
     {
         base.Awake();
+        AssetUtil = Singleton.Instance<AssetUtils>();
+
         towerPool = new Dictionary<int, Queue<GameObject>>();
         towers = new Dictionary<int, Object>();
         LoadTowers();
@@ -56,8 +59,7 @@ public sealed class TowerSpawnManager : MonoSingle<TowerSpawnManager>
     public void ReturnTower(TowerType type, GameObject tower)
     {
         tower.SetActive(false);
-        Queue<GameObject> pool;
-        if (towerPool.TryGetValue(type.GetHashCode(), out pool))
+        if (towerPool.TryGetValue(type.GetHashCode(), out Queue<GameObject> pool))
         {
             pool.Enqueue(tower);
         }

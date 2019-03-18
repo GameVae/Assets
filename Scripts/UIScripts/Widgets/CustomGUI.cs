@@ -30,7 +30,7 @@ namespace UI.Widget
         public bool IsPlaceholder
         {
             get { return isPlaceholder; }
-            set { isPlaceholder = value; }
+            protected set { isPlaceholder = value; }
         }
 
         public Color PlaceholderColor

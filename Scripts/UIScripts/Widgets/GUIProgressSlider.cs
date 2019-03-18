@@ -30,7 +30,7 @@ namespace UI.Widget
                 {
                     Slider.value = value;
                     //if (IsPlaceholder && Placeholder)
-                    Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
+                    // Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
                 }
             }
         }
@@ -55,8 +55,6 @@ namespace UI.Widget
                 Interactable = value;
             }
         }
-
-        public override void SetChildrenDependence() { }
 
     }
 }

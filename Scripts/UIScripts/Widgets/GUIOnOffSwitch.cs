@@ -89,6 +89,9 @@ namespace UI.Widget
         {
             On += delegate { BackgroundImg.sprite = onSprite; };
             Off += delegate { BackgroundImg.sprite = offSprite; };
+
+            BackgroundImg.sprite = IsOn ? onSprite : offSprite;
+
         }
 
         public void SwitchOff()

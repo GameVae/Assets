@@ -70,9 +70,5 @@ namespace UI.Widget
             ElementSize = size;
             CalculateElementSize();
         }
-
-        public override void InteractableChange(bool value) { }
-
-        public override void SetChildrenDependence() { }
     }
 }

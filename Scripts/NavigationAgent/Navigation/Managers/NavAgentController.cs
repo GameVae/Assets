@@ -113,13 +113,13 @@ namespace Entities.Navigation
         {
             MoveConditions += delegate
             {
-                return curAgent != null;
+                return curAgent != null && !eventSystem.IsPointerOverGameObject();
             };
 
 #if !UNITY_EDITOR && UNITY_ANDROID
         MoveConditions += delegate
         {
-            return !isDisable && !eventSystem.IsPointerOverGameObject();
+            return !isDisable;
         };
 
         MoveConditions += delegate
@@ -130,7 +130,7 @@ namespace Entities.Navigation
 #if UNITY_EDITOR
             MoveConditions += delegate
             {
-                return Input.GetMouseButtonUp(0) && !eventSystem.IsPointerOverGameObject();
+                return Input.GetMouseButtonUp(0);
             };
             MoveConditions += delegate
             {

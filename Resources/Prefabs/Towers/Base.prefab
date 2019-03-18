@@ -5434,8 +5434,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba64ce62be50fed44a7064b4acc1d7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExactlyPosition: {x: 0, y: 0, z: 0}
   Type: 0
+  ExactlyPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &1562924392
 MonoBehaviour:
   m_ObjectHideFlags: 0
