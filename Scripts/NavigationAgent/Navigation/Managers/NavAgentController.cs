@@ -87,10 +87,10 @@ namespace Entities.Navigation
             bool foundPath = curAgent.StartMove(start, end);
             if (foundPath)
             {
-                //curAgent.GetMovePath().Log();
-                //curAgent.GetTime().Log();
+            //    //curAgent.GetMovePath().Log();
+            //    //curAgent.GetTime().Log();
 
-                moveEvent.Move(curAgent.GetMovePath(), curAgent.GetTimes(), curAgent.CurrentPosition, curAgent.AgentType);
+            //    moveEvent.Move(curAgent.GetMovePath(), curAgent.GetTimes(), curAgent.CurrentPosition, curAgent.AgentType);
             }
         }
 
@@ -115,23 +115,12 @@ namespace Entities.Navigation
             {
                 return curAgent != null && !eventSystem.IsPointerOverGameObject();
             };
-
-#if !UNITY_EDITOR && UNITY_ANDROID
-        MoveConditions += delegate
-        {
-            return !isDisable;
-        };
-
-        MoveConditions += delegate
-        {
-            return crossInput.IsTouchUp;
-        };
-#endif
-#if UNITY_EDITOR
             MoveConditions += delegate
             {
-                return Input.GetMouseButtonUp(0);
+                return crossInput.IsPointerUp && !isDisable;
             };
+
+#if UNITY_EDITOR
             MoveConditions += delegate
             {
                 return crossInput.Axises.magnitude / Time.deltaTime <= 0.5f;

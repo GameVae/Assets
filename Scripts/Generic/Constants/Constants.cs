@@ -19,6 +19,18 @@ namespace Generic.Contants
         /// 0.0001f
         /// </summary>
         public const float TINY_VALUE = 0.0001f;
+        /// <summary>
+        /// Vector3Int.One * - 1
+        /// </summary>
+        public static readonly Vector3Int InvalidPosition = new Vector3Int(-1, -1, -1);
+        /// <summary>
+        /// Vector3Int (5,5,0)
+        /// </summary>
+        public static readonly Vector3Int ToClientPosition = new Vector3Int(5, 5, 0);
+        /// <summary>
+        /// Vector3Int (-5,-5,0)
+        /// </summary>
+        public static readonly Vector3Int ToSerPosition = new Vector3Int(-5, -5, 0);
 
 
         // 1 / DPI
@@ -129,7 +141,7 @@ namespace Generic.Contants
         #region Util methods
         public static Vector3Int[] GetNeighboursRange(Vector3Int center, int range)
         {
-            Vector3Int[] result = (center.y % 2 == 0) ? GetEvenRange(center,range) : GetOddRange(center,range);
+            Vector3Int[] result = (center.y % 2 == 0) ? GetEvenRange(center, range) : GetOddRange(center, range);
             return result;
         }
 
@@ -139,10 +151,10 @@ namespace Generic.Contants
         }
 
         #region Private Methods
-        private static Vector3Int[] GetEvenRange(Vector3Int cell,int range)
+        private static Vector3Int[] GetEvenRange(Vector3Int cell, int range)
         {
             Vector3Int[] pattern = null;
-            switch(range)
+            switch (range)
             {
                 case 1:
                     pattern = NeighbourHexCell.HexaPatternEven1;

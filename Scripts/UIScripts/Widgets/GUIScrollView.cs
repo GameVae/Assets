@@ -27,10 +27,6 @@ namespace UI.Widget
             protected set { background = value; }
         }
 
-        public override void InteractableChange(bool value) { }
-
-        public override void SetChildrenDependence() { }
-
 #if UNITY_EDITOR
         private void OnValidate()
         {

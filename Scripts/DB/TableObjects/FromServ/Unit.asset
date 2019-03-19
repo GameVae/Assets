@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: Unit
   m_EditorClassIdentifier: 
   Rows:
-  - ID: 9
-    ID_Unit: 16
-    ID_User: 42
-    BaseNumber: 1
+  - ID: 0
+    ID_Unit: 0
+    ID_User: 0
+    BaseNumber: 0
     Level: 0
     Quality: 0
-    Hea_cur: 3.5
-    Health: 5.6
+    Hea_cur: 0
+    Health: 0
     Position_Cell: 
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
     TimeFinishMove: 0
-    ListMove: 
+    ListMove: []
     Status: 0
     Attack_Base_ID: 0
     Attack_Unit_ID: 0

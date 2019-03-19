@@ -1615,18 +1615,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189730255}
   m_CullTransparentMesh: 0
---- !u!114 &197424479 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114607846718650940, guid: 024e8c9dd4d849a4697eb95e884604f3,
-    type: 3}
-  m_PrefabInstance: {fileID: 1376673207}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad97fb9dadc251747bfb659da65c3246, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &206227370
 GameObject:
   m_ObjectHideFlags: 0
@@ -5387,7 +5375,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.37543753, y: 0.1825}
   m_AnchorMax: {x: 0.62578124, y: 0.29500002}
-  m_AnchoredPosition: {x: -0.5, y: -59}
+  m_AnchoredPosition: {x: -0.5, y: -59.00003}
   m_SizeDelta: {x: -1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &617586663
@@ -11240,6 +11228,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 340176693}
     m_Modifications:
+    - target: {fileID: 1316827578118006, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+      propertyPath: m_Name
+      value: MobileConsole
+      objectReference: {fileID: 0}
     - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11279,6 +11271,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
@@ -11333,47 +11340,9 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000014618259
+      value: -0.0000005355736
       objectReference: {fileID: 0}
-    - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
-        type: 3}
-      propertyPath: ScrollView
-      value: 
-      objectReference: {fileID: 197424479}
-    - target: {fileID: 1787422311474592, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1521316941867674, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114897059501838348, guid: 024e8c9dd4d849a4697eb95e884604f3,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114897059501838348, guid: 024e8c9dd4d849a4697eb95e884604f3,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114897059501838348, guid: 024e8c9dd4d849a4697eb95e884604f3,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114897059501838348, guid: 024e8c9dd4d849a4697eb95e884604f3,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.39215687
-      objectReference: {fileID: 0}
-    - target: {fileID: 1120362298944884, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114955005858603068, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
 --- !u!224 &1376673208 stripped
 RectTransform:

@@ -1,4 +1,5 @@
-﻿using Generic.Contants;
+﻿using System;
+using Generic.Contants;
 using Generic.Singleton;
 using UnityEngine;
 
@@ -6,6 +7,12 @@ namespace Generic.CustomInput
 {
     public sealed class CrossInput : MonoSingle<CrossInput>
     {
+        public enum PointerState
+        {
+            Free,Down,Up,Press
+        }
+
+        private PointerState pointerState = PointerState.Free;
         private Vector3 lastPosition;
         private Vector2 axises;
         private Constants constants;
@@ -17,16 +24,22 @@ namespace Generic.CustomInput
             }
         }
 
-#if !UNITY_EDITOR && UNITY_ANDROID
-        public bool IsTouchUp
+         
+
+
+        public bool IsPointerUp
         {
             get
             {
+#if !UNITY_EDITOR && UNITY_ANDROID
                 return TouchCount == 1 &&
                     (GetTouch(0).phase == TouchPhase.Ended || GetTouch(0).phase == TouchPhase.Canceled);
+#endif
+#if UNITY_EDITOR || UNITY_STANDALONE
+                return pointerState == PointerState.Up;
+#endif
             }
         }
-#endif
         public Vector2 Axises
         {
             get
@@ -91,7 +104,37 @@ namespace Generic.CustomInput
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
             RecordMouseState();
+            pointerState = RecordPointerState(pointerState);
 #endif
+        }
+
+        private PointerState RecordPointerState(PointerState state)
+        {
+           switch(state)
+            {
+                case PointerState.Free:
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                            return PointerState.Down;
+                        break;
+                    }
+                case PointerState.Down:
+                    {
+                        if (Input.GetMouseButton(0))
+                            return PointerState.Press;
+                        break;
+                    }
+                case PointerState.Press:
+                    {
+                        if (Input.GetMouseButton(0))
+                            return PointerState.Press;
+                        if (Input.GetMouseButtonUp(0))
+                            return PointerState.Up;
+                        break;
+                    }
+
+            }
+            return PointerState.Free;
         }
 
         public float ZoomValue()

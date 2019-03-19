@@ -125,7 +125,7 @@ public class MiniMap : BaseWindow
             }
             else
             {
-                selectedCell = currentSelectCell + new Vector3Int(5, 5, 0);
+                selectedCell = currentSelectCell.ToClientPosition();
             }
             StartClose();
         }
@@ -177,15 +177,7 @@ public class MiniMap : BaseWindow
     private void InitSelectCondition()
     {
         selectCondition.Conditions += delegate { return Window.activeInHierarchy; };
-#if UNITY_EDITOR || UNITY_STANDALONE
-        selectCondition.Conditions += delegate 
-        {
-            return Input.GetMouseButtonUp(0);
-        };
-#endif
-#if UNITY_ANDROID && !UNITY_EDITOR
-        selectCondition.Conditions += delegate { return crossInput.IsTouchUp; };
-#endif
+        selectCondition.Conditions += delegate { return crossInput.IsPointerUp; };
     }
 }
 

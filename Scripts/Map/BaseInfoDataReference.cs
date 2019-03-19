@@ -27,7 +27,7 @@ public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
         GameObject tower = TowerSpawner.GetTower(EnumCollect.TowerType.Base);
         tower.SetActive(true);
 
-        tower.GetComponent<BaseTower>().SetPosition(postion.Parse3Int() + new Vector3Int(5, 5, 0));
+        tower.GetComponent<BaseTower>().SetPosition(postion.Parse3Int().ToClientPosition());
 
         tower.GetComponentInChildren<LookAt>().Target = Camera.main.transform;
         TowerLabel label = tower.GetComponent<TowerLabel>();

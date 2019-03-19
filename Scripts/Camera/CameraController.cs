@@ -215,7 +215,7 @@ public class CameraController : MonoBehaviour
 
     public bool IsTouch()
     {
-#if UNITY_EDITOR
+#if  UNITY_STANDALONE || UNITY_EDITOR
         return CrossInput.Axises.magnitude / Time.deltaTime <= Option.SwipeMinSpeed;
 #endif
 #if !UNITY_EDITOR && UNITY_ANDROID

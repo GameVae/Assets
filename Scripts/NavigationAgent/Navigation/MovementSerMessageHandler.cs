@@ -20,6 +20,9 @@ public sealed class MovementSerMessageHandler
 
         JSONObject listMove = r_move.GetField("ListMove");
 
+        //moveSteps = JsonUtility.FromJson<List<MoveStep>>(listMove.ToString());
+        //moveSteps.Insert(0, firstStep);
+
         moveSteps.Add(firstStep);
         for (int i = 0; i < listMove.Count; i++)
         {

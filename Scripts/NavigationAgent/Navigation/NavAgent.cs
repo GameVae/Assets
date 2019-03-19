@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Animation;
 using EnumCollect;
 using Generic.Contants;
@@ -14,6 +15,9 @@ namespace Entities.Navigation
     public class NavAgent : MonoBehaviour
     {
         private NavRemote remote;
+        private FixedMovement fixedMove;
+        private NavPathRenderer pathRenderer;
+        private SIO_MovementListener moveEvent;
 
         #region Singleton
         private HexMap mapIns;
@@ -27,8 +31,6 @@ namespace Entities.Navigation
         private List<Vector3Int> path;
         #endregion
 
-        private NavPathRenderer pathRenderer;
-
         public AnimatorController Anim;
         public NavOffset Offset;
 
@@ -37,7 +39,6 @@ namespace Entities.Navigation
         private int curMoveStep;
         private int maxMoveStep;
 
-        private FixedMovement fixedMove;
 
         public bool IsMoving { get; private set; }
         public WayPoint WayPoint { get; private set; }
@@ -69,7 +70,7 @@ namespace Entities.Navigation
             remote = GetComponent<NavRemote>();
 
             OffsetInit();
-
+            fixedMove = new FixedMovement(this);
         }
 
         private void OffsetInit()
@@ -84,10 +85,9 @@ namespace Entities.Navigation
         {
             mapIns = Singleton.Instance<HexMap>();
             breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
-
             aStar = new AStartAlgorithm(mapIns, maxSearchLevel);
-            fixedMove = new FixedMovement(this, Anim);
 
+            moveEvent = FindObjectOfType<SIO_MovementListener>();
             MoveFinish();
         }
         #endregion
@@ -133,8 +133,6 @@ namespace Entities.Navigation
                 else
                 {
                     MoveFinish();
-                    IsMoving = false;
-                    Anim.Stop(AnimState.Walking);
                 }
             }
         }
@@ -157,29 +155,35 @@ namespace Entities.Navigation
                 curMoveStep = 0;
             }
 
-            IsMoving = aStar.FindPath(StartPosition.ZToZero(), EndPosition.ZToZero());
+            bool foundPath = false;
+            foundPath = aStar.FindPath(StartPosition.ZToZero(), EndPosition.ZToZero());
             path = aStar.Path;
 
             pathRenderer.LineRendererGenPath(
-                foundPath: IsMoving,
+                foundPath: foundPath,
                 worldPath: mapIns.CellToWorld(path),
                 t: GetPerHasGone(), // (count - (maxMoveStep - CurrentMoveStep)) * 1.0f / count
                 position: transform.position,
                 target: mapIns.CellToWorld(EndPosition)
                 );
-            return IsMoving;
+            return foundPath;
         }
 
-        private void MoveFinish()
+        public void MoveFinish()
         {
             Vector3Int currentCell = mapIns.WorldToCell(transform.position).ZToZero();
             if (!WayPoint.Binding())
             {
                 if (breathFirstSearch.GetNearestCell(currentCell, out Vector3Int result))
                 {
-                    FindPath(currentCell, result);
+                    StartMove(currentCell, result);
                     curMoveStep = 0;
                 }
+            }
+            else
+            {
+                Anim.Stop(AnimState.Walking);
+                IsMoving = false;
             }
         }
 
@@ -190,24 +194,48 @@ namespace Entities.Navigation
             return (count - (maxMoveStep - curMoveStep)) * 1.0f / count;
         }
 
-        public bool StartMove(Vector3Int start, Vector3Int end)
+        public void StartMove(bool foundPath)
         {
-            if (IsMoving == false)
-            {
-                WayPoint.Unbinding();
-            }
-
-            bool foundPath = FindPath(start, end);
             if (foundPath)
             {
-                Anim.Play(AnimState.Walking);
+                if (IsMoving == false)
+                {
+                    WayPoint.Unbinding();
+                    Anim.Play(AnimState.Walking);
+                    IsMoving = true;
+                }
                 CalculateCurrentTarget();
             }
-            else if (IsMoving == true)
+            else // path not found
             {
-                WayPoint.Binding();
-                Anim.Stop(AnimState.Walking);
+                if (IsMoving == true)
+                {
+                    MoveFinish();
+                    Anim.Stop(AnimState.Walking);
+                }
+            }
+        }
 
+        public void FixedStartMove()
+        {
+            WayPoint.Unbinding();
+            Anim.Play(AnimState.Walking);
+        }
+
+        public void FixedMoveFinish()
+        {
+            WayPoint.Binding();
+            Anim.Stop(AnimState.Walking);
+
+        }
+
+        public bool StartMove(Vector3Int start, Vector3Int end)
+        {
+            bool foundPath = FindPath(start, end);
+            StartMove(foundPath);
+            if (foundPath)
+            {
+                moveEvent.Move(GetMovePath(), GetTimes(), CurrentPosition, AgentType,remote.AgentID);
             }
             return foundPath;
         }
@@ -235,7 +263,7 @@ namespace Entities.Navigation
             }
             return separateTime;
         }
-        
+
         public List<Vector3Int> GetMovePath()
         {
             return aStar.Truncate(path, maxMoveStep);

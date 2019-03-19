@@ -1,4 +1,5 @@
-﻿using EnumCollect;
+﻿using System;
+using EnumCollect;
 using Generic.Singleton;
 using ManualTable.Row;
 using UnityEngine;
@@ -34,6 +35,20 @@ namespace Entities.Navigation
         {
             ctrl = Singleton.Instance<NavAgentController>();
             Label.LookAt(ctrl.CameraRaycaster.transform);
+        }
+
+        private void Start()
+        {
+            CheckStartupPosition();
+        }
+
+        private void CheckStartupPosition()
+        {
+            if(agentData.Next_Cell.SerPositionValidate())
+            {
+                JSONObject moveData = new JSONObject(agentData.ToJSON());
+                Agent.StartMove(moveData);
+            }
         }
 
         public void ActiveNav()

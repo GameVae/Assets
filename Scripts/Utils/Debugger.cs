@@ -97,7 +97,7 @@ public sealed class Debugger : MonoSingle<Debugger>
         text.raycastTarget = false;
         text.enableAutoSizing = true;
         text.fontSizeMax = 32;
-        text.fontSizeMin = 18f;
+        text.fontSizeMin = 25f;
         text.color = Color.black;
         text.richText = true;
 

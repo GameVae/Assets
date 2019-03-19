@@ -55,7 +55,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             return;
         else
         {
-            agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int() + new Vector3Int(5, 5, 0));
+            agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int().ToClientPosition());
 
             NavRemote agentRemote = agent.GetComponent<NavRemote>();
             agentRemote.Init(r, user);

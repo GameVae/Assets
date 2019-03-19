@@ -1,6 +1,7 @@
 ﻿using EnumCollect;
 using Json;
 using ManualTable.Interface;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ManualTable.Row
@@ -341,13 +342,14 @@ namespace ManualTable.Row
         public string End_Cell;
         public float TimeMoveNextCell;
         public float TimeFinishMove;
-        public string ListMove;
+        public List<MoveStep> ListMove;
         public int Status;
         public int Attack_Base_ID;
         public int Attack_Unit_ID;
         public bool AttackedBool;
     }
 
+    [System.Serializable]
     public class MoveStep : ServerMessage
     {
         public override int FieldCount { get { return 3; } }
@@ -355,15 +357,14 @@ namespace ManualTable.Row
         public string Next_Cell;
         public float TimeMoveNextCell;
 
-        private readonly Vector3Int addBy = new Vector3Int(5, 5, 0);
         public Vector3Int Position
         {
-            get { return Position_Cell.Parse3Int() + addBy; }
+            get { return Position_Cell.Parse3Int().ToClientPosition(); }
         }
 
         public Vector3Int NextPosition
         {
-            get { return Next_Cell.Parse3Int() + addBy; }
+            get { return Next_Cell.Parse3Int().ToClientPosition(); }
         }
 
         public float TimeSecond

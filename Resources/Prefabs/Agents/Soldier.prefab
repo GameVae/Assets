@@ -1806,9 +1806,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Anim: {fileID: 1885978826}
   Offset:
-    MaxMoveStep: 30
-    MaxSearchLevel: 100
-    MaxSpeed: 2
+    MaxMoveStep: 50
+    MaxSearchLevel: 300
+    MaxSpeed: 0.5
     MaxAngular: 5
 --- !u!114 &1885978820
 MonoBehaviour:

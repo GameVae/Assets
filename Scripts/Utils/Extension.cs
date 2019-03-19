@@ -130,6 +130,11 @@ public static class Extension
         return start && end;
     }
 
+    public static bool SerPositionValidate(this string value)
+    {
+        return value.Parse3Int() != Generic.Contants.Constants.InvalidPosition;
+    }
+
     public static Vector3Int Parse3Int(this string value)
     {
         try
@@ -140,9 +145,9 @@ public static class Extension
         catch (Exception e)
         {
 #if UNITY_EDITOR
-            Debug.Log(e.ToString());
+            // Debug.Log(e.ToString());
 #endif
-            return Vector3Int.zero;
+            return Vector3Int.one * - 1;
         }
     }
 
@@ -167,6 +172,16 @@ public static class Extension
     public static string ToPositionString(this Vector3Int value)
     {
         return string.Format("{0},{1},{2}", value.x, value.y, value.z);
+    }
+
+    public static Vector3Int ToClientPosition(this Vector3Int value)
+    {
+        return value + Generic.Contants.Constants.ToClientPosition;
+    }
+
+    public static Vector3Int ToSerPosition(this Vector3Int value)
+    {
+        return value + Generic.Contants.Constants.ToSerPosition;
     }
     #endregion
 

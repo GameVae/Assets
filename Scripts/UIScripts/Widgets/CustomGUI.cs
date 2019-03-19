@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,7 +85,11 @@ namespace UI.Widget
 
         public Mask Mask
         {
-            get { return mask ?? (mask = GetComponent<Mask>()); }
+            get
+            {
+                if (mask == null) mask = GetComponent<Mask>();
+                return mask ?? (mask = FindTypeWithCustomMask<Mask>(CustomLayerMask.CustomMask.MaskImg));
+            }
             protected set { mask = value; }
         }
 
@@ -174,7 +179,7 @@ namespace UI.Widget
         public void IsBackgroudChange(bool value)
         {
             IsBackground = value;
-            if(BackgroundImg) BackgroundImg.enabled = value;
+            if (BackgroundImg) BackgroundImg.enabled = value;
         }
         #endregion
 
@@ -195,14 +200,24 @@ namespace UI.Widget
             where T : Component
         {
             CustomLayerMask[] marks = GetComponentsInChildren<CustomLayerMask>();
-            CustomLayerMask r;
+            List<CustomLayerMask> sameType = new List<CustomLayerMask>();
             int length = marks.Length;
-            r = length > 0 ? marks[0] : null;
+
+            for (int i = 1; i < length; i++)
+            {
+                if (marks[i].Mask == maskType)
+                    sameType.Add(marks[i]);
+            }
+
+            length = sameType.Count;
+            CustomLayerMask r;
+            r = length > 0 ? sameType[0] : null;
+
             for (int i = 1; i < length; i++)
             {
                 if (r.SameTypePiority < marks[i].SameTypePiority)
                     r = marks[i];
-            }            
+            }
             return r?.GetComponent<T>();
         }
 

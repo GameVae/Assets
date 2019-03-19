@@ -15,7 +15,15 @@ namespace Map
 
         public override bool Unbinding()
         {
-            return agentNodeManager.Remove(Position);
+            if(agentNodeManager.GetInfo(Position, out NodeInfo info))
+            {
+                if(info == NodeInfo) // agent only remove its info otherwise return false (ignore)
+                {
+                    return agentNodeManager.Remove(Position);
+
+                }
+            }
+            return false;
         }
 
         protected override void Awake()

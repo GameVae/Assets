@@ -36,28 +36,29 @@ public class SIO_MovementListener : Listener
         moveJSONObject.type = JSONObject.Type.BAKED;
         moveJSONObject.str = moveJson;
 
-        Debug.Log(moveJSONObject);
+        Debugger.Log(moveJSONObject);
         return moveJSONObject;
     }
 
     public void Move(List<Vector3Int> path,
         List<float> separateTime,
         Vector3Int curCellPosition,
-        ListUpgrade unit)
+        ListUpgrade unit,
+        int id)
     {
-        InitMessage(path, separateTime, curCellPosition, unit);
+        InitMessage(path, separateTime, curCellPosition, unit,id);
         Emit("S_MOVE"); ;
     }
 
-    private void InitMessage(List<Vector3Int> realPath, List<float> separateTime, Vector3Int curCellPosition, ListUpgrade unit)
+    private void InitMessage(List<Vector3Int> clientPath, 
+        List<float> separateTime, Vector3Int curCellPosition, ListUpgrade unit,int id)
     {
-        Vector3Int substractBy = new Vector3Int(5, 5, 0);
-        curCellPosition -= substractBy;
+        curCellPosition = curCellPosition.ToSerPosition();
 
-        List<Vector3Int> tempPath = new List<Vector3Int>(realPath);
+        List<Vector3Int> tempPath = new List<Vector3Int>(clientPath);
         for (int i = 0; i < tempPath.Count; i++)
         {
-            tempPath[i] -= substractBy;
+            tempPath[i] = tempPath[i].ToSerPosition();
         }
         tempPath = tempPath.Invert();
 
@@ -79,7 +80,7 @@ public class SIO_MovementListener : Listener
 
         moveJson = string.Format(format,
             user.Server_ID,
-            agentCtrl.CurrentAgent.ID,
+            id,
             (int)unit,
             user.ID_User,
             curCellPosition.ToPositionString(),

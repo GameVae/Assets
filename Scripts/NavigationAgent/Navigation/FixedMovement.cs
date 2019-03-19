@@ -17,12 +17,11 @@ namespace Entities.Navigation
         private List<Vector3Int> path;
         private NavAgent targetAgent;
         private MovementSerMessageHandler moveHandler;
-        private AnimatorController anim;
 
         public List<Vector3Int> Path
         { get { return path; } }
 
-        public FixedMovement(NavAgent agent, AnimatorController animatorController)
+        public FixedMovement(NavAgent agent)
         {
             isMoving = false;
 
@@ -30,7 +29,6 @@ namespace Entities.Navigation
             mapIns = Singleton.Instance<HexMap>();
             moveHandler = new MovementSerMessageHandler();
             targetAgent = agent;
-            anim = animatorController;
         }
 
         public void Update()
@@ -68,8 +66,8 @@ namespace Entities.Navigation
             isMoving = true;
             Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
             speed = CalculateSpeed(targetAgent.transform.position, target, 0, moveSteps[0].TimeSecond);
-            targetAgent.WayPoint.Unbinding();
-            anim.Play(AnimState.Walking);
+
+            targetAgent.FixedStartMove();
         }
 
         private void NextStep()
@@ -87,13 +85,20 @@ namespace Entities.Navigation
 
         private float CalculateSpeed(Vector3 pos, Vector3 tar, float lastTime, float targetTime)
         {
+            float deltaTime = targetTime - lastTime;
+            if(deltaTime < 0)
+            {
+                path.Clear();
+                Stop();
+                return 0;
+            }
             return Vector3.Distance(pos, tar) / (targetTime - lastTime);
         }
 
         private void Stop()
         {
-            anim.Stop(AnimState.Walking);
-            targetAgent.WayPoint.Binding();
+            targetAgent.FixedMoveFinish();
+            isMoving = false;
         }
 
     }

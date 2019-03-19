@@ -66,7 +66,7 @@ public class NaturalResource : MonoBehaviour
             // parse position
             CellPos = Data.Position.Parse3Int();
 
-            transform.position = Singleton.Instance<HexMap>().CellToWorld(CellPos + new Vector3Int(5, 5, 0));
+            transform.position = Singleton.Instance<HexMap>().CellToWorld(CellPos.ToClientPosition());
         }
     }
 

@@ -29,7 +29,7 @@ public class BaseDefendController : MonoBehaviour
         Debugger.Log(baseDefends.Length + " " + baseInfo.Count);
         for (int i = 0; i < baseDefends.Length && i < baseInfo.Count; i++)
         {
-            Vector3 basePos = Map.CellToWorld(((BaseInfoRow)SyncData.BaseInfo[i]).Position.Parse3Int() + new Vector3Int(5, 5, 0));
+            Vector3 basePos = Map.CellToWorld(SyncData.BaseInfo.Rows[i].Position.Parse3Int().ToClientPosition());
             for (int j = 0; j < baseDefends[i].Count; j++)
             {
                 BaseDefendRow row = baseDefends[i].Rows[j];
