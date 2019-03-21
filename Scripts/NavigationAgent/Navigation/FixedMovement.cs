@@ -2,51 +2,68 @@
 using EnumCollect;
 using Generic.Contants;
 using Generic.Singleton;
-using ManualTable.Row;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Entities.Navigation
 {
-    public sealed class FixedMovement
+    public sealed class FixedMovement : AgentMoveability
     {
-        private bool isMoving;
-        private HexMap mapIns;
         private float speed;
-        private List<MoveStep> moveSteps;
-        private List<Vector3Int> path;
-        private NavAgent targetAgent;
+
+        private Vector3 target;
+        private HexMap mapIns;
+        private AnimatorController Anim;
         private MovementSerMessageHandler moveHandler;
 
-        public List<Vector3Int> Path
-        { get { return path; } }
-
-        public FixedMovement(NavAgent agent)
+        private void Awake()
         {
-            isMoving = false;
+            IsMoving = false;
 
-            path = new List<Vector3Int>();
+            Anim = GetComponent<AnimatorController>();
             mapIns = Singleton.Instance<HexMap>();
-            moveHandler = new MovementSerMessageHandler();
-            targetAgent = agent;
+            moveHandler = new MovementSerMessageHandler(mapIns);
         }
 
-        public void Update()
+        public void StartMove(JSONObject r_move)
         {
-            if (isMoving)
-            {
-                if (path.Count > 0)
-                {
-                    Vector3 currentTarget = mapIns.CellToWorld(path[path.Count - 1]);
+            moveHandler.HandlerEvent(r_move);
+            speed = moveHandler.FirstStep(transform.position, out target);
 
-                    targetAgent.transform.position = Vector3.MoveTowards(
-                        current: targetAgent.transform.position,
-                        target: currentTarget,
+            IsMoving = true;
+            Rotator.Target = target;
+            Rotator.IsBlock = false;
+            Anim.Play(AnimState.Walking);
+            Unbinding();
+
+        }
+
+        private void NextStep()
+        {
+            speed = moveHandler.NextStep(transform.position, out target);
+            Rotator.Target = target;
+        }
+
+        public void Stop()
+        {
+            IsMoving = false;
+            Rotator.IsBlock = true;
+            Anim.Stop(AnimState.Walking);
+            Binding();
+            moveHandler.Clear();
+        }
+
+        protected override void UpdateMove()
+        {
+            if (IsMoving)
+            {
+                if (speed > 0)
+                {
+                    transform.position = Vector3.MoveTowards(
+                        current: transform.position,
+                        target: target,
                         maxDistanceDelta: Time.deltaTime * speed);
 
-                    targetAgent.RotateToTarget(currentTarget);
-
-                    if ((targetAgent.transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
+                    if ((transform.position - target).magnitude <= Constants.TINY_VALUE)
                     {
                         NextStep();
                     }
@@ -57,49 +74,5 @@ namespace Entities.Navigation
                 }
             }
         }
-
-        public void StartMove(JSONObject r_move)
-        {
-            moveSteps = moveHandler.HandlerEvent(r_move);
-            path = moveHandler.GetPath(moveSteps);
-
-            isMoving = true;
-            Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
-            speed = CalculateSpeed(targetAgent.transform.position, target, 0, moveSteps[0].TimeSecond);
-
-            targetAgent.FixedStartMove();
-        }
-
-        private void NextStep()
-        {
-            float lastTime = moveSteps[0].TimeSecond;
-
-            Path.RemoveAt(Path.Count - 1);
-            moveSteps.RemoveAt(0);
-            if (moveSteps.Count > 0)
-            {
-                Vector3 target = mapIns.CellToWorld(moveSteps[0].NextPosition);
-                speed = CalculateSpeed(targetAgent.transform.position, target, lastTime, moveSteps[0].TimeSecond);
-            }
-        }
-
-        private float CalculateSpeed(Vector3 pos, Vector3 tar, float lastTime, float targetTime)
-        {
-            float deltaTime = targetTime - lastTime;
-            if(deltaTime < 0)
-            {
-                path.Clear();
-                Stop();
-                return 0;
-            }
-            return Vector3.Distance(pos, tar) / (targetTime - lastTime);
-        }
-
-        private void Stop()
-        {
-            targetAgent.FixedMoveFinish();
-            isMoving = false;
-        }
-
     }
 }

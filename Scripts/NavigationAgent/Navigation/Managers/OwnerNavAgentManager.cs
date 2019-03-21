@@ -1,5 +1,10 @@
 ﻿using Generic.Singleton;
+using ManualTable;
+using ManualTable.Row;
+using Network.Data;
+using SocketIO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Entities.Navigation
 {

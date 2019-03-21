@@ -1638,12 +1638,12 @@ GameObject:
   - component: {fileID: 1885978823}
   - component: {fileID: 1885978822}
   - component: {fileID: 1885978825}
-  - component: {fileID: 1885978824}
-  - component: {fileID: 1885978821}
-  - component: {fileID: 1885978820}
   - component: {fileID: 1885978826}
   - component: {fileID: 8755347990513165770}
   - component: {fileID: 2846919174950901839}
+  - component: {fileID: 413202727086834659}
+  - component: {fileID: 4826951270794861632}
+  - component: {fileID: 6480722271264577063}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -1780,48 +1780,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &1885978824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885978819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8283fa622c591374e81e560506b91dae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1885978821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885978819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea8b10e54f04e024d81ff53da316bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Anim: {fileID: 1885978826}
-  Offset:
-    MaxMoveStep: 50
-    MaxSearchLevel: 300
-    MaxSpeed: 0.5
-    MaxAngular: 5
---- !u!114 &1885978820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885978819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f6b6b4d814c1024480d7e1e3612ec4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1885978826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1847,8 +1805,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49decbdf546ff814790c936fd298ce08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UnitData:
+    ID: 0
+    ID_Unit: 0
+    ID_User: 0
+    BaseNumber: 0
+    Level: 0
+    Quality: 0
+    Hea_cur: 0
+    Health: 0
+    Position_Cell: 
+    Next_Cell: 
+    End_Cell: 
+    TimeMoveNextCell: 0
+    TimeFinishMove: 0
+    ListMove: []
+    Status: 0
+    Attack_Base_ID: 0
+    Attack_Unit_ID: 0
+    AttackedBool: 0
   Type: 16
   Label: {fileID: 2846919174950901839}
+  Offset:
+    MaxMoveStep: 50
+    MaxSearchLevel: 200
+    MaxSpeed: 1
 --- !u!114 &2846919174950901839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1866,6 +1847,45 @@ MonoBehaviour:
   HPFiller: {fileID: 1200966803}
   Quality: {fileID: 867952975}
   NameInGame: {fileID: 3934474485301954627}
+--- !u!114 &413202727086834659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885978819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e14eb392c7e0984d800e688f57db86c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {x: 0, y: 0, z: 0}
+  Angular: 5
+  IsBlock: 1
+--- !u!114 &4826951270794861632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885978819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8283fa622c591374e81e560506b91dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6480722271264577063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885978819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d74e79f38abb56438a5a5db147be039, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2010609893
 GameObject:
   m_ObjectHideFlags: 0

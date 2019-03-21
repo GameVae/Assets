@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using ManualTable.Row;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,8 @@ public class AgentLabel : MonoBehaviour
     private float maxHP;
 
     private LookAt Lookat;
+    private UnitRow agentInfo;
+    private UserInfoRow userInfo;
 
     public Transform Head;
     public RectTransform Label;
@@ -57,5 +60,16 @@ public class AgentLabel : MonoBehaviour
         if (Lookat == null)
             Lookat = Head.GetComponent<LookAt>();
         Lookat.Target = trans;
+    }
+
+    public void SetInfo(UnitRow info, UserInfoRow user)
+    {
+        agentInfo = info;
+        userInfo = user;
+
+        SetMaxHP(agentInfo.Health);
+        SetHp(agentInfo.Hea_cur);
+        SetQuality(agentInfo.Quality);
+        SetNameInGame("Id " + agentInfo.ID + " " + agentInfo.Position_Cell.Parse3Int().ToClientPosition());
     }
 }

@@ -281,4 +281,15 @@ public static class Extension
     }
     #endregion
 
+    #region GameObject
+    public static T AddComponentNotExist<T>(this GameObject gameObject)
+        where T : Component
+    {
+        T checker = gameObject.GetComponent<T>();
+        if (checker == null)
+            return gameObject.AddComponent<T>();
+        return checker;
+    }
+    #endregion
+
 }

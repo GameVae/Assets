@@ -45,5 +45,6 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
             evCtrl.On(ev, callbacks[i]);
         }
         listenningEvents.Add(ev);
+        // Debugger.Log("On " + ev);
     }
 }

@@ -11,37 +11,37 @@ using UnityEngine;
 
 namespace Entities.Navigation
 {
-    [RequireComponent(typeof(LineRenderer), typeof(AgentWayPoint))]
-    public class NavAgent : MonoBehaviour
+    [RequireComponent(typeof(LineRenderer))]
+    public class NavAgent : AgentMoveability
     {
-        private NavRemote remote;
-        private FixedMovement fixedMove;
+        private AnimatorController animator;
+        private HexMap mapIns;
         private NavPathRenderer pathRenderer;
         private SIO_MovementListener moveEvent;
 
         #region Singleton
-        private HexMap mapIns;
+        private HexMap MapIns
+        {
+            get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
+        }
         private BreathFirstSearch breathFirstSearch;
         #endregion
 
         #region A* Pathfinding
         private int maxSearchLevel;
-        private Vector3 currentTarget;
+        private Vector3 target;
         private AStartAlgorithm aStar;
         private List<Vector3Int> path;
         #endregion
 
-        public AnimatorController Anim;
-        public NavOffset Offset;
+        public AnimatorController Animator
+        {
+            get { return animator ?? (animator = GetComponent<AnimatorController>()); }
+        }
 
         private float speed;
-        private float maxAngular;
         private int curMoveStep;
         private int maxMoveStep;
-
-
-        public bool IsMoving { get; private set; }
-        public WayPoint WayPoint { get; private set; }
 
         public Vector3Int EndPosition { get; private set; }
         public Vector3Int StartPosition { get; private set; }
@@ -49,63 +49,42 @@ namespace Entities.Navigation
         {
             get
             {
-                if (mapIns != null)
-                    return mapIns.WorldToCell(transform.position);
+                if (MapIns != null)
+                    return MapIns.WorldToCell(transform.position);
                 return Vector3Int.zero;
             }
         }
-
-        public ListUpgrade AgentType
-        {
-            get { return remote.Type; }
-        }
-
-        public int ID { get { return remote.AgentID; } }
 
         #region Initalize
         private void Awake()
         {
             pathRenderer = new NavPathRenderer(GetComponent<LineRenderer>());
-            WayPoint = GetComponent<AgentWayPoint>();
-            remote = GetComponent<NavRemote>();
 
             OffsetInit();
-            fixedMove = new FixedMovement(this);
         }
 
         private void OffsetInit()
         {
             speed = Offset.MaxSpeed;
-            maxAngular = Offset.MaxAngular;
             maxMoveStep = Offset.MaxMoveStep;
             maxSearchLevel = Offset.MaxSearchLevel;
         }
 
         private void Start()
         {
-            mapIns = Singleton.Instance<HexMap>();
             breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
-            aStar = new AStartAlgorithm(mapIns, maxSearchLevel);
+
+            aStar = new AStartAlgorithm(MapIns, maxSearchLevel);
 
             moveEvent = FindObjectOfType<SIO_MovementListener>();
-            MoveFinish();
         }
         #endregion
 
-        private void Update()
+        protected override void Update()
         {
-            //print("delta time: " + Time.deltaTime);
-            MoveToTarget();
-
-            fixedMove.Update();
-
+            base.Update();
+     
             pathRenderer.Update();
-        }
-
-        private void FixedUpdate()
-        {
-            if (IsMoving)
-                RotateToTarget(currentTarget);
         }
 
         private void AStarMoveToTarget()
@@ -114,20 +93,20 @@ namespace Entities.Navigation
             {
                 if (path.Count > 0)
                 {
-                    //Vector3 currentTarget = mapIns.CellToWorld(path[path.Count - 1]);
-                    transform.position = Vector3.MoveTowards(
+                    Vector3 position = Vector3.MoveTowards(
                         current: transform.position,
-                        target: currentTarget,
-                        maxDistanceDelta: Time.deltaTime * speed);
+                        target: target,
+                        maxDistanceDelta: Time.deltaTime * speed);                   
+                    transform.position = position;
 
-                    if ((transform.position - currentTarget).magnitude <= Constants.TINY_VALUE)
+                    if ((transform.position - target).magnitude <= Constants.TINY_VALUE)
                     {
                         path.RemoveAt(path.Count - 1);
                         CalculateCurrentTarget();
                         curMoveStep++;
 
+                        // path render
                         pathRenderer.RemoveForwardPoint(path.Count, GetPerHasGone());
-                        if (maxMoveStep == curMoveStep) pathRenderer.Clear();
                     }
                 }
                 else
@@ -137,13 +116,27 @@ namespace Entities.Navigation
             }
         }
 
-        private void MoveToTarget()
+        protected override void UpdateMove()
         {
-            if (maxMoveStep - 1 < curMoveStep/* || (path != null && path.Count == 0)*/)
+            if (maxMoveStep - 1 < curMoveStep)
             {
                 path?.Clear();
             }
             AStarMoveToTarget();
+        }
+
+        public bool StartMove(Vector3Int start, Vector3Int end)
+        {
+            if (Remote.FixedMove.IsMoving)
+                Remote.FixedMove.Stop();
+
+            bool foundPath = FindPath(start, end);
+            StartMove(foundPath);
+            if (foundPath)
+            {
+                moveEvent.Move(GetMovePath(), GetTimes(), CurrentPosition, Remote.Type, Remote.AgentID);
+            }
+            return foundPath;
         }
 
         private bool FindPath(Vector3Int start, Vector3Int end)
@@ -161,18 +154,18 @@ namespace Entities.Navigation
 
             pathRenderer.LineRendererGenPath(
                 foundPath: foundPath,
-                worldPath: mapIns.CellToWorld(path),
+                worldPath: MapIns.CellToWorld(path),
                 t: GetPerHasGone(), // (count - (maxMoveStep - CurrentMoveStep)) * 1.0f / count
                 position: transform.position,
-                target: mapIns.CellToWorld(EndPosition)
+                target: MapIns.CellToWorld(EndPosition)
                 );
             return foundPath;
         }
 
-        public void MoveFinish()
+        private void MoveFinish()
         {
-            Vector3Int currentCell = mapIns.WorldToCell(transform.position).ZToZero();
-            if (!WayPoint.Binding())
+            Vector3Int currentCell = MapIns.WorldToCell(transform.position).ZToZero();
+            if (!Binding())
             {
                 if (breathFirstSearch.GetNearestCell(currentCell, out Vector3Int result))
                 {
@@ -182,8 +175,7 @@ namespace Entities.Navigation
             }
             else
             {
-                Anim.Stop(AnimState.Walking);
-                IsMoving = false;
+                Stop();
             }
         }
 
@@ -194,15 +186,26 @@ namespace Entities.Navigation
             return (count - (maxMoveStep - curMoveStep)) * 1.0f / count;
         }
 
-        public void StartMove(bool foundPath)
+        private void Stop()
+        {
+            Animator.Stop(state: AnimState.Walking);
+            IsMoving = false;
+            path?.Clear();
+            pathRenderer.Clear();
+            Rotator.IsBlock = true;
+        }
+
+        private void StartMove(bool foundPath)
         {
             if (foundPath)
             {
                 if (IsMoving == false)
                 {
-                    WayPoint.Unbinding();
-                    Anim.Play(AnimState.Walking);
                     IsMoving = true;
+                    Rotator.IsBlock = false;
+
+                    Unbinding();
+                    Animator.Play(AnimState.Walking);
                 }
                 CalculateCurrentTarget();
             }
@@ -211,38 +214,8 @@ namespace Entities.Navigation
                 if (IsMoving == true)
                 {
                     MoveFinish();
-                    Anim.Stop(AnimState.Walking);
                 }
             }
-        }
-
-        public void FixedStartMove()
-        {
-            WayPoint.Unbinding();
-            Anim.Play(AnimState.Walking);
-        }
-
-        public void FixedMoveFinish()
-        {
-            WayPoint.Binding();
-            Anim.Stop(AnimState.Walking);
-
-        }
-
-        public bool StartMove(Vector3Int start, Vector3Int end)
-        {
-            bool foundPath = FindPath(start, end);
-            StartMove(foundPath);
-            if (foundPath)
-            {
-                moveEvent.Move(GetMovePath(), GetTimes(), CurrentPosition, AgentType,remote.AgentID);
-            }
-            return foundPath;
-        }
-
-        public void StartMove(JSONObject r_move)
-        {
-            fixedMove.StartMove(r_move);
         }
 
         public List<float> GetTimes()
@@ -256,7 +229,7 @@ namespace Entities.Navigation
 
             for (int i = currentPath.Count; i > 0; i--)
             {
-                Vector3 nextPosition = mapIns.CellToWorld(currentPath[i - 1]);
+                Vector3 nextPosition = MapIns.CellToWorld(currentPath[i - 1]);
                 distance = Vector3.Distance(currentPosition, nextPosition);
                 separateTime.Add(distance / Offset.MaxSpeed); // time
                 currentPosition = nextPosition;
@@ -274,7 +247,8 @@ namespace Entities.Navigation
             int count = path.Count;
             if (count > 0)
             {
-                currentTarget = mapIns.CellToWorld(path[count - 1]);
+                target = MapIns.CellToWorld(path[count - 1]);
+                Rotator.Target = target;
             }
         }
 
@@ -282,23 +256,15 @@ namespace Entities.Navigation
         {
             if (!IsMoving)
             {
-                WayPoint.Unbinding();
+                Unbinding();
             }
         }
-
-        #region Animation
-        public void RotateToTarget(Vector3 target)
-        {
-            Vector3 direction = (target - transform.position) * maxAngular;
-            transform.forward += direction * Time.deltaTime;
-        }
-        #endregion
 
 
 #if UNITY_EDITOR
         public void ActiveNav()
         {
-            remote.ActiveNav();
+            Remote.ActiveNav();
         }
 #endif
     }

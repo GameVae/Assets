@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class SIO_MovementListener : Listener
 {
-    private NavAgentController agentCtrl;
+    // public NavAgentController agentCtrl;
     private NonControlAgentManager nCtrlAgentManager;
     private JSONObject moveJSONObject;
     private string moveJson;
@@ -17,18 +17,32 @@ public class SIO_MovementListener : Listener
     protected override void Start()
     {
         base.Start();
-        agentCtrl = Singleton.Instance<NavAgentController>();
+        // agentCtrl = Singleton.Instance<NavAgentController>();
         nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
+
+        // Emit("S_UNIT");
     }
 
     public override void RegisterCallback()
     {
         AddEmiter("S_MOVE", S_MOVE);
+        AddEmiter("S_UNIT", S_UNIT);
 
-        On("R_MOVE", R_MOVE);
+        //On("R_MOVE", R_MOVE);
     }
 
+    private JSONObject S_UNIT()
+    {
+        Debugger.Log("S_UNIT: " + Time.realtimeSinceStartup);
+
+        Dictionary<string, string> data = new Dictionary<string, string>()
+        {
+            {"ID_User",SyncData.UserInfo.Rows[0].ID_User.ToString() },
+            {"Server_ID",SyncData.UserInfo.Rows[0].Server_ID.ToString() },
+        };
+        return new JSONObject(data);
+    }
 
     private JSONObject S_MOVE()
     {
@@ -120,7 +134,7 @@ public class SIO_MovementListener : Listener
         return string.Format("[{0}]", result);
     }
 
-    private void R_MOVE(SocketIOEvent obj)
+    public void R_MOVE(SocketIOEvent obj)
     {
         Debugger.Log(obj);
         nCtrlAgentManager.MoveAgent(obj.data["R_MOVE"]);

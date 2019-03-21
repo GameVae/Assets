@@ -50,6 +50,7 @@ namespace Animation
         {
             animPlaylist.TryGetValue(state + SUFFIX_STOP, out UnityAction value);
             value?.Invoke();
+            
         }
 
         public void Play(AnimState state)

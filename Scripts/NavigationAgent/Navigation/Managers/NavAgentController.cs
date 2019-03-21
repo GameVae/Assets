@@ -27,7 +27,7 @@ namespace Entities.Navigation
         {
             add
             {
-                if(moveConditions == null)
+                if (moveConditions == null)
                     moveConditions = new NestedCondition();
 
                 moveConditions.Conditions += value;
@@ -47,15 +47,17 @@ namespace Entities.Navigation
             SwitchButton.On += On;
             SwitchButton.Off += Off;
             InitMoveCondition();
+
+            eventSystem = FindObjectOfType<EventSystem>();
+            moveEvent = FindObjectOfType<SIO_MovementListener>();
         }
 
         private void Start()
-        {
-            eventSystem = FindObjectOfType<EventSystem>();
-            moveEvent = FindObjectOfType<SIO_MovementListener>();
-
+        {            
             HexMap = Singleton.Instance<HexMap>();
             crossInput = Singleton.Instance<CrossInput>();
+            moveEvent.Emit("S_UNIT");
+
         }
 
         private void Update()
@@ -85,13 +87,6 @@ namespace Entities.Navigation
         private void AgentStartMove(Vector3Int start, Vector3Int end)
         {
             bool foundPath = curAgent.StartMove(start, end);
-            if (foundPath)
-            {
-            //    //curAgent.GetMovePath().Log();
-            //    //curAgent.GetTime().Log();
-
-            //    moveEvent.Move(curAgent.GetMovePath(), curAgent.GetTimes(), curAgent.CurrentPosition, curAgent.AgentType);
-            }
         }
 
         public void SwitchToAgent(NavAgent agent)

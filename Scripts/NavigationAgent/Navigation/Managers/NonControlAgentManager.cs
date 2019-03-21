@@ -1,19 +1,26 @@
 ﻿using Generic.Singleton;
+using ManualTable;
+using ManualTable.Row;
+using Network.Data;
+using SocketIO;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Entities.Navigation
 {
     public sealed class NonControlAgentManager : MonoSingle<NonControlAgentManager>
     {
-        private Dictionary<int, NavAgent> nCtrlAgents;
+        private Dictionary<int, FixedMovement> nCtrlAgents;
+
 
         protected override void Awake()
         {
             base.Awake();
-            nCtrlAgents = new Dictionary<int, NavAgent>();
+            nCtrlAgents = new Dictionary<int, FixedMovement>();
         }
 
-        public void Add(int id, NavAgent agent)
+        public void Add(int id, FixedMovement agent)
         {
             if (!nCtrlAgents.ContainsKey(id))
             {

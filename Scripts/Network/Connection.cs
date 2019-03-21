@@ -80,7 +80,7 @@ public sealed class Connection : MonoSingle<Connection>
             {
                 SocketComponent.Close();
 #if UNITY_EDITOR
-                Debug.Log("Connection Closed");
+                Debugger.Log("Connection Closed");
 #endif
             }
             Sync?.SyncUpdate(Time.deltaTime);

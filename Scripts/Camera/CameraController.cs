@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour
     private void Update()
     {
         CameraGestureHandle();
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         ZoomHandle();
         if (IsTouch() && CrossInput.SwipeDirection != Vector2.zero)
         {
@@ -215,12 +215,7 @@ public class CameraController : MonoBehaviour
 
     public bool IsTouch()
     {
-#if  UNITY_STANDALONE || UNITY_EDITOR
-        return CrossInput.Axises.magnitude / Time.deltaTime <= Option.SwipeMinSpeed;
-#endif
-#if !UNITY_EDITOR && UNITY_ANDROID
-        return gestureType == CameraGesture.Touch;
-#endif
+        return CrossInput.IsTouch;
     }
 }
 

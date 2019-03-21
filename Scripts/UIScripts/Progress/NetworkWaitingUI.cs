@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using Generic.Singleton;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProgressController : MonoBehaviour
+public class NetworkWaitingUI : MonoBehaviour
 {
     private bool isActive;
     private Image image;
@@ -11,6 +12,7 @@ public class ProgressController : MonoBehaviour
 
     public float Angular;
     public Graphic Background;
+
     private void Awake()
     {
         image = GetComponentInChildren<Image>();

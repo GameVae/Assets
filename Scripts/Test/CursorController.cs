@@ -4,12 +4,12 @@ using UnityEngine.EventSystems;
 public class CursorController : MonoBehaviour
 {
     private EventSystem eventSystem;
-   
+
     public HexMap Map;
     public CursorPos Cursor;
     public Camera CameraRaycaster;
     public CameraController CameraCtrl;
-  
+
     private void Awake()
     {
         eventSystem = FindObjectOfType<EventSystem>();
@@ -17,8 +17,7 @@ public class CursorController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0) &&
-            CameraCtrl.IsTouch() && 
+        if (CameraCtrl.IsTouch() &&
             !eventSystem.IsPointerOverGameObject())
         {
             Vector3 mousePos = Input.mousePosition;
@@ -27,7 +26,7 @@ public class CursorController : MonoBehaviour
                 CameraRaycaster.ScreenPointToRay(mousePos),
                 out RaycastHit hitInfo,
                 int.MaxValue);
-            
+
             if (raycastHitted)
             {
                 Vector3Int selectCell = Map.WorldToCell(hitInfo.point);

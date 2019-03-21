@@ -5,6 +5,8 @@ using UnityEngine;
 public sealed class SIO_StartupListener : Listener
 {
     public Player Player;
+    public SIO_MovementListener MovementListener;
+
     public void R_GET_RSS(SocketIOEvent obj)
     {
         //Debug.Log(obj);
@@ -58,6 +60,7 @@ public sealed class SIO_StartupListener : Listener
     {
         Debugger.Log(obj);
         SyncData.UnitTable.LoadTable(obj.data["R_UNIT"]);
+        Debugger.Log("R_UNIT: " + Time.realtimeSinceStartup);
     }
 
     private void R_PLAYER_INFO(SocketIOEvent obj)
@@ -87,5 +90,6 @@ public sealed class SIO_StartupListener : Listener
         On("R_UNIT", R_UNIT);
         On("R_PLAYER_INFO", R_PLAYER_INFO);       
         On("R_BASE_PLAYER", R_BASE_PLAYER);
+        On("R_MOVE", MovementListener.R_MOVE);
     }
 }

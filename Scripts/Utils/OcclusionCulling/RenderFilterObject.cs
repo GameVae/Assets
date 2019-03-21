@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class RenderFilterObject : MonoBehaviour
 {
-    private NavAgent navAgent;
+    private AgentMoveability agent;
 
     private void Awake()
     {
-        navAgent = GetComponent<NavAgent>();    
+        agent = GetComponent<AgentMoveability>();    
     }
 
     private void OnBecameVisible()
     {
-        Singleton.Instance<RenderFilterManager>().BecomeVisible(navAgent.WayPoint.NodeInfo);
+        Singleton.Instance<RenderFilterManager>().BecomeVisible(agent.WayPoint.NodeInfo);
     }
 
     private void OnBecameInvisible()
     {
-        Singleton.Instance<RenderFilterManager>().BecomeInvisible(navAgent.WayPoint.NodeInfo);
+        Singleton.Instance<RenderFilterManager>().BecomeInvisible(agent.WayPoint.NodeInfo);
     }
 }

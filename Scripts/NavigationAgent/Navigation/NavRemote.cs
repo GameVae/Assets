@@ -1,81 +1,94 @@
-﻿using System;
-using EnumCollect;
+﻿using EnumCollect;
 using Generic.Singleton;
 using ManualTable.Row;
 using UnityEngine;
 
 namespace Entities.Navigation
 {
-    [RequireComponent(typeof(NavAgent))]
     public sealed class NavRemote : MonoBehaviour
     {
-        private NavAgentController ctrl;
-        private NavAgent thisAgent;
+        private NavAgentController navAgentController;
 
-        private UnitRow agentData;
+        private NavAgent navAgent;
+        private FixedMovement fixedMove;
+
         private UserInfoRow owner;
 
-        public ListUpgrade Type;
-        public AgentLabel Label;
-
-        public int AgentID
-        {
-            get { return agentData.ID; }
-        }
-
-        public NavAgent Agent
+        private NavAgentController NavAgentCtrl
         {
             get
             {
-                return thisAgent ?? (thisAgent = GetComponent<NavAgent>());
+                return navAgentController ?? (navAgentController = Singleton.Instance<NavAgentController>());
             }
+        }
+        public FixedMovement FixedMove
+        {
+            get { return fixedMove ?? (fixedMove = GetComponent<FixedMovement>()); }
+        }
+
+        public AgentMoveability MainNavAgent
+        {
+            get
+            {
+                if (IsOwner)
+                    return navAgent ?? (navAgent = GetComponent<NavAgent>());
+                else
+                    return FixedMove;
+            }
+        }
+
+        public UnitRow UnitData;
+
+        public ListUpgrade Type;
+        public AgentLabel Label;
+        public NavOffset Offset;
+
+        public int AgentID
+        {
+            get { return UnitData.ID; }
+        }
+
+        public bool IsOwner
+        {
+            get; private set;
         }
 
         private void Awake()
         {
-            ctrl = Singleton.Instance<NavAgentController>();
-            Label.LookAt(ctrl.CameraRaycaster.transform);
+            Label.LookAt(NavAgentCtrl.CameraRaycaster.transform);
         }
 
         private void Start()
         {
-            CheckStartupPosition();
+            SyncPosition();
         }
 
-        private void CheckStartupPosition()
+        private void SyncPosition()
         {
-            if(agentData.Next_Cell.SerPositionValidate())
+            if (UnitData.Next_Cell.SerPositionValidate())
             {
-                JSONObject moveData = new JSONObject(agentData.ToJSON());
-                Agent.StartMove(moveData);
+                JSONObject moveData = new JSONObject(UnitData.ToJSON());
+                FixedMove.StartMove(moveData);
+            }
+            else
+            {
+                FixedMove.Stop();
             }
         }
 
         public void ActiveNav()
         {
-            ctrl.SwitchToAgent(Agent);
+            if (IsOwner)
+                NavAgentCtrl.SwitchToAgent(MainNavAgent as NavAgent);
         }
 
-        public void Init(UnitRow data, UserInfoRow user)
+        public void SetUnitData(UnitRow data, UserInfoRow user, bool isOwner)
         {
-            agentData = data;
+            UnitData = data;
             owner = user;
+            IsOwner = isOwner;
 
-            InitLabel();
-        }
-
-        public void SetAgentData(UnitRow data)
-        {
-            agentData = data;
-            InitLabel();
-        }
-
-        private void InitLabel()
-        {
-            Label.SetMaxHP(agentData.Health);
-            Label.SetHp(agentData.Hea_cur);
-            Label.SetQuality(agentData.Quality);
-            Label.SetNameInGame(owner?.NameInGame + " Id " + agentData.ID);
+            Label.SetInfo(data, user);
         }
     }
 }
