@@ -10,7 +10,6 @@ namespace Entities.Navigation
     {
         private Dictionary<int, FixedMovement> nCtrlAgents;
 
-
         protected override void Awake()
         {
             base.Awake();
@@ -39,6 +38,12 @@ namespace Entities.Navigation
             {
                 nCtrlAgents[id].StartMove(jSONObject);
             }
+        }
+
+        public FixedMovement GetAgent(int id)
+        {
+            nCtrlAgents.TryGetValue(id, out FixedMovement value);
+            return value;
         }
     }
 }

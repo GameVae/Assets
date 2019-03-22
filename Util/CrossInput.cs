@@ -30,14 +30,8 @@ namespace Generic.CustomInput
         public bool IsTouch
         {
            get
-            {
-                
-#if UNITY_EDITOR || UNITY_STANDALONE
+            {                
                 return pointerState == PointerState.Up && lastPointerState != PointerState.Swipe;
-#endif
-#if !UNITY_EDITOR && UNITY_ANDROID
-                return TouchCount == 1 && Axises.magnitude <= 0.01f && IsPointerUp;
-#endif
             }
         }
 
@@ -118,11 +112,15 @@ namespace Generic.CustomInput
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
             RecordMouseState();
-            pointerState = RecordPointerState(pointerState);
+            pointerState = EditorPointerState(pointerState);
 #endif
+#if !UNITY_EDITOR && UNITY_ANDROID
+            pointerState = MobilePointerState(pointerState);
+#endif
+
         }
 
-        private PointerState RecordPointerState(PointerState state)
+        private PointerState EditorPointerState(PointerState state)
         {
             lastPointerState = state;
             switch (state)
@@ -154,6 +152,46 @@ namespace Generic.CustomInput
                 case PointerState.Swipe:
                     {
                         if (Input.GetMouseButtonUp(0))
+                            return PointerState.Up;
+                        return PointerState.Swipe;
+                    }
+            }
+
+            return PointerState.Free;
+        }
+
+        private PointerState MobilePointerState(PointerState state)
+        {
+            lastPointerState = state;
+            switch (state)
+            {
+                case PointerState.Free:
+                    {
+                        if (TouchCount == 1)
+                            return PointerState.Down;
+                        return PointerState.Free;
+                    }
+                case PointerState.Down:
+                    {
+                        if (TouchCount == 1)
+                            return PointerState.Press;
+                        return PointerState.Up;
+                    }
+                case PointerState.Press:
+                    {
+                        if (IsPointerUp)
+                            return PointerState.Up;
+                        if (Axises.magnitude > 0.01f)
+                            return PointerState.Swipe;
+                        return PointerState.Press;
+                    }
+                case PointerState.Up:
+                    {
+                        return PointerState.Free;
+                    }
+                case PointerState.Swipe:
+                    {
+                        if (TouchCount != 1)
                             return PointerState.Up;
                         return PointerState.Swipe;
                     }

@@ -15,15 +15,11 @@ namespace Entities.Navigation
     public class NavAgent : AgentMoveability
     {
         private AnimatorController animator;
-        private HexMap mapIns;
+       
         private NavPathRenderer pathRenderer;
         private SIO_MovementListener moveEvent;
 
         #region Singleton
-        private HexMap MapIns
-        {
-            get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
-        }
         private BreathFirstSearch breathFirstSearch;
         #endregion
 
@@ -45,15 +41,6 @@ namespace Entities.Navigation
 
         public Vector3Int EndPosition { get; private set; }
         public Vector3Int StartPosition { get; private set; }
-        public Vector3Int CurrentPosition
-        {
-            get
-            {
-                if (MapIns != null)
-                    return MapIns.WorldToCell(transform.position);
-                return Vector3Int.zero;
-            }
-        }
 
         #region Initalize
         private void Awake()

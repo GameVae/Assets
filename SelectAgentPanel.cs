@@ -51,7 +51,7 @@ public class SelectAgentPanel : MonoBehaviour
 
     private void OnOpenButton()
     {
-        if(isCanInit && !isInited)
+        if (isCanInit && !isInited)
         {
             Init();
             isInited = true;
@@ -63,24 +63,11 @@ public class SelectAgentPanel : MonoBehaviour
 
     private void Init()
     {
-        
         for (int i = 0; i < Units.Count; i++)
         {
             Add(Units.Rows[i]);
         }
-        int count = elements.Count;
-
-        if(count == 1)
-        {
-            ResizeAnimation.MaxSize.y = 250;
-        } else if(count == 2)
-        {
-            ResizeAnimation.MaxSize.y = 300;
-        }
-        else
-        {
-            ResizeAnimation.MaxSize.y = 450;
-        }
+        FitSize(elements.Count);
     }
 
     public void OnSelectAgent()
@@ -91,15 +78,39 @@ public class SelectAgentPanel : MonoBehaviour
     public void Add(UnitRow agentInfo)
     {
         int id = agentInfo.ID;
-        if(!elements.ContainsKey(id) && OwnerNavController.IsOwnerAgent(id))
+        if (!elements.ContainsKey(id) && OwnerNavController.IsOwnerAgent(id))
         {
             GUIInteractableIcon el = Instantiate(Prefab, ScrollViewContent);
             el.Placeholder.text = id.ToString();
 
-            el.OnClickEvents += delegate { OwnerNavController.ActiveNav(id); } ;
+            el.OnClickEvents += delegate { OwnerNavController.ActiveNav(id); };
             el.gameObject.SetActive(true);
 
             elements[id] = el;
+        }
+
+        if (isInited) // first init
+            FitSize(elements.Count);
+    }
+
+    private void FitSize(int count)
+    {
+        if (count == 1)
+        {
+            ResizeAnimation.MaxSize.y = 250;
+        }
+        else if (count == 2)
+        {
+            ResizeAnimation.MaxSize.y = 320;
+        }
+        else
+        {
+            ResizeAnimation.MaxSize.y = 450;
+        }
+
+        if(ResizeAnimation.IsOpen)
+        {
+            ResizeAnimation.ForceMaxSize();
         }
     }
 }

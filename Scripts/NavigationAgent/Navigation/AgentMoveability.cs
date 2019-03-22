@@ -1,4 +1,5 @@
-﻿using Map;
+﻿using Generic.Singleton;
+using Map;
 using UnityEngine;
 
 namespace Entities.Navigation
@@ -7,7 +8,21 @@ namespace Entities.Navigation
     public abstract class AgentMoveability : MonoBehaviour
     {
         public bool IsMoving { get ; protected set; }
+        protected HexMap MapIns
+        {
+            get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
+        }
+        public Vector3Int CurrentPosition
+        {
+            get
+            {
+                if (MapIns != null)
+                    return MapIns.WorldToCell(transform.position);
+                return Vector3Int.zero;
+            }
+        }
 
+        private HexMap mapIns;
         private NavRemote remote;
         private AgentWayPoint wayPoint;
         private VectorRotator rotator;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace UI.Animation
@@ -14,7 +15,6 @@ namespace UI.Animation
             Down
         }
 
-        private bool isOpen;
         private float timmer;
         private bool isAnimating;
         private Vector2 deltaSize;
@@ -28,6 +28,8 @@ namespace UI.Animation
         public RectTransform RefRect;
         public Direction HorizontalDirection;
         public Direction VerticalDirection;
+
+        public bool IsOpen { get; private set; }
 
         public event UnityAction OpenDoneEvt
         {
@@ -59,19 +61,19 @@ namespace UI.Animation
                 if (timmer >= Duration)
                 {
                     timmer = 0;
-                    if (!isOpen)
+                    if (!IsOpen)
                     {
                         RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MaxSize.x);
                         RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, MaxSize.y);
-                        isOpen = true;
+                        IsOpen = true;
                     }
                     else
                     {
                         RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, defaultSize.x);
                         RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultSize.y);
-                        isOpen = false;
+                        IsOpen = false;
                     }
-                    AnimationDone(isOpen);
+                    AnimationDone(IsOpen);
                     isAnimating = false;
                 }
             }
@@ -95,9 +97,15 @@ namespace UI.Animation
             }
         }
 
+        public void ForceMaxSize()
+        {
+            RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, MaxSize.x);
+            RefRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, MaxSize.y);
+        }
+
         public void Action()
         {
-            if (isOpen)
+            if (IsOpen)
                 Close();
             else Open();
         }
@@ -114,7 +122,7 @@ namespace UI.Animation
 
         private void AnimationDone(bool opened)
         {
-            if(opened)
+            if (opened)
             {
                 openDoneAction?.Invoke();
             }

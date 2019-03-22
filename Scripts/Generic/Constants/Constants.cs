@@ -218,6 +218,7 @@ namespace Generic.Contants
             base.Awake();
             PixelDependencyDevice = 1.0f / Screen.dpi;
             ScreenRatio = Screen.width * 1.0f / Screen.height;
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
         private void Start()

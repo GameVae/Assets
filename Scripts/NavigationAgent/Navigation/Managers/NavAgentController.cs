@@ -68,7 +68,9 @@ namespace Entities.Navigation
                 if (raycastHitted)
                 {
                     Vector3Int selectCell = mapIns.WorldToCell(hitInfo.point);
-                    if (!mapIns.IsValidCell(selectCell.x, selectCell.y) || selectCell == CurrentAgent.CurrentPosition)
+                    if (!mapIns.IsValidCell(selectCell.x, selectCell.y) || 
+                        selectCell == CurrentAgent.CurrentPosition || 
+                        (CurrentAgent.IsMoving && selectCell == CurrentAgent.EndPosition))
                     {
                         return;
                     }
