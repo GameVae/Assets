@@ -16,7 +16,7 @@ namespace UI.CustomInspector
         protected override void OnEnable()
         {
             base.OnEnable();
-            Owner = (GUISliderWithBtn)target;
+            Owner = target as GUISliderWithBtn;
 
             sliderRatio = Owner.SliderRatio;
         }

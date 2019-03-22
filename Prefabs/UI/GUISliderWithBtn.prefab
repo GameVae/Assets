@@ -143,7 +143,12 @@ MonoBehaviour:
   backgroundImg: {fileID: 114356156779170382}
   isBackground: 0
   isUIDependent: 1
-  onOffSwitch: {fileID: 114073072708963418}
+  button: {fileID: 0}
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114073072708963418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeholder: {fileID: 114043733343353614}
-  mask: {fileID: 0}
+  mask: {fileID: 114661276361470010}
   maskImage: {fileID: 114387806569075654}
   maskable: 0
   interactable: 1
@@ -166,11 +171,8 @@ MonoBehaviour:
   isBackground: 0
   isUIDependent: 1
   button: {fileID: 114223991554551472}
-  OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  onSprite: {fileID: 0}
+  offSprite: {fileID: 0}
 --- !u!114 &114661276361470010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +361,7 @@ GameObject:
   - component: {fileID: 222500690596441918}
   - component: {fileID: 114622309650315070}
   - component: {fileID: 114142652133558940}
+  - component: {fileID: 1381059961141160556}
   m_Layer: 5
   m_Name: GUISliderWithBtn
   m_TagString: Untagged
@@ -437,17 +440,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeholder: {fileID: 114227528363885166}
-  mask: {fileID: 0}
+  mask: {fileID: 1381059961141160556}
   maskImage: {fileID: 114622309650315070}
   maskable: 0
   interactable: 0
-  isPlaceholder: 1
+  isPlaceholder: 0
   backgroundImg: {fileID: 114385200123603778}
   isBackground: 1
   isUIDependent: 0
   sliderRatio: 0.8
   slider: {fileID: 114554833824940446}
   button: {fileID: 114815482916197670}
+--- !u!114 &1381059961141160556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348133124232652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1200242548, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &1438004113374404
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,7 +739,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506384396536174}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 

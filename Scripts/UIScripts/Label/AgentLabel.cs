@@ -70,6 +70,6 @@ public class AgentLabel : MonoBehaviour
         SetMaxHP(agentInfo.Health);
         SetHp(agentInfo.Hea_cur);
         SetQuality(agentInfo.Quality);
-        SetNameInGame("Id " + agentInfo.ID + " " + agentInfo.Position_Cell.Parse3Int().ToClientPosition());
+        SetNameInGame(userInfo?.NameInGame + " Id " + agentInfo.ID);
     }
 }

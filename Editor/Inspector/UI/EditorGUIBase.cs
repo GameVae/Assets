@@ -47,7 +47,7 @@ namespace UI.CustomInspector
             // mask field setup
             maskable = BaseOwner.Maskable;
             maskSprite = BaseOwner.MaskSprite;
-            showMaskGrap = BaseOwner.Mask.showMaskGraphic;
+            showMaskGrap = BaseOwner.Mask ? BaseOwner.Mask.showMaskGraphic : false;
 
             // placeholder field
             isPlaceholder = BaseOwner.IsPlaceholder;
@@ -138,7 +138,7 @@ namespace UI.CustomInspector
             {
                 bool isChanged = false;
                 placeholder = EditorGUILayout.DelayedTextField("Placeholder", placeholder);
-                if (placeholder != BaseOwner.Placeholder.text)
+                if (placeholder != BaseOwner.Placeholder?.text)
                 {
                     BaseOwner.PlaceholderValueChange(placeholder);
                     isChanged = true;

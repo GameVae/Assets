@@ -3,12 +3,16 @@ using EnumCollect;
 using Generic.CustomInput;
 using Generic.Singleton;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
     private float direction;
     private float targetFov;
     private CameraGesture gestureType;
+
+    private EventSystem eventSystem;
+    private NestedCondition swipeConditions;
 
     public Vector3 Velocity;
 
@@ -36,6 +40,15 @@ public class CameraController : MonoBehaviour
         SetStartupPosition();
         targetFov = Option.DefaultFov;
         direction = 1;
+
+        eventSystem = FindObjectOfType<EventSystem>();
+
+        swipeConditions = new NestedCondition();
+        swipeConditions.Conditions += delegate
+        {
+            return IsTouch() && !eventSystem.IsPointerOverGameObject();
+        };
+        
     }
 
     private void Update()
@@ -43,7 +56,7 @@ public class CameraController : MonoBehaviour
         CameraGestureHandle();
 #if UNITY_EDITOR || UNITY_STANDALONE
         ZoomHandle();
-        if (IsTouch() && CrossInput.SwipeDirection != Vector2.zero)
+        if (swipeConditions.Evaluate())
         {
             SwipeHandle();
         }

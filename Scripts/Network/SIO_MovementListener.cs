@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class SIO_MovementListener : Listener
 {
-    // public NavAgentController agentCtrl;
     private NonControlAgentManager nCtrlAgentManager;
     private JSONObject moveJSONObject;
     private string moveJson;
@@ -17,7 +16,6 @@ public class SIO_MovementListener : Listener
     protected override void Start()
     {
         base.Start();
-        // agentCtrl = Singleton.Instance<NavAgentController>();
         nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
 

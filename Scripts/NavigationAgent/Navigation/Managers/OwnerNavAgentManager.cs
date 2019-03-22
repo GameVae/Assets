@@ -36,5 +36,11 @@ namespace Entities.Navigation
             if (agentRemotes.ContainsKey(id))
                 agentRemotes[id].ActiveNav();
         }
+
+        public bool IsOwnerAgent(int id)
+        {
+            return agentRemotes.ContainsKey(id);
+        }
+
     }
 }

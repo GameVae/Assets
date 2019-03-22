@@ -31,11 +31,12 @@ namespace Generic.CustomInput
         {
            get
             {
+                
 #if UNITY_EDITOR || UNITY_STANDALONE
                 return pointerState == PointerState.Up && lastPointerState != PointerState.Swipe;
 #endif
 #if !UNITY_EDITOR && UNITY_ANDROID
-                return TouchCount == 1 && GetTouch(0).deltaPosition == Vector2.zero && IsPointerUp;
+                return TouchCount == 1 && Axises.magnitude <= 0.01f && IsPointerUp;
 #endif
             }
         }
