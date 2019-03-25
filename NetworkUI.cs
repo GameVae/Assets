@@ -27,13 +27,13 @@ public class NetworkUI : MonoBehaviour
     {
         if (!isActive)
         {
-            if (!Conn.IsServerConnected)
+            if (Conn.IsLosedNetwork)
                 Active(true);
         }
         else
         {
-            WaitingUI.Rotate(0, 0, Angualar * Time.deltaTime);
-            if(Conn.IsServerConnected)
+            WaitingUI.Rotate(0, 0, Angualar * Time.deltaTime,Space.Self);
+            if(!Conn.IsLosedNetwork)
             {
                 Active(false);
             }

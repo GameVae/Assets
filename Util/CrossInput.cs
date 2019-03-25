@@ -1,5 +1,4 @@
-﻿using System;
-using Generic.Contants;
+﻿using Generic.Contants;
 using Generic.Singleton;
 using UnityEngine;
 
@@ -14,8 +13,10 @@ namespace Generic.CustomInput
 
         private PointerState pointerState = PointerState.Free;
         private PointerState lastPointerState = PointerState.Free;
+
         private Vector3 lastPosition;
         private Vector2 axises;
+
         private Constants constants;
         private Constants Constants
         {
@@ -25,12 +26,20 @@ namespace Generic.CustomInput
             }
         }
 
+        public PointerState CurrentState
+        {
+            get { return pointerState; }
+        }
 
+        public PointerState LastState
+        {
+            get { return lastPointerState; }
+        }
 
         public bool IsTouch
         {
-           get
-            {                
+            get
+            {
                 return pointerState == PointerState.Up && lastPointerState != PointerState.Swipe;
             }
         }
@@ -48,6 +57,7 @@ namespace Generic.CustomInput
 #endif
             }
         }
+
         public Vector2 Axises
         {
             get
@@ -74,7 +84,7 @@ namespace Generic.CustomInput
             }
         }
 
-#region Touch Properties
+        #region Touch Properties
         public int TouchCount
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
@@ -100,7 +110,7 @@ namespace Generic.CustomInput
 #endif
         }
 
-#endregion
+        #endregion
 
         protected override void Awake()
         {
@@ -117,7 +127,6 @@ namespace Generic.CustomInput
 #if !UNITY_EDITOR && UNITY_ANDROID
             pointerState = MobilePointerState(pointerState);
 #endif
-
         }
 
         private PointerState EditorPointerState(PointerState state)
@@ -141,7 +150,7 @@ namespace Generic.CustomInput
                     {
                         if (Input.GetMouseButtonUp(0))
                             return PointerState.Up;
-                        if (SwipeDirection != Vector2.zero)
+                        if (Axises.magnitude > 0.025f)
                             return PointerState.Swipe;
                         return PointerState.Press;
                     }
@@ -156,7 +165,6 @@ namespace Generic.CustomInput
                         return PointerState.Swipe;
                     }
             }
-
             return PointerState.Free;
         }
 
@@ -179,10 +187,12 @@ namespace Generic.CustomInput
                     }
                 case PointerState.Press:
                     {
-                        if (IsPointerUp)
+                        if (TouchCount != 1)
                             return PointerState.Up;
                         if (Axises.magnitude > 0.01f)
+                        {
                             return PointerState.Swipe;
+                        }
                         return PointerState.Press;
                     }
                 case PointerState.Up:
@@ -195,9 +205,9 @@ namespace Generic.CustomInput
                             return PointerState.Up;
                         return PointerState.Swipe;
                     }
+                default:
+                    return PointerState.Free;
             }
-
-            return PointerState.Free;
         }
 
         public float ZoomValue()
@@ -211,16 +221,16 @@ namespace Generic.CustomInput
         }
 
 
-#region Editor
+        #region Editor
         private void RecordMouseState()
         {
             axises = Input.mousePosition - lastPosition;
             lastPosition = Input.mousePosition;
         }
 
-#endregion
+        #endregion
 
-#region  Mobile
+        #region  Mobile
 
         private float GetMobileZoomValue()
         {
@@ -240,6 +250,6 @@ namespace Generic.CustomInput
             }
             return (zoomValue * Constants.PixelDependencyDevice) / Time.deltaTime;
         }
-#endregion
+        #endregion
     }
 }

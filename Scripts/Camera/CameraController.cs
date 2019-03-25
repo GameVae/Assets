@@ -1,9 +1,8 @@
-﻿using Entities.Navigation;
-using EnumCollect;
+﻿using EnumCollect;
 using Generic.CustomInput;
 using Generic.Singleton;
+using UI;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -11,18 +10,16 @@ public class CameraController : MonoBehaviour
     private float targetFov;
     private CameraGesture gestureType;
 
-    private EventSystem eventSystem;
+    private CrossInput crossInput;
+    private UnityEventSystem eventSystem;
     private NestedCondition swipeConditions;
 
     public Vector3 Velocity;
-
-    public CameraBlindInsideMap CameraBlinding;
     public CameraOption Option;
+    public CameraBlindInsideMap CameraBlinding;
 
     public Camera TargetCamera;
     public Connection Conn;
-    public CrossInput CrossInput;
-    public NavAgentController AgentCtrl;
 
     public CameraGesture Gesture
     {
@@ -31,29 +28,27 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
+        eventSystem = Singleton.Instance<UnityEventSystem>();
         Conn = Singleton.Instance<Connection>();
-        CrossInput = Singleton.Instance<CrossInput>();
-
-        AgentCtrl = Singleton.Instance<NavAgentController>();
-        AgentCtrl.MoveConditions += IsTouch;
+        crossInput = eventSystem.CrossInput;
 
         SetStartupPosition();
         targetFov = Option.DefaultFov;
         direction = 1;
 
-        eventSystem = FindObjectOfType<EventSystem>();
 
         swipeConditions = new NestedCondition();
         swipeConditions.Conditions += delegate
         {
-            return IsTouch() && !eventSystem.IsPointerOverGameObject();
-        };
-        
+            return crossInput.CurrentState == CrossInput.PointerState.Swipe && !eventSystem.IsPointerDownOverUI;
+        };      
     }
 
     private void Update()
     {
+#if !UNITY_EDITOR && UNITY_ANDROID
         CameraGestureHandle();
+#endif
 #if UNITY_EDITOR || UNITY_STANDALONE
         ZoomHandle();
         if (swipeConditions.Evaluate())
@@ -81,7 +76,7 @@ public class CameraController : MonoBehaviour
 
     private void SetStartupPosition()
     {
-        Vector3Int cellIndex = Conn.Sync.CurrentMainBase.Position.Parse3Int() + new Vector3Int(5, 5, 0);
+        Vector3Int cellIndex = Conn.Sync.CurrentMainBase.Position.Parse3Int().ToClientPosition();
         Set(cellIndex);
     }
 
@@ -129,20 +124,20 @@ public class CameraController : MonoBehaviour
     private void ZoomHandle()
     {
         targetFov = Mathf.Clamp(
-            value: targetFov + CrossInput.ZoomValue().Wrap(-Option.MaxZoomValue, Option.MaxZoomValue),
+            value: targetFov + crossInput.ZoomValue().Wrap(-Option.MaxZoomValue, Option.MaxZoomValue),
             min: Option.FovClampValue.x,
             max: Option.FovClampValue.y);
     }
 
     private void SwipeHandle()
     {
-        Velocity += (new Vector3(CrossInput.Axises.x, 0, CrossInput.Axises.y) * direction) / Time.deltaTime;
+        Velocity += (new Vector3(crossInput.Axises.x, 0, crossInput.Axises.y) * direction) / Time.deltaTime;
         Velocity = Velocity.Truncate(Option.SwipeMaxSpeed);
     }
 
     private void DetermineGesture()
     {
-        switch (CrossInput.TouchCount)
+        switch (crossInput.TouchCount)
         {
             case 1: DetermineSwipe(ref gestureType); break;
             case 2: DetermineZoomAndRotate(ref gestureType); break;
@@ -159,24 +154,12 @@ public class CameraController : MonoBehaviour
 
     private void DetermineSwipe(ref CameraGesture type)
     {
-        if (type == CameraGesture.None)
-            type = CameraGesture.Touch;
-        if (type == CameraGesture.Touch && CrossInput.Axises.magnitude / Time.deltaTime >= Option.SwipeMinSpeed)
+        //if (type == CameraGesture.Touch && CrossInput.Axises.magnitude / Time.deltaTime >= Option.SwipeMinSpeed)
+        //if (type == CameraGesture.Touch && swipeConditions.Evaluate())
+        if (swipeConditions.Evaluate())
             type = CameraGesture.Swipe;
+        else type = CameraGesture.None;
         // Debugger.Log("swipe vel: " + CrossInput.Axises.magnitude / Time.deltaTime + " axises: " + CrossInput.Axises);
-    }
-
-    //  TO DO: test
-    public void IncreaseZoom()
-    {
-        Option.SwipeMaxSpeed += 1f;
-        //    Debugger.Log(Option.ZoomSmoothValue);
-    }
-
-    public void DecreaseZoom()
-    {
-        Option.SwipeMaxSpeed -= 1f;
-        //Debugger.Log(Option.ZoomSmoothValue);
     }
 
     public void InvertSwipeDirection()
@@ -225,10 +208,5 @@ public class CameraController : MonoBehaviour
     }
     #endregion
     #endregion
-
-    public bool IsTouch()
-    {
-        return CrossInput.IsTouch;
-    }
 }
 

@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public sealed class Popup : MonoSingle<Popup>
 {
-    private EventSystem events;
-
     public CursorPos Cursor;
     public GameObject Panel;
     public Text QualityText;
@@ -19,7 +17,6 @@ public sealed class Popup : MonoSingle<Popup>
     {
         base.Awake();
         Panel.gameObject.SetActive(false);
-        events = FindObjectOfType<EventSystem>();
     }
 
     public void Open(string generalInfo, string quality, string coord)

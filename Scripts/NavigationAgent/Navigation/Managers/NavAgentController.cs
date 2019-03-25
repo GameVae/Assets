@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 using UI.Widget;
 using Generic.Singleton;
 using Generic.CustomInput;
+using UI;
 
 namespace Entities.Navigation
 {
     public sealed class NavAgentController : MonoSingle<NavAgentController>
     {
-        private EventSystem eventSystem;
-        private SIO_MovementListener moveEvent;
-
         private HexMap mapIns;
         private CrossInput crossInput;
+        private UnityEventSystem eventSystem;
+        private SIO_MovementListener moveEvent;
 
         private Vector3Int startCell;
         private Vector3Int endCell;
@@ -24,6 +23,7 @@ namespace Entities.Navigation
         public Camera CameraRaycaster;
 
         public NavAgent CurrentAgent { get; private set; }
+
         public event System.Func<bool> MoveConditions
         {
             add
@@ -44,7 +44,7 @@ namespace Entities.Navigation
             SwitchButton.Off += Off;
             InitMoveCondition();
 
-            eventSystem = FindObjectOfType<EventSystem>();
+            eventSystem = Singleton.Instance<UnityEventSystem>();
             moveEvent = FindObjectOfType<SIO_MovementListener>();
         }
 
@@ -105,7 +105,7 @@ namespace Entities.Navigation
         {
             MoveConditions += delegate
             {
-                return CurrentAgent != null && !eventSystem.IsPointerOverGameObject();
+                return CurrentAgent != null && !eventSystem.IsPointerDownOverUI;
             };
             MoveConditions += delegate
             {

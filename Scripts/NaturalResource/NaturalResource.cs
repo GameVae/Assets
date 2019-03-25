@@ -27,10 +27,6 @@ public class NaturalResource : MonoBehaviour
 
     public Vector3Int CellPos { get; private set; }
 
-    private void Awake()
-    {
-    }
-
     private void Start()
     {
         Data = (RSS_PositionRow)Singleton.Instance<ResourceManager>().Datas[Id - 1];
@@ -52,6 +48,8 @@ public class NaturalResource : MonoBehaviour
 
         Singleton.Instance<Popup>().Open(general, Data.Quality.ToString(), Data.Position);
         Singleton.Instance<Popup>().SetCursor(CellPos);
+
+        Debugger.Log("Pointer down");
     }
     public void InitData()
     {

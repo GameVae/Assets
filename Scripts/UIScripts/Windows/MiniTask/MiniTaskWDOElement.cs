@@ -36,7 +36,7 @@ public class MiniTaskWDOElement : MonoBehaviour
     private void FixedUpdate()
     {
         Placeholder = currentPlaceholder?.Invoke();
-        Progress.Value = (int)remainingTime?.Invoke();
+        Progress.Value = remainingTime != null ? remainingTime.Invoke() : 0;
 
     }
 

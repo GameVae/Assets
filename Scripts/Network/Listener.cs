@@ -38,6 +38,11 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
         //Debugger.Log("Emit: " + ev);
     }
 
+    public void Emit(string ev, JSONObject data)
+    {
+        evCtrl.Emit(ev, data);
+    }
+
     public void On(string ev,params System.Action<SocketIOEvent>[] callbacks)
     {
         for (int i = 0; i < callbacks.Length; i++)

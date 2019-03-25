@@ -11,17 +11,15 @@ namespace Entities.Navigation
         private float speed;
 
         private Vector3 target;
-        private HexMap mapIns;
         private AnimatorController Anim;
         private MovementSerMessageHandler moveHandler;
 
         private void Awake()
         {
             IsMoving = false;
-
+            moveHandler = new MovementSerMessageHandler(MapIns);
             Anim = GetComponent<AnimatorController>();
-            mapIns = Singleton.Instance<HexMap>();
-            moveHandler = new MovementSerMessageHandler(mapIns);
+
         }
 
         public void StartMove(JSONObject r_move)

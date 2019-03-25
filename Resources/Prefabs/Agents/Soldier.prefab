@@ -197,8 +197,8 @@ SkinnedMeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 3
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -1497,7 +1497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1509149967
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1827,8 +1827,8 @@ MonoBehaviour:
   Type: 16
   Label: {fileID: 2846919174950901839}
   Offset:
-    MaxMoveStep: 50
-    MaxSearchLevel: 200
+    MaxMoveStep: 20
+    MaxSearchLevel: 120
     MaxSpeed: 1
 --- !u!114 &2846919174950901839
 MonoBehaviour:

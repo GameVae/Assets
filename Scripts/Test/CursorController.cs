@@ -1,24 +1,27 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using Generic.CustomInput;
+using Generic.Singleton;
+using UI;
+using UnityEngine;
 
 public class CursorController : MonoBehaviour
 {
-    private EventSystem eventSystem;
+    private UnityEventSystem eventSystem;
+    private CrossInput crossInput;
 
     public HexMap Map;
     public CursorPos Cursor;
     public Camera CameraRaycaster;
-    public CameraController CameraCtrl;
 
     private void Awake()
     {
-        eventSystem = FindObjectOfType<EventSystem>();
+        eventSystem = Singleton.Instance<UnityEventSystem>();
+        crossInput = eventSystem.CrossInput;
     }
 
     private void Update()
     {
-        if (CameraCtrl.IsTouch() &&
-            !eventSystem.IsPointerOverGameObject())
+        if (crossInput.IsTouch &&
+            !eventSystem.IsPointerDownOverUI)
         {
             Vector3 mousePos = Input.mousePosition;
 

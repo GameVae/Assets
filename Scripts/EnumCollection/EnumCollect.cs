@@ -11,7 +11,6 @@ namespace EnumCollect
     public enum CameraGesture
     {
         None,
-        Touch,
         Swipe,
         Zoom,
         Rotate,

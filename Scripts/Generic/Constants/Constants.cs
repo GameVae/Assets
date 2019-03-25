@@ -223,7 +223,7 @@ namespace Generic.Contants
 
         private void Start()
         {
-            Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
+           // Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
         }
         #endregion
     }

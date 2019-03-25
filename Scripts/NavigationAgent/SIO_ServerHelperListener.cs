@@ -1,5 +1,4 @@
 ﻿using Entities.Navigation;
-using EnumCollect;
 using Generic.Singleton;
 using PathFinding;
 using SocketIO;
@@ -9,35 +8,21 @@ using UnityEngine;
 
 public class SIO_ServerHelperListener : Listener
 {
-    [SerializeField]
-    private int maxDeep;
-    [SerializeField]
-    private float maxSpeed;
+    private const int maxDeep = 100;
+    private const float maxSpeed = 2.0f;
 
+    private HexMap mapIns;
+    private AStartAlgorithm aStar;
+    private BreathFirstSearch breathFS;
     private NonControlAgentManager nonCtrlAgents;
 
-    private BreathFirstSearch breathFS;
-    private AStartAlgorithm aStar;
-    private HexMap mapIns;
-
     private bool isInited;
-
-    private Vector3Int agentNextPosition;
     private FixedMovement agent;
-    private JSONObject moveObject;
-    private Connection Conn;
+    private Vector3Int agentTargetPosition;
 
     public override void RegisterCallback()
     {
-        // AddEmiter("S_NEW_POS", S_NEW_POS);
-
         On("R_NEW_POS", R_NEW_POS);
-    }
-
-    private JSONObject S_NEW_POS()
-    {
-        
-        return moveObject;
     }
 
     public void R_NEW_POS(SocketIOEvent obj)
@@ -48,23 +33,33 @@ public class SIO_ServerHelperListener : Listener
             Init();
             isInited = true;
         }
+        
         int id = -1;
+        int serId = -1;
         obj.data["R_NEW_POS"].GetField(ref id, "ID");
+        obj.data["R_NEW_POS"].GetField(ref serId, "Server_ID");
+
         if (id != -1)
         {
-            agentNextPosition = FindNextValidPosition(id);
-            bool foundPath = aStar.FindPath(agent.CurrentPosition, agentNextPosition);
+            agentTargetPosition = FindNextValidPosition(id);
+            bool foundPath = aStar.FindPath(agent.CurrentPosition, agentTargetPosition);
 
             if (foundPath &&
-                agentNextPosition != Generic.Contants.Constants.InvalidPosition)
+                mapIns.IsValidCell(agentTargetPosition.x,agentTargetPosition.y))
             {
-                string json = InitMessage(aStar.Path, GetTimes(aStar.Path), agent.CurrentPosition, id);
+                string data = ResponseMessage(
+                    clientPath:         aStar.Path,
+                    separateTime:       GetTimes(aStar.Path,agent.transform.position), 
+                    curCellPosition:    agent.CurrentPosition,
+                    id:                 id,
+                    serId:              serId);
 
-                moveObject.Clear();
-                moveObject.type = JSONObject.Type.BAKED;
-                moveObject.str = json;
+                JSONObject moveObject = new JSONObject(JSONObject.Type.BAKED)
+                {
+                    str = data
+                };
 
-                Conn.Emit("S_MOVE", moveObject);
+                Emit("S_MOVE", moveObject);
             }
             else Debugger.Log("Path not found");
         }
@@ -75,9 +70,7 @@ public class SIO_ServerHelperListener : Listener
         mapIns = Singleton.Instance<HexMap>();
         breathFS = Singleton.Instance<BreathFirstSearch>();
         aStar = new AStartAlgorithm(mapIns, maxDeep);
-        moveObject = new JSONObject();
         nonCtrlAgents = Singleton.Instance<NonControlAgentManager>();
-        Conn = Singleton.Instance<Connection>();
     }
 
     private Vector3Int FindNextValidPosition(int unitId)
@@ -91,13 +84,13 @@ public class SIO_ServerHelperListener : Listener
         return Generic.Contants.Constants.InvalidPosition;
     }
 
-    public List<float> GetTimes(List<Vector3Int> path)
+    public List<float> GetTimes(List<Vector3Int> path,Vector3 curPos)
     {
         float distance = 0.0f;
         List<Vector3Int> currentPath = path;
         List<float> separateTime = new List<float>();
 
-        Vector3 currentPosition = transform.position;
+        Vector3 currentPosition = curPos;
 
         for (int i = currentPath.Count; i > 0; i--)
         {
@@ -109,8 +102,8 @@ public class SIO_ServerHelperListener : Listener
         return separateTime;
     }
 
-    private string InitMessage(List<Vector3Int> clientPath,
-        List<float> separateTime, Vector3Int curCellPosition, int id)
+    private string ResponseMessage(List<Vector3Int> clientPath,
+        List<float> separateTime, Vector3Int curCellPosition, int id, int serId)
     {
         curCellPosition = curCellPosition.ToSerPosition();
 
@@ -136,7 +129,7 @@ public class SIO_ServerHelperListener : Listener
             "}}";
 
         string moveJson = string.Format(format,
-            "1",
+            serId,
             id,
             (int)agent.Remote.Type,
             agent.Remote.UnitData.ID_User,

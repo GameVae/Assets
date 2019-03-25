@@ -3,12 +3,14 @@ using Generic.Singleton;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TestObj : MonoBehaviour {
     Ray ray;
 
     public NavAgent AgentTest;
     public Connection moveEvent;
+    public EventSystem eventSystem;
     //void Update()
     //{
     //    RaycastHit hit;
@@ -49,7 +51,7 @@ public class TestObj : MonoBehaviour {
 
     private void Update()
     {
-        
+        // Debug.Log(eventSystem.IsPointerOverGameObject());
     }
     private void Start()
     {

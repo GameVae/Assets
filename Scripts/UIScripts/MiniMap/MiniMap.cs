@@ -29,7 +29,6 @@ public class MiniMap : BaseWindow
     protected override void Awake()
     {
         base.Awake();
-        //OpenBtn.OnClick.AddListener(Open);
         OpenButton.OnClickEvents += Open;
 
     }
@@ -41,7 +40,6 @@ public class MiniMap : BaseWindow
         crossInput = Singleton.Instance<CrossInput>();
 
         InitSelectCondition();
-
     }
 
     protected override void Update()

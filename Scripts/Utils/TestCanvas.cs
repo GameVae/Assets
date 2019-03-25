@@ -11,8 +11,6 @@ public class TestCanvas : MonoBehaviour
 
     private void Awake()
     {
-        ZoomSpeedUp.OnClickEvents += CameraCtrl.IncreaseZoom;
-        ZoomSpeedDown.OnClickEvents += CameraCtrl.DecreaseZoom;
     }
 
 }

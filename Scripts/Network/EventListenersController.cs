@@ -40,6 +40,11 @@ namespace Network.Data
             }
         }
 
+        public void Emit(string ev,JSONObject data)
+        {
+            Conn.Emit(ev, data);
+        }
+
         public void On(string ev, System.Action<SocketIOEvent> callback)
         {
             Conn.On(ev, callback);

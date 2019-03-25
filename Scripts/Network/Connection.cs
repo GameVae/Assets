@@ -18,6 +18,12 @@ public sealed class Connection : MonoSingle<Connection>
         get { return SocketComponent; }
     }
 
+    /// <summary>
+    /// have to bigger than Ping Interval and smaller than Ping Time Out
+    /// </summary>
+    [Header("Have to bigger than Ping Interval and smaller than Ping Time Out")]
+    public float NetworkTimeOut;
+
     public bool IsServerConnected
     {
         get
@@ -32,6 +38,14 @@ public sealed class Connection : MonoSingle<Connection>
         {
             try { return !SocketComponent.IsConnected; }
             catch { return true; }
+        }
+    }
+
+    public bool IsLosedNetwork
+    {
+        get
+        {
+            return pingElapsed > NetworkTimeOut;
         }
     }
 

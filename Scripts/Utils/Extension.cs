@@ -26,36 +26,9 @@ public static class Extension
         }
     }
 
-    public static string ToJson<T>(this T[] arr)
-        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
-    {
-        string result = "[";
-        string format = typeof(T) == typeof(string) ? "\"{0}\"" : "{0}";
-
-        for (int i = 0; i < arr.Length; i++)
-        {
-            result += string.Format(format, arr[i]);
-            result += (i < arr.Length - 1) ? "," : "";
-        }
-        return result + "]";
-    }
-
-    public static string ToJson(this string[] arr)
-    {
-        string result = "[";
-        string format = "\"{0}\"";
-
-        for (int i = 0; i < arr.Length; i++)
-        {
-            result += string.Format(format, arr[i]);
-            result += (i < arr.Length - 1) ? "," : "";
-        }
-        return result + "]";
-    }
-
     public static T[] IgnoreInstanceComponent<T>(this T[] arr, T comp) where T : Component
     {
-        System.Collections.Generic.List<T> newArr = new System.Collections.Generic.List<T>();
+        List<T> newArr = new List<T>();
         for (int i = 0; i < arr.Length; i++)
         {
             if (arr[i].gameObject.GetInstanceID() != comp.gameObject.GetInstanceID())
@@ -69,9 +42,9 @@ public static class Extension
     #region List
     public static List<T> Invert<T>(this List<T> list)
     {
-        List <T> rs = new List<T>();
+        List<T> rs = new List<T>();
         int count = list.Count;
-        for (int i = count - 1; i >= 0 ; i--)
+        for (int i = count - 1; i >= 0; i--)
         {
             rs.Add(list[i]);
         }
@@ -110,26 +83,6 @@ public static class Extension
         return Regex.Replace(value, "([a-z])([A-Z])", "$1 $2");
     }
 
-    public static bool IsJsonArray(this string json)
-    {
-        if (json.ValidateJson())
-        {
-            return json.Trim().StartsWith("[");
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public static bool ValidateJson(this string value)
-    {
-        value = value.Trim();
-        bool start = value.StartsWith("[") || value.StartsWith("{");
-        bool end = value.EndsWith("]") || value.EndsWith("}");
-        return start && end;
-    }
-
     public static bool SerPositionValidate(this string value)
     {
         return value.Parse3Int() != Generic.Contants.Constants.InvalidPosition;
@@ -142,12 +95,12 @@ public static class Extension
             string[] xyz = value.Split(',');
             return new Vector3Int(int.Parse(xyz[0]), int.Parse(xyz[1]), int.Parse(xyz[2]));
         }
-        catch (Exception e)
+        catch //(Exception e)
         {
 #if UNITY_EDITOR
             // Debug.Log(e.ToString());
 #endif
-            return Vector3Int.one * - 1;
+            return Vector3Int.one * -1;
         }
     }
 
@@ -196,7 +149,7 @@ public static class Extension
     {
         return vector3.magnitude < maxMagnitude ? vector3 : vector3.normalized * maxMagnitude;
     }
-    
+
     #endregion
 
     #region RectTransform
@@ -226,13 +179,13 @@ public static class Extension
     public static T Wrap<T>(this T value, T min, T max)
         where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {
-        if(value.CompareTo(min) < 0) return min;
-        if(value.CompareTo(max) > 0) return max;
+        if (value.CompareTo(min) < 0) return min;
+        if (value.CompareTo(max) > 0) return max;
         return value;
     }
 
-    public static void Log<T>(this T values,string prefix = "")
-        where T: IEnumerable
+    public static void Log<T>(this T values, string prefix = "")
+        where T : IEnumerable
     {
         foreach (var item in values)
         {
