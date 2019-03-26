@@ -15,23 +15,23 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
     public OwnerNavAgentManager OwnerAgents;
 
     public Sync SyncData;
-    public Player Player;
-    public HexMap HexMap;
+    public Player PlayerInfo;
+    public HexMap MapIns;
 
     private UnitJSONTable UnitTable;
     private UserInfoJSONTable Users;
     private EventListenersController Events;
+
     protected override void Awake()
     {
         base.Awake();
         UnitTable = SyncData.UnitTable;
-        Users = SyncData.UserInfo;
+        Users = SyncData.UserInfos;
 
-        Player = Singleton.Instance<Player>();
+        PlayerInfo = Singleton.Instance<Player>();
         NCAgentManager = Singleton.Instance<NonControlAgentManager>();
         OwnerAgents = Singleton.Instance<OwnerNavAgentManager>();
         Events = Singleton.Instance<EventListenersController>();
-
 
         Events.On("R_UNIT", CreateAgents);
     }
@@ -45,8 +45,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         for (int i = 0; i < count; i++)
         {
             r = UnitTable.Rows[i];
-            user = Users.Rows.FirstOrDefault(u => u.ID_User == r.ID_User);
-
+            user = Users.GetUser(r.ID_User);
             Create(r, user);
         }
     }
@@ -58,23 +57,23 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             return;
         else
         {
-            agent.transform.position = HexMap.CellToWorld(r.Position_Cell.Parse3Int().ToClientPosition());
+            agent.transform.position = MapIns.CellToWorld(r.Position_Cell.Parse3Int().ToClientPosition());
 
             NavRemote agentRemote = agent.GetComponent<NavRemote>();
-            bool isOwner = r.ID_User == Player.Info.ID_User;
+            bool isOwner = r.ID_User == PlayerInfo.Info.ID_User;
 
             agentRemote.SetUnitData(r, user, isOwner);
             if (!isOwner)
             {
                 FixedMovement nav = agent.GetComponent<FixedMovement>();
                 NCAgentManager.Add(r.ID, nav);
-                agent.name = "Other " + r.Position_Cell.Parse3Int().ToClientPosition();
+                agent.name = "Other " + r.ID;
             }
             else
             {
                 agent.AddComponentNotExist<NavAgent>();
                 OwnerAgents.Add(agentRemote);
-                agent.name = "Owner " + r.Position_Cell.Parse3Int().ToClientPosition();
+                agent.name = "Owner " + r.ID;
             }
 
             agent.SetActive(true);

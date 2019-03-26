@@ -27,8 +27,6 @@ namespace UI.CustomInspector
 
         protected readonly GUILayoutOption[] sizeOption = new GUILayoutOption[]
         {
-            GUILayout.MaxWidth(500),
-            GUILayout.MaxHeight(500)
         };
 
         protected virtual void OnEnable()

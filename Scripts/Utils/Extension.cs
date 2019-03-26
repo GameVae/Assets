@@ -184,13 +184,22 @@ public static class Extension
         return value;
     }
 
-    public static void Log<T>(this T values, string prefix = "")
+    public static void Log<T>(this T values, string separator = "")
         where T : IEnumerable
     {
+        string msg = "";
+        bool first = true;
         foreach (var item in values)
         {
-            Debugger.Log(prefix + item.ToString());
+            if (first)
+            {
+                msg = item.ToString();
+                first = false;
+            }
+            else
+                msg += separator + item.ToString();
         }
+        Debugger.Log(msg);
     }
     #endregion
 
@@ -244,5 +253,48 @@ public static class Extension
         return checker;
     }
     #endregion
+
+    #region Algorithm
+
+    #region Binary Search and Binary Insert Sort
+
+    private static int SearchInsertIndex<T>(List<T> list, int low, int high, object value)
+        where T : IComparable
+    {
+        if (low == high) return low;
+        int mid = low + (high - low) / 2;
+
+        int comparer = list[mid].CompareTo(value);
+        if (comparer > 0)
+            return SearchInsertIndex(list, low, mid, value);
+        else if (comparer < 0)
+            return SearchInsertIndex(list, mid + 1, high, value);
+        return mid;
+    }
+
+    public static int BinarySearch<T>(this List<T> list, int low, int high, object value)
+        where T : IComparable
+    {
+        return SearchInsertIndex(list, low, high, value);
+    }
+
+    public static void BinarySort<T>(this List<T> list)
+        where T : IComparable
+    {
+        int count = list.Count;
+        for (int i = 1; i < count; i++)
+        {
+            T value = list[i];
+            int index = SearchInsertIndex(list, 0, i, value);
+
+            list.RemoveAt(i);
+            list.Insert(index, value);
+        }
+    }
+
+    #endregion
+
+    #endregion
+
 
 }

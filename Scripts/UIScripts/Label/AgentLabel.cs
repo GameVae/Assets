@@ -19,8 +19,8 @@ public class AgentLabel : MonoBehaviour
     public TextMeshProUGUI NameInGame;
 
     private void Start()
-    {        
-        Enable();        
+    {
+        Enable();
         Lookat.GameObject = Head;
     }
 
@@ -45,9 +45,9 @@ public class AgentLabel : MonoBehaviour
         HPFiller.fillAmount = (currentHP / maxHP);
     }
 
-    public void SetNameInGame(string vale)
+    public void SetNameInGame(string text)
     {
-        NameInGame.text = vale;
+        NameInGame.text = text;
     }
 
     public void SetQuality(int value)
@@ -62,7 +62,7 @@ public class AgentLabel : MonoBehaviour
         Lookat.Target = trans;
     }
 
-    public void SetInfo(UnitRow info, UserInfoRow user)
+    public void SetInfo(UnitRow info, UserInfoRow user, bool isOwner)
     {
         agentInfo = info;
         userInfo = user;
@@ -70,6 +70,8 @@ public class AgentLabel : MonoBehaviour
         SetMaxHP(agentInfo.Health);
         SetHp(agentInfo.Hea_cur);
         SetQuality(agentInfo.Quality);
-        SetNameInGame(userInfo?.NameInGame + " Id " + agentInfo.ID);
+
+        string nameFormat = isOwner ? "{0}" : "<color=red>{0}</color>";
+        SetNameInGame(string.Format(nameFormat, userInfo?.NameInGame + " Id " + agentInfo.ID));
     }
 }

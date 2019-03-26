@@ -33,7 +33,7 @@ namespace ManualTable
         public System.Type RowType
         { get { return typeof(T); } }
 
-        public void LoadRow(string json)
+        public virtual void LoadRow(string json)
         {
             if (Rows == null)
                 Rows = new List<T>();
@@ -41,7 +41,7 @@ namespace ManualTable
             Rows.Add(row);
         }
 
-        public void LoadTable(JSONObject data, bool clearPre = true)
+        public virtual void LoadTable(JSONObject data, bool clearPre = true)
         {
             if (Rows == null)
                 Rows = new List<T>();

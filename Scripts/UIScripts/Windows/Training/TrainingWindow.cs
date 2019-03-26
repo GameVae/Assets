@@ -184,8 +184,8 @@ public class TrainingWindow : BaseWindow
 
     private JSONObject S_TRAINING()
     {
-        UserInfoRow user = (UserInfoRow)SyncData.UserInfo[0];
-        BaseInfoRow baseInfo = (BaseInfoRow)SyncData.BaseInfo[0];
+        UserInfoRow user = SyncData.MainUser;
+        BaseInfoRow baseInfo = (BaseInfoRow)SyncData.BaseInfos[0];
 
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
@@ -301,11 +301,14 @@ public class TrainingWindow : BaseWindow
             SyncData.CurrentMainBase.Stone -= refCostInfo.StoneCost * quality;
             SyncData.CurrentMainBase.Metal -= refCostInfo.MetalCost * quality;
 
-            SyncData.CurrentMainBase.Training_Might = fieldReflection.GetFieldValue<int>
+            int trainingMight = fieldReflection.GetFieldValue<int>
                 (refTypeTraining, "MightBonus", BindingFlags.Public | BindingFlags.Instance) * quality;
-            SyncData.CurrentMainBase.TrainingTime = fieldReflection.GetFieldValue<int>
+
+            int trainingTime = fieldReflection.GetFieldValue<int>
                 (refTypeTraining, "TrainingTime", BindingFlags.Public | BindingFlags.Instance) * quality;
 
+            SyncData.CurrentMainBase.SetTrainingTime(trainingTime);
+            SyncData.CurrentMainBase.Training_Might = trainingMight;
             SyncData.CurrentMainBase.TrainingUnit_ID = selectedType;
             SyncData.CurrentMainBase.TrainingQuality = quality;
 

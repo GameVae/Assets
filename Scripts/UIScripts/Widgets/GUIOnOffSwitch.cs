@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI.Widget
@@ -13,7 +14,7 @@ namespace UI.Widget
 
         [SerializeField, HideInInspector] protected Sprite onSprite;
         [SerializeField, HideInInspector] protected Sprite offSprite;
-
+        [SerializeField, HideInInspector] UnityEvent onClick;
 
         private NestedCondition switchConditions;
         private OnOffAction on;
@@ -76,6 +77,7 @@ namespace UI.Widget
 
         private void OnOffEffect()
         {
+            onClick?.Invoke();
             if (switchConditions.Evaluate())
             {
                 if (!IsOn)

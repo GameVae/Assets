@@ -246,7 +246,6 @@ namespace SocketIO
         public void Emit(string ev, JSONObject data)
         {
             EmitMessage(-1, string.Format("[\"{0}\",{1}]", ev, data));
-            Debugger.Log(string.Format("[\"{0}\",{1}]", ev, data));
         }
 
         public void Emit(string ev, JSONObject data, Action<JSONObject> action)

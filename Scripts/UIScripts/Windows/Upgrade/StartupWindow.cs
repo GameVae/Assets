@@ -48,9 +48,9 @@ public class StartupWindow : BaseWindow, IWindowGroup
     {
         if (ResProgBar.gameObject.activeInHierarchy)
         {
-            ResProgBar.Slider.Value = ResProgBar.Slider.MaxValue - SyncData.CurrentMainBase.ResearchTime;
-            ResProgBar.Placeholder.text = SyncData.CurrentMainBase.GetResTimeString();
-            if (SyncData.CurrentMainBase.ResIsDone())
+            ResProgBar.Slider.Value = ResProgBar.Slider.MaxValue - (float)SyncData.CurrentMainBase.ResearchTime;
+            ResProgBar.Placeholder.text = ResearchText(SyncData.CurrentMainBase);
+            if (SyncData.CurrentMainBase.IsResearchDone)
             {
                 ResProgBar.gameObject.SetActive(false);
             }
@@ -58,13 +58,29 @@ public class StartupWindow : BaseWindow, IWindowGroup
 
         if (UpgProgBar.gameObject.activeInHierarchy)
         {
-            UpgProgBar.Slider.Value = UpgProgBar.Slider.MaxValue - SyncData.CurrentMainBase.UpgradeTime;
-            UpgProgBar.Placeholder.text = SyncData.CurrentMainBase.GetUpgTimeString();
-            if (SyncData.CurrentMainBase.UpgIsDone())
+            UpgProgBar.Slider.Value = UpgProgBar.Slider.MaxValue - (float)SyncData.CurrentMainBase.UpgradeTime;
+            UpgProgBar.Placeholder.text = UpgradeText(SyncData.CurrentMainBase);
+            if (SyncData.CurrentMainBase.IsUpgradeDone)
             {
                 UpgProgBar.gameObject.SetActive(false);
             }
         }
+    }
+
+    private string ResearchText(BaseInfoRow baseInfo)
+    {
+        string type = baseInfo.ResearchWait_ID.ToString().InsertSpace();
+        string remainTime = System.TimeSpan.FromSeconds(Mathf.RoundToInt((float)baseInfo.ResearchTime)).ToString().Replace(".", "d ");
+
+        return type + " " + remainTime;
+    }
+
+    private string UpgradeText(BaseInfoRow baseInfo)
+    {
+        string type = baseInfo.UpgradeWait_ID.ToString().InsertSpace();
+        string remainTime = System.TimeSpan.FromSeconds(Mathf.RoundToInt((float)baseInfo.UpgradeTime)).ToString().Replace(".", "d ");
+
+        return type + " " + remainTime;
     }
 
     public override void Load(params object[] input)
@@ -82,23 +98,19 @@ public class StartupWindow : BaseWindow, IWindowGroup
         if (isUpgrade)
         {
             table = WDOCtrl[upgRef.ID];
-            //string jsonData = table[upgRef.Level - 1].ToJSON();
-            //GenericUpgradeInfo upgInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
 
             IJSON upgInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetFieldValue<int>(upgInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
-            UpgProgBar.Slider.MaxValue = timeInt;// upgInfo != null ? upgInfo.TimeInt : 0;
+            UpgProgBar.Slider.MaxValue = timeInt;
         }
 
         if (isResearch)
         {
             table = WDOCtrl[resRef.ID];
-            //string jsonData = table[resRef.Level - 1].ToJSON();
-            //GenericUpgradeInfo resInfo = JsonUtility.FromJson<GenericUpgradeInfo>(jsonData);
 
             IJSON resInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetFieldValue<int>(resInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
-            ResProgBar.Slider.MaxValue = timeInt;// resInfo != null ? resInfo.TimeInt : 0;
+            ResProgBar.Slider.MaxValue = timeInt;
         }
 
         UpgProgBar.gameObject.SetActive(isUpgrade);

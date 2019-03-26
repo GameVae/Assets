@@ -36,8 +36,8 @@ public class SIO_MovementListener : Listener
 
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
-            {"ID_User",SyncData.UserInfo.Rows[0].ID_User.ToString() },
-            {"Server_ID",SyncData.UserInfo.Rows[0].Server_ID.ToString() },
+            {"ID_User",SyncData.MainUser.ID_User.ToString() },
+            {"Server_ID",SyncData.MainUser.Server_ID.ToString() },
         };
         return new JSONObject(data);
     }
@@ -88,7 +88,7 @@ public class SIO_MovementListener : Listener
             "\"ListMove\":" + "{9}" +
             "}}";
 
-        UserInfoRow user = SyncData.UserInfo.Rows[0];
+        UserInfoRow user = SyncData.MainUser;
 
         moveJson = string.Format(format,
             user.Server_ID,

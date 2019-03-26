@@ -229,10 +229,10 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         {
             if (isUpgradeType)
             {
-                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - currentMainBase.UpgradeTime;
-                ProgressSlider.Slider.Placeholder.text = currentMainBase.GetUpgTimeString();
+                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - (float)currentMainBase.UpgradeTime;
+                ProgressSlider.Slider.Placeholder.text = UpgradeText(currentMainBase);
 
-                if (currentMainBase.UpgIsDone())
+                if (currentMainBase.IsUpgradeDone)
                 {
                     ActiveProgressBar(false);
                     ActiveBtnGroup(true);
@@ -240,9 +240,10 @@ public class UpgResWindow : BaseWindow, IWindowGroup
             }
             else
             {
-                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - currentMainBase.ResearchTime;
-                ProgressSlider.Slider.Placeholder.text = currentMainBase.GetResTimeString();
-                if (currentMainBase.ResIsDone())
+                ProgressSlider.Slider.Value = ProgressSlider.Slider.MaxValue - (float)currentMainBase.ResearchTime;
+                ProgressSlider.Slider.Placeholder.text = ResearchText(currentMainBase);
+
+                if (currentMainBase.IsResearchDone)
                 {
                     ActiveProgressBar(false);
                     ActiveBtnGroup(true);
@@ -251,9 +252,25 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         }
     }
 
+    private string ResearchText(BaseInfoRow baseInfo)
+    {
+        string type = baseInfo.ResearchWait_ID.ToString().InsertSpace();
+        string remainTime = System.TimeSpan.FromSeconds(Mathf.RoundToInt((float)baseInfo.ResearchTime)).ToString().Replace(".", "d ");
+
+        return type + " " + remainTime;
+    }
+
+    private string UpgradeText(BaseInfoRow baseInfo)
+    {
+        string type = baseInfo.UpgradeWait_ID.ToString().InsertSpace();
+        string remainTime = System.TimeSpan.FromSeconds(Mathf.RoundToInt((float)baseInfo.UpgradeTime)).ToString().Replace(".", "d ");
+
+        return type + " " + remainTime;
+    }
+
     private JSONObject S_UPGRADE()
     {
-        UserInfoRow userInfo = (UserInfoRow)SyncData.UserInfo[0];
+        UserInfoRow userInfo = SyncData.MainUser;
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
             {"ID_Server"   ,userInfo.Server_ID },
@@ -288,7 +305,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         currentMainBase.Stone -= stoneCost;// needInfo.StoneCost;
 
         currentMainBase.UpgradeWait_ID = refUpgType.ID;
-        currentMainBase.UpgradeTime = timeInt; // needInfo.TimeInt;
+        currentMainBase.SetUpgradeTime(timeInt); // needInfo.TimeInt;
 
         listenersController.Emit("S_UPGRADE");
         Group.Close();

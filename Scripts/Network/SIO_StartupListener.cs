@@ -1,5 +1,4 @@
-﻿using Generic.Singleton;
-using SocketIO;
+﻿using SocketIO;
 using UnityEngine;
 
 public sealed class SIO_StartupListener : Listener
@@ -16,14 +15,15 @@ public sealed class SIO_StartupListener : Listener
     public void R_BASE_INFO(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
-        SyncData.BaseInfo.LoadTable(obj.data["R_BASE_INFO"]);
-        Player.BaseInfo = SyncData.BaseInfo.Rows[0];
+        SyncData.BaseInfos.LoadTable(obj.data["R_BASE_INFO"]);
+        Player.BaseInfo = SyncData.BaseInfos.Rows[0]; 
     }
 
     public void R_USER_INFO(SocketIOEvent obj)
     {
-        SyncData.UserInfo.LoadTable(obj.data["R_USER_INFO"]);
-        Player.Info = SyncData.UserInfo.Rows[0];
+
+        SyncData.LoadUserInfo(obj.data["R_USER_INFO"]);
+        Player.Info = SyncData.MainUser;
 
         //string data = obj.data["R_USER_INFO"].ToString();
         //Debugger.Log(obj);
@@ -60,13 +60,12 @@ public sealed class SIO_StartupListener : Listener
     {
         Debugger.Log(obj);
         SyncData.UnitTable.LoadTable(obj.data["R_UNIT"]);
-        Debugger.Log("R_UNIT: " + Time.realtimeSinceStartup);
     }
 
     private void R_PLAYER_INFO(SocketIOEvent obj)
     {
         Debug.Log(obj);
-        SyncData.UserInfo.LoadTable(obj.data["R_PLAYER_INFO"],false);
+        SyncData.UserInfos.LoadTable(obj.data["R_PLAYER_INFO"],false);
         
     }
 

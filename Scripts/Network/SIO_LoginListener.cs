@@ -14,9 +14,6 @@ public class SIO_LoginListener : Listener
     {
         base.Start();
         gameTask = Singleton.Instance<LoadingPanel>();
-
-        string a = "0";
-        Debug.Log(a.Parse3Int());
     }
 
     public override void RegisterCallback()

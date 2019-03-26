@@ -56,7 +56,7 @@ public class DeployMilitaryWindow : BaseWindow
         Debugger.Log(obj);
         string json = obj.data["R_DEPLOY"].ToString();
         UnitRow unit = JsonUtility.FromJson<UnitRow>(json);
-        UserInfoRow user = SyncData.UserInfo.Rows.FirstOrDefault(u => u.ID_User == unit.ID_User);
+        UserInfoRow user = SyncData.UserInfos.GetUser(unit.ID_User);
 
         unitDataReference.Create(unit, user);
 
@@ -78,7 +78,7 @@ public class DeployMilitaryWindow : BaseWindow
 
     private JSONObject S_DEPLOY()
     {
-        UserInfoRow user = SyncData.UserInfo.Rows[0];
+        UserInfoRow user = SyncData.MainUser;
         BaseInfoRow baseInfo = SyncData.CurrentMainBase;
 
         Dictionary<string, string> data = new Dictionary<string, string>()

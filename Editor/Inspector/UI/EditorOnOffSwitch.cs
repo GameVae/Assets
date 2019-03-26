@@ -13,6 +13,8 @@ namespace UI.CustomInspector
         private Sprite onSprite;
         private Sprite offSprite;
 
+        private SerializedProperty onClickEvt;
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -20,12 +22,18 @@ namespace UI.CustomInspector
 
             onSprite = Owner.OnSprite;
             offSprite = Owner.OffSprite;
+
+            onClickEvt = serializedObject.FindProperty("onClick");
         }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            OnOffSpriteOption();
+            if (!Owner.UIDependent && !Application.isPlaying)
+            {
+                OnOffSpriteOption();
+                OnClickEventDrawer();
+            }
         }
 
         private void OnOffSpriteOption()
@@ -46,6 +54,12 @@ namespace UI.CustomInspector
             }
 
             GUILayout.EndHorizontal();
+        }
+
+        private void OnClickEventDrawer()
+        {
+            EditorGUILayout.PropertyField(onClickEvt);
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

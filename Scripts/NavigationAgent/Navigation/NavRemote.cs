@@ -88,7 +88,7 @@ namespace Entities.Navigation
             owner = user;
             IsOwner = isOwner;
 
-            Label.SetInfo(data, user);
+            Label.SetInfo(data, user,isOwner);
         }
     }
 }

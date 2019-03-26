@@ -1,7 +1,10 @@
 ﻿using EnumCollect;
 using Json;
 using ManualTable.Interface;
+using Network.Sync;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ManualTable.Row
@@ -248,11 +251,11 @@ namespace ManualTable.Row
 
         public ListUpgrade UpgradeWait_ID;
         public int UpgradeWait_Might;
-        public float UpgradeTime;
+        public double UpgradeTime;
 
         public ListUpgrade ResearchWait_ID;
         public int ResearchWait_Might;
-        public float ResearchTime;
+        public double ResearchTime;
 
         public string UnitTransferType;
         public string UnitTransferQuality;
@@ -264,24 +267,142 @@ namespace ManualTable.Row
         public int Training_Might;
         public int SumUnitQuality;
 
-        ///*===============Util Funs==================*/
-        public string GetResTimeString()
+
+        public bool IsUpgradeDone   { get; private set; }
+        public bool IsResearchDone { get; private set; }
+        public bool IsTrainingDone { get; private set; }
+
+        private AsyncCounter upgCounter;
+        private AsyncCounter researchCounter;
+        private AsyncCounter trainingCounter;
+
+        public void Initalize()
         {
-            return ResearchWait_ID.ToString().InsertSpace() + " " +
-                System.TimeSpan.FromSeconds(Mathf.RoundToInt(ResearchTime)).ToString().Replace(".", "d ");
+            researchCounter = new AsyncCounter();
+            researchCounter.Start(ResearchTime);
+
+            upgCounter = new AsyncCounter();
+            upgCounter.Start(UpgradeTime);
+
+            trainingCounter = new AsyncCounter();
+            trainingCounter.Start(TrainingTime);
         }
 
-        public string GetUpgTimeString()
+        public void Update(Sync sync)
         {
-            return UpgradeWait_ID.ToString().InsertSpace() + " " +
-                System.TimeSpan.FromSeconds(Mathf.RoundToInt(UpgradeTime)).ToString().Replace(".", "d ");
+            UpdateResearchTime(sync);
+
+            UpdateUpgradeTime(sync);
+
+            UpdateTrainingTime(sync);
         }
 
-        public bool ResIsDone()
-        { return ResearchTime <= 0; }
+        private void UpdateResearchTime(Sync sync)
+        {
+            if (!IsResearchDone && researchCounter != null)
+            {
+                ResearchTime = researchCounter.RefTime;
+                if (ResearchTime <= 0)
+                {
+                    ResearchTime = 0;
+                    IsResearchDone = true;
 
-        public bool UpgIsDone()
-        { return UpgradeTime <= 0; }
+                    ResearchDone(sync);
+                }
+            }
+        }
+        private void UpdateUpgradeTime(Sync sync)
+        {
+            if (!IsUpgradeDone && upgCounter != null)
+            {
+                UpgradeTime = upgCounter.RefTime;
+                if (UpgradeTime <= 0)
+                {
+                    UpgradeTime = 0;
+                    IsUpgradeDone = true;
+
+                    UpgradeDone(sync);
+                }
+            }
+        }
+        private void UpdateTrainingTime(Sync sync)
+        {
+            if (!IsTrainingDone && trainingCounter != null)
+            {
+                TrainingTime = trainingCounter.RefTime;
+                if (TrainingTime <= 0)
+                {
+                    TrainingTime = 0;
+                    IsTrainingDone = true;
+
+                    TrainingDone(sync);
+                }
+            }
+        }
+
+        private void ResearchDone(Sync sync)
+        {
+            UserInfoRow user = sync.MainUser;
+            BaseUpgradeJSONTable baseUpgrade = sync.CurrentBaseUpgrade;
+
+            baseUpgrade[ResearchWait_ID].Level++;
+            user.Might += ResearchWait_Might;
+            ResearchWait_ID = 0;
+        }
+        private void UpgradeDone(Sync sync)
+        {
+            UserInfoRow user = sync.MainUser;
+            BaseUpgradeJSONTable baseUpgrade = sync.CurrentBaseUpgrade;
+
+            baseUpgrade[UpgradeWait_ID].Level++;
+            user.Might += UpgradeWait_Might;
+
+            UpgradeWait_ID = 0;
+        }
+        private void TrainingDone(Sync sync)
+        {
+            UserInfoRow user = sync.MainUser;
+            BaseDefendJSONTable baseDefend = sync.CurrentBaseDefend;
+            BaseDefendRow defendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == TrainingUnit_ID);
+
+            if (defendRow == null)
+            {
+                baseDefend.Rows.Add(new BaseDefendRow()
+                {
+                    BaseNumber = BaseNumber,
+                    ID_Unit = TrainingUnit_ID,
+                    Quality = TrainingQuality,
+                });
+            }
+            else
+            {
+                defendRow.Quality += TrainingQuality;
+            }
+
+            user.Might += Training_Might;
+            TrainingUnit_ID = 0;
+            TrainingQuality = 0;
+            Training_Might = 0;
+        }
+
+        public void SetUpgradeTime(double time)
+        {
+            UpgradeTime = time;            
+            upgCounter.Start(UpgradeTime);
+            IsUpgradeDone = false;
+        }
+        public void SetResearchTime(double time)
+        {
+            researchCounter.Start(ResearchTime);
+            ResearchTime = time;
+            IsResearchDone = false;
+        }
+        public void SetTrainingTime(double time)
+        {
+            trainingCounter.Start(TrainingTime);
+            TrainingTime = time;
+            IsTrainingDone = false;
+        }
 
         public bool IsEnoughtResource(int farm, int wood, int stone, int metal)
         {
@@ -295,7 +416,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UserInfoRow : ServerMessage
+    public class UserInfoRow : ServerMessage, IComparable
     {
         public override int FieldCount { get { return 9; } }
 
@@ -308,6 +429,12 @@ namespace ManualTable.Row
         public string LastGuildID;
         public int Might;
         public int Killed;
+
+        public int CompareTo(object obj)
+        {
+            UserInfoRow other = obj as UserInfoRow;
+            return ID_User.CompareTo(other?.ID_User);
+        }
     }
 
     [System.Serializable]
@@ -322,7 +449,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UnitRow : ServerMessage
+    public class UnitRow : ServerMessage, IComparable
     {
         public override int FieldCount
         {
@@ -347,6 +474,12 @@ namespace ManualTable.Row
         public int Attack_Base_ID;
         public int Attack_Unit_ID;
         public bool AttackedBool;
+
+        public int CompareTo(object obj)
+        {
+            UnitRow other = obj as UnitRow;
+            return ID.CompareTo(other?.ID);
+        }
     }
 
     [System.Serializable]

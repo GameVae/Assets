@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TestObj : MonoBehaviour {
+public class TestObj : MonoBehaviour
+{
     Ray ray;
 
     public NavAgent AgentTest;
@@ -58,12 +59,20 @@ public class TestObj : MonoBehaviour {
         moveEvent = Singleton.Instance<Connection>();
         // moveEvent.On("R_MOVE", R_MOVE);
         //Debugger.Log("This is a log from Debugger");
+        List<int> li = new List<int>()
+        {0,1,10,2,3,300,891,10,2,3,300,25};
+
+        // ebug.Log("index: " + li.BinarySearch(0,li.Count - 1, 101));
+        li.BinarySort();
+        Debug.Log("sorted list: ");
+        li.Log(" - ");
+        Debug.Log("index: " + li.BinarySearch(0, li.Count - 1, 1000));
     }
 
     private void R_MOVE(SocketIO.SocketIOEvent ev)
     {
         Debugger.Log(ev.data["R_MOVE"]);
-      
+
     }
 
     public void Log()

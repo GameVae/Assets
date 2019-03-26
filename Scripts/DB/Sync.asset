@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: Sync
   m_EditorClassIdentifier: 
   CurBaseIndex: 0
+  User_ID: 42
+  MainUser:
+    ID_User: 0
+    Server_ID: 
+    NameInGame: 
+    ChatWorldColor: 
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 0
+    Killed: 0
   RSS_Position: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
   Position: {fileID: 11400000, guid: 3a7a7582f5be8d24a9c795572c169ec6, type: 2}
-  UserInfo: {fileID: 11400000, guid: 30c8655fc391a2d42b3e389ce1501a41, type: 2}
-  BaseInfo: {fileID: 11400000, guid: 203c5f93255f20a4cb9dc0ea092e5e59, type: 2}
+  UserInfos: {fileID: 11400000, guid: 30c8655fc391a2d42b3e389ce1501a41, type: 2}
+  BaseInfos: {fileID: 11400000, guid: 203c5f93255f20a4cb9dc0ea092e5e59, type: 2}
   BaseUpgrade:
   - {fileID: 11400000, guid: f9b313d243d8a3c43a0f836ac2454cdc, type: 2}
   - {fileID: 11400000, guid: e761f57420909564999f1ce88215edd5, type: 2}
