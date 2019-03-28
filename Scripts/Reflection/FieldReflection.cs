@@ -32,6 +32,11 @@ public sealed class FieldReflection : ISingleton
         }
     }
 
+    public T GetPublicField<T>(object obj, string fieldName)
+    {
+        return GetFieldValue<T>(obj, fieldName, BindingFlags.Public | BindingFlags.Instance);
+    }
+
     private void Catch(Type type, string fieldName, FieldInfo info)
     {
         if(!catching.TryGetValue(type, out Dictionary<string,FieldInfo> dict))

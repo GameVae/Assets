@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 namespace UI.Widget
 {
-    [RequireComponent(typeof(Image))]
     public abstract class CustomGUI : MonoBehaviour
     {
         [SerializeField, HideInInspector] protected TextMeshProUGUI placeholder;
@@ -203,7 +202,7 @@ namespace UI.Widget
             List<CustomLayerMask> sameType = new List<CustomLayerMask>();
             int length = marks.Length;
 
-            for (int i = 1; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 if (marks[i].Mask == maskType)
                     sameType.Add(marks[i]);

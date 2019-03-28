@@ -20,7 +20,6 @@ public class DeployMilitaryWindow : BaseWindow
     public GUIInteractableIcon OpenButton;
     public SelectAgentPanel SelectAgentPanel;
 
-    private FieldReflection fieldReflection;
     private DBReference dbRef;
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
@@ -45,9 +44,7 @@ public class DeployMilitaryWindow : BaseWindow
             EmitDeployData();
         };
 
-        //OpenWDO.OnClick.AddListener(Open);
         dbRef = Singleton.Instance<DBReference>();
-        fieldReflection = Singleton.Instance<FieldReflection>();
         unitDataReference = Singleton.Instance<UnitDataReference>();
     }
 
@@ -70,7 +67,7 @@ public class DeployMilitaryWindow : BaseWindow
         if (refTag.Slider.Value > 0)
         {
             Singleton.Instance<EventListenersController>().Emit("S_DEPLOY");
-            AddUnit();
+            DecreaseQuality();
 
             Close();
         }
@@ -161,40 +158,12 @@ public class DeployMilitaryWindow : BaseWindow
         }
     }
 
-    private void AddUnit()
+    private void DecreaseQuality()
     {
-        //UserInfoRow user = SyncData.UserInfo.Rows[0];
-        //UnitJSONTable units = SyncData.UnitTable;
-        //BaseInfoRow baseInfo = SyncData.CurrentMainBase;
-        //BaseUpgradeJSONTable baseUpgrade = SyncData.CurrentBaseUpgrade;
         BaseDefendJSONTable baseDefend = SyncData.CurrentBaseDefend;
 
-        //int lv = baseUpgrade[refTag.Type].Level;
         ListUpgrade unitType = refTag.Type;
-        //int useId = user.ID_User;
-        //int baseN = baseInfo.BaseNumber;
-        //string position = baseInfo.Position;
         int quality = (int)refTag.Slider.Value;
-
-        //Json.Interface.IJSON militaryType = dbRef[type][lv - 1];
-        //float health = fieldReflection.GetFieldValue<float>(militaryType, "Health", BindingFlags.Public | BindingFlags.Instance);
-        //float cur_hea = health;
-
-        //UnitRow newUnit = new UnitRow()
-        //{
-        //    ID = 0,
-        //    ID_Unit = type,
-        //    ID_User = useId,
-        //    BaseNumber = baseN,
-        //    Level = lv,
-        //    Quality = quality,
-        //    Hea_cur = cur_hea,
-        //    Health = health,
-        //    Position_Cell = position
-        //};
-        // units.Rows.Add(newUnit);
-
-        
 
         BaseDefendRow baseDefendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == unitType);
         baseDefendRow.Quality -= quality;

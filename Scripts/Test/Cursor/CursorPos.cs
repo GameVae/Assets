@@ -54,7 +54,7 @@ public class CursorPos : MonoBehaviour
     }
 
     public void updateCursor(Vector3 hitPoint)
-    {
+    {        
         cursorCellPosition = grid.WorldToCell(hitPoint);
         tempTransform = grid.CellToWorld(cursorCellPosition);
         tempTransform.y = 1;

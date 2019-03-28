@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ManualTable
 {
-    public class ManualTableJSON<T> : ScriptableObject, ITable where T : ServerMessage, new()
+    public class ManualTableJSON<T> : ScriptableObject, ITable where T : ServerMessage
     {
         [SerializeField] public List<T> Rows;
 

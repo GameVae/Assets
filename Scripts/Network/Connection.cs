@@ -97,7 +97,8 @@ public sealed class Connection : MonoSingle<Connection>
                 Debugger.Log("Connection Closed");
 #endif
             }
-            Sync?.SyncUpdate(Time.deltaTime);
+            
+            Sync?.SyncUpdate();
         }
     }
 

@@ -322,7 +322,6 @@ public class UpgResWindow : BaseWindow, IWindowGroup
 
     private T GetPublicValue<T>(object obj, string name)
     {
-        BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-        return fieldReflection.GetFieldValue<T>(obj, name, flags);
+        return fieldReflection.GetPublicField<T>(obj, name);
     }
 }

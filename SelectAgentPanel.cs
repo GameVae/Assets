@@ -16,6 +16,7 @@ public class SelectAgentPanel : MonoBehaviour
     public RectTransform ScrollViewContent;
     public GUIInteractableIcon OpenButton;
 
+    public CameraButtonGroup CameraGroup;
     public ResizeAnimation ResizeAnimation;
     public OwnerNavAgentManager OwnerNavController;
 
@@ -83,7 +84,13 @@ public class SelectAgentPanel : MonoBehaviour
             GUIInteractableIcon el = Instantiate(Prefab, ScrollViewContent);
             el.Placeholder.text = id.ToString();
 
-            el.OnClickEvents += delegate { OwnerNavController.ActiveNav(id); };
+            el.OnClickEvents += delegate 
+            {
+                OwnerNavController.ActiveNav(id);
+                Vector3Int position = OwnerNavController.GetNavRemote(id).FixedMove.CurrentPosition;
+
+                CameraGroup.CameraMoveToAgent(position);
+            };
             el.gameObject.SetActive(true);
 
             elements[id] = el;

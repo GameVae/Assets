@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour
         swipeConditions.Conditions += delegate
         {
             return crossInput.CurrentState == CrossInput.PointerState.Swipe && !eventSystem.IsPointerDownOverUI;
-        };      
+        };
     }
 
     private void Update()
@@ -50,15 +50,20 @@ public class CameraController : MonoBehaviour
         CameraGestureHandle();
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE
+        StanaloneGestureHandle();
+#endif
+        ValueUpdate();
+    }
+
+
+    private void StanaloneGestureHandle()
+    {
         ZoomHandle();
         if (swipeConditions.Evaluate())
         {
             SwipeHandle();
         }
-#endif
-        ValueUpdate();
     }
-
 
     #region Camera Set Position
     /// <summary>
@@ -185,6 +190,7 @@ public class CameraController : MonoBehaviour
     }
 
     #region  Camera Move
+
     private void PositionValueUpdate()
     {
         Vector3 position = TargetCamera.transform.position;

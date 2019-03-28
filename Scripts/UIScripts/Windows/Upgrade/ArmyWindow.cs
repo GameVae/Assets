@@ -132,6 +132,7 @@ public class ArmyWindow : BaseWindow, IWindowGroup
             level = SyncData.CurrentBaseUpgrade[armyType.Types[i]].Level;
             elements[i].Icon.InteractableChange(level > 0);
             elements[i].LevelBar.Value = level;
+            elements[i].LevelBar.SetDefaultPlaceholder();
         }
 
         // check active or not for upgrade btn
@@ -139,6 +140,7 @@ public class ArmyWindow : BaseWindow, IWindowGroup
 
         // set level bar value and rename element btn
         levelBar.Value = selTypeLv;
+        levelBar.SetDefaultPlaceholder();
         for (int i = 0; i < armyType.Types.Length; i++)
         {
             elements[i].Icon.Placeholder.text = armyType.Titles[i];

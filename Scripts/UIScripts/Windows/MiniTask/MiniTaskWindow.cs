@@ -192,7 +192,7 @@ namespace UI
             {
                 int level = SyncData.CurrentBaseUpgrade[type].Level;
                 IJSON data = dbRef[type][level - 1];
-                int upgradeTime = fieldReflection.GetFieldValue<int>(data, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
+                int upgradeTime = fieldReflection.GetPublicField<int>(data, "TimeInt");
                 return upgradeTime;
             }
             return 0;
@@ -237,7 +237,7 @@ namespace UI
             {
                 int level = SyncData.CurrentBaseUpgrade[type].Level;
                 IJSON data = dbRef[type][level - 1];
-                return fieldReflection.GetFieldValue<int>(data, "TimeInt", BindingFlags.Public | BindingFlags.Instance);             
+                return fieldReflection.GetPublicField<int>(data, "TimeInt");             
             }
             return 0;
         }

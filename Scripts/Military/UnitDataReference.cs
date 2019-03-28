@@ -5,6 +5,7 @@ using ManualTable.Row;
 using Network.Data;
 using Network.Sync;
 using SocketIO;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -38,16 +39,18 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 
     private void CreateAgents(SocketIOEvent evt)
     {
-        int count = UnitTable.Count;
-        UnitRow r;
-        UserInfoRow user;
+        //int count = UnitTable.Count;
+        //UnitRow r;
+        //UserInfoRow user;
 
-        for (int i = 0; i < count; i++)
-        {
-            r = UnitTable.Rows[i];
-            user = Users.GetUser(r.ID_User);
-            Create(r, user);
-        }
+        //for (int i = 0; i < count; i++)
+        //{
+        //    r = UnitTable.Rows[i];
+        //    user = Users.GetUser(r.ID_User);
+        //    Create(r, user);
+        //}
+
+        StartCoroutine(AsyncCreateAgents());
     }
 
     public void Create(UnitRow r, UserInfoRow user)
@@ -78,5 +81,25 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 
             agent.SetActive(true);
         }
+    }
+
+    private IEnumerator AsyncCreateAgents()
+    {
+        int i = 0;
+        int count = UnitTable.Count;
+
+        UnitRow r;
+        UserInfoRow user;
+
+        while (i < count)
+        {
+            r = UnitTable.Rows[i];
+            user = Users.GetUser(r.ID_User);
+            Create(r, user);
+
+            i++;
+            yield return null;
+        }
+        yield break;
     }
 }

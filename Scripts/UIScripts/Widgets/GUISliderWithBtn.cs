@@ -51,8 +51,8 @@ namespace UI.Widget
 
         public override void SetChildrenDependence()
         {
-            Slider.UIDependent = true;
-            Button.UIDependent = true;
+            Slider.UIDependent = false;
+            Button.UIDependent = false;
         }
 
         public void SliderRatioChange(float value)

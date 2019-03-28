@@ -205,10 +205,7 @@ namespace ManualTable.Row
 
         public override int FieldCount
         {
-            get
-            {
-                return 12;
-            }
+            get { return 12; }
         }
     }
 
@@ -267,8 +264,7 @@ namespace ManualTable.Row
         public int Training_Might;
         public int SumUnitQuality;
 
-
-        public bool IsUpgradeDone   { get; private set; }
+        public bool IsUpgradeDone { get; private set; }
         public bool IsResearchDone { get; private set; }
         public bool IsTrainingDone { get; private set; }
 
@@ -279,17 +275,23 @@ namespace ManualTable.Row
         public void Initalize()
         {
             researchCounter = new AsyncCounter();
-            researchCounter.Start(ResearchTime);
+            IsResearchDone = !(ResearchTime > 0);
+            if (!IsResearchDone)
+                researchCounter.Start(ResearchTime);
 
             upgCounter = new AsyncCounter();
-            upgCounter.Start(UpgradeTime);
+            IsUpgradeDone = !(UpgradeTime > 0);
+            if (!IsUpgradeDone)
+                upgCounter.Start(UpgradeTime);
 
             trainingCounter = new AsyncCounter();
-            trainingCounter.Start(TrainingTime);
+            IsTrainingDone = !(TrainingTime > 0);
+            if (!IsTrainingDone)
+                trainingCounter.Start(TrainingTime);
         }
 
         public void Update(Sync sync)
-        {
+        {            
             UpdateResearchTime(sync);
 
             UpdateUpgradeTime(sync);
@@ -387,7 +389,7 @@ namespace ManualTable.Row
 
         public void SetUpgradeTime(double time)
         {
-            UpgradeTime = time;            
+            UpgradeTime = time;
             upgCounter.Start(UpgradeTime);
             IsUpgradeDone = false;
         }
@@ -412,7 +414,6 @@ namespace ManualTable.Row
             //    metal + "/" + Metal + "\n");
             return (Farm >= farm && Wood >= wood && Stone >= stone && Metal >= metal);
         }
-
     }
 
     [System.Serializable]
@@ -432,8 +433,15 @@ namespace ManualTable.Row
 
         public int CompareTo(object obj)
         {
-            UserInfoRow other = obj as UserInfoRow;
-            return ID_User.CompareTo(other?.ID_User);
+            if (obj.GetType() == typeof(UserInfoRow))
+            {
+                UserInfoRow other = obj as UserInfoRow;
+                return ID_User.CompareTo(other?.ID_User);
+            }
+            else
+            {
+                return ID_User.CompareTo((int)obj);
+            }
         }
     }
 
@@ -477,8 +485,15 @@ namespace ManualTable.Row
 
         public int CompareTo(object obj)
         {
-            UnitRow other = obj as UnitRow;
-            return ID.CompareTo(other?.ID);
+            if (obj.GetType() == typeof(UnitRow))
+            {
+                UnitRow other = obj as UnitRow;
+                return ID.CompareTo(other?.ID);
+            }
+            else
+            {
+                return ID.CompareTo((int)obj);
+            }
         }
     }
 

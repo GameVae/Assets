@@ -1,6 +1,7 @@
 ﻿using Generic.Singleton;
 using ManualTable.Row;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum Flag
 {
@@ -19,6 +20,7 @@ public enum RssType
 
 public class NaturalResource : MonoBehaviour
 {
+    private Popup popupIns;
     private GameObject rss;
     private GameObject flag;
 
@@ -29,6 +31,7 @@ public class NaturalResource : MonoBehaviour
 
     private void Start()
     {
+        popupIns = Singleton.Instance<Popup>();
         Data = (RSS_PositionRow)Singleton.Instance<ResourceManager>().Datas[Id - 1];
         Singleton.Instance<ResourceManager>()[Id] = this;
 
@@ -41,16 +44,24 @@ public class NaturalResource : MonoBehaviour
 
     }
 
-    private void OnMouseUp()
+    //private void OnMouseUp()
+    //{
+    //    RssType type = (RssType)Data.RssType;
+    //    string general = string.Format("{0}: Lv {1}", type.ToString(), Data.Level);
+
+    //    popupIns.Open(general, Data.Quality.ToString(), Data.Position);
+    //    popupIns.SetCursorText(CellPos);
+    //}
+
+    public void OpenPopup()
     {
         RssType type = (RssType)Data.RssType;
         string general = string.Format("{0}: Lv {1}", type.ToString(), Data.Level);
 
-        Singleton.Instance<Popup>().Open(general, Data.Quality.ToString(), Data.Position);
-        Singleton.Instance<Popup>().SetCursor(CellPos);
-
-        Debugger.Log("Pointer down");
+        popupIns.Open(general, Data.Quality.ToString(), Data.Position);
+        popupIns.SetCursorText(CellPos);
     }
+
     public void InitData()
     {
         if (Data != null)
@@ -62,11 +73,9 @@ public class NaturalResource : MonoBehaviour
             flag?.SetActive(true);
 
             // parse position
-            CellPos = Data.Position.Parse3Int();
+            CellPos = Data.Position.Parse3Int().ToClientPosition();
 
             transform.position = Singleton.Instance<HexMap>().CellToWorld(CellPos.ToClientPosition());
         }
     }
-
-
 }

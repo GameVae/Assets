@@ -1,5 +1,6 @@
 ﻿using Generic.Singleton;
 using ManualTable;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,20 +52,28 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
     private void Start()
     {
-        float start = Time.realtimeSinceStartup;
-        int count = Datas.Rows.Count;
-        for (int i = 0; i < count; i++)
-        {
-            GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, i + 1);
-        }
-
-        Debugger.Log("instaniate done: " + (Time.realtimeSinceStartup - start));
+        StartCoroutine(AsyncCreateRss());
     }
 
+    private IEnumerator AsyncCreateRss()
+    {
+        int count = Datas.Rows.Count;
+        int i = 0;
+
+        while(i < count)
+        {
+            GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, i + 1);
+
+            i++;
+            yield return null;
+        }
+        yield break;
+    }
 
     public NaturalResource GenResource(RssType rssType, Flag group, int id)
     {
         NaturalResource newGO = new GameObject("Resource" + rssType.ToString() + id).AddComponent<NaturalResource>();
+        newGO.gameObject.layer = LayerMask.NameToLayer("RSS");
 
         newGO.Id = id;
         Instantiate(resourceTypes[((int)rssType - 1)], newGO.transform);    // resource

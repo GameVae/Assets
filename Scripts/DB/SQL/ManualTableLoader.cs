@@ -1,7 +1,6 @@
 ﻿using ManualTable.Interface;
 using ManualTable.Row;
 using ManualTable.SQL;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 

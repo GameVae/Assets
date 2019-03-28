@@ -23,7 +23,6 @@ public class SIO_LoginListener : Listener
         On("R_USER_INFO", delegate { getUserInfoDone = true; });
         On("R_GET_POSITION", delegate { getPositionDone = true; });
 
-
         AddEmiter("S_LOGIN", S_LOGIN);
     }
 

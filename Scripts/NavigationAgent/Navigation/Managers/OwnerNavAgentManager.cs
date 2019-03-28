@@ -42,5 +42,11 @@ namespace Entities.Navigation
             return agentRemotes.ContainsKey(id);
         }
 
+        public NavRemote GetNavRemote(int id)
+        {
+            agentRemotes.TryGetValue(id, out NavRemote value);
+            return value;
+        }
+
     }
 }

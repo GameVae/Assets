@@ -8,8 +8,6 @@ using ManualTable.Row;
 using Network.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
@@ -95,8 +93,7 @@ public class TrainingWindow : BaseWindow
             IJSON typeInfo = table[level - 1];
 
             TranningProgress.Slider.MaxValue =
-                fieldReflection.GetFieldValue<int>
-                (typeInfo, "TrainingTime", BindingFlags.Public | BindingFlags.Instance) * baseInfo.TrainingQuality;
+                fieldReflection.GetPublicField<int>(typeInfo, "TrainingTime") * baseInfo.TrainingQuality;
 
             AcceptBtn.InteractableChange(false);
             TranningProgress.gameObject.SetActive(true);
@@ -105,7 +102,6 @@ public class TrainingWindow : BaseWindow
         {
             AcceptBtn.InteractableChange(true);
             TranningProgress.gameObject.SetActive(false);
-            Debug.Log("false");
         }
     }
 
@@ -163,7 +159,8 @@ public class TrainingWindow : BaseWindow
     {
         try
         {
-            return (SyncData.CurrentMainBase.IsEnoughtResource
+            return (
+                SyncData.CurrentMainBase.IsEnoughtResource
                 (refCostInfo.FoodCost * quality,
                 refCostInfo.WoodCost * quality,
                 refCostInfo.StoneCost * quality,
@@ -185,7 +182,7 @@ public class TrainingWindow : BaseWindow
     private JSONObject S_TRAINING()
     {
         UserInfoRow user = SyncData.MainUser;
-        BaseInfoRow baseInfo = (BaseInfoRow)SyncData.BaseInfos[0];
+        BaseInfoRow baseInfo = SyncData.CurrentMainBase;
 
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
@@ -260,20 +257,20 @@ public class TrainingWindow : BaseWindow
     private void SetCostInfo()
     {
         string norFormat = "{0}/{1}";
-        string warFormat = "<color=red>{0}</color>/{1}";
+        string warnFormat = "<color=red>{0}</color>/{1}";
 
         bool enoughtFood = refCostInfo.FoodCost * quality <= SyncData.CurrentMainBase.Farm;
         bool enoughtWood = refCostInfo.WoodCost * quality <= SyncData.CurrentMainBase.Wood;
         bool enoughtStone = refCostInfo.StoneCost * quality <= SyncData.CurrentMainBase.Stone;
         bool enoughtMetal = refCostInfo.MetalCost * quality <= SyncData.CurrentMainBase.Metal;
 
-        FoodInfo.text = string.Format(enoughtFood ? norFormat : warFormat, refCostInfo.FoodCost * quality,
+        FoodInfo.text = string.Format(enoughtFood ? norFormat : warnFormat, refCostInfo.FoodCost * quality,
             SyncData.CurrentMainBase.Farm);
-        WoodInfo.text = string.Format(enoughtWood ? norFormat : warFormat, refCostInfo.WoodCost * quality,
+        WoodInfo.text = string.Format(enoughtWood ? norFormat : warnFormat, refCostInfo.WoodCost * quality,
             SyncData.CurrentMainBase.Wood);
-        StoneInfo.text = string.Format(enoughtStone ? norFormat : warFormat, refCostInfo.StoneCost * quality,
+        StoneInfo.text = string.Format(enoughtStone ? norFormat : warnFormat, refCostInfo.StoneCost * quality,
             SyncData.CurrentMainBase.Stone);
-        MetalInfo.text = string.Format(enoughtMetal ? norFormat : warFormat, refCostInfo.MetalCost * quality,
+        MetalInfo.text = string.Format(enoughtMetal ? norFormat : warnFormat, refCostInfo.MetalCost * quality,
             SyncData.CurrentMainBase.Metal);
     }
 
@@ -301,11 +298,8 @@ public class TrainingWindow : BaseWindow
             SyncData.CurrentMainBase.Stone -= refCostInfo.StoneCost * quality;
             SyncData.CurrentMainBase.Metal -= refCostInfo.MetalCost * quality;
 
-            int trainingMight = fieldReflection.GetFieldValue<int>
-                (refTypeTraining, "MightBonus", BindingFlags.Public | BindingFlags.Instance) * quality;
-
-            int trainingTime = fieldReflection.GetFieldValue<int>
-                (refTypeTraining, "TrainingTime", BindingFlags.Public | BindingFlags.Instance) * quality;
+            int trainingMight = fieldReflection.GetPublicField<int>(refTypeTraining, "MightBonus") * quality;
+            int trainingTime = fieldReflection.GetPublicField<int>(refTypeTraining, "TrainingTime") * quality;
 
             SyncData.CurrentMainBase.SetTrainingTime(trainingTime);
             SyncData.CurrentMainBase.Training_Might = trainingMight;

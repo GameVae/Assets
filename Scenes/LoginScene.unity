@@ -5861,7 +5861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sync: {fileID: 11400000, guid: e7d31efb8a4ef8c459f4791dbdf85a22, type: 2}
   SocketComponent: {fileID: 56121115}
-  NetworkTimeOut: 5
+  NetworkTimeOut: 10
 --- !u!1 &632598821
 GameObject:
   m_ObjectHideFlags: 0
@@ -11713,7 +11713,7 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00000587193
+      value: 0.000018849523
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}

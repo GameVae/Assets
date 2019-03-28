@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31811130277dd3d4eb7c08de449e04e0, type: 3}
   m_Name: Sync
   m_EditorClassIdentifier: 
-  CurBaseIndex: 0
   User_ID: 42
+  CurBaseIndex: 0
   MainUser:
-    ID_User: 0
-    Server_ID: 
-    NameInGame: 
-    ChatWorldColor: 
+    ID_User: 42
+    Server_ID: 1
+    NameInGame: ndinhtoan45
+    ChatWorldColor: FFFFFF
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 0
+    Might: 12022
     Killed: 0
   RSS_Position: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
   Position: {fileID: 11400000, guid: 3a7a7582f5be8d24a9c795572c169ec6, type: 2}

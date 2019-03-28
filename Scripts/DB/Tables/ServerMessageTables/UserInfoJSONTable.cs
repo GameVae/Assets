@@ -9,12 +9,12 @@ namespace ManualTable
     {
         private void Sort()
         {
-            Rows?.BinarySort();
+            Rows?.BinarySort_L();
         }
 
         public UserInfoRow GetUser(int id)
         {
-            int index = Rows.BinarySearch(0, Rows.Count - 1, id);
+            int index = Rows.BinarySearch_L(0, Rows.Count - 1, id);
             return index >= 0 ? Rows[index] : null;
         }
 

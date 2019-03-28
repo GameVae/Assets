@@ -4,6 +4,7 @@ using UnityEditor;
 using UI.Widget;
 using UnityEngine;
 using UnityEditor.SceneManagement;
+using UnityEngine.UI;
 
 namespace UI.CustomInspector
 {
@@ -92,10 +93,14 @@ namespace UI.CustomInspector
             {
                 maskSprite = (Sprite)
                    EditorGUILayout.ObjectField("Mask Sprite", maskSprite, typeof(Sprite), false, sizeOption);
+
+                EditorGUILayout.ObjectField("Readonly Target Graphic", BaseOwner.Mask.graphic, typeof(Graphic), false);
+
                 if (BaseOwner.MaskSprite != maskSprite)
                 {
                     BaseOwner.MaskSpriteChange(maskSprite);
-                    EditorUtility.SetDirty(BaseOwner.MaskSprite);
+                    if (BaseOwner.MaskSprite)
+                        EditorUtility.SetDirty(BaseOwner.MaskSprite);
                 }
             }
         }
@@ -113,7 +118,8 @@ namespace UI.CustomInspector
                 if (BaseOwner.BackgroudSprite != backgroudSprite)
                 {
                     BaseOwner.BackgroundChange(backgroudSprite);
-                    EditorUtility.SetDirty(BaseOwner.BackgroudSprite);
+                    if (BaseOwner.BackgroudSprite)
+                        EditorUtility.SetDirty(BaseOwner.BackgroudSprite);
                 }
             }
         }

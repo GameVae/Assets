@@ -63,10 +63,10 @@ public class TestObj : MonoBehaviour
         {0,1,10,2,3,300,891,10,2,3,300,25};
 
         // ebug.Log("index: " + li.BinarySearch(0,li.Count - 1, 101));
-        li.BinarySort();
+        li.BinarySort_R();
         Debug.Log("sorted list: ");
         li.Log(" - ");
-        Debug.Log("index: " + li.BinarySearch(0, li.Count - 1, 1000));
+        Debug.Log("index: " + li.BinarySearch_L(0, li.Count - 1,891));
     }
 
     private void R_MOVE(SocketIO.SocketIOEvent ev)

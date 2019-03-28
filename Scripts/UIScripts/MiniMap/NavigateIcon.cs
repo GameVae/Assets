@@ -11,7 +11,7 @@ public class NavigateIcon : MonoBehaviour
     private float alphaCounter;
     private float maxValue;
 
-    private Image image;
+    public Image Icon;
     private Color tempColor;
     private Color defaultColor;
     private Graphic imageGrap;
@@ -31,14 +31,13 @@ public class NavigateIcon : MonoBehaviour
 
     private void Awake()
     {
-        trans = (RectTransform)transform;
-        image = GetComponent<Image>();
+        trans = transform as RectTransform;
 
-        image.enabled = false;
-        imageGrap = image;
+        Icon.enabled = false;
+        imageGrap = Icon;
         defaultColor = imageGrap.color;
         maxValue = 100.0f * (1 - MinAlpha);
-        Rectangle = new Rect(Vector2.zero, image.rectTransform.sizeDelta);
+        Rectangle = new Rect(Vector2.zero, Icon.rectTransform.sizeDelta);
     }
     private void OnEnable()
     {
@@ -47,7 +46,7 @@ public class NavigateIcon : MonoBehaviour
 
     private void Update()
     {
-        if (image.enabled)
+        if (Icon.enabled)
         {
             alphaCounter = Mathf.PingPong(Time.time * ColorAniamtionSpeed, maxValue) * 0.01f + MinAlpha;
             tempColor = defaultColor;
@@ -58,12 +57,12 @@ public class NavigateIcon : MonoBehaviour
 
     public void Disable()
     {
-        image.enabled = false;
+        Icon.enabled = false;
     }
 
     public void SetPosition(Vector3 position)
     {
-        if (!image.enabled) image.enabled = true;
+        if (!Icon.enabled) Icon.enabled = true;
         trans.localPosition = position;
     }
 }

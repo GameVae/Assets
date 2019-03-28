@@ -9,8 +9,8 @@ namespace Network.Sync
     [CreateAssetMenu(fileName = @"Sync", menuName = @"Conn/Sync", order = 1)]
     public sealed class Sync : ScriptableObject
     {
-        public int CurBaseIndex = 0;
         public int User_ID = 0;
+        public int CurBaseIndex = 0;
 
         public UserInfoRow MainUser;
 
@@ -53,21 +53,21 @@ namespace Network.Sync
         public UnitJSONTable UnitTable;
         public BasePlayerJSONTable BasePlayerTable;
 
-        public void SyncUpdate(float deltaTime)
-        {            
+        public void SyncUpdate()
+        {
             for (int i = 0; i < BaseInfos?.Rows?.Count; i++)
             {
-                UpdateBaseInfo(deltaTime, i, MainUser);
+                UpdateBaseInfo(i, MainUser);
             }
         }
 
-        private void UpdateBaseInfo(float elapsedTime, int i, UserInfoRow user)
+        private void UpdateBaseInfo(int i, UserInfoRow user)
         {
             BaseInfoRow baseInfo = BaseInfos.Rows[i];
             BaseUpgradeJSONTable baseUpgrade = BaseUpgrade[i];
 
             baseInfo.Update(this);
-
+            #region old
             //if (baseInfo?.UpgradeTime > 0.0f)
             //{
             //    baseInfo.UpgradeTime -= elapsedTime;
@@ -101,6 +101,7 @@ namespace Network.Sync
             //    //Debug.Log("af: " + baseInfo?.TrainingTime);
 
             //}
+            #endregion
         }
 
         private void TranningDone(int baseIndex, UserInfoRow user)

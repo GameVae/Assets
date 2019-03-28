@@ -1,4 +1,5 @@
-﻿using Generic.CustomInput;
+﻿using System;
+using Generic.CustomInput;
 using Generic.Singleton;
 using UI;
 using UnityEngine;
@@ -47,7 +48,19 @@ public class CursorController : MonoBehaviour
 
                 Cursor.PositionCursor.SetPosTxt(selectCell.x.ToString(), selectCell.y.ToString());
                 Cursor.updateCursor(Map.CellToWorld(selectCell));
+
+                IsSelectOnRSS(hitInfo);
+                    
             }
+        }
+    }
+
+    private void IsSelectOnRSS(RaycastHit hitInfo)
+    {
+        bool isRss = LayerMask.NameToLayer("RSS") == hitInfo.transform.gameObject.layer;
+        if(isRss)
+        {
+            hitInfo.transform.GetComponent<NaturalResource>()?.OpenPopup();
         }
     }
 }

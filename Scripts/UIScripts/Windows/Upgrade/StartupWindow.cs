@@ -86,7 +86,9 @@ public class StartupWindow : BaseWindow, IWindowGroup
     public override void Load(params object[] input)
     {
         MainbaseLevelBar.Value = SyncData.CurrentBaseUpgrade[ListUpgrade.MainBase].Level;
-        BaseUpgradeRow resRef = SyncData.CurrentResearch;
+        MainbaseLevelBar.SetDefaultPlaceholder();
+
+       BaseUpgradeRow resRef = SyncData.CurrentResearch;
         BaseUpgradeRow upgRef = SyncData.CurrentUpgrade;
 
         bool isUpgrade = upgRef != null ? upgRef.ID.IsDefined() : false;
@@ -100,7 +102,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
             table = WDOCtrl[upgRef.ID];
 
             IJSON upgInfo = table[upgRef.Level - 1];
-            int timeInt = fieldReflection.GetFieldValue<int>(upgInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
+            int timeInt = fieldReflection.GetPublicField<int>(upgInfo, "TimeInt");
             UpgProgBar.Slider.MaxValue = timeInt;
         }
 
@@ -109,7 +111,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
             table = WDOCtrl[resRef.ID];
 
             IJSON resInfo = table[upgRef.Level - 1];
-            int timeInt = fieldReflection.GetFieldValue<int>(resInfo, "TimeInt", BindingFlags.Public | BindingFlags.Instance);
+            int timeInt = fieldReflection.GetPublicField<int>(resInfo, "TimeInt");
             ResProgBar.Slider.MaxValue = timeInt;
         }
 

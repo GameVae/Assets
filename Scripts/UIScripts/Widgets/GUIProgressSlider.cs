@@ -29,8 +29,6 @@ namespace UI.Widget
                 if (Slider != null)
                 {
                     Slider.value = value;
-                    //if (IsPlaceholder && Placeholder)
-                    // Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
                 }
             }
         }
@@ -56,5 +54,9 @@ namespace UI.Widget
             }
         }
 
+        public void SetDefaultPlaceholder()
+        {
+            Placeholder.text = string.Format("{0}/{1}", Value, MaxValue);
+        }
     }
 }
