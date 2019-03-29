@@ -11605,6 +11605,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MobileConsole
       objectReference: {fileID: 0}
+    - target: {fileID: 1316827578118006, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11713,7 +11717,19 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000018849523
+      value: 0.000018910529
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787422311474592, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521316941867674, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120362298944884, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}

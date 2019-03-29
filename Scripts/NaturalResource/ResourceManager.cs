@@ -6,9 +6,11 @@ using UnityEngine;
 
 public sealed class ResourceManager : MonoSingle<ResourceManager>
 {
+    private HexMap mapIns;
     private GameObject ResourceContainer;
     private GameObject[] resourceTypes;
     private GameObject[] flags;
+
 
     private Dictionary<int, NaturalResource> Resources;
 
@@ -19,13 +21,17 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
     {
         get
         {
-            NaturalResource value;
-            return Resources.TryGetValue(id, out value) ? value : null;
+            Resources.TryGetValue(id, out NaturalResource value);
+            return value;
         }
         set
         {
             Resources[id] = value;
         }
+    }
+    public HexMap MapIns
+    {
+        get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
     }
 
     protected override void Awake()
@@ -60,9 +66,12 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         int count = Datas.Rows.Count;
         int i = 0;
 
-        while(i < count)
+        while (i < count)
         {
-            GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, i + 1);
+            int id = i + 1;
+            NaturalResource rs = GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, id);
+            rs.Initalize(id, this);
+            Resources[id] = rs;
 
             i++;
             yield return null;
@@ -70,7 +79,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         yield break;
     }
 
-    public NaturalResource GenResource(RssType rssType, Flag group, int id)
+    private NaturalResource GenResource(RssType rssType, Flag group, int id)
     {
         NaturalResource newGO = new GameObject("Resource" + rssType.ToString() + id).AddComponent<NaturalResource>();
         newGO.gameObject.layer = LayerMask.NameToLayer("RSS");
@@ -84,6 +93,8 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         BoxCollider colli = newGO.gameObject.AddComponent<BoxCollider>();
         colli.center = new Vector3(0, 1, 0);
         colli.size = new Vector3(2, 2, 2);
+        colli.isTrigger = true;
+
         return newGO;
     }
 

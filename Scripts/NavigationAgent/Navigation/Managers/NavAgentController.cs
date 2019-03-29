@@ -21,6 +21,7 @@ namespace Entities.Navigation
 
         public GUIOnOffSwitch SwitchButton;
         public Camera CameraRaycaster;
+        public CursorController CursorController;
 
         public NavAgent CurrentAgent { get; private set; }
 
@@ -46,39 +47,15 @@ namespace Entities.Navigation
 
             eventSystem = Singleton.Instance<UnityEventSystem>();
             moveEvent = FindObjectOfType<SIO_MovementListener>();
+
+            CursorController.SelectedCallback += OnCursorSelected;
         }
 
         private void Start()
-        {            
+        {
             mapIns = Singleton.Instance<HexMap>();
             crossInput = Singleton.Instance<CrossInput>();
             moveEvent.Emit("S_UNIT");
-        }
-
-        private void Update()
-        {
-            if (moveConditions.Evaluate())
-            {
-                Vector3 mousePos = Input.mousePosition;
-                bool raycastHitted = Physics.Raycast(
-                    CameraRaycaster.ScreenPointToRay(mousePos),
-                    out RaycastHit hitInfo,
-                    int.MaxValue);
-
-                if (raycastHitted)
-                {
-                    Vector3Int selectCell = mapIns.WorldToCell(hitInfo.point);
-                    if (!mapIns.IsValidCell(selectCell.x, selectCell.y) || 
-                        selectCell == CurrentAgent.CurrentPosition || 
-                        (CurrentAgent.IsMoving && selectCell == CurrentAgent.EndPosition))
-                    {
-                        return;
-                    }
-                    endCell = selectCell.ZToZero();
-                    startCell = mapIns.WorldToCell(CurrentAgent.transform.position).ZToZero();
-                    AgentStartMove(startCell, endCell);
-                }
-            }
         }
 
         private void AgentStartMove(Vector3Int start, Vector3Int end)
@@ -111,6 +88,25 @@ namespace Entities.Navigation
             {
                 return crossInput.IsTouch && !isDisable;
             };
+        }
+
+        private void OnCursorSelected()
+        {
+            if (moveConditions.Evaluate())
+            {
+                Vector3Int selected = CursorController.SelectedPosition;
+
+                if (!mapIns.IsValidCell(selected.x, selected.y) ||
+                    selected == CurrentAgent.CurrentPosition ||
+                    (CurrentAgent.IsMoving && selected == CurrentAgent.EndPosition))
+                {
+                    return;
+                }
+
+                endCell = selected;
+                startCell = CurrentAgent.CurrentPosition;
+                AgentStartMove(startCell, endCell);
+            }
         }
     }
 }

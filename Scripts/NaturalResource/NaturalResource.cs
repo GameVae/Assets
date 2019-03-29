@@ -1,7 +1,5 @@
-﻿using Generic.Singleton;
-using ManualTable.Row;
+﻿using ManualTable.Row;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public enum Flag
 {
@@ -20,50 +18,28 @@ public enum RssType
 
 public class NaturalResource : MonoBehaviour
 {
-    private Popup popupIns;
     private GameObject rss;
     private GameObject flag;
 
     public RSS_PositionRow Data;
     public int Id;
 
-    public Vector3Int CellPos { get; private set; }
+    public Vector3Int Position { get; private set; }
 
-    private void Start()
-    {
-        popupIns = Singleton.Instance<Popup>();
-        Data = (RSS_PositionRow)Singleton.Instance<ResourceManager>().Datas[Id - 1];
-        Singleton.Instance<ResourceManager>()[Id] = this;
-
-        InitData();
-
-        LookAt look = gameObject.AddComponent<LookAt>();
-        look.GameObject = flag.transform;
-        look.Target = Camera.main.transform;
-        look.ProjectionDir = ProjectionDir.Right;
-
-    }
-
-    //private void OnMouseUp()
-    //{
-    //    RssType type = (RssType)Data.RssType;
-    //    string general = string.Format("{0}: Lv {1}", type.ToString(), Data.Level);
-
-    //    popupIns.Open(general, Data.Quality.ToString(), Data.Position);
-    //    popupIns.SetCursorText(CellPos);
-    //}
-
-    public void OpenPopup()
+    public void OpenPopup(Popup popupIns)
     {
         RssType type = (RssType)Data.RssType;
         string general = string.Format("{0}: Lv {1}", type.ToString(), Data.Level);
 
         popupIns.Open(general, Data.Quality.ToString(), Data.Position);
-        popupIns.SetCursorText(CellPos);
+        popupIns.SetCursorText(Position);
     }
 
-    public void InitData()
+    public void Initalize(int id,ResourceManager manager)
     {
+        Id = id;
+        Data = manager.Datas.Rows[id - 1];
+            
         if (Data != null)
         {
             rss = transform.GetChild(0).gameObject;
@@ -73,9 +49,19 @@ public class NaturalResource : MonoBehaviour
             flag?.SetActive(true);
 
             // parse position
-            CellPos = Data.Position.Parse3Int().ToClientPosition();
+            Position = Data.Position.Parse3Int().ToClientPosition();
 
-            transform.position = Singleton.Instance<HexMap>().CellToWorld(CellPos.ToClientPosition());
+            transform.position = manager.MapIns.CellToWorld(Position.ToClientPosition());
+
+            AddLookAtComponent();
         }
+    }
+
+    private void AddLookAtComponent()
+    {
+        LookAt look = gameObject.AddComponent<LookAt>();
+        look.GameObject = flag.transform;
+        look.Target = Camera.main.transform;
+        look.ProjectionDir = ProjectionDir.Right;
     }
 }

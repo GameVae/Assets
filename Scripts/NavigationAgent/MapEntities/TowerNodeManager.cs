@@ -78,10 +78,14 @@ public sealed class TowerNodeManager
 
         for (int i = 0; i < pattern.Length; i++)
         {
-            Vector3Int temp = center + pattern[i];
+            Vector3Int temp = pattern[i];
             if (hexMap.IsValidCell(temp.x, temp.y))
             {
                 infos[temp] = info;
+            }
+            else
+            {
+                Debugger.Log("Invalid " + temp);
             }
         }
     }
