@@ -41,7 +41,7 @@ public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
     {
         CreateBase(Player.Info?.NameInGame,
             SyncData.CurrentBaseUpgrade[EnumCollect.ListUpgrade.MainBase].Level,
-            Player.BaseInfo.Position);
+            Player.BaseInfo?.Position);
         for (int i = 0; i < basePlayer.Count; i++)
         {
             CreateBase(basePlayer.Rows[i].NameInGame, basePlayer.Rows[i].Level, basePlayer.Rows[i].Position);

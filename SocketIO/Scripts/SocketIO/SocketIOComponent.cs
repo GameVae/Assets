@@ -198,7 +198,6 @@ namespace SocketIO
 
         public void On(string ev, Action<SocketIOEvent> callback)
         {
-            //Debug.Log(handlers);
             if (!handlers.ContainsKey(ev))
             {
                 handlers[ev] = new List<Action<SocketIOEvent>>();

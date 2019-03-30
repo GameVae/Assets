@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Generic.Singleton;
+using System.Collections.Generic;
 using UI.Widget;
 using UnityEngine;
 using static WindowManager;
@@ -35,7 +36,7 @@ public class WindowGroup : MonoBehaviour
 
     private void Start()
     {
-        WDOCtrl = WindowManager.Instance;
+        WDOCtrl = Singleton.Instance<WindowManager>();
 
         WDOCtrl.AddGroup(GroupType, this);
         windows = WDOCtrl.Windows;

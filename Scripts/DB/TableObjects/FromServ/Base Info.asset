@@ -20,7 +20,7 @@ MonoBehaviour:
     Wood: 529104
     Stone: 182159
     Metal: 315375
-    UpgradeWait_ID: 12
+    UpgradeWait_ID: 1
     UpgradeWait_Might: 2
     UpgradeTime: -0.52
     ResearchWait_ID: 15

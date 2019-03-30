@@ -10,7 +10,7 @@ using System;
 using Generic.Singleton;
 
 [SerializeField]
-public sealed class WindowManager : MonoBehaviour
+public sealed class WindowManager : MonoSingle<WindowManager>
 {
     public enum WindowType
     {
@@ -29,18 +29,19 @@ public sealed class WindowManager : MonoBehaviour
         UpgradeResearchGroup,
     }
 
-    public static WindowManager Instance { get; private set; }
-
+    private Connection conn;
     private Dictionary<int, IWindow> windows;
     private Dictionary<int, WindowGroup> groups;
 
     private Stack<WindowType> preWindow;
     private WindowType curWindow;
 
-    public GameObject WDOPanel;
-    public Connection Conn;
+    public Connection Conn
+    {
+        get { return conn ?? (conn = Singleton.Instance<Connection>()); }
+    }
 
-    public void AddGroup(WindowGroupType groupType,WindowGroup windowGroup)
+    public void AddGroup(WindowGroupType groupType, WindowGroup windowGroup)
     {
         if (groups == null)
             groups = new Dictionary<int, WindowGroup>();
@@ -55,18 +56,14 @@ public sealed class WindowManager : MonoBehaviour
         private set { windows = value; }
     }
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else Destroy(Instance);
-    
+        base.Awake();
         Init();
     }
 
     private void Init()
     {
-        Conn = FindObjectOfType<Connection>();
         preWindow = new Stack<WindowType>();
     }
 
@@ -95,7 +92,7 @@ public sealed class WindowManager : MonoBehaviour
 
     public void AddWindow(WindowType type, IWindow w)
     {
-        if(windows == null)
+        if (windows == null)
             windows = new Dictionary<int, IWindow>();
         windows[type.GetHashCode()] = w;
     }

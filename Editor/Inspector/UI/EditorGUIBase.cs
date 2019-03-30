@@ -72,61 +72,66 @@ namespace UI.CustomInspector
             }
         }
 
-
         protected virtual void MaskableGUI()
         {
-            GUILayout.BeginHorizontal();
-            maskable = EditorGUILayout.Toggle("Maskable", maskable, sizeOption);
+            maskable = EditorGUILayout.Toggle("__Maskable", maskable, sizeOption);
             if (maskable != BaseOwner.Maskable)
             {
                 BaseOwner.MaskableChange(maskable);
             }
-            if (maskable)
+
+            using (new EditorGUI.IndentLevelScope())
             {
-                showMaskGrap = EditorGUILayout.Toggle("Show Mask Graphic", showMaskGrap);
-                BaseOwner.Mask.showMaskGraphic = showMaskGrap;
-            }
-            GUILayout.EndHorizontal();
-
-
-            if (maskable)
-            {
-                maskSprite = (Sprite)
-                   EditorGUILayout.ObjectField("Mask Sprite", maskSprite, typeof(Sprite), false, sizeOption);
-
-                EditorGUILayout.ObjectField("Readonly Target Graphic", BaseOwner.Mask.graphic, typeof(Graphic), false);
-
-                if (BaseOwner.MaskSprite != maskSprite)
+                if (maskable)
                 {
-                    BaseOwner.MaskSpriteChange(maskSprite);
-                    if (BaseOwner.MaskSprite)
-                        EditorUtility.SetDirty(BaseOwner.MaskSprite);
+                    EditorGUI.BeginDisabledGroup(true);
+                    {
+                        EditorGUILayout.ObjectField("Readonly Target Graphic", BaseOwner.Mask.graphic, typeof(Graphic), false);
+                    }
+                    EditorGUI.EndDisabledGroup();
+
+                    showMaskGrap = EditorGUILayout.Toggle("Show Mask Graphic", showMaskGrap);
+                    BaseOwner.Mask.showMaskGraphic = showMaskGrap;
+
+                    maskSprite = (Sprite)
+                       EditorGUILayout.ObjectField("Mask Sprite", maskSprite, typeof(Sprite), false, sizeOption);
+
+                    if (BaseOwner.MaskSprite != maskSprite)
+                    {
+                        BaseOwner.MaskSpriteChange(maskSprite);
+                        if (BaseOwner.MaskSprite)
+                            EditorUtility.SetDirty(BaseOwner.MaskSprite);
+                    }
                 }
             }
         }
 
         protected virtual void BackgroudGUI()
         {
-            useBackgroud = EditorGUILayout.Toggle("Is Use Backgroud", BaseOwner.IsBackground);
+            useBackgroud = EditorGUILayout.Toggle("__Is Use Backgroud", BaseOwner.IsBackground);
+
             if (useBackgroud != BaseOwner.IsBackground)
             {
                 BaseOwner.IsBackgroudChange(useBackgroud);
             }
-            if (useBackgroud)
+            using (new EditorGUI.IndentLevelScope())
             {
-                backgroudSprite = (Sprite)EditorGUILayout.ObjectField("Backgroud Sprite", backgroudSprite, typeof(Sprite), false, sizeOption);
-                if (BaseOwner.BackgroudSprite != backgroudSprite)
+                if (useBackgroud)
                 {
-                    BaseOwner.BackgroundChange(backgroudSprite);
-                    if (BaseOwner.BackgroudSprite)
-                        EditorUtility.SetDirty(BaseOwner.BackgroudSprite);
+                    backgroudSprite = (Sprite)EditorGUILayout.ObjectField("Backgroud Sprite", backgroudSprite, typeof(Sprite), false, sizeOption);
+                    if (BaseOwner.BackgroudSprite != backgroudSprite)
+                    {
+                        BaseOwner.BackgroundChange(backgroudSprite);
+                        if (BaseOwner.BackgroudSprite)
+                            EditorUtility.SetDirty(BaseOwner.BackgroudSprite);
+                    }
                 }
             }
         }
 
         protected virtual void InteractableGUI()
         {
-            interactable = EditorGUILayout.Toggle("Interactable", interactable);
+            interactable = EditorGUILayout.Toggle("__Interactable", interactable);
             if (interactable != BaseOwner.Interactable)
             {
                 BaseOwner.InteractableChange(interactable);
@@ -135,33 +140,36 @@ namespace UI.CustomInspector
 
         protected virtual void PlaceholderGUI()
         {
-            isPlaceholder = EditorGUILayout.Foldout(isPlaceholder, "Use Placeholder");
+            isPlaceholder = EditorGUILayout.Foldout(isPlaceholder, "__Is Use Placeholder");
             if (isPlaceholder != BaseOwner.IsPlaceholder)
                 BaseOwner.IsPlaceholderChange(isPlaceholder);
-            if (isPlaceholder)
+            using (new EditorGUI.IndentLevelScope())
             {
-                bool isChanged = false;
-                placeholder = EditorGUILayout.DelayedTextField("Placeholder", placeholder);
-                if (placeholder != BaseOwner.Placeholder?.text)
+                if (isPlaceholder)
                 {
-                    BaseOwner.PlaceholderValueChange(placeholder);
-                    isChanged = true;
-                }
+                    bool isChanged = false;
+                    placeholder = EditorGUILayout.DelayedTextField("Placeholder", placeholder);
+                    if (placeholder != BaseOwner.Placeholder?.text)
+                    {
+                        BaseOwner.PlaceholderValueChange(placeholder);
+                        isChanged = true;
+                    }
 
-                placeholderColor = EditorGUILayout.ColorField("Color", placeholderColor);
-                if (placeholderColor != BaseOwner.PlaceholderColor)
-                {
-                    BaseOwner.PlaceholderColorChange(placeholderColor);
-                    isChanged = true;
-                }
+                    placeholderColor = EditorGUILayout.ColorField("Color", placeholderColor);
+                    if (placeholderColor != BaseOwner.PlaceholderColor)
+                    {
+                        BaseOwner.PlaceholderColorChange(placeholderColor);
+                        isChanged = true;
+                    }
 
-                fontSize = EditorGUILayout.DelayedFloatField("Font Size", fontSize);
-                if (!Mathf.Approximately(fontSize, BaseOwner.FontSize))
-                {
-                    BaseOwner.FontSizeChange(fontSize);
-                    isChanged = true;
+                    fontSize = EditorGUILayout.DelayedFloatField("Font Size", fontSize);
+                    if (!Mathf.Approximately(fontSize, BaseOwner.FontSize))
+                    {
+                        BaseOwner.FontSizeChange(fontSize);
+                        isChanged = true;
+                    }
+                    if (isChanged) EditorUtility.SetDirty(BaseOwner.Placeholder);
                 }
-                if (isChanged) EditorUtility.SetDirty(BaseOwner.Placeholder);
             }
         }
     }

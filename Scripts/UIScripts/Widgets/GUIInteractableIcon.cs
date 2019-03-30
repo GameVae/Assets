@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -11,6 +12,9 @@ namespace UI.Widget
         private Button button;
         [SerializeField, HideInInspector]
         private Button.ButtonClickedEvent onClick;
+
+        [SerializeField, HideInInspector] private ColorBlock colorBlock;
+        [SerializeField, HideInInspector] private SpriteState spriteBlock;
 
         public Button Button
         {
@@ -44,6 +48,19 @@ namespace UI.Widget
                 Button.interactable = value;
             }
         }
+
+#if UNITY_EDITOR
+        public void TransitionChange(Selectable.Transition transitionType)
+        {
+            Button.transition = transitionType;
+        }
+
+        public void ApplyModifiedProperties()
+        {
+            Button.colors = colorBlock;
+            Button.spriteState = spriteBlock;
+        }
+#endif
     }
 
 }

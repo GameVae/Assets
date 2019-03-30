@@ -1,4 +1,5 @@
-﻿using Network.Sync;
+﻿using Generic.Singleton;
+using Network.Sync;
 using UnityEngine;
 using static WindowManager;
 
@@ -12,17 +13,20 @@ public abstract class BaseWindow : MonoBehaviour, IWindow
 
     protected WindowManager WDOCtrl
     {
-        get { return ctrl ?? (ctrl = GetComponentInParent<WindowManager>()); }
+        get { return ctrl ?? (ctrl = Singleton.Instance<WindowManager>()); }
     }
 
     protected Sync SyncData { get { return WDOCtrl?.Sync; } }
 
     protected virtual void Awake()
     {
-        WDOCtrl.AddWindow(type, this);
+        //WDOCtrl.AddWindow(type, this);
     }
 
-    protected virtual void Start() { }
+    protected virtual void Start()
+    {
+        WDOCtrl.AddWindow(type, this);
+    }
 
     protected virtual void Update() { }
 

@@ -88,7 +88,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         MainbaseLevelBar.Value = SyncData.CurrentBaseUpgrade[ListUpgrade.MainBase].Level;
         MainbaseLevelBar.SetDefaultPlaceholder();
 
-       BaseUpgradeRow resRef = SyncData.CurrentResearch;
+        BaseUpgradeRow resRef = SyncData.CurrentResearch;
         BaseUpgradeRow upgRef = SyncData.CurrentUpgrade;
 
         bool isUpgrade = upgRef != null ? upgRef.ID.IsDefined() : false;

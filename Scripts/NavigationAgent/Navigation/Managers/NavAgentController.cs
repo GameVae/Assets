@@ -55,7 +55,7 @@ namespace Entities.Navigation
         {
             mapIns = Singleton.Instance<HexMap>();
             crossInput = Singleton.Instance<CrossInput>();
-            moveEvent.Emit("S_UNIT");
+            moveEvent?.Emit("S_UNIT");
         }
 
         private void AgentStartMove(Vector3Int start, Vector3Int end)

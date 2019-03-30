@@ -7,16 +7,19 @@ namespace Network.Data
 {
     public sealed class EventListenersController : MonoSingle<EventListenersController>
     {
-        public Sync.Sync SyncData { get { return Conn?.Sync; } }
+        public Sync.Sync SyncData { get { return conn?.Sync; } }
 
-        private Connection Conn;
-
+        private Connection conn;
         private Dictionary<string, System.Func<JSONObject>> emitter;
+
+        private Connection Conn
+        {
+            get { return conn ?? (conn = Singleton.Instance<Connection>()); }
+        }
 
         protected override void Awake()
         {
             base.Awake();
-            Conn = Singleton.Instance<Connection>();
             emitter = new Dictionary<string, System.Func<JSONObject>>();
         }
 
@@ -30,7 +33,7 @@ namespace Network.Data
             try
             {
                 if (emitter.ContainsKey(ev))
-                    Conn.Emit(ev, emitter[ev]?.Invoke());
+                    conn.Emit(ev, emitter[ev]?.Invoke());
             }
             catch (System.Exception ex)
             {
