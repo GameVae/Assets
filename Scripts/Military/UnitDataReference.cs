@@ -16,7 +16,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
     public OwnerNavAgentManager OwnerAgents;
 
     public Sync SyncData;
-    public Player PlayerInfo;
+    public PlayerInfo PlayerInfo;
     public HexMap MapIns;
 
     private UnitJSONTable UnitTable;
@@ -29,7 +29,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         UnitTable = SyncData.UnitTable;
         Users = SyncData.UserInfos;
 
-        PlayerInfo = Singleton.Instance<Player>();
+        PlayerInfo = Singleton.Instance<PlayerInfo>();
         NCAgentManager = Singleton.Instance<NonControlAgentManager>();
         OwnerAgents = Singleton.Instance<OwnerNavAgentManager>();
         Events = Singleton.Instance<EventListenersController>();

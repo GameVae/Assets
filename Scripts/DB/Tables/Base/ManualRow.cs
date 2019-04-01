@@ -42,22 +42,6 @@ namespace ManualTable.Row
         public string KeyValuePairs { get { return ""; } }
     }
 
-    #region old not use
-    //[System.Serializable]
-    //public sealed class GenericUpgradeInfo : JSONBase
-    //{
-    //    public int Level;
-    //    public int MightBonus;
-    //    public int FoodCost;
-    //    public int WoodCost;
-    //    public int StoneCost;
-    //    public int MetalCost;
-    //    public string TimeMin;
-    //    public int TimeInt;
-    //    public int Required;
-    //}
-    #endregion
-
     #region DB row
     [System.Serializable]
     public class MainBaseRow : JSONBase, IManualRow
@@ -408,10 +392,6 @@ namespace ManualTable.Row
 
         public bool IsEnoughtResource(int farm, int wood, int stone, int metal)
         {
-            //Debug.Log(farm + "/" + Farm + "\n" +
-            //    wood + "/" + Wood + "\n" +
-            //    stone + "/" + Stone + "\n" +
-            //    metal + "/" + Metal + "\n");
             return (Farm >= farm && Wood >= wood && Stone >= stone && Metal >= metal);
         }
     }

@@ -14,8 +14,15 @@ namespace ManualTable
         [SerializeField] public List<string> Columns;
         [SerializeField] public List<T> Rows;
 
+        [SerializeField] private System.Type rowType;
+
         public System.Type RowType
-        { get { return typeof(T); } }
+        {
+            get
+            {
+                return rowType ?? (rowType = typeof(T));
+            }
+        }
 
         public int Count
         {

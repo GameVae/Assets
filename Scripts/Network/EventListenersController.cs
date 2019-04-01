@@ -7,7 +7,7 @@ namespace Network.Data
 {
     public sealed class EventListenersController : MonoSingle<EventListenersController>
     {
-        public Sync.Sync SyncData { get { return conn?.Sync; } }
+        public Sync.Sync SyncData { get { return Conn?.Sync; } }
 
         private Connection conn;
         private Dictionary<string, System.Func<JSONObject>> emitter;
