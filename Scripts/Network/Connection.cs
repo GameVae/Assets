@@ -1,8 +1,6 @@
 ﻿using Generic.Singleton;
 using Network.Sync;
 using SocketIO;
-using System;
-using System.Collections;
 using System.Threading;
 using UnityEngine;
 using WebSocketSharp;
@@ -50,6 +48,9 @@ public sealed class Connection : MonoSingle<Connection>
     }
 
     public float PingTimeOut { get { return SocketComponent.pingTimeout; } }
+    public float PingElapsed { get { return pingElapsed; } }
+    public float PingInterval { get { return SocketComponent.pingInterval; } }
+    public float Ping{ get; private set; }
 
     private volatile float pingElapsed;
     private Decoder decoder;
@@ -97,7 +98,7 @@ public sealed class Connection : MonoSingle<Connection>
                 Debugger.Log("Connection Closed");
 #endif
             }
-            
+
             Sync?.SyncUpdate();
         }
     }
@@ -114,6 +115,9 @@ public sealed class Connection : MonoSingle<Connection>
         switch (packet.enginePacketType)
         {
             case EnginePacketType.PONG:
+                // TODO:
+                //Debug.Log(PingElapsed);
+                Ping = PingElapsed - PingInterval;
                 pingElapsed = 0;
                 break;
         }

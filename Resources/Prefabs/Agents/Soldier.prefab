@@ -1826,10 +1826,7 @@ MonoBehaviour:
     AttackedBool: 0
   Type: 16
   Label: {fileID: 2846919174950901839}
-  Offset:
-    MaxMoveStep: 20
-    MaxSearchLevel: 120
-    MaxSpeed: 1
+  Offset: {fileID: 11400000, guid: 5282ee73be35e64429712d8d9158ad71, type: 2}
 --- !u!114 &2846919174950901839
 MonoBehaviour:
   m_ObjectHideFlags: 0

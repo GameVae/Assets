@@ -27,7 +27,7 @@ public class TrainingWindow : BaseWindow
     private int elementCount;
 
     private TrainningCostRow refCostInfo;
-    private IJSON refTypeTraining;
+    private IManualRow refTypeTraining;
 
     private BaseUpgradeRow refType;
     private ListUpgrade selectedType;
@@ -90,7 +90,7 @@ public class TrainingWindow : BaseWindow
             ITable table = dBReference[tranningType];
             int level = SyncData.CurrentBaseUpgrade[tranningType].Level;
 
-            IJSON typeInfo = table[level - 1];
+            IManualRow typeInfo = table[level - 1];
 
             TranningProgress.Slider.MaxValue =
                 fieldReflection.GetPublicField<int>(typeInfo, "TrainingTime") * baseInfo.TrainingQuality;

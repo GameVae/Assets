@@ -50,7 +50,6 @@ public class SIO_LoginListener : Listener
 
     public JSONObject S_LOGIN()
     {
-
         AddProgress();
 
         Dictionary<string, string> data = new Dictionary<string, string>();

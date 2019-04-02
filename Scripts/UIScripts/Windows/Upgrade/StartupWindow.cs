@@ -101,7 +101,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[upgRef.ID];
 
-            IJSON upgInfo = table[upgRef.Level - 1];
+            IManualRow upgInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetPublicField<int>(upgInfo, "TimeInt");
             UpgProgBar.Slider.MaxValue = timeInt;
         }
@@ -110,7 +110,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[resRef.ID];
 
-            IJSON resInfo = table[upgRef.Level - 1];
+            IManualRow resInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetPublicField<int>(resInfo, "TimeInt");
             ResProgBar.Slider.MaxValue = timeInt;
         }

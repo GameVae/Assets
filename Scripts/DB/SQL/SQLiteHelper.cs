@@ -24,9 +24,24 @@ public class SQLiteHelper : MonoSingle<SQLiteHelper>
     {
         string rs = "";
         int count = infos.Count;
+        object value;
         for (int i = 0; i < count; i++)
         {
-            rs += infos[i].GetValue(obj) + ((i < count - 1) ? ", " : "");
+            value = (infos[i].GetValue(obj) ?? "NULL");
+            if (value.GetType() == typeof(string))
+            {
+                if (value.ToString().CompareTo("") == 0)
+                {
+                    value = "NULL";
+                }
+                else
+                {
+                    value = string.Format("\"{0}\"", value);
+                }
+            }
+
+            rs += value;
+            rs += (i < count - 1) ? ", " : "";
         }
         return rs;
     }
@@ -46,15 +61,29 @@ public class SQLiteHelper : MonoSingle<SQLiteHelper>
     {
         string rs = "";
         int count = infos.Count;
+        object value;
         for (int i = 0; i < count; i++)
         {
-            rs += infos[i].Name + "=" + infos[i].GetValue(obj);
+            value = (infos[i].GetValue(obj) ?? "NULL");
+            if (value.GetType() == typeof(string))
+            {
+                if (value.ToString().CompareTo("") == 0)
+                {
+                    value = "NULL";
+                }
+                else
+                {
+                    value = string.Format("\"{0}\"", value);
+                }
+            }
+
+            rs += infos[i].Name + "=" + value;
             if (i < count - 1)
                 rs += ", ";
         }
         return rs;
     }
-  
+
     /// <summary>
     /// Return sequence for UPDATE
     /// </summary>
@@ -79,7 +108,7 @@ public class SQLiteHelper : MonoSingle<SQLiteHelper>
     public string CreateValuesSequenceFrom(System.Type type, object obj)
     {
         GetOrCreateFieldInfos(out List<FieldInfo> infos, type);
-        return CreateValuesSequenceFrom(type, obj);
+        return CreateValuesSequenceFrom(infos, obj);
     }
     public string CreateValuesSequenceFrom(object obj)
     {
@@ -94,7 +123,7 @@ public class SQLiteHelper : MonoSingle<SQLiteHelper>
     public string CreateColumnSequenceFrom(System.Type type, object obj)
     {
         GetOrCreateFieldInfos(out List<FieldInfo> infos, type);
-        return CreateColumnSequenceFrom(type, obj);
+        return CreateColumnSequenceFrom(infos, obj);
     }
     public string CreateColumnSequenceFrom(object obj)
     {

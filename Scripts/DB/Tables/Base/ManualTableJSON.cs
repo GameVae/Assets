@@ -1,17 +1,15 @@
-﻿using Json;
-using Json.Interface;
+﻿using Generic.Singleton;
 using ManualTable.Interface;
-using ManualTable.Row;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ManualTable
 {
-    public class ManualTableJSON<T> : ScriptableObject, ITable where T : ServerMessage
+    public class ManualTableJSON<T> : ScriptableObject, ITable where T : IManualRow
     {
         [SerializeField] public List<T> Rows;
 
-        public IJSON this[int index]
+        public IManualRow this[int index]
         {
             get
             {
@@ -50,13 +48,29 @@ namespace ManualTable
                 if (clearPre)
                     Rows.Clear();
             }
-            //Debug.Log(Rows.Count);
 
             int count = data.Count;
             for (int i = 0; i < count; i++)
             {
                 LoadRow(data[i].ToString());
             }
+        }
+
+        public virtual void AsyncLoadTable(JSONObject data,bool clearPre = true)
+        {
+            Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncJsonParser<T>.ParseInfo()
+            {
+                Obj = data,
+                ResultHandler = LoadRow,
+                Operation = new AsyncJsonParser<T>.ParseOperation(),
+            });
+        }
+
+        private void LoadRow(T r)
+        {
+            if (Rows == null)
+                Rows = new List<T>();
+            Rows.Add(r);
         }
     }
 }

@@ -181,6 +181,7 @@ namespace Utils
             {
                 dbConnection.Close();
 #if UNITY_EDITOR
+                Debug.Log(cmd);
                 Debug.Log(e.ToString());
 #endif
                 return false;
@@ -282,17 +283,7 @@ namespace Utils
         public static string GetDeleteCommand(string table, string conditions)
         {
             return string.Format("DELETE FROM {0} WHERE {1}", table, conditions);
-        }
-
-        public static string GetSequenceString(string separateSign, params object[] values)
-        {
-            string result = "";
-            for (int i = 0; i < values.Length; i++)
-            {
-                result += values[i] + ((i < values.Length - 1) ? separateSign : "");
-            }
-            return result;
-        }
+        }      
 
         public static string GetGenerateColumnCommand(string table, string colName, string dataType, string defaultValue, bool notNull = false)
         {
@@ -302,19 +293,6 @@ namespace Utils
             cmd += @" DEFAULT " + defaultValue;
             return cmd;
         }
-
-        public static string MakeKeyValuePair(string key, object value, string operateSign = "=")
-        {
-            if (value.GetType() != typeof(string))
-                return string.Format("{0} {2} {1}", key, value, operateSign);
-            else
-                return string.Format("{0} {2} \"{1}\"", key, value, operateSign);
-        }
-
-        public static string JsonToString(this string target)
-        {
-            string[] newS = Regex.Split(target,"\"");
-            return newS[1];
-        }
+        
     }
 }

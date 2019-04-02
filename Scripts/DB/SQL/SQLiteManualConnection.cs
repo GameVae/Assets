@@ -34,7 +34,7 @@ namespace ManualTable.SQL
             }
         }
 
-        public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, IJSON, new()
+        public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, new()
         {
             try
             {
@@ -48,17 +48,17 @@ namespace ManualTable.SQL
                         table.Clear();
                         if (reader.Read())
                         {
-                            LoadColumns(reader, table);
+                            // LoadColumns(reader, table);
                             do
                             {
-                                int fieldCount = table.FieldCount;
+                                //int fieldCount = table.FieldCount;
+                                int fieldCount = reader.FieldCount;
                                 string json = "";
                                 for (int i = 0; i < fieldCount; i++)
                                 {
                                     json += MakeJSONValue(reader.GetName(i), reader.GetValue(i)) + ((i < fieldCount - 1) ? "," : "");
                                 }
                                 json = FormatJSON(json);
-                                //table.LoadRow((T)JsonUtility.FromJson(json, typeof(T)));
                                 table.LoadRow(json);
                             } while (reader.Read());
 
@@ -81,14 +81,6 @@ namespace ManualTable.SQL
 #if UNITY_EDITOR
                 Debug.Log(e.ToString());
 #endif
-            }
-        }
-
-        private void LoadColumns<T>(IDataReader reader, ManualTableBase<T> table) where T : IManualRow, IJSON, new()
-        {
-            for (int i = 0; i < reader.FieldCount; i++)
-            {
-                table.LoadColumn(reader.GetName(i));
             }
         }
 

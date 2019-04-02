@@ -9,21 +9,24 @@ public sealed class SIO_StartupListener : Listener
     public void R_GET_RSS(SocketIOEvent obj)
     {
         //Debug.Log(obj);
-        SyncData.RSS_Position.LoadTable(obj.data["R_GET_RSS"]);
+        SyncData.RSS_Position.AsyncLoadTable(obj.data["R_GET_RSS"]);
     }
 
     public void R_BASE_INFO(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
         SyncData.BaseInfos.LoadTable(obj.data["R_BASE_INFO"]);
-        Player.BaseInfo = SyncData.BaseInfos.Rows[0]; 
+
+        if (Player != null)
+            Player.BaseInfo = SyncData.BaseInfos.Rows[0];
     }
 
     public void R_USER_INFO(SocketIOEvent obj)
     {
 
         SyncData.LoadUserInfo(obj.data["R_USER_INFO"]);
-        Player.Info = SyncData.MainUser;
+        if (Player != null)
+            Player.Info = SyncData.MainUser;
 
         //string data = obj.data["R_USER_INFO"].ToString();
         //Debugger.Log(obj);
@@ -32,7 +35,7 @@ public sealed class SIO_StartupListener : Listener
     public void R_GET_POSITION(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
-        SyncData.Position.LoadTable(obj.data["R_GET_POSITION"]);
+        SyncData.Position.AsyncLoadTable(obj.data["R_GET_POSITION"]);
     }
 
     public void R_TRAINNING(SocketIOEvent obj)
@@ -42,7 +45,7 @@ public sealed class SIO_StartupListener : Listener
 
     public void R_BASE_DEFEND(SocketIOEvent obj)
     {
-       // Debug.Log(obj);
+        // Debug.Log(obj);
         SyncData.BaseDefends[0].LoadTable(obj.data["R_BASE_DEFEND"]);
     }
 
@@ -58,20 +61,20 @@ public sealed class SIO_StartupListener : Listener
 
     private void R_UNIT(SocketIOEvent obj)
     {
-        Debugger.Log(obj);
+        //Debugger.Log(obj);
         SyncData.UnitTable.LoadTable(obj.data["R_UNIT"]);
     }
 
     private void R_PLAYER_INFO(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
-        SyncData.UserInfos.LoadTable(obj.data["R_PLAYER_INFO"],false);
-        
+        SyncData.UserInfos.LoadTable(obj.data["R_PLAYER_INFO"], false);
+
     }
 
     private void R_BASE_PLAYER(SocketIOEvent obj)
     {
-        Debug.Log(obj);        
+        //Debugger.Log(obj);
         SyncData.BasePlayerTable.LoadTable(obj.data["R_BASE_PLAYER"]);
     }
 
@@ -87,8 +90,10 @@ public sealed class SIO_StartupListener : Listener
         On("R_BASE_UPGRADE", R_BASE_UPGRADE);
         On("R_UPGRADE", R_UPGRADE);
         On("R_UNIT", R_UNIT);
-        On("R_PLAYER_INFO", R_PLAYER_INFO);       
+        On("R_PLAYER_INFO", R_PLAYER_INFO);
         On("R_BASE_PLAYER", R_BASE_PLAYER);
-        On("R_MOVE", MovementListener.R_MOVE);
+
+        if(MovementListener)
+            On("R_MOVE", MovementListener.R_MOVE);
     }
 }

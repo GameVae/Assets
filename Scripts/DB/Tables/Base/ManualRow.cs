@@ -18,7 +18,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public sealed class TrainningCostRow : JSONBase, IManualRow
+    public sealed class TrainningCostRow : IManualRow
     {
         public int ID;
         public ListUpgrade ID_Unit;
@@ -31,20 +31,11 @@ namespace ManualTable.Row
         public int WoodCost;
         public int StoneCost;
         public int MetalCost;
-
-        public int FieldCount
-        {
-            get { return 11; }
-        }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
     }
 
     #region DB row
     [System.Serializable]
-    public class MainBaseRow : JSONBase, IManualRow
+    public class MainBaseRow : IManualRow
     {
         public int Level;
         public int MightBonus;
@@ -57,89 +48,20 @@ namespace ManualTable.Row
         public int Required;
         public string Unlock;
         public ListUpgrade Unlock_ID;
-
-        public int FieldCount
-        {
-            get { return 11; }
-        }
-
-        public string ValuesSequence
-        {
-            get
-            {
-                string result = "";
-                result += string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
-                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin ?? "0", TimeInt, Required, Unlock ?? "0", Unlock_ID);
-                return result;
-            }
-        }
-
-        public string KeyValuePairs
-        {
-            get
-            {
-                string result = "";
-                result += string.Format("Level = {0}," +
-                                        "MightBonus = {1}," +
-                                        "FoodCost = {2}," +
-                                        "WoodCost = {3}," +
-                                        "StoneCost = {4}," +
-                                        "MetalCost = {5}," +
-                                        "TimeMin = \"{6}\"," +
-                                        "TimeInt = {7}," +
-                                        "Required = {8}," +
-                                        "Unlock = \"{9}\"," +
-                                        "Unlock_ID = {10}",
-                    Level, MightBonus, FoodCost, WoodCost, StoneCost, MetalCost, TimeMin, TimeInt, Required, Unlock, Unlock_ID);
-                return result;
-            }
-        }
     }
 
     [System.Serializable]
-    public class VersionRow : JSONBase, IManualRow
+    public class VersionRow : IManualRow
     {
         public int Id;
         public string Task;
         public string Content;
         public string Comment;
-
-        public int FieldCount { get { return 4; } }
-
-        public string ValuesSequence
-        {
-            get
-            {
-                string result = "";
-                result += string.Format("{0},{1},{2},{3}",
-                    Id, Task ?? "0", Content ?? "0", Comment ?? "0");
-                return result;
-            }
-        }
-
-        public string KeyValuePairs
-        {
-            get
-            {
-                string result = "";
-                result += string.Format("Id = {0}," +
-                                        "Task = \"{1}\"," +
-                                        "Content = \"{2}\"," +
-                                        "Comment = \"{3}\"", Id, Task, Content, Comment);
-                return result;
-            }
-        }
     }
 
     [System.Serializable]
-    public class MilitaryRow : JSONBase, IManualRow
+    public class MilitaryRow : IManualRow
     {
-        public int FieldCount { get { return 12; } }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
-
         public int Level;
         public int TrainingTime;
         public int MightBonus;
@@ -162,17 +84,7 @@ namespace ManualTable.Row
     //======================================//
 
     [System.Serializable]
-    public abstract class ServerMessage : JSONBase, IManualRow
-    {
-        public abstract int FieldCount { get; }
-
-        public string ValuesSequence { get { return ""; } }
-
-        public string KeyValuePairs { get { return ""; } }
-    }
-
-    [System.Serializable]
-    public class RSS_PositionRow : ServerMessage
+    public class RSS_PositionRow : IManualRow
     {
         public int ID;
         public int RssType;
@@ -186,29 +98,21 @@ namespace ManualTable.Row
         public string TimePrepare;
         public string TimeHarvestFinish;
         public string TimeRemove;
-
-        public override int FieldCount
-        {
-            get { return 12; }
-        }
     }
 
     [System.Serializable]
-    public class PositionRow : ServerMessage
+    public class PositionRow : IManualRow
     {
         public int ID;
         public string Position_Transform;
         public string Position_Cell;
         public string ID_Type;
         public string Comment;
-
-        public override int FieldCount { get { return 5; } }
     }
 
     [System.Serializable]
-    public class BaseUpgradeRow : ServerMessage
+    public class BaseUpgradeRow : IManualRow
     {
-        public override int FieldCount { get { return 4; } }
 
         public ListUpgrade ID;
         public string Name_Upgrade;
@@ -217,9 +121,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseInfoRow : ServerMessage
+    public class BaseInfoRow : IManualRow
     {
-        public override int FieldCount { get { return 22; } }
 
         public int ID_User;
         public int BaseNumber;
@@ -275,7 +178,7 @@ namespace ManualTable.Row
         }
 
         public void Update(Sync sync)
-        {            
+        {
             UpdateResearchTime(sync);
 
             UpdateUpgradeTime(sync);
@@ -397,10 +300,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UserInfoRow : ServerMessage, IComparable
+    public class UserInfoRow : IManualRow, IComparable
     {
-        public override int FieldCount { get { return 9; } }
-
         public int ID_User;
         public string Server_ID;
         public string NameInGame;
@@ -426,10 +327,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseDefendRow : ServerMessage
+    public class BaseDefendRow : IManualRow
     {
-        public override int FieldCount { get { return 4; } }
-
         public int ID;
         public int BaseNumber;
         public ListUpgrade ID_Unit;
@@ -437,13 +336,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UnitRow : ServerMessage, IComparable
+    public class UnitRow : IManualRow, IComparable
     {
-        public override int FieldCount
-        {
-            get { return 10; }
-        }
-
         public int ID;
         public ListUpgrade ID_Unit;
         public int ID_User;
@@ -478,13 +372,13 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class MoveStep : ServerMessage
+    public class MoveStep : IManualRow
     {
-        public override int FieldCount { get { return 3; } }
         public string Position_Cell;
         public string Next_Cell;
         public float TimeMoveNextCell;
 
+        #region Properties
         public Vector3Int Position
         {
             get { return Position_Cell.Parse3Int().ToClientPosition(); }
@@ -499,13 +393,12 @@ namespace ManualTable.Row
         {
             get { return TimeMoveNextCell / 1000.0f; }
         }
+        #endregion
     }
 
     [System.Serializable]
-    public class BasePlayerRow : ServerMessage
+    public class BasePlayerRow : IManualRow
     {
-        public override int FieldCount { get { return 5; } }
-
         public int ID_User;
         public string NameInGame;
         public string Position;

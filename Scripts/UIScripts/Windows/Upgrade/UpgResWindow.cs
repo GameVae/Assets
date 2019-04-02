@@ -104,7 +104,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         int level = SyncData.CurrentBaseUpgrade[loadType].Level;
 
 
-        IJSON needInfo = table[level - 1];
+        IManualRow needInfo = table[level - 1];
 
         int foodCost = GetPublicValue<int>(needInfo, "FoodCost");
         int woodCost = GetPublicValue<int>(needInfo, "WoodCost");
@@ -286,7 +286,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
     private void OnLevelBtn()
     {
         ITable table = dbReference[refUpgType.ID];
-        IJSON needInfo = table[refUpgType.Level - 1];
+        IManualRow needInfo = table[refUpgType.Level - 1];
 
         #region old
         //string jsonData = table[refUpgType.Level - 1].ToJSON();

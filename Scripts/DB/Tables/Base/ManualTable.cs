@@ -1,4 +1,4 @@
-﻿using Json;
+﻿using Generic.Singleton;
 using Json.Interface;
 using ManualTable.Interface;
 using System.Collections.Generic;
@@ -8,13 +8,18 @@ using Utils;
 
 namespace ManualTable
 {
-    public class ManualTableBase<T> : ScriptableObject, ITable where T : IJSON, IManualRow, new()
+    public class ManualTableBase<T> : ScriptableObject, ITable where T : IManualRow, new()
     {
-        [SerializeField] public string TableName;
-        [SerializeField] public List<string> Columns;
-        [SerializeField] public List<T> Rows;
+        public string TableName;
+        public List<T> Rows;
 
         [SerializeField] private System.Type rowType;
+
+        private SQLiteHelper helper;
+        protected SQLiteHelper Helper
+        {
+            get { return helper ?? (helper = Singleton.Instance<SQLiteHelper>()); }
+        }
 
         public System.Type RowType
         {
@@ -29,7 +34,7 @@ namespace ManualTable
             get { return (int)Rows?.Count; }
         }
 
-        public IJSON this[int rowID]
+        public IManualRow this[int rowID]
         {
             get { return Rows[rowID]; }
             set { Rows[rowID] = (T)value; }
@@ -43,30 +48,16 @@ namespace ManualTable
             Rows.Add(newRow);
         }
 
-        public void LoadColumn(string column)
-        {
-            if (!Columns.Contains(column))
-                Columns.Add(column);
-        }
-
-        public int FieldCount
-        {
-            get { return Columns != null ? Columns.Count : 0; }
-        }
-
         public void Clear()
         {
             if (Rows != null)
                 Rows.Clear();
-            if (Columns != null)
-                Columns.Clear();
         }
 
         public void SQLInsert(IDbConnection dbConnection, T row)
         {
-            string[] cols = Columns.ToArray();
-            string colsString = SQLUtils.GetSequenceString(",", cols);
-            string valuesString = row.ValuesSequence;
+            string colsString   = Helper.CreateColumnSequenceFrom(RowType,row);
+            string valuesString = Helper.CreateValuesSequenceFrom(RowType, row);
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);
             if (dbConnection.InsertValue(cmd))
@@ -76,7 +67,7 @@ namespace ManualTable
         public void SQLUpdate(IDbConnection dbConnection, int rowID)
         {
             T row = Rows[rowID];
-            string keyValuePairs = row.KeyValuePairs;
+            string keyValuePairs = Helper.CreateUpdateValuesFrom(RowType, row);
             string cmd = SQLUtils.GetUpdateCommand(TableName, rowID + 1, keyValuePairs);
             dbConnection.UpdateValue(cmd);
         }

@@ -8,8 +8,8 @@ using UnityEngine;
 
 public class SIO_ServerHelperListener : Listener
 {
-    private const int maxDeep = 100;
-    private const float maxSpeed = 2.0f;
+    private int maxDeep;
+    private float maxSpeed;
 
     private HexMap mapIns;
     private AStartAlgorithm aStar;
@@ -19,6 +19,8 @@ public class SIO_ServerHelperListener : Listener
     private bool isInited;
     private FixedMovement agent;
     private Vector3Int agentTargetPosition;
+
+    public NavOffset SoldierOffset;
 
     public override void RegisterCallback()
     {
@@ -67,10 +69,18 @@ public class SIO_ServerHelperListener : Listener
 
     private void Init()
     {
+        InitalizeOffset();
+
         mapIns = Singleton.Instance<HexMap>();
         breathFS = Singleton.Instance<BreathFirstSearch>();
         aStar = new AStartAlgorithm(mapIns, maxDeep);
         nonCtrlAgents = Singleton.Instance<NonControlAgentManager>();
+    }
+
+    private void InitalizeOffset()
+    {
+        maxDeep = SoldierOffset.MaxSearchLevel;
+        maxSpeed = SoldierOffset.MaxSpeed;
     }
 
     private Vector3Int FindNextValidPosition(int unitId)

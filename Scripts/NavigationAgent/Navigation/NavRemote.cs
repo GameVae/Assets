@@ -67,7 +67,8 @@ namespace Entities.Navigation
         {
             if (UnitData.Next_Cell.SerPositionValidate())
             {
-                JSONObject moveData = new JSONObject(UnitData.ToJSON());
+                string json = JsonUtility.ToJson(UnitData);
+                JSONObject moveData = new JSONObject(json);
                 FixedMove.StartMove(moveData);
             }
             else
