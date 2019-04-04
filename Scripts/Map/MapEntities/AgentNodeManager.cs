@@ -1,5 +1,4 @@
-﻿using Generic.Singleton;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class AgentNodeManager 
@@ -16,6 +15,8 @@ public class AgentNodeManager
         if (IsHolding(pos))
             return false;
         infos[pos] = info;
+
+        // Debugger.Log("Blind" + infos.Count);
         return true;
     }
 

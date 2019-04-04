@@ -47,6 +47,5 @@ namespace Entities.Navigation
             agentRemotes.TryGetValue(id, out NavRemote value);
             return value;
         }
-
     }
 }

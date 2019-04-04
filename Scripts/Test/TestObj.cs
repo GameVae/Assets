@@ -6,6 +6,7 @@ using ManualTable.Row;
 using ManualTable.SQL;
 using Network.Data;
 using System;
+using Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -81,6 +82,10 @@ public class TestObj : MonoBehaviour
         //        " Thread 2" + ": " + info2.Operation.Progress + "% " +
         //        " Thread 3" + ": " + info3.Operation.Progress + "% ");
         //}
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            StartCoroutine(LockMainThread());
+        }
     }
     private void Start()
     {
@@ -101,15 +106,26 @@ public class TestObj : MonoBehaviour
         // TestDBConnection();
         // events.On("R_GET_POSITION", R_GET_RSS);
 
-        rss_table1.Rows?.Clear();
-        rss_table2.Rows?.Clear();
-        rss_table3.Rows?.Clear();
+        //rss_table1.Rows?.Clear();
+        //rss_table2.Rows?.Clear();
+        //rss_table3.Rows?.Clear();
 
-        events.On("R_GET_POSITION", R_GET_RSS_Thread);
-        StartCoroutine(TestLogin());
+        //events.On("R_GET_POSITION", R_GET_RSS_Thread);
+        //StartCoroutine(TestLogin());
 
         //SafeThreadTest();
     }
+    private IEnumerator LockMainThread()
+    {
+        bool exit = false;
+        while (!exit)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) exit = true;
+        }
+        Debug.Log("Exited");
+        yield break;
+    }
+
 
     private IEnumerator TestLogin()
     {
@@ -179,7 +195,7 @@ public class TestObj : MonoBehaviour
     {
         JSONObject data = evt.data["R_GET_POSITION"];
         string json = data.ToString();
-//        Debug.Log(json);
+        //        Debug.Log(json);
 
         parser = Singleton.Instance<AsyncJsonParser<PositionRow>>();
 

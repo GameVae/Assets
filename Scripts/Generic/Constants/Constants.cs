@@ -219,11 +219,20 @@ namespace Generic.Contants
             PixelDependencyDevice = 1.0f / Screen.dpi;
             ScreenRatio = Screen.width * 1.0f / Screen.height;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+
         }
 
         private void Start()
         {
-           // Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
+            // Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
+            System.Threading.ThreadPool.GetMaxThreads(out int maxWorkerNum, out int maxCompletionPort);
+            System.Threading.ThreadPool.GetMinThreads(out int minWorkerNum, out int minCompletionPort);
+            System.Threading.ThreadPool.GetAvailableThreads(out int avalWorkerNum, out int avalCompletionPort);
+
+            Debugger.Log("Max: " + maxWorkerNum + " - CompletionPort: " + maxCompletionPort);
+            Debugger.Log("Min: " + minWorkerNum + " - CompletionPort: " + minCompletionPort);
+            Debugger.Log("Aval: " + avalWorkerNum + " - CompletionPort: " + avalCompletionPort);
         }
         #endregion
     }

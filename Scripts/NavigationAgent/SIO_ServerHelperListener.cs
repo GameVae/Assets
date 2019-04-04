@@ -12,9 +12,10 @@ public class SIO_ServerHelperListener : Listener
     private float maxSpeed;
 
     private HexMap mapIns;
-    private AStartAlgorithm aStar;
+    private AStarAlgorithm aStar;
     private BreathFirstSearch breathFS;
     private NonControlAgentManager nonCtrlAgents;
+    private OwnerNavAgentManager ownerAgentManager;
 
     private bool isInited;
     private FixedMovement agent;
@@ -22,6 +23,14 @@ public class SIO_ServerHelperListener : Listener
 
     public NavOffset SoldierOffset;
 
+
+    protected OwnerNavAgentManager OwnerAgentManager
+    {
+        get
+        {
+            return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<OwnerNavAgentManager>());
+        }
+    }
     public override void RegisterCallback()
     {
         On("R_NEW_POS", R_NEW_POS);
@@ -41,7 +50,7 @@ public class SIO_ServerHelperListener : Listener
         obj.data["R_NEW_POS"].GetField(ref id, "ID");
         obj.data["R_NEW_POS"].GetField(ref serId, "Server_ID");
 
-        if (id != -1)
+        if (id != -1 && id != 0)
         {
             agentTargetPosition = FindNextValidPosition(id);
             bool foundPath = aStar.FindPath(agent.CurrentPosition, agentTargetPosition);
@@ -73,7 +82,7 @@ public class SIO_ServerHelperListener : Listener
 
         mapIns = Singleton.Instance<HexMap>();
         breathFS = Singleton.Instance<BreathFirstSearch>();
-        aStar = new AStartAlgorithm(mapIns, maxDeep);
+        aStar = new AStarAlgorithm(mapIns, maxDeep);
         nonCtrlAgents = Singleton.Instance<NonControlAgentManager>();
     }
 
@@ -86,6 +95,9 @@ public class SIO_ServerHelperListener : Listener
     private Vector3Int FindNextValidPosition(int unitId)
     {
         agent = nonCtrlAgents.GetAgent(unitId);
+        if (agent == null)
+            agent = OwnerAgentManager.GetNavRemote(unitId)?.FixedMove;
+
         if (agent != null)
         {
             breathFS.GetNearestCell(agent.CurrentPosition, out Vector3Int res);

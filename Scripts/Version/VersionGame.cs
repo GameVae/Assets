@@ -30,7 +30,8 @@ public class VersionGame : MonoSingle<VersionGame>
     public void S_CHECK_VERSION()
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Version"] = "1"; // Loader.ClientVersion;
+        data["Version"] = Loader.ClientVersion;
+        Debugger.Log(Loader.ClientVersion);
        
         Connection.Emit("S_CHECK_VERSION", new JSONObject(data));
     }
@@ -38,15 +39,15 @@ public class VersionGame : MonoSingle<VersionGame>
     private void R_CHECK_VERSION(SocketIOEvent obj)
     {
         Loader.ServerVersion = obj.data.GetField("Version").ToString().Trim('"');
-        Debug.Log(obj.data.GetField("Version"));
-        if (Loader.CheckVersion())
+        // Debugger.Log(obj.data.GetField("Version"));
+        bool isUpdate = Loader.CheckVersion();
+        // Debugger.Log(isUpdate);
+        if (isUpdate)
         {
             // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"
             string link = obj.data["Data"].ToString().Trim('"');
 
-            Debug.Log(obj.data["Data"]);
-
-
+            //Debug.Log(obj.data["Data"]);
             string saveAt = Application.dataPath + @"\Data\Infantry.sqlite";
             try
             {

@@ -66,19 +66,16 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             bool isOwner = r.ID_User == PlayerInfo.Info.ID_User;
 
             agentRemote.SetUnitData(r, user, isOwner);
-            if (!isOwner)
-            {
-                FixedMovement nav = agent.GetComponent<FixedMovement>();
-                NCAgentManager.Add(r.ID, nav);
-                agent.name = "Other " + r.ID;
-            }
-            else
+
+            if (isOwner)
             {
                 agent.AddComponentNotExist<NavAgent>();
                 OwnerAgents.Add(agentRemote);
                 agent.name = "Owner " + r.ID;
             }
 
+            FixedMovement nav = agentRemote.FixedMove;
+            NCAgentManager.Add(r.ID, nav);
             agent.SetActive(true);
         }
     }

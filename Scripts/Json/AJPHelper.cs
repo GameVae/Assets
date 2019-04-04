@@ -1,18 +1,21 @@
 ﻿using Generic.Singleton;
 
-// ASYNC JSON PARSE HELPER
-// Pattern: Factory
-public class AJPHelper : ISingleton
+namespace Json
 {
-    private AJPHelper() { }
-
-    public AsyncJsonParser<T> GetParser<T>()
+    // ASYNC JSON PARSE HELPER
+    // Pattern: Factory
+    public class AJPHelper : ISingleton
     {
-        return Singleton.Instance<AsyncJsonParser<T>>();
-    }
+        private AJPHelper() { }
 
-    public void Parse<T>(AsyncJsonParser<T>.ParseInfo info)
-    {
-        GetParser<T>().Start(info);
+        public AsyncJsonParser<T> GetParser<T>()
+        {
+            return Singleton.Instance<AsyncJsonParser<T>>();
+        }
+
+        public void Parse<T>(AsyncJsonParser<T>.ParseInfo info)
+        {
+            GetParser<T>().Start(info);
+        }
     }
 }

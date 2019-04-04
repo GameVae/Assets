@@ -10,8 +10,17 @@ using UnityEngine;
 public class SIO_MovementListener : Listener
 {
     private NonControlAgentManager nCtrlAgentManager;
+    private OwnerNavAgentManager ownerAgentManager;
     private JSONObject moveJSONObject;
     private string moveJson;
+
+    protected OwnerNavAgentManager OwnerAgentManager
+    {
+        get
+        {
+            return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<OwnerNavAgentManager>());
+        }
+    }
 
     protected override void Start()
     {
@@ -134,8 +143,15 @@ public class SIO_MovementListener : Listener
 
     public void R_MOVE(SocketIOEvent obj)
     {
-        Debugger.Log(obj);
-        nCtrlAgentManager.MoveAgent(obj.data["R_MOVE"]);
+        // Debugger.Log(obj);
+        JSONObject r_move = obj.data["R_MOVE"];
+        bool isOther = nCtrlAgentManager.MoveAgent(r_move);
+        //if(!isOther)
+        //{
+        //    int id = -1;
+        //    r_move.GetField(ref id, "ID");
+        //    OwnerAgentManager.GetNavRemote(id)?.FixedMove.StartMove(r_move);
+        //}
     }
 }
 

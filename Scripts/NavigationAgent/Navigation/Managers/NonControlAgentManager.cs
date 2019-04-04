@@ -30,14 +30,16 @@ namespace Entities.Navigation
             return nCtrlAgents.Remove(id);
         }
 
-        public void MoveAgent(JSONObject jSONObject)
+        public bool MoveAgent(JSONObject jSONObject)
         {
             int id = -1;
             jSONObject.GetField(ref id, "ID");
             if (nCtrlAgents.ContainsKey(id))
             {
                 nCtrlAgents[id].StartMove(jSONObject);
+                return true;
             }
+            return false;
         }
 
         public FixedMovement GetAgent(int id)

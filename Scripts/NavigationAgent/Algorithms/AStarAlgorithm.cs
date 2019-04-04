@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AStartAlgorithm
+public class AStarAlgorithm
 {
     private List<int> closedIndex;
     private List<HexCell> openCell;
@@ -13,7 +13,7 @@ public class AStartAlgorithm
 
     public List<Vector3Int> Path { get; protected set; }
 
-    public AStartAlgorithm(HexMap hexMap, int maxDeep)
+    public AStarAlgorithm(HexMap hexMap, int maxDeep)
     {
         Path = new List<Vector3Int>();
         openCell = new List<HexCell>();

@@ -2,6 +2,7 @@
 using ManualTable.Interface;
 using System.Collections.Generic;
 using UnityEngine;
+using Json;
 
 namespace ManualTable
 {
@@ -56,8 +57,15 @@ namespace ManualTable
             }
         }
 
-        public virtual void AsyncLoadTable(JSONObject data,bool clearPre = true)
+        public virtual void AsyncLoadTable(JSONObject data, bool clearPre = true)
         {
+            if (Rows == null)
+                Rows = new List<T>();
+            else
+            {
+                if (clearPre)
+                    Rows.Clear();
+            }
             Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncJsonParser<T>.ParseInfo()
             {
                 Obj = data,
@@ -68,8 +76,6 @@ namespace ManualTable
 
         private void LoadRow(T r)
         {
-            if (Rows == null)
-                Rows = new List<T>();
             Rows.Add(r);
         }
     }

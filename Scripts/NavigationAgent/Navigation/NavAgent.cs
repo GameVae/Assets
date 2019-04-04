@@ -26,7 +26,7 @@ namespace Entities.Navigation
         #region A* Pathfinding
         private int maxSearchLevel;
         private Vector3 target;
-        private AStartAlgorithm aStar;
+        private AStarAlgorithm aStar;
         private List<Vector3Int> path;
         #endregion
 
@@ -61,7 +61,7 @@ namespace Entities.Navigation
         {
             breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
 
-            aStar = new AStartAlgorithm(MapIns, maxSearchLevel);
+            aStar = new AStarAlgorithm(MapIns, maxSearchLevel);
 
             moveEvent = FindObjectOfType<SIO_MovementListener>();
         }
