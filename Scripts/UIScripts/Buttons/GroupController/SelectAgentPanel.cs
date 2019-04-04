@@ -37,7 +37,7 @@ public class SelectAgentPanel : MonoBehaviour
 
         ResizeAnimation.CloseDoneEvt += delegate { ActiveContent(false); };
         OpenButton.OnClickEvents += OnOpenButton;
-        UnSelectAgentButton.OnClickEvents += UnSelectAgent;
+        UnSelectAgentButton.OnClickEvents += OnUnSelectAgent;
 
         Events.On("R_UNIT", UnitAlreadyForInit);
     }
@@ -64,9 +64,10 @@ public class SelectAgentPanel : MonoBehaviour
         ActiveContent(true);
     }
 
-    private void UnSelectAgent()
+    private void OnUnSelectAgent()
     {
         OwnerNavController.UnSelectCurrentAgent();
+        UnSelectAgentButton.gameObject.SetActive(false);
     }
 
     private void Init()
@@ -97,6 +98,7 @@ public class SelectAgentPanel : MonoBehaviour
                 Vector3Int position = OwnerNavController.GetNavRemote(id).FixedMove.CurrentPosition;
 
                 CameraGroup.CameraMoveToAgent(position);
+                ActiveUnSelectButton();
             };
             el.gameObject.SetActive(true);
 
@@ -126,5 +128,10 @@ public class SelectAgentPanel : MonoBehaviour
         {
             ResizeAnimation.ForceMaxSize();
         }
+    }
+
+    private void ActiveUnSelectButton()
+    {
+        UnSelectAgentButton.gameObject.SetActive(true);
     }
 }

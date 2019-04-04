@@ -5,7 +5,7 @@ public class CameraButtonGroup : MonoBehaviour
 {
     public CameraController CameraController;
     
-    private bool isMoveToAgent;
+    private bool isMoveToAgent = true;
     
     public void OnMoveToAgentButton()
     {
