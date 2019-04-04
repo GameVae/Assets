@@ -100,4 +100,12 @@ public class CursorController : MonoBehaviour
             hitInfo.transform.GetComponent<NaturalResource>()?.OpenPopup(popupIns);
         }
     }
+
+
+    public Vector3Int Position;
+    [ContextMenu("Set Position")]
+    public void SetPosition()
+    {
+        Cursor.updateCursor(MapIns.CellToWorld(Position));
+    }
 }

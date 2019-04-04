@@ -1,5 +1,6 @@
 ﻿using Generic.Contants;
 using Generic.Singleton;
+using PathFinding;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +13,13 @@ public sealed class HexMap : MonoSingle<HexMap>
 
     private GlobalNodeManager nodeManager;
     private AgentNodeManager agentNodeManager;
+    private BreathFirstSearch breathFirstSearch;
 
     private void Start()
     {
         nodeManager = Singleton.Instance<GlobalNodeManager>();
+        breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
+
         agentNodeManager = nodeManager.AgentNode;
     }
 
@@ -99,5 +103,10 @@ public sealed class HexMap : MonoSingle<HexMap>
             rs.Add(CellToWorld(cells[i]));
         }
         return rs;
+    }
+
+    public bool GetNearestPosition(Vector3Int center, out Vector3Int result)
+    {
+        return breathFirstSearch.GetNearestCell(center, out result);
     }
 }

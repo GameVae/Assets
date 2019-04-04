@@ -143,6 +143,7 @@ namespace Generic.Contants
         {
             Vector3Int[] result = (center.y % 2 == 0) ? GetEvenRange(center, range) : GetOddRange(center, range);
             return result;
+            
         }
 
         public static bool IsValidCell(int x, int y)
@@ -219,8 +220,6 @@ namespace Generic.Contants
             PixelDependencyDevice = 1.0f / Screen.dpi;
             ScreenRatio = Screen.width * 1.0f / Screen.height;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
-
         }
 
         private void Start()

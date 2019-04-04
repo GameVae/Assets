@@ -5,6 +5,7 @@ using EnumCollect;
 using Generic.Contants;
 using Generic.Singleton;
 using Map;
+using MultiThread;
 using PathFinding;
 using UnityEngine;
 
@@ -15,13 +16,9 @@ namespace Entities.Navigation
     public class NavAgent : AgentMoveability
     {
         private AnimatorController animator;
-       
+
         private NavPathRenderer pathRenderer;
         private SIO_MovementListener moveEvent;
-
-        #region Singleton
-        private BreathFirstSearch breathFirstSearch;
-        #endregion
 
         #region A* Pathfinding
         private int maxSearchLevel;
@@ -46,7 +43,6 @@ namespace Entities.Navigation
         private void Awake()
         {
             pathRenderer = new NavPathRenderer(GetComponent<LineRenderer>());
-
             OffsetInit();
         }
 
@@ -59,10 +55,7 @@ namespace Entities.Navigation
 
         private void Start()
         {
-            breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
-
             aStar = new AStarAlgorithm(MapIns, maxSearchLevel);
-
             moveEvent = FindObjectOfType<SIO_MovementListener>();
         }
         #endregion
@@ -70,10 +63,11 @@ namespace Entities.Navigation
         protected override void Update()
         {
             base.Update();
-     
+
             pathRenderer.Update();
         }
 
+        #region CALCULATE POSITION
         private void AStarMoveToTarget()
         {
             if (IsMoving)
@@ -83,7 +77,7 @@ namespace Entities.Navigation
                     Vector3 position = Vector3.MoveTowards(
                         current: transform.position,
                         target: target,
-                        maxDistanceDelta: Time.deltaTime * speed);                   
+                        maxDistanceDelta: Time.deltaTime * speed);
                     transform.position = position;
 
                     if ((transform.position - target).magnitude <= Constants.TINY_VALUE)
@@ -103,6 +97,16 @@ namespace Entities.Navigation
             }
         }
 
+        private void CalculateCurrentTarget()
+        {
+            int count = path.Count;
+            if (count > 0)
+            {
+                target = MapIns.CellToWorld(path[count - 1]);
+                Rotator.Target = target;
+            }
+        }
+
         protected override void UpdateMove()
         {
             if (maxMoveStep - 1 < curMoveStep)
@@ -111,6 +115,9 @@ namespace Entities.Navigation
             }
             AStarMoveToTarget();
         }
+        #endregion
+
+        #region FIND PATH BY MAIN THREAD
 
         public bool StartMove(Vector3Int start, Vector3Int end)
         {
@@ -118,7 +125,7 @@ namespace Entities.Navigation
                 Remote.FixedMove.Stop();
 
             bool foundPath = FindPath(start, end);
-            StartMove(foundPath);
+            InitForMove(foundPath);
             if (foundPath)
             {
                 moveEvent.Move(GetMovePath(), GetTimes(), CurrentPosition, Remote.Type, Remote.AgentID);
@@ -147,31 +154,56 @@ namespace Entities.Navigation
                 target: MapIns.CellToWorld(EndPosition)
                 );
             return foundPath;
+        }        
+
+        #endregion
+
+        #region FIND PATH BY ANOTHER THREAD
+        private void FindPathDoneCallback(AStarAlgorithm aStar,bool found)
+        {
+            path = aStar.Path;
+            Singleton.Instance<MultiThreadHelper>().Invoke(() => FindPathDone(found));
         }
 
-        private void MoveFinish()
+        private void FindPathDone(bool foundPath)
         {
-            Vector3Int currentCell = MapIns.WorldToCell(transform.position).ZToZero();
-            if (!Binding())
+            if (Remote.FixedMove.IsMoving)
+                Remote.FixedMove.Stop();
+
+            InitForMove(foundPath);
+            if (foundPath)
             {
-                if (breathFirstSearch.GetNearestCell(currentCell, out Vector3Int result))
-                {
-                    StartMove(currentCell, result);
-                    curMoveStep = 0;
-                }
+                moveEvent.Move(GetMovePath(), GetTimes(), CurrentPosition, Remote.Type, Remote.AgentID);
             }
-            else
-            {
-                Stop();
-            }
+
+            pathRenderer.LineRendererGenPath(
+               foundPath: foundPath,
+               worldPath: MapIns.CellToWorld(path),
+               t: GetPerHasGone(), // (count - (maxMoveStep - CurrentMoveStep)) * 1.0f / count
+               position: transform.position,
+               target: MapIns.CellToWorld(EndPosition)
+               );
         }
 
-        public float GetPerHasGone()
+        public void AsyncStartMove(Vector3Int start,Vector3Int end)
         {
-            int count = path.Count;
-            if (count == 0) return 1;
-            return (count - (maxMoveStep - curMoveStep)) * 1.0f / count;
+            StartPosition = start;
+            EndPosition = end;
+            if (curMoveStep >= maxMoveStep || (path != null && path.Count == 0))
+            {
+                curMoveStep = 0;
+            }
+
+            AStarAlgorithm.FindInfo info = new AStarAlgorithm.FindInfo()
+            {
+                StartPosition = start,
+                EndPosition = end,
+                DoneCallback = FindPathDoneCallback
+            };
+            aStar.FindPath(info);
         }
+
+        #endregion
 
         private void Stop()
         {
@@ -182,7 +214,25 @@ namespace Entities.Navigation
             Rotator.IsBlock = true;
         }
 
-        private void StartMove(bool foundPath)
+        public void MoveFinish()
+        {
+            Vector3Int currentCell = MapIns.WorldToCell(transform.position).ZToZero();
+            if (!Binding())
+            {
+                if (MapIns.GetNearestPosition(currentCell, out Vector3Int result))
+                {
+                    // StartMove(currentCell, result); // main thread
+                    AsyncStartMove(currentCell, result); // another thread
+                    curMoveStep = 0;
+                }
+            }
+            else
+            {
+                Stop();
+            }
+        }
+               
+        private void InitForMove(bool foundPath)
         {
             if (foundPath)
             {
@@ -205,9 +255,15 @@ namespace Entities.Navigation
             }
         }
 
+        public float GetPerHasGone()
+        {
+            int count = path.Count;
+            if (count == 0) return 1;
+            return (count - (maxMoveStep - curMoveStep)) * 1.0f / count;
+        }
+
         public List<float> GetTimes()
         {
-            // return Offset.GetTime(GetMovePath(), transform.position);
             float distance = 0.0f;
             List<Vector3Int> currentPath = GetMovePath();
             List<float> separateTime = new List<float>();
@@ -227,17 +283,7 @@ namespace Entities.Navigation
         public List<Vector3Int> GetMovePath()
         {
             return aStar.Truncate(path, maxMoveStep);
-        }
-
-        private void CalculateCurrentTarget()
-        {
-            int count = path.Count;
-            if (count > 0)
-            {
-                target = MapIns.CellToWorld(path[count - 1]);
-                Rotator.Target = target;
-            }
-        }
+        }       
 
         private void OnDestroy()
         {
@@ -246,7 +292,6 @@ namespace Entities.Navigation
                 Unbinding();
             }
         }
-
 
 #if UNITY_EDITOR
         public void ActiveNav()

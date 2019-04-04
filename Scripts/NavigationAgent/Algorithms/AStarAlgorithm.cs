@@ -1,9 +1,18 @@
 ﻿using Generic.Singleton;
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class AStarAlgorithm
 {
+    public struct FindInfo
+    {
+        public Vector3Int StartPosition;
+        public Vector3Int EndPosition;
+        public Action<AStarAlgorithm,bool> DoneCallback;
+    }
+
     private List<int> closedIndex;
     private List<HexCell> openCell;
     private List<HexCell> closedCell;
@@ -23,6 +32,21 @@ public class AStarAlgorithm
         maxLevel = maxDeep;
     }
 
+    /// <summary>
+    /// Use another thread for finding
+    /// </summary>
+    /// <param name="obj">Info of path</param>
+    public void FindPath(FindInfo obj)
+    {
+        ThreadPool.QueueUserWorkItem(FindPathCallback, obj);
+    }
+
+    /// <summary>
+    /// Use main thread for finding
+    /// </summary>
+    /// <param name="start">Start position</param>
+    /// <param name="end">End position</param>
+    /// <returns></returns>
     public bool FindPath(Vector3Int start, Vector3Int end)
     {
         // init value to calculate
@@ -141,5 +165,14 @@ public class AStarAlgorithm
         closedCell.Clear();
         closedIndex.Clear();
         Singleton.Instance<PoolHexCell>().ResetAll();
+    }
+
+    private void FindPathCallback(object obj)
+    {
+        // Debug.Log("Star find path");
+        FindInfo info = (FindInfo)obj;
+        bool found = FindPath(info.StartPosition, info.EndPosition);
+        info.DoneCallback?.Invoke(this, found);
+        // Debug.Log("find path complete");
     }
 }

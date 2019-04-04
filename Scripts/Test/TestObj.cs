@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using MultiThread;
 
 public class TestObj : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class TestObj : MonoBehaviour
     public PositionJSONTable rss_table2;
     public PositionJSONTable rss_table3;
 
-
+    public MultiThreadHelper ThreadHelper;
     //void Update()
     //{
     //    RaycastHit hit;
@@ -114,7 +115,34 @@ public class TestObj : MonoBehaviour
         //StartCoroutine(TestLogin());
 
         //SafeThreadTest();
+
+        th1 = new Thread(AnotherThreadExecute);
+        th1.Start();
     }
+
+    private void AnotherThreadExecute()
+    {
+        th2 = new Thread(
+            () =>
+            {
+                for (int i = 0; i < 1000; i++)
+                {
+                    Debugger.Log("another thread running " + i);
+                }
+            }
+            );
+        th2.Start();
+        ThreadHelper.Invoke(() =>
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                Debugger.Log("Main thread from another thread " + i);
+            }
+        }
+      );
+
+    }
+
     private IEnumerator LockMainThread()
     {
         bool exit = false;

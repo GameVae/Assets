@@ -15,6 +15,7 @@ public class SelectAgentPanel : MonoBehaviour
     public GUIInteractableIcon Prefab;
     public RectTransform ScrollViewContent;
     public GUIInteractableIcon OpenButton;
+    public GUIInteractableIcon UnSelectAgentButton;
 
     public CameraButtonGroup CameraGroup;
     public ResizeAnimation ResizeAnimation;
@@ -36,6 +37,7 @@ public class SelectAgentPanel : MonoBehaviour
 
         ResizeAnimation.CloseDoneEvt += delegate { ActiveContent(false); };
         OpenButton.OnClickEvents += OnOpenButton;
+        UnSelectAgentButton.OnClickEvents += UnSelectAgent;
 
         Events.On("R_UNIT", UnitAlreadyForInit);
     }
@@ -60,6 +62,11 @@ public class SelectAgentPanel : MonoBehaviour
 
         ResizeAnimation.Action();
         ActiveContent(true);
+    }
+
+    private void UnSelectAgent()
+    {
+        OwnerNavController.UnSelectCurrentAgent();
     }
 
     private void Init()

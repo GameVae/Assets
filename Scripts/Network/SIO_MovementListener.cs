@@ -41,7 +41,7 @@ public class SIO_MovementListener : Listener
 
     private JSONObject S_UNIT()
     {
-        Debugger.Log("S_UNIT: " + Time.realtimeSinceStartup);
+        // Debugger.Log("S_UNIT: " + Time.realtimeSinceStartup);
 
         Dictionary<string, string> data = new Dictionary<string, string>()
         {
@@ -143,10 +143,11 @@ public class SIO_MovementListener : Listener
 
     public void R_MOVE(SocketIOEvent obj)
     {
+        Debugger.Log("R_MOVE");
         // Debugger.Log(obj);
         JSONObject r_move = obj.data["R_MOVE"];
         bool isOther = nCtrlAgentManager.MoveAgent(r_move);
-        //if(!isOther)
+        //if (!isOther)
         //{
         //    int id = -1;
         //    r_move.GetField(ref id, "ID");

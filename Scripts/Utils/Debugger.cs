@@ -1,7 +1,9 @@
 ﻿using Generic.Singleton;
+using MultiThread;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UI.Widget;
 using UnityEngine;
@@ -22,6 +24,7 @@ public sealed class Debugger : MonoSingle<Debugger>
     private Queue<TextMeshProUGUI> logs;
 
     public GUIScrollView ScrollView;
+    public MultiThreadHelper ThreadHelper;
 
     private Queue<TextMeshProUGUI> Logs
     {
@@ -85,6 +88,13 @@ public sealed class Debugger : MonoSingle<Debugger>
     }
     #endregion
 
+    private bool IsMainThread()
+    {
+        if (ThreadHelper == null)
+            ThreadHelper = Singleton.Instance<MultiThreadHelper>();
+        return ThreadHelper.IsMainThreadRunning;
+    }
+
     private void CreatePrefab()
     {
         RectTransform sentence = new GameObject("Prefab", typeof(TextMeshProUGUI), typeof(ContentSizeFitter)).GetComponent<RectTransform>();
@@ -105,18 +115,21 @@ public sealed class Debugger : MonoSingle<Debugger>
         sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
         logPrefab = text;
+        logPrefab.rectTransform.localScale = Vector3.one;
         logPrefab.gameObject.SetActive(false);
     }
 
     public static void Log(object obj)
     {
-
         if (ins == null)
             ins = Singleton.Instance<Debugger>();
 #if UNITY_ANDROID
-        TextMeshProUGUI mgs = ins.CreateSentence();
-        if(mgs)
-            mgs.text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString();
+        if (ins.IsMainThread())
+        {
+            TextMeshProUGUI mgs = ins.CreateSentence();
+            if (mgs)
+                mgs.text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString();
+        }
 #endif
 #if UNITY_EDITOR
         Debug.Log(obj);

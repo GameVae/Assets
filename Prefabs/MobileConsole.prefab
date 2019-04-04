@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000018593551}
+  m_AnchoredPosition: {x: 0, y: 0.000013718705}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &222605018279493946
@@ -176,9 +176,7 @@ MonoBehaviour:
   backgroundImg: {fileID: 114897059501838348}
   isBackground: 0
   isUIDependent: 0
-  backgroundSprite: {fileID: 0}
   scrollRect: {fileID: 0}
-  background: {fileID: 114897059501838348}
 --- !u!114 &114256922716520360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,6 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxSentence: 100
   ScrollView: {fileID: 114607846718650940}
+  ThreadHelper: {fileID: 0}
 --- !u!1 &1521316941867674
 GameObject:
   m_ObjectHideFlags: 0

@@ -60,7 +60,8 @@ namespace Entities.Navigation
 
         private void AgentStartMove(Vector3Int start, Vector3Int end)
         {
-            bool foundPath = CurrentAgent.StartMove(start, end);
+            //bool foundPath = CurrentAgent.StartMove(start, end);
+            CurrentAgent.AsyncStartMove(start, end);
         }
 
         public void SwitchToAgent(NavAgent agent)

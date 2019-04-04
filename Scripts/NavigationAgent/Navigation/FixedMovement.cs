@@ -68,7 +68,12 @@ namespace Entities.Navigation
                 }
                 else
                 {
-                    Stop();
+                    if (Remote.IsOwner)
+                    {
+                        (Remote.MainNavAgent as NavAgent).MoveFinish();
+                    }
+                    else
+                        Stop();
                 }
             }
         }

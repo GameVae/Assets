@@ -13,24 +13,6 @@ MonoBehaviour:
   m_Name: Unit
   m_EditorClassIdentifier: 
   Rows:
-  - ID: 9
-    ID_Unit: 16
-    ID_User: 9
-    BaseNumber: 1
-    Level: 1
-    Quality: 5
-    Hea_cur: 5.2
-    Health: 5.2
-    Position_Cell: 11,11,0
-    Next_Cell: 
-    End_Cell: 
-    TimeMoveNextCell: 0
-    TimeFinishMove: 0
-    ListMove: []
-    Status: 6
-    Attack_Base_ID: 0
-    Attack_Unit_ID: 0
-    AttackedBool: 0
   - ID: 10
     ID_Unit: 16
     ID_User: 9
@@ -93,7 +75,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.65
     Health: 5.45
-    Position_Cell: 19,7,0
+    Position_Cell: 23,6,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -129,7 +111,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 25,6,0
+    Position_Cell: 24,3,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -147,7 +129,7 @@ MonoBehaviour:
     Quality: 3
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 19,6,0
+    Position_Cell: 19,14,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -165,28 +147,13 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 20,5,0
-    Next_Cell: 21,5,0
-    End_Cell: 26,5,0
-    TimeMoveNextCell: 1581
-    TimeFinishMove: 15581
-    ListMove:
-    - Position_Cell: 21,5,0
-      Next_Cell: 22,5,0
-      TimeMoveNextCell: 4963
-    - Position_Cell: 22,5,0
-      Next_Cell: 23,5,0
-      TimeMoveNextCell: 7763
-    - Position_Cell: 23,5,0
-      Next_Cell: 24,5,0
-      TimeMoveNextCell: 10563
-    - Position_Cell: 24,5,0
-      Next_Cell: 25,5,0
-      TimeMoveNextCell: 13363
-    - Position_Cell: 25,5,0
-      Next_Cell: 26,5,0
-      TimeMoveNextCell: 16163
-    Status: 1
+    Position_Cell: 17,4,0
+    Next_Cell: 
+    End_Cell: 
+    TimeMoveNextCell: 0
+    TimeFinishMove: 0
+    ListMove: []
+    Status: 6
     Attack_Base_ID: 0
     Attack_Unit_ID: 0
     AttackedBool: 0
@@ -198,7 +165,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 25,6,0
+    Position_Cell: 24,6,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -216,7 +183,7 @@ MonoBehaviour:
     Quality: 3
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 285,13,0
+    Position_Cell: 277,13,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -234,7 +201,7 @@ MonoBehaviour:
     Quality: 8
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 270,2,0
+    Position_Cell: 255,2,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -252,7 +219,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 16,5,0
+    Position_Cell: 25,5,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -360,7 +327,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 18,7,0
+    Position_Cell: 19,15,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0

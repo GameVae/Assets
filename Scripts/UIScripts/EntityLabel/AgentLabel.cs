@@ -72,6 +72,6 @@ public class AgentLabel : MonoBehaviour
         SetQuality(agentInfo.Quality);
 
         string nameFormat = isOwner ? "{0}" : "<color=red>{0}</color>";
-        SetNameInGame(string.Format(nameFormat, userInfo?.NameInGame + " Id " + agentInfo.ID));
+        SetNameInGame(string.Format(nameFormat,/* userInfo?.NameInGame + */" Id " + agentInfo.ID));
     }
 }

@@ -55,7 +55,6 @@ public class CameraController : MonoBehaviour
         ValueUpdate();
     }
 
-
     private void StanaloneGestureHandle()
     {
         ZoomHandle();
@@ -214,5 +213,12 @@ public class CameraController : MonoBehaviour
     }
     #endregion
     #endregion
+
+    public Vector3Int Position;
+    [ContextMenu("Set Camera")]
+    public void Set()
+    {
+        Set(Position);
+    }
 }
 

@@ -11,7 +11,15 @@ namespace Entities.Navigation
     public sealed class OwnerNavAgentManager : MonoSingle<OwnerNavAgentManager>
     {
         private Dictionary<int, NavRemote> agentRemotes;
+        private NavAgentController navController;
 
+        private NavAgentController NavCtrl
+        {
+            get
+            {
+                return navController ?? (navController = Singleton.Instance<NavAgentController>());
+            }
+        }
         protected override void Awake()
         {
             base.Awake();
@@ -46,6 +54,11 @@ namespace Entities.Navigation
         {
             agentRemotes.TryGetValue(id, out NavRemote value);
             return value;
+        }
+
+        public void UnSelectCurrentAgent()
+        {
+            NavCtrl.SwitchToAgent(null);
         }
     }
 }

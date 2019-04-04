@@ -1,5 +1,6 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
+using MultiThread;
 using PathFinding;
 using SocketIO;
 using System.Collections.Generic;
@@ -12,8 +13,9 @@ public class SIO_ServerHelperListener : Listener
     private float maxSpeed;
 
     private HexMap mapIns;
-    private AStarAlgorithm aStar;
+    private JSONObject r_new_pos;
     private BreathFirstSearch breathFS;
+    private AStarAlgorithm aStarAlgorithm;
     private NonControlAgentManager nonCtrlAgents;
     private OwnerNavAgentManager ownerAgentManager;
 
@@ -21,22 +23,23 @@ public class SIO_ServerHelperListener : Listener
     private FixedMovement agent;
     private Vector3Int agentTargetPosition;
 
-    public NavOffset SoldierOffset;
-
-
-    protected OwnerNavAgentManager OwnerAgentManager
+    private OwnerNavAgentManager OwnerAgentManager
     {
         get
         {
             return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<OwnerNavAgentManager>());
         }
     }
+
+    public NavOffset SoldierOffset;
+
+    #region REGISTER EVENTS
     public override void RegisterCallback()
     {
         On("R_NEW_POS", R_NEW_POS);
     }
 
-    public void R_NEW_POS(SocketIOEvent obj)
+    private void R_NEW_POS(SocketIOEvent obj)
     {
         Debugger.Log(obj);
         if (!isInited)
@@ -44,45 +47,33 @@ public class SIO_ServerHelperListener : Listener
             Init();
             isInited = true;
         }
-        
-        int id = -1;
-        int serId = -1;
-        obj.data["R_NEW_POS"].GetField(ref id, "ID");
-        obj.data["R_NEW_POS"].GetField(ref serId, "Server_ID");
 
+        int id = -1;
+        r_new_pos = obj.data["R_NEW_POS"];
+        r_new_pos.GetField(ref id, "ID");
         if (id != -1 && id != 0)
         {
             agentTargetPosition = FindNextValidPosition(id);
-            bool foundPath = aStar.FindPath(agent.CurrentPosition, agentTargetPosition);
-
-            if (foundPath &&
-                mapIns.IsValidCell(agentTargetPosition.x,agentTargetPosition.y))
+            AStarAlgorithm.FindInfo info = new AStarAlgorithm.FindInfo()
             {
-                string data = ResponseMessage(
-                    clientPath:         aStar.Path,
-                    separateTime:       GetTimes(aStar.Path,agent.transform.position), 
-                    curCellPosition:    agent.CurrentPosition,
-                    id:                 id,
-                    serId:              serId);
+                StartPosition = agent.CurrentPosition,
+                EndPosition = agentTargetPosition,
+                DoneCallback = FindPathDoneCallback
+            };
 
-                JSONObject moveObject = new JSONObject(JSONObject.Type.BAKED)
-                {
-                    str = data
-                };
-
-                Emit("S_MOVE", moveObject);
-            }
-            else Debugger.Log("Path not found");
+            aStarAlgorithm.FindPath(info);
         }
     }
+    #endregion
 
+    #region INITALIZE
     private void Init()
     {
         InitalizeOffset();
 
         mapIns = Singleton.Instance<HexMap>();
         breathFS = Singleton.Instance<BreathFirstSearch>();
-        aStar = new AStarAlgorithm(mapIns, maxDeep);
+        aStarAlgorithm = new AStarAlgorithm(mapIns, maxDeep);
         nonCtrlAgents = Singleton.Instance<NonControlAgentManager>();
     }
 
@@ -91,13 +82,12 @@ public class SIO_ServerHelperListener : Listener
         maxDeep = SoldierOffset.MaxSearchLevel;
         maxSpeed = SoldierOffset.MaxSpeed;
     }
+    #endregion
 
+    #region FORMAT DATA
     private Vector3Int FindNextValidPosition(int unitId)
     {
         agent = nonCtrlAgents.GetAgent(unitId);
-        if (agent == null)
-            agent = OwnerAgentManager.GetNavRemote(unitId)?.FixedMove;
-
         if (agent != null)
         {
             breathFS.GetNearestCell(agent.CurrentPosition, out Vector3Int res);
@@ -106,7 +96,7 @@ public class SIO_ServerHelperListener : Listener
         return Generic.Contants.Constants.InvalidPosition;
     }
 
-    public List<float> GetTimes(List<Vector3Int> path,Vector3 curPos)
+    private List<float> GetTimes(List<Vector3Int> path, Vector3 curPos)
     {
         float distance = 0.0f;
         List<Vector3Int> currentPath = path;
@@ -191,4 +181,41 @@ public class SIO_ServerHelperListener : Listener
 
         return string.Format("[{0}]", result);
     }
+    #endregion
+
+    #region MULTI-THREAD CALLBACK
+    private void FindPathDoneCallback(AStarAlgorithm aStar, bool found)
+    {
+        Singleton.Instance<MultiThreadHelper>().Invoke(() =>
+        {
+            FindPathDone(aStar, found);
+        });
+    }
+
+    private void FindPathDone(AStarAlgorithm aStar, bool found)
+    {
+        int id = -1;
+        int serId = -1;
+        r_new_pos.GetField(ref id, "ID");
+        r_new_pos.GetField(ref serId, "Server_ID");
+
+        if (found)
+        {
+            string data = ResponseMessage(
+                clientPath: aStar.Path,
+                separateTime: GetTimes(aStar.Path, agent.transform.position),
+                curCellPosition: agent.CurrentPosition,
+                id: id,
+                serId: serId);
+
+            JSONObject moveObject = new JSONObject(JSONObject.Type.BAKED)
+            {
+                str = data
+            };
+
+            Emit("S_MOVE", moveObject);
+        }
+        else Debugger.Log("Path not found");
+    }
+    #endregion
 }

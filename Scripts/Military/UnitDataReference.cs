@@ -73,9 +73,12 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
                 OwnerAgents.Add(agentRemote);
                 agent.name = "Owner " + r.ID;
             }
-
-            FixedMovement nav = agentRemote.FixedMove;
-            NCAgentManager.Add(r.ID, nav);
+            else
+            {
+                FixedMovement nav = agentRemote.FixedMove;
+                NCAgentManager.Add(r.ID, nav);
+                agent.name = "other " + r.ID;
+            }
             agent.SetActive(true);
         }
     }
