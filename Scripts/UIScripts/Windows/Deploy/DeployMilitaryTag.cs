@@ -7,7 +7,7 @@ public class DeployMilitaryTag : MonoBehaviour
 {
     public GUIInteractableIcon Icon;
     public GUIProgressSlider Slider;
-    public InputField InputField;
+    public GUIInputField InputField;
     public ListUpgrade Type;
 
     public DeployMilitaryWindow deployWind;
@@ -22,31 +22,28 @@ public class DeployMilitaryTag : MonoBehaviour
 
     private void Awake()
     {
-        InputField.onValueChanged.AddListener((string value) => OnInputFieldValueChanged(value));
-        Slider.OnValueChanged.AddListener((float value) => OnSliderValueChanged(value));
-    }
+        Slider.OnValueChanged.AddListener(OnSliderValueChanged);
+        InputField.OnSelectField += delegate { deployWind.TagSelected(this); };
+        InputField.OnValueChange += OnInputValueChanged;
+    }   
 
-    private void OnInputFieldValueChanged(string value)
+    public void SetSliderValue(int value)
     {
-        int iV = int.Parse(value);
-        iV = Mathf.Clamp(iV, 0,(int)MaxQuality);
-
-        InputField.text = iV.ToString();
-        Slider.Value = iV;
-        deployWind.TagSelected(this);
+        Slider.Value = value;
     }
 
     private void OnSliderValueChanged(float value)
     {
-        int iV = (int)value;
+        int iValue = (int)value;
 
-        Slider.Value = iV;
-        InputField.text = iV.ToString();
+        SetSliderValue(iValue);
         deployWind.TagSelected(this);
+        InputField.SetText(iValue.ToString());
     }
 
-    public void SetValue(int value)
+    private void OnInputValueChanged(string value)
     {
-        Slider.Value = 0;
+        int.TryParse(value, out int iValue);
+        SetSliderValue(iValue);
     }
 }

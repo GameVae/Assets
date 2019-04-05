@@ -15,8 +15,22 @@ namespace UI.CustomInspector
                 GameObjectUtility.SetParentAndAlign(obj, menuCmd.context as GameObject);
                 Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
                 Selection.activeObject = obj;
-                obj.name = obj.name.Replace("(Clone)", "*");
+                obj.name = obj.name.Replace("(Clone)", " new");
             }
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUIInputField")]
+        public static void CreateInputField(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/UI/GUIInputField.prefab";
+            Create(menuCmd, path);
+        }
+
+        [MenuItem("GameObject/UI/GUI/GUIHorizontalGrid")]
+        public static void CreateHorizontalGrid(MenuCommand menuCmd)
+        {
+            string path = @"Assets/Prefabs/UI/GUIHorizontalGrid.prefab";
+            Create(menuCmd, path);
         }
 
         [MenuItem("GameObject/UI/GUI/GUIVerticalList")]

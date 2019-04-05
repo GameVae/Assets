@@ -13,7 +13,7 @@ using UnityEngine;
 
 public class DeployMilitaryWindow : BaseWindow
 {
-
+    public NumpadInput Numpad;
     public DeployMilitaryTag TagPrefab;
     public GUIScrollView ScrollView;
     public GUIInteractableIcon DeployButton;
@@ -36,13 +36,11 @@ public class DeployMilitaryWindow : BaseWindow
     protected override void Start()
     {
         base.Start();
-        Singleton.Instance<EventListenersController>().AddEmiter("S_DEPLOY", S_DEPLOY);
+        events.AddEmiter("S_DEPLOY", S_DEPLOY);
         events.On("R_DEPLOY", R_DEPLOY);
 
-        DeployButton.OnClickEvents += delegate
-        {
-            EmitDeployData();
-        };
+        DeployButton.OnClickEvents += OnDeployButton;
+
 
         dbRef = Singleton.Instance<DBReference>();
         unitDataReference = Singleton.Instance<UnitDataReference>();
@@ -62,9 +60,10 @@ public class DeployMilitaryWindow : BaseWindow
         SelectAgentPanel.Add(unit);
         Debugger.Log("added " + unit.ID);
     }
-    private void EmitDeployData()
+
+    private void OnDeployButton()
     {
-        if (refTag.Slider.Value > 0)
+        if (refTag != null && refTag.Slider.Value > 0)
         {
             Singleton.Instance<EventListenersController>().Emit("S_DEPLOY");
             DecreaseQuality();
@@ -97,11 +96,12 @@ public class DeployMilitaryWindow : BaseWindow
         {
             if (refTag != null && refTag.Slider.Value > 0)
             {
-                deployMilitaryTag.SetValue(0);
+                deployMilitaryTag.SetSliderValue(0);
             }
             else
             {
                 refTag = deployMilitaryTag;
+                Numpad.SetInputField(refTag.InputField);
             }
         }
     }
@@ -121,7 +121,7 @@ public class DeployMilitaryWindow : BaseWindow
     {
         base.Open();
         Load();
-        refTag?.SetValue(0);
+        refTag?.SetSliderValue(0);
     }
 
     protected override void Init()
@@ -136,6 +136,13 @@ public class DeployMilitaryWindow : BaseWindow
         tag.MaxQuality = maxQuality;
         tag.Type = type;
         tag.gameObject.SetActive(true);
+        tag.InputField.OnSelectField += delegate { OnInputFieldSelected(tag); };
+    }
+
+    private void OnInputFieldSelected(DeployMilitaryTag tag)
+    {
+        if (tag == refTag)
+            Numpad.OpenNumpad();
     }
 
     private DeployMilitaryTag GetTag()
