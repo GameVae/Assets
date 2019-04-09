@@ -37,7 +37,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
     public TextMeshProUGUI ResearchLevel;
 
     [Header("Order Materials"), Space]
-    public GUIHorizontalInfo[] OrderMaterialElements;
+    public MaterialRequireTag[] OrderMaterialElements;
     public TextMeshProUGUI DurationText;
 
     [Header("Info Group"), Space]
@@ -182,7 +182,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
             for (int i = 0; i < 4; i++)
             {
                 int captureInt = i;
-                OrderMaterialElements[i].Button.OnClickEvents += delegate
+                OrderMaterialElements[i].SelectableComp.OnClickEvents += delegate
                 {
                     SetMaterialRequirement(captureInt, ++curMaterials[captureInt], needMaterials[captureInt]);
                     if (IsEnoughtMeterial(needMaterials))
@@ -198,18 +198,19 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         NumberName.text = "Might Bonus";
         Amount.text = string.Format("{0}", mightBonus);
 
-        DurationText.text = "Duration: " + timeMin;
+        //DurationText.text = "Duration: " + timeMin;
+        DurationText.text = timeMin;
         #endregion
     }
 
     private void SetMaterialRequirement(int index, int cur, int need)
     {
-        GUIHorizontalInfo material = OrderMaterialElements[index];
-        material.InteractableChange(cur < need);
+        MaterialRequireTag material = OrderMaterialElements[index];
+        material.SelectableComp.gameObject.SetActive(cur < need);
         if (cur >= need)
-            material.Placeholder.text = string.Format("{0}/{1}", cur, need);
+            material.Placeholder.Text = string.Format("{0}/{1}", cur, need);
         else
-            material.Placeholder.text = string.Format("<color=red>{0}</color>/{1}", cur, need);
+            material.Placeholder.Text = string.Format("<color=red>{0}</color>/{1}", cur, need);
     }
 
     private void ActiveProgressBar(bool value)

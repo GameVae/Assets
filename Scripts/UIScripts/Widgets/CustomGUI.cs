@@ -87,7 +87,7 @@ namespace UI.Widget
             get
             {
                 if (mask == null) mask = GetComponent<Mask>();
-                return mask ?? (mask = FindTypeWithCustomMask<Mask>(CustomLayerMask.CustomMask.MaskImg));
+                return mask;
             }
             protected set { mask = value; }
         }

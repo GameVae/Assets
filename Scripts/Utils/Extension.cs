@@ -353,5 +353,16 @@ public static class Extension
 
     #endregion
 
+    #region UI.SpriteState
+    public static bool Equal(this UnityEngine.UI.SpriteState a, UnityEngine.UI.SpriteState b)
+    {
+        bool isEqual = true;
+        isEqual = isEqual && a.pressedSprite == b.pressedSprite;
+        isEqual = isEqual && a.disabledSprite == b.disabledSprite;
+        isEqual = isEqual && a.highlightedSprite == b.highlightedSprite;
+        return isEqual;
+    }
+    #endregion
+
 
 }

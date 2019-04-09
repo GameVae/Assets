@@ -30,7 +30,11 @@ public class FriendWindow : BaseWindow
 
     protected override void Init()
     {
-       
+        for (int i = 0; i < 10; i++)
+        {
+            var f = Instantiate(FriendTagPrefab, ScrollView.Content);
+            f.gameObject.SetActive(true);
+        }
     }
 
     public override void Open()

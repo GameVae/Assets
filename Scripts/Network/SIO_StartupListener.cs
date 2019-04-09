@@ -45,7 +45,7 @@ public sealed class SIO_StartupListener : Listener
 
     public void R_BASE_DEFEND(SocketIOEvent obj)
     {
-        // Debug.Log(obj);
+        //Debug.Log(obj);
         SyncData.BaseDefends[0].LoadTable(obj.data["R_BASE_DEFEND"]);
     }
 
@@ -67,7 +67,7 @@ public sealed class SIO_StartupListener : Listener
 
     private void R_PLAYER_INFO(SocketIOEvent obj)
     {
-        //Debugger.Log(obj);
+        // Debugger.Log(obj);
         SyncData.UserInfos.LoadTable(obj.data["R_PLAYER_INFO"], false);
 
     }

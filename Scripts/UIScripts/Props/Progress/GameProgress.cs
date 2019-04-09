@@ -54,7 +54,7 @@ public class GameProgress
         {
             if (currentTask.IsDone())
             {
-                // Debugger.Log(currentTask.Name + " done");
+                Debugger.Log(currentTask.Name + " done");
                 if (!IsDone)
                 {
                     currentTask = tasks.Dequeue();

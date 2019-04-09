@@ -4,22 +4,27 @@ using UnityEngine;
 public class PositionSelector : MonoBehaviour
 {
     public GameObject Panel;
-    public NumpadInput NumpadInput;
-    public GUIInputField InputK;
-    public GUIInputField InputX;
-    public GUIInputField InputY;
+    public InputFieldv2 InputK;
+    public InputFieldv2 InputX;
+    public InputFieldv2 InputY;
     public GUIInteractableIcon AcceptButton;
+    public GUIInteractableIcon CloseButton;
     public CameraController CameraCtr;
 
     private Vector3Int Position;
+    private InputFieldv2 focusInputField;
 
     private void Awake()
     {
-        InputK.OnSelectField += delegate { OnFieldSelected(InputK); };
-        InputX.OnSelectField += delegate { OnFieldSelected(InputX); };
-        InputY.OnSelectField += delegate { OnFieldSelected(InputY); };
+        InputK.OnSelected += delegate { SetFocusInputField(InputK); };
+        InputX.OnSelected += delegate { SetFocusInputField(InputX); };
+        InputY.OnSelected += delegate { SetFocusInputField(InputY); };
+
+        InputX.OnValueChanged += OnPositionInputChanged;
+        InputY.OnValueChanged += OnPositionInputChanged;
 
         AcceptButton.OnClickEvents += OnAcceptButton;
+        CloseButton.OnClickEvents += Close;
     }
 
     private void OnAcceptButton()
@@ -31,35 +36,34 @@ public class PositionSelector : MonoBehaviour
         Position.y = Mathf.Clamp(y, 0, 512);
 
         CameraCtr.Set(Position.ToClientPosition());
-
         Close();
-        NumpadInput.CloseNumpad();
     }
 
-    private void OnFieldSelected(GUIInputField field)
-    {
-        NumpadInput.SetInputField(field);
-        NumpadInput.OpenNumpad();
-
-        int.TryParse(field.Text, out int v);
-        NumpadInput.Numpad.InputInt = v;
-    }
-
-    private void Close()
+    public void Close()
     {
         Panel.SetActive(false);
+        focusInputField?.Keyboard?.Close();
     }
 
     public void Open()
     {
         if (Panel.activeInHierarchy)
         {
-            NumpadInput.CloseNumpad();
             Panel.SetActive(false);
         }
         else
             Panel.SetActive(true);
+    }
 
+    private void SetFocusInputField(InputFieldv2 inputField)
+    {
+        focusInputField = inputField;
+    }
 
+    private void OnPositionInputChanged(string value)
+    {
+        int.TryParse(value, out int v);
+        v = Mathf.Clamp(v, 0, 512);
+        focusInputField.Keyboard.InputString = v.ToString();
     }
 }

@@ -22,7 +22,12 @@ public class SIO_ServerHelperListener : Listener
     private bool isInited;
     private FixedMovement agent;
     private Vector3Int agentTargetPosition;
+    private MultiThreadHelper threadHelper;
 
+    private MultiThreadHelper ThreadHelper
+    {
+        get { return threadHelper ?? (threadHelper = Singleton.Instance<MultiThreadHelper>()); }
+    }
     private OwnerNavAgentManager OwnerAgentManager
     {
         get
@@ -186,7 +191,7 @@ public class SIO_ServerHelperListener : Listener
     #region MULTI-THREAD CALLBACK
     private void FindPathDoneCallback(AStarAlgorithm aStar, bool found)
     {
-        Singleton.Instance<MultiThreadHelper>().Invoke(() =>
+        ThreadHelper.Invoke(() =>
         {
             FindPathDone(aStar, found);
         });

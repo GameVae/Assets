@@ -9,6 +9,7 @@ namespace UI
             Default,
             Background,
             MaskImg,
+            Placeholder,
         }
 
         public CustomMask Mask;

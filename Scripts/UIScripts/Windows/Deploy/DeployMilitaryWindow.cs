@@ -7,13 +7,11 @@ using Network.Data;
 using SocketIO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UI.Widget;
 using UnityEngine;
 
 public class DeployMilitaryWindow : BaseWindow
 {
-    public NumpadInput Numpad;
     public DeployMilitaryTag TagPrefab;
     public GUIScrollView ScrollView;
     public GUIInteractableIcon DeployButton;
@@ -96,12 +94,11 @@ public class DeployMilitaryWindow : BaseWindow
         {
             if (refTag != null && refTag.Slider.Value > 0)
             {
-                deployMilitaryTag.SetSliderValue(0);
+                deployMilitaryTag.Refresh();
             }
             else
             {
                 refTag = deployMilitaryTag;
-                Numpad.SetInputField(refTag.InputField);
             }
         }
     }
@@ -121,7 +118,7 @@ public class DeployMilitaryWindow : BaseWindow
     {
         base.Open();
         Load();
-        refTag?.SetSliderValue(0);
+        refTag?.Refresh();
     }
 
     protected override void Init()
@@ -136,13 +133,6 @@ public class DeployMilitaryWindow : BaseWindow
         tag.MaxQuality = maxQuality;
         tag.Type = type;
         tag.gameObject.SetActive(true);
-        tag.InputField.OnSelectField += delegate { OnInputFieldSelected(tag); };
-    }
-
-    private void OnInputFieldSelected(DeployMilitaryTag tag)
-    {
-        if (tag == refTag)
-            Numpad.OpenNumpad();
     }
 
     private DeployMilitaryTag GetTag()

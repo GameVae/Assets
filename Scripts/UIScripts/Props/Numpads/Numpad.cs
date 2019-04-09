@@ -1,35 +1,22 @@
 ﻿using System;
+using TMPro;
 using UI.Widget;
 using UnityEngine;
 
-public class Numpad : MonoBehaviour
+public class Numpad : Keyboard
 {
     [SerializeField] private int maxLenght;
     [SerializeField] private GUIInteractableIcon[] numbers;
     [SerializeField] private GUIInteractableIcon enterButton;
-    [SerializeField] private GUIInteractableIcon textField;
+    [SerializeField] private TextMeshProUGUI textField;
     [SerializeField] private GUIInteractableIcon backspace;
 
-    private Action<int> onValueChange;
     private Action<int> onEnter;
 
     public event Action<int> OnEnter
     {
         add { onEnter += value; }
         remove { onEnter -= value; }
-    }
-
-    public event Action<int> OnValueChange
-    {
-        add { onValueChange += value; }
-        remove { onValueChange -= value; }
-    }
-
-    public string InputString
-    {
-        get { return textField.Placeholder.text; }
-        private set { textField.Placeholder.text = value; }
-
     }
 
     public int InputInt
@@ -47,9 +34,7 @@ public class Numpad : MonoBehaviour
 
     private void Awake()
     {
-        Open();
         InitalizeNumbers();
-
         backspace.OnClickEvents += OnBackspace;
         enterButton.OnClickEvents += delegate { Close(); };
     }
@@ -68,37 +53,34 @@ public class Numpad : MonoBehaviour
 
     private void OnNumber(int capture)
     {
-        if (InputString.Length <= maxLenght)
+        if (InputString == null || InputString.Length <= maxLenght)
         {
             InputString += capture.ToString();
-            textField.Placeholder.text = InputString;
-
-            onValueChange?.Invoke(InputInt);
+            RefreshNumpadDisplay();
         }
     }
 
     private void OnBackspace()
     {
-        if(InputString.Length > 0)
+        if (InputString != null && InputString.Length > 0)
         {
             InputString = InputString.Remove(InputString.Length - 1);
-            onValueChange?.Invoke(InputInt);
+            RefreshNumpadDisplay();
         }
     }
 
-    public void Close()
+    protected void RefreshNumpadDisplay()
     {
-        gameObject.SetActive(false);
+        textField.text = InputString ?? "0";
     }
 
-    public void Open()
-    {
-        Refresh();
-        gameObject.SetActive(true);
-    }
+    protected override void HandleInput() { }
 
-    public void Refresh()
+    protected override void Active(bool value, InputFieldv2 inputField)
     {
-        InputString = "";
+        base.Active(value, inputField);
+
+        RefreshNumpadDisplay();
+        gameObject.SetActive(value);
     }
 }

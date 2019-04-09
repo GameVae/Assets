@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -2223,18 +2223,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitalizeDB:
-  - Key: 1
-    Value: {fileID: 11400000, guid: c29a9e8656513124ba1af8f29cf09ba7, type: 2}
-  - Key: 16
-    Value: {fileID: 11400000, guid: 5ed5adb73bc9e4948a69b968c8827d5b, type: 2}
-  - Key: 15
-    Value: {fileID: 11400000, guid: 7678bed0ebff6ba41a4fa0d3b926950e, type: 2}
-  - Key: 17
-    Value: {fileID: 11400000, guid: d8384436cb05c7940a95d00a2ff6f3a1, type: 2}
   - Key: 18
     Value: {fileID: 11400000, guid: 5b006a4a2b968ce4bacf31dbbbe5e2c2, type: 2}
   - Key: 19
     Value: {fileID: 11400000, guid: d18fc6b0b42dd11469025449e41808d5, type: 2}
+  - Key: 16
+    Value: {fileID: 11400000, guid: 5ed5adb73bc9e4948a69b968c8827d5b, type: 2}
+  - Key: 17
+    Value: {fileID: 11400000, guid: d8384436cb05c7940a95d00a2ff6f3a1, type: 2}
+  - Key: 15
+    Value: {fileID: 11400000, guid: 7678bed0ebff6ba41a4fa0d3b926950e, type: 2}
+  - Key: 1
+    Value: {fileID: 11400000, guid: c29a9e8656513124ba1af8f29cf09ba7, type: 2}
   InitalizeDBOther:
   - Key: 0
     Value: {fileID: 11400000, guid: 94279d21dc538df4f837c4ae7e4ecf32, type: 2}
@@ -11930,8 +11930,13 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000014337445
+      value: 0.000012383799
       objectReference: {fileID: 0}
+    - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
+        type: 3}
+      propertyPath: ThreadHelper
+      value: 
+      objectReference: {fileID: 713133371}
     - target: {fileID: 1521316941867674, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
       propertyPath: m_IsActive
       value: 0
