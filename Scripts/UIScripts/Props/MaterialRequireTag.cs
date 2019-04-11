@@ -5,5 +5,5 @@ public class MaterialRequireTag : MonoBehaviour
 {
     public SelectableComp SelectableComp;
     public PlaceholderComp Placeholder;
-    public BackgroudComp Icon;
+    public BackgroundComp Icon;
 }

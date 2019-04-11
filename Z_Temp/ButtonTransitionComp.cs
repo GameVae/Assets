@@ -47,5 +47,16 @@ namespace UI.Composites
             }
             return isChanged;
         }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            FindButton();
+        }
+
+        private void FindButton()
+        {
+            button = GetComponent<Button>();
+        }
     }
 }

@@ -3,7 +3,6 @@ public partial class InputFieldv2
 {  
     public abstract partial class ContentValidate
     {
-        private ContentValidate validator;
         protected ContentType type;
 
         public abstract string CheckContent(string str);       
@@ -30,6 +29,20 @@ public partial class InputFieldv2
                 }
             }
             return temp;
+        }
+    }
+
+    [System.Serializable]
+    public class TextValidate : ContentValidate
+    {
+        public TextValidate()
+        {
+            type = ContentType.Text;
+        }
+
+        public override string CheckContent(string str)
+        {
+            return str;
         }
     }
 }

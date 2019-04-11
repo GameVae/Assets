@@ -56,11 +56,22 @@ namespace UI.Composites
             }
             return base.ConfirmOffset(); ;
         }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            FindPlaceholder();
+        }
+
+        private void FindPlaceholder()
+        {
+            placeholder = FindTypeWithCustomMask<TextMeshProUGUI>(CustomLayerMask.CustomMask.Placeholder);
+        }
     }
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(PlaceholderComp), true)]
+[CustomEditor(typeof(PlaceholderComp))]
 public class EditorPlaceholder : EditorUIComposite
 {
     private PlaceholderComp owner;

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64dfa078857d76649ad009915a747a12, type: 3}
+  m_Name: TST_GuildWindow_Group
+  m_EditorClassIdentifier: 
+  ActiveSprite: {fileID: 21300000, guid: c6aeaed872aa042a38ca56e6f552da09, type: 3}
+  UnActiveSprite: {fileID: 21300000, guid: 5fa23b156addd4748b9d35efac048f2f, type: 3}

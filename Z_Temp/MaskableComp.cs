@@ -51,11 +51,22 @@ namespace UI.Composites
             }
         }
 
+        public override void Refresh()
+        {
+            base.Refresh();
+            FindComponent();
+        }
+
+        private void FindComponent()
+        {
+            maskImg = GetComponent<Image>();
+            mask = GetComponent<Mask>();
+        }
     }
 }
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(MaskableComp), true)]
+[CustomEditor(typeof(MaskableComp),false)]
 public class EditorMaskable : EditorUIComposite
 {
     private MaskableComp owner;
@@ -75,18 +86,20 @@ public class EditorMaskable : EditorUIComposite
     {
         sprite = EditorGUILayout.ObjectField("Mask Sprite:", sprite, typeof(Sprite), true) as Sprite;
         showTargetGraphic = EditorGUILayout.Toggle("Show Mask Graphic", owner.ShowTargetGraphic);
-
+        bool isChanged = false;
         if (sprite != owner.Sprite)
         {
             owner.Sprite = sprite;
-            EditorUtility.SetDirty(owner.Sprite);
+            isChanged = true;
         }
 
         if (showTargetGraphic != owner.ShowTargetGraphic)
         {
             owner.ShowTargetGraphic = showTargetGraphic;
-            EditorUtility.SetDirty(owner.Mask);
+            isChanged = true;
         }
+        if (isChanged)
+            EditorUtility.SetDirty(owner);
     }
 }
 #endif

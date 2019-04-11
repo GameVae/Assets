@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: bd5879090328dcd4e8270be4c528ad53
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ToggleSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

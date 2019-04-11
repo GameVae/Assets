@@ -39,25 +39,51 @@ namespace UI.Composites
         /// </summary>
         /// <returns>Determine whether something changed</returns>
         public virtual bool ConfirmOffset() { return false; }
+
+        public virtual void Refresh() { }
+
+#if UNITY_EDITOR
+        protected bool unactiveModify;
+        public bool UnActiveModify
+        {
+            get { return unactiveModify; }
+            set { unactiveModify = value; }
+        }
+#endif
+
     }
 }
 
 #if UNITY_EDITOR
+[CanEditMultipleObjects]
 [CustomEditor(typeof(GUIComposite), true)]
-public abstract class EditorUIComposite : Editor
+public class EditorUIComposite : Editor
 {
+    private GUIComposite owner;
     protected virtual void OnEnable()
     {
-        bool changed = (target as GUIComposite).ConfirmOffset();
-        EditorUtility.SetDirty(target);
+        owner = target as GUIComposite;
+        bool changed = owner.ConfirmOffset();
+        //if (changed)
+        //    EditorUtility.SetDirty(target);
     }
 
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+        RefreshButton();
+
+        EditorGUI.BeginDisabledGroup(owner.UnActiveModify);
         Draw();
+        EditorGUI.EndDisabledGroup();
     }
 
-    protected abstract void Draw();
+    protected virtual void Draw() { }
+
+    private void RefreshButton()
+    {
+        if (GUILayout.Button("Refresh"))
+            owner.Refresh();
+    }
 }
 #endif

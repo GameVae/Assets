@@ -11,6 +11,8 @@ public class ContentValidateProvider : ISingleton
         {
             case ContentType.Interger:
                 return new IntergerValidate();
+            case ContentType.Text:
+                return new TextValidate();
             default:
                 return null;
         }

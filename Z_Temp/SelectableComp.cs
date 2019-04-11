@@ -9,11 +9,11 @@ using UnityEngine.UI;
 
 namespace UI.Composites
 {
-    [RequireComponent(typeof(Button), typeof(BackgroudComp), typeof(ButtonTransitionComp))]
+    [RequireComponent(typeof(Button), typeof(BackgroundComp))]
     public class SelectableComp : GUIComposite
     {
-        [SerializeField, HideInInspector] private Button button;
-        [SerializeField, HideInInspector] private BackgroudComp background;
+        private Button button;
+        private BackgroundComp background;
         [SerializeField, HideInInspector] private Button.ButtonClickedEvent onClick;
 
         public event UnityAction OnClickEvents
@@ -41,9 +41,9 @@ namespace UI.Composites
             }
         }
 
-        public BackgroudComp Background
+        public BackgroundComp Background
         {
-            get { return background ?? (background = GetComponent<BackgroudComp>()); }
+            get { return background ?? (background = GetComponent<BackgroundComp>()); }
         }
 
         private void Awake()
@@ -62,12 +62,29 @@ namespace UI.Composites
             }
             return base.ConfirmOffset();
         }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            FindComponent();
+        }
+
+        public void RemoveAllListener()
+        {
+            onClick.RemoveAllListeners();
+        }
+
+        private void FindComponent()
+        {
+            button = GetComponent<Button>();
+            background = GetComponent<BackgroundComp>();
+        }
     }
 }
 
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(SelectableComp), true)]
+[CustomEditor(typeof(SelectableComp))]
 public class EditorSelectable : EditorUIComposite
 {
     private SelectableComp owner;

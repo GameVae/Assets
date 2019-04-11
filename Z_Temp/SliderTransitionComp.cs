@@ -7,11 +7,11 @@ namespace UI.Composites
     [RequireComponent(typeof(Slider))]
     public class SliderTransitionComp : TransitionComp
     {
-        [SerializeField, HideInInspector] private Slider button;
+        [SerializeField, HideInInspector] private Slider slider;
 
         public Slider Slider
         {
-            get { return button ?? (button = GetComponent<Slider>()); }
+            get { return slider ?? (slider = GetComponent<Slider>()); }
         }
 
         public override Transition Transition
@@ -46,6 +46,17 @@ namespace UI.Composites
                 }
             }
             return isChanged;
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            FindSlider();
+        }
+
+        private void FindSlider()
+        {
+            slider = GetComponent<Slider>();
         }
     }
 }

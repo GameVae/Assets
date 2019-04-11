@@ -137,6 +137,10 @@ public partial class InputFieldv2 : MonoBehaviour
 
     private void OpenKeyboard()
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (keyboardType == Keyboard.KeyboardType.Standalone)
+            keyboardType = Keyboard.KeyboardType.MobileNative;
+#endif
         keyboard = Provider.GetKeyboard(keyboardType);
         keyboard?.Open(this);
     }
