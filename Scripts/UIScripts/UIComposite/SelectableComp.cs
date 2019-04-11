@@ -85,7 +85,7 @@ namespace UI.Composites
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(SelectableComp))]
-public class EditorSelectable : EditorUIComposite
+public class EditorSelectable : EditorComposite
 {
     private SelectableComp owner;
     private SerializedProperty onClickEvents;

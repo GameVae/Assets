@@ -57,7 +57,7 @@ namespace UI.Composites
 #if UNITY_EDITOR
 [CanEditMultipleObjects]
 [CustomEditor(typeof(GUIComposite), true)]
-public class EditorUIComposite : Editor
+public class EditorComposite : Editor
 {
     private GUIComposite owner;
     protected virtual void OnEnable()

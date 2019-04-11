@@ -110,7 +110,7 @@ namespace UI.Composites
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ToggleGroupComp))]
-public class EditorToggleGroup : EditorUIComposite
+public class EditorToggleGroup : EditorComposite
 {
     protected override void Draw()
     {

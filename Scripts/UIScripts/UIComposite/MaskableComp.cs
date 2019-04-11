@@ -67,7 +67,7 @@ namespace UI.Composites
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(MaskableComp),false)]
-public class EditorMaskable : EditorUIComposite
+public class EditorMaskable : EditorComposite
 {
     private MaskableComp owner;
 

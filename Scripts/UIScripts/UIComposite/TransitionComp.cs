@@ -20,7 +20,7 @@ namespace UI.Composites
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(TransitionComp), true)]
-public class EditorTransitionComp : EditorUIComposite
+public class EditorTransitionComp : EditorComposite
 {
     private TransitionComp owner;
     private Transition transition;

@@ -72,7 +72,7 @@ namespace UI.Composites
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(PlaceholderComp))]
-public class EditorPlaceholder : EditorUIComposite
+public class EditorPlaceholder : EditorComposite
 {
     private PlaceholderComp owner;
     private bool isChanged;

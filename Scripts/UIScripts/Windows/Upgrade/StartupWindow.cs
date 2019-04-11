@@ -1,6 +1,5 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
-using Json.Interface;
 using ManualTable.Interface;
 using ManualTable.Row;
 using System.Reflection;

@@ -43,7 +43,7 @@ namespace UI.Composites
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(BackgroundComp))]
-public class EditorBackground : EditorUIComposite
+public class EditorBackground : EditorComposite
 {
     private BackgroundComp owner;
     private Sprite bgSprite;

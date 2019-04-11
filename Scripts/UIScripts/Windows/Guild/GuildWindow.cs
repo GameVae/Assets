@@ -7,7 +7,7 @@ public class GuildWindow : WindowToggleGroup
 {
     [Header("Test")]
     public GameObject[] Windows;
-    private GameObject activeWindow;
+    private GameObject testActiveWindow;
 
     protected override void Init()
     {
@@ -17,8 +17,8 @@ public class GuildWindow : WindowToggleGroup
     private void OnTogglesSelected(ToggleComp toggle)
     {
         int index = toggles.Toggles.IndexOf(toggle);
-        activeWindow?.SetActive(false);
-        activeWindow = Windows[index];
-        activeWindow.SetActive(true);
+        testActiveWindow?.SetActive(false);
+        testActiveWindow = Windows[index];
+        testActiveWindow.SetActive(true);
     }
 }

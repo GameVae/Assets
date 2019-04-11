@@ -84,4 +84,15 @@ namespace EnumCollect
     {
         Base,
     }
+
+    public enum AgentStatus
+    {
+        Base = 0,
+        Move,
+        Attack_Unit,
+        Attack_Base,
+        Attacked,
+        Gathering,
+        Standby
+    }
 }

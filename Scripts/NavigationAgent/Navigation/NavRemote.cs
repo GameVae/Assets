@@ -65,7 +65,7 @@ namespace Entities.Navigation
 
         private void SyncPosition()
         {
-            if (UnitData.Next_Cell.SerPositionValidate())
+            if (UnitData.AgentStatus == AgentStatus.Move)
             {
                 string json = JsonUtility.ToJson(UnitData);
                 JSONObject moveData = new JSONObject(json);

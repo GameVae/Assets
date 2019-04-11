@@ -357,6 +357,11 @@ namespace ManualTable.Row
         public int Attack_Unit_ID;
         public bool AttackedBool;
 
+        public AgentStatus AgentStatus
+        {
+            get { return (AgentStatus)Status; }
+        }
+
         public int CompareTo(object obj)
         {
             if (obj.GetType() == typeof(UnitRow))
