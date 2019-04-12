@@ -11,6 +11,7 @@ public class PingInfo : MonoBehaviour
         if (Conn.IsServerConnected)
         {
             PingText.text = "Ping: " + (float)System.Math.Round(Conn.Ping, 3) * 1000.0f + " ms";
+            PingText.text += "\n FPS: " + Mathf.RoundToInt(1.0f / Time.deltaTime);
         }
     }
 }

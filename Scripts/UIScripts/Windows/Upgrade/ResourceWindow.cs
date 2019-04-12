@@ -86,7 +86,7 @@ public class ResourceWindow : BaseWindow,IWindowGroup
 
     private void OnBtnElement(ListUpgrade type)
     {
-        MainBaseTable table = Singleton.Instance<DBReference>()[type] as MainBaseTable;
+        SQLiteTable_MainBase table = Singleton.Instance<DBReference>()[type] as SQLiteTable_MainBase;
         if (table == null) return;
 
         int[] need;

@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,6 +13,15 @@ MonoBehaviour:
   m_Name: UserInfo Table
   m_EditorClassIdentifier: 
   Rows:
+  - ID_User: 9
+    Server_ID: 
+    NameInGame: Mquan
+    ChatWorldColor: FFFFFF
+    Guild_ID: 13
+    Guild_Name: 
+    LastGuildID: 
+    Might: 402
+    Killed: 0
   - ID_User: 42
     Server_ID: 1
     NameInGame: ndinhtoan45
@@ -19,5 +29,23 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 1271
+    Might: 12022
+    Killed: 0
+  - ID_User: 43
+    Server_ID: 
+    NameInGame: ndinhtoan44
+    ChatWorldColor: FFFFFF
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 1242
+    Killed: 0
+  - ID_User: 44
+    Server_ID: 
+    NameInGame: ndinhtoan46
+    ChatWorldColor: FFFFFF
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 0
     Killed: 0

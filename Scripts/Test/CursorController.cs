@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class CursorController : MonoBehaviour
 {
     private NestedCondition selectConditions;
-    private UnityAction selectedCallback;
+    private UnityAction<Vector3Int> selectedCallback;
 
     private UnityEventSystem eventSystem;
     private CrossInput crossInput;
@@ -20,7 +20,7 @@ public class CursorController : MonoBehaviour
     public CameraController CameraController;
     private Camera CameraRaycaster;
 
-    public event UnityAction SelectedCallback
+    public event UnityAction<Vector3Int> SelectedCallback
     {
         add     { selectedCallback += value; }
         remove  { selectedCallback -= value; }
@@ -75,15 +75,15 @@ public class CursorController : MonoBehaviour
                 DetermineSelectedOnTower();
                 DetermineSelectedOnRSS(hitInfo);
 
-                selectedCallback?.Invoke();
+                selectedCallback?.Invoke(SelectedPosition);
             }
         }
     }
 
-    private void UpdateCursor()
+    private void UpdateCursor(Vector3Int position)
     {
-        Cursor.PositionCursor.SetPosTxt(SelectedPosition.x.ToString(), SelectedPosition.y.ToString());
-        Cursor.updateCursor(MapIns.CellToWorld(SelectedPosition));
+        Cursor.PositionCursor.SetPosTxt(position.x.ToString(), position.y.ToString());
+        Cursor.updateCursor(MapIns.CellToWorld(position));
     }
     private void DetermineSelectedOnTower()
     {

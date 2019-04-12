@@ -34,7 +34,7 @@ namespace ManualTable.SQL
             }
         }
 
-        public void LoadTable<T>(ManualTableBase<T> table) where T : IManualRow, new()
+        public void LoadTable<T>(SQLiteTable<T> table) where T : IManualRow, new()
         {
             try
             {

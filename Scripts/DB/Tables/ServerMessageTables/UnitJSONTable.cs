@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ManualTable
 {
     [CreateAssetMenu(fileName = "New Unit Table", menuName = "SQLiteTable/Unit JSONTable", order = 12)]
-    public sealed class UnitJSONTable : ManualTableJSON<UnitRow>
+    public sealed class UnitJSONTable : JSONTable<UnitRow>
     {
         private void Sort()
         {

@@ -25,7 +25,7 @@ public class TestObj : MonoBehaviour
 
     [Header("Test SQL")]
     public SQLiteManualConnection DBConn;
-    public MainBaseTable table;
+    public SQLiteTable_MainBase table;
 
     [Header("Test Ser Event")]
     public EventListenersController events;
@@ -284,7 +284,7 @@ public class TestObj : MonoBehaviour
         }
     }
 
-    private void LoadRowForTable<T>(ManualTableJSON<T> table, T value)
+    private void LoadRowForTable<T>(JSONTable<T> table, T value)
         where T : IManualRow
     {
         table.Rows.Add(value);

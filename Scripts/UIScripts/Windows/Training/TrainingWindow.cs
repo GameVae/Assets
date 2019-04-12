@@ -279,7 +279,7 @@ public class TrainingWindow : BaseWindow
         refType = SyncData.CurrentBaseUpgrade[type];
         ITable dbTable = dBReference[selectedType];
 
-        TrainningCostTable costTable = dBReference[DBType.TrainningCost] as TrainningCostTable;
+        SQLiteTable_TrainningCost costTable = dBReference[DBType.TrainningCost] as SQLiteTable_TrainningCost;
 
 
         refTypeTraining = dbTable[SyncData.CurrentBaseUpgrade[selectedType].Level - 1];

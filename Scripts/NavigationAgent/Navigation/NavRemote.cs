@@ -1,6 +1,7 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
 using ManualTable.Row;
+using Network.Data;
 using UnityEngine;
 
 namespace Entities.Navigation
@@ -11,8 +12,10 @@ namespace Entities.Navigation
 
         private NavAgent navAgent;
         private FixedMovement fixedMove;
-
         private UserInfoRow owner;
+        private AgentAttack agentAttack;
+        private CursorController cursorController;
+        private AgentNodeManager agentNodes;
 
         private NavAgentController NavAgentCtrl
         {
@@ -36,12 +39,36 @@ namespace Entities.Navigation
                     return FixedMove;
             }
         }
-
         public UnitRow UnitData;
+
+        public AgentNodeManager AgentNodes
+        {
+            get { return agentNodes ?? (agentNodes = Singleton.Instance<GlobalNodeManager>().AgentNode); }
+        }
+        public UserInfoRow UserInfo
+        {
+            get { return owner; }
+        }
+        public CursorController CursorController
+        {
+            get { return cursorController ?? (cursorController = FindObjectOfType<CursorController>()); }
+        }
 
         public ListUpgrade Type;
         public AgentLabel Label;
         public NavOffset Offset;
+        public AgentAttack AgentAttack
+        {
+            get
+            {
+                if (agentAttack == null)
+                {
+                    agentAttack = GetComponent<AgentAttack>();
+
+                }
+                return agentAttack ?? (agentAttack = gameObject.AddComponent<AgentAttack>());
+            }
+        }
 
         public int AgentID
         {
@@ -60,7 +87,7 @@ namespace Entities.Navigation
 
         private void Start()
         {
-            SyncPosition();
+            SyncPosition();           
         }
 
         private void SyncPosition()
@@ -89,7 +116,19 @@ namespace Entities.Navigation
             owner = user;
             IsOwner = isOwner;
 
-            Label.SetInfo(data, user,isOwner);
+            Label.SetInfo(data, user, isOwner);
+        }
+
+        public void Attack(Vector3Int position)
+        {
+            if (!MainNavAgent.IsMoving)
+            {
+                if (AgentNodes.GetInfo(position, out NodeInfo info))
+                {
+                    JSONObject attackData = AgentAttack.S_ATTACK(info.GameObject.GetComponent<NavRemote>());
+                    Singleton.Instance<EventListenersController>().Emit("S_ATTACK", attackData);
+                }
+            }
         }
     }
 }

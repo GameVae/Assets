@@ -186,6 +186,7 @@ MonoBehaviour:
   placeholder: {fileID: 5146404402088233202}
   textField: {fileID: 5146404400689177588}
   keyboardType: 2
+  contentType: 0
 --- !u!114 &5146404400455839702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,8 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bfe5f6847c7f4384b3988a521805a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 5146404400455839702}
-  background: {fileID: 5146404400455839701}
   onClick:
     m_PersistentCalls:
       m_Calls: []
@@ -406,7 +405,7 @@ MonoBehaviour:
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
-  m_isRichText: 1
+  m_isRichText: 0
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

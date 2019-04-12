@@ -12,7 +12,8 @@ namespace Entities.Navigation
         private CrossInput crossInput;
         private UnityEventSystem eventSystem;
         private SIO_MovementListener moveEvent;
-
+        private AgentNodeManager agentNodes;
+             
         private Vector3Int startCell;
         private Vector3Int endCell;
         private bool isDisable;
@@ -24,6 +25,10 @@ namespace Entities.Navigation
         public CursorController CursorController;
 
         public NavAgent CurrentAgent { get; private set; }
+        public AgentNodeManager AgentNodes
+        {
+            get { return agentNodes ?? (agentNodes = Singleton.Instance<GlobalNodeManager>().AgentNode); }
+        }
 
         public event System.Func<bool> MoveConditions
         {
@@ -36,7 +41,6 @@ namespace Entities.Navigation
             }
             remove { moveConditions.Conditions -= value; }
         }
-
         protected override void Awake()
         {
             base.Awake();
@@ -89,13 +93,21 @@ namespace Entities.Navigation
             {
                 return crossInput.IsTouch && !isDisable;
             };
+            MoveConditions += IsTargetEmpty;
         }
 
-        private void OnCursorSelected()
+        private bool IsTargetEmpty()
+        {
+            Vector3Int position = CursorController.SelectedPosition;
+            if (AgentNodes.IsHolding(position)) return false;
+            return true;
+        }
+
+        private void OnCursorSelected(Vector3Int position)
         {
             if (moveConditions.Evaluate())
             {
-                Vector3Int selected = CursorController.SelectedPosition;
+                Vector3Int selected = position;
 
                 if (!mapIns.IsValidCell(selected.x, selected.y) ||
                     selected == CurrentAgent.CurrentPosition ||
@@ -107,6 +119,13 @@ namespace Entities.Navigation
                 endCell = selected;
                 startCell = CurrentAgent.CurrentPosition;
                 AgentStartMove(startCell, endCell);
+            }
+            else
+            {
+                if(!IsTargetEmpty())
+                {
+                    CurrentAgent.Remote.Attack(CursorController.SelectedPosition);
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ namespace ManualTable.Loader
         public string ServerVersion;
         public SQLiteManualConnection SQLDataConnection;
         public SQLiteManualConnection SQLVersionConnection;
-        public VersionTable Version;
+        public SQLiteTable_Version Version;
         public TableContainer[] Containers;
 
         private void Awake()
@@ -50,16 +50,16 @@ namespace ManualTable.Loader
             switch (ManualRowType)
             {
                 case DBRowType.MainBase:
-                    SQLDataConnection.LoadTable(Cast<MainBaseTable>(TableData));
+                    SQLDataConnection.LoadTable(Cast<SQLiteTable_MainBase>(TableData));
                     break;
                 case DBRowType.Military:
-                    SQLDataConnection.LoadTable(Cast<MilitaryTable>(TableData));
+                    SQLDataConnection.LoadTable(Cast<SQLiteTable_Military>(TableData));
                     break;
                 case DBRowType.Version:
-                    SQLVersionConnection.LoadTable(Cast<VersionTable>(TableData));
+                    SQLVersionConnection.LoadTable(Cast<SQLiteTable_Version>(TableData));
                     break;
                 case DBRowType.TrainningCost:
-                    SQLDataConnection.LoadTable(Cast<TrainningCostTable>(TableData));
+                    SQLDataConnection.LoadTable(Cast<SQLiteTable_TrainningCost>(TableData));
                     break;
             }
         }
