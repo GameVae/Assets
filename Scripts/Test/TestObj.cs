@@ -1,9 +1,9 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Interface;
-using ManualTable.Row;
-using ManualTable.SQL;
+using DataTable;
+using DataTable;
+using DataTable.Row;
+using DataTable.SQL;
 using Network.Data;
 using System;
 using Json;
@@ -30,9 +30,9 @@ public class TestObj : MonoBehaviour
     [Header("Test Ser Event")]
     public EventListenersController events;
     public SIO_LoginListener loginEvent;
-    public PositionJSONTable rss_table1;
-    public PositionJSONTable rss_table2;
-    public PositionJSONTable rss_table3;
+    public JSONTable_Position rss_table1;
+    public JSONTable_Position rss_table2;
+    public JSONTable_Position rss_table3;
 
     public MultiThreadHelper ThreadHelper;
     //void Update()
@@ -173,7 +173,7 @@ public class TestObj : MonoBehaviour
         table.SQLInsert(DBConn.DbConnection, r);
     }
 
-    private void RefectionTest(IManualRow manualRow)
+    private void RefectionTest(ITableData manualRow)
     {
         Debug.Log(Singleton.Instance<SQLiteHelper>().CreateUpdateValuesFrom(manualRow));
     }
@@ -285,7 +285,7 @@ public class TestObj : MonoBehaviour
     }
 
     private void LoadRowForTable<T>(JSONTable<T> table, T value)
-        where T : IManualRow
+        where T : ITableData
     {
         table.Rows.Add(value);
     }

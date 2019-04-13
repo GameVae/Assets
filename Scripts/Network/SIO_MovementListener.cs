@@ -1,7 +1,7 @@
 ﻿using Entities.Navigation;
 using EnumCollect;
 using Generic.Singleton;
-using ManualTable.Row;
+using DataTable.Row;
 using SocketIO;
 using System.Collections.Generic;
 using System.Linq;

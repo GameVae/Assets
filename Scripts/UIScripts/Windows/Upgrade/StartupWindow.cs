@@ -1,7 +1,7 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
-using ManualTable.Interface;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using System.Reflection;
 using UI.Widget;
 using UnityEngine;
@@ -100,7 +100,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[upgRef.ID];
 
-            IManualRow upgInfo = table[upgRef.Level - 1];
+            ITableData upgInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetPublicField<int>(upgInfo, "TimeInt");
             UpgProgBar.Slider.MaxValue = timeInt;
         }
@@ -109,7 +109,7 @@ public class StartupWindow : BaseWindow, IWindowGroup
         {
             table = WDOCtrl[resRef.ID];
 
-            IManualRow resInfo = table[upgRef.Level - 1];
+            ITableData resInfo = table[upgRef.Level - 1];
             int timeInt = fieldReflection.GetPublicField<int>(resInfo, "TimeInt");
             ResProgBar.Slider.MaxValue = timeInt;
         }

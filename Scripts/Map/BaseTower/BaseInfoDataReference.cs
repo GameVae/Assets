@@ -1,5 +1,5 @@
 ﻿using Generic.Singleton;
-using ManualTable;
+using DataTable;
 using Map;
 using Network.Sync;
 using System.Collections;
@@ -12,7 +12,7 @@ public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
     public TowerSpawnManager TowerSpawner;
     public PlayerInfo Player;
 
-    private BasePlayerJSONTable basePlayer;
+    private JSONTable_BasePlayer basePlayer;
 
     private void Start()
     {

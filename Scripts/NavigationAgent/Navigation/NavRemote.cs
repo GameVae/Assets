@@ -1,6 +1,6 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
-using ManualTable.Row;
+using DataTable.Row;
 using Network.Data;
 using UnityEngine;
 

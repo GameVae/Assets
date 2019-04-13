@@ -1,6 +1,6 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
-using ManualTable.Row;
+using DataTable.Row;
 using Network.Data;
 using System.Collections;
 using System.Collections.Generic;

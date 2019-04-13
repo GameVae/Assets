@@ -2,8 +2,8 @@
 using EnumCollect;
 using Generic.Singleton;
 
-using ManualTable.Interface;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using System.Collections.Generic;
 using System.Reflection;
 using UI.Widget;
@@ -146,7 +146,7 @@ namespace UI
             if (type.IsDefined())
             {
                 int level = SyncData.CurrentBaseUpgrade[type].Level;
-                IManualRow data = dbRef[type][level - 1];
+                ITableData data = dbRef[type][level - 1];
                 int trainingTime = fieldReflection.GetFieldValue<int>(data, "TrainingTime", BindingFlags.Public | BindingFlags.Instance);
                 return trainingTime * baseInfo.TrainingQuality;
             }
@@ -191,7 +191,7 @@ namespace UI
             if (type.IsDefined())
             {
                 int level = SyncData.CurrentBaseUpgrade[type].Level;
-                IManualRow data = dbRef[type][level - 1];
+                ITableData data = dbRef[type][level - 1];
                 int upgradeTime = fieldReflection.GetPublicField<int>(data, "TimeInt");
                 return upgradeTime;
             }
@@ -236,7 +236,7 @@ namespace UI
             if (type.IsDefined())
             {
                 int level = SyncData.CurrentBaseUpgrade[type].Level;
-                IManualRow data = dbRef[type][level - 1];
+                ITableData data = dbRef[type][level - 1];
                 return fieldReflection.GetPublicField<int>(data, "TimeInt");             
             }
             return 0;

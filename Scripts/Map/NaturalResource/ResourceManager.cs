@@ -1,5 +1,5 @@
 ﻿using Generic.Singleton;
-using ManualTable;
+using DataTable;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +14,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
     private Dictionary<int, NaturalResource> Resources;
 
-    public RSS_PositionJSONTable Datas;
+    public JSONTable_RSSPosition Datas;
     public Transform Prefab;
 
     public NaturalResource this[int id]

@@ -1,11 +1,11 @@
 ﻿using EnumCollect;
-using ManualTable.Row;
+using DataTable.Row;
 using System.Linq;
 using UnityEngine;
 
-namespace ManualTable
+namespace DataTable
 {
-    [CreateAssetMenu(fileName = "New TranningCost Table", menuName = "SQLiteTable/TranningCost", order = 12)]
+    [CreateAssetMenu(fileName = "New TranningCost Table", menuName = "DataTable/SQLiteTable/TranningCost", order = 3)]
     public class SQLiteTable_TrainningCost : SQLiteTable<TrainningCostRow>
     {
         public TrainningCostRow this[ListUpgrade type]

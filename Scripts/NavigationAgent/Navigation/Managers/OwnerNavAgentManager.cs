@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using Network.Data;
 using SocketIO;
 using System.Collections.Generic;

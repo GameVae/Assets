@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
-using ManualTable;
-using ManualTable.Loader;
+using DataTable;
+using DataTable.Loader;
 using SocketIO;
 using System;
 using System.Collections;
@@ -95,7 +95,6 @@ public class VersionGame : MonoSingle<VersionGame>
 
     private void ReloadDB()
     {
-        Loader.InitSQLConnection();
         Loader.ReloadData();
     }
 

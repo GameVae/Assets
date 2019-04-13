@@ -1,13 +1,10 @@
 ﻿using EnumCollect;
-using Json;
-using ManualTable.Interface;
 using Network.Sync;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace ManualTable.Row
+namespace DataTable.Row
 {
     public enum DBRowType
     {
@@ -18,7 +15,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public sealed class TrainningCostRow : IManualRow
+    public sealed class TrainningCostRow : ISQLiteData
     {
         public int ID;
         public ListUpgrade ID_Unit;
@@ -35,7 +32,7 @@ namespace ManualTable.Row
 
     #region DB row
     [System.Serializable]
-    public class MainBaseRow : IManualRow
+    public class MainBaseRow : ISQLiteData
     {
         public int Level;
         public int MightBonus;
@@ -51,7 +48,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class VersionRow : IManualRow
+    public class VersionRow : ISQLiteData
     {
         public int Id;
         public string Task;
@@ -60,7 +57,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class MilitaryRow : IManualRow
+    public class MilitaryRow : ISQLiteData
     {
         public int Level;
         public int TrainingTime;
@@ -84,7 +81,7 @@ namespace ManualTable.Row
     //======================================//
 
     [System.Serializable]
-    public class RSS_PositionRow : IManualRow
+    public class RSS_PositionRow : ITableData
     {
         public int ID;
         public int RssType;
@@ -101,7 +98,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class PositionRow : IManualRow
+    public class PositionRow : ITableData
     {
         public int ID;
         public string Position_Transform;
@@ -111,9 +108,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseUpgradeRow : IManualRow
+    public class BaseUpgradeRow : ITableData
     {
-
         public ListUpgrade ID;
         public string Name_Upgrade;
         public int Level;
@@ -121,9 +117,8 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseInfoRow : IManualRow
+    public class BaseInfoRow : ITableData
     {
-
         public int ID_User;
         public int BaseNumber;
         public string Position;
@@ -232,7 +227,7 @@ namespace ManualTable.Row
         private void ResearchDone(Sync sync)
         {
             UserInfoRow user = sync.MainUser;
-            BaseUpgradeJSONTable baseUpgrade = sync.CurrentBaseUpgrade;
+            JSONTable_BaseUpgrade baseUpgrade = sync.CurrentBaseUpgrade;
 
             baseUpgrade[ResearchWait_ID].Level++;
             user.Might += ResearchWait_Might;
@@ -241,7 +236,7 @@ namespace ManualTable.Row
         private void UpgradeDone(Sync sync)
         {
             UserInfoRow user = sync.MainUser;
-            BaseUpgradeJSONTable baseUpgrade = sync.CurrentBaseUpgrade;
+            JSONTable_BaseUpgrade baseUpgrade = sync.CurrentBaseUpgrade;
 
             baseUpgrade[UpgradeWait_ID].Level++;
             user.Might += UpgradeWait_Might;
@@ -251,7 +246,7 @@ namespace ManualTable.Row
         private void TrainingDone(Sync sync)
         {
             UserInfoRow user = sync.MainUser;
-            BaseDefendJSONTable baseDefend = sync.CurrentBaseDefend;
+            JSONTable_BaseDefend baseDefend = sync.CurrentBaseDefend;
             BaseDefendRow defendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == TrainingUnit_ID);
 
             if (defendRow == null)
@@ -300,7 +295,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UserInfoRow : IManualRow, IComparable
+    public class UserInfoRow : ITableData, System.IComparable
     {
         public int ID_User;
         public string Server_ID;
@@ -327,7 +322,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BaseDefendRow : IManualRow
+    public class BaseDefendRow : ITableData
     {
         public int ID;
         public int BaseNumber;
@@ -336,7 +331,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class UnitRow : IManualRow, IComparable
+    public class UnitRow : ITableData, System.IComparable
     {
         public int ID;
         public ListUpgrade ID_Unit;
@@ -377,7 +372,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class MoveStep : IManualRow
+    public class MoveStep : ITableData
     {
         public string Position_Cell;
         public string Next_Cell;
@@ -402,7 +397,7 @@ namespace ManualTable.Row
     }
 
     [System.Serializable]
-    public class BasePlayerRow : IManualRow
+    public class BasePlayerRow : ITableData
     {
         public int ID_User;
         public string NameInGame;

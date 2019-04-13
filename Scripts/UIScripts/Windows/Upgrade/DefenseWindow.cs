@@ -2,9 +2,9 @@
 using UI.Widget;
 using static WindowManager;
 using EnumCollect;
-using ManualTable;
+using DataTable;
 using DB;
-using ManualTable.Row;
+using DataTable.Row;
 using System.Linq;
 using Generic.Singleton;
 

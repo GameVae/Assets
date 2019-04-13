@@ -1,4 +1,4 @@
-﻿using ManualTable.Row;
+﻿using DataTable.Row;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

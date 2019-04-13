@@ -1,7 +1,7 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using Network.Data;
 using SocketIO;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class SelectAgentPanel : MonoBehaviour
 {
-    public UnitJSONTable Units;
+    public JSONTable_Unit Units;
     public GUIInteractableIcon Prefab;
     public RectTransform ScrollViewContent;
     public GUIInteractableIcon OpenButton;

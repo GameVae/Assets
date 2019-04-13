@@ -1,8 +1,8 @@
-﻿using ManualTable;
+﻿using DataTable;
 using UI.Widget;
 using System.Collections.Generic;
 using UnityEngine;
-using ManualTable.Interface;
+using DataTable;
 using EnumCollect;
 using Network.Sync;
 using DB;

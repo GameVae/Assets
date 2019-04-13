@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using Network.Sync;
 using UnityEngine;
 
@@ -11,8 +11,8 @@ public class BaseDefendController : MonoBehaviour
     public HexMap Map;
     public Sync SyncData;
 
-    private BaseDefendJSONTable[] baseDefends;
-    private BaseInfoJSONTable baseInfo;
+    private JSONTable_BaseDefend[] baseDefends;
+    private JSONTable_BaseInfo baseInfo;
 
     private void Start()
     {

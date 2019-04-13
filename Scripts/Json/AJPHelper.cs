@@ -4,7 +4,7 @@ namespace Json
 {
     // ASYNC JSON PARSE HELPER
     // Pattern: Factory
-    public class AJPHelper : ISingleton
+    public sealed class AJPHelper : ISingleton
     {
         private AJPHelper() { }
 

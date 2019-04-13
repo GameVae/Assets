@@ -1,6 +1,6 @@
 ﻿using EnumCollect;
 using Generic.Singleton;
-using ManualTable.Interface;
+using DataTable;
 using System.Collections.Generic;
 using UnityEngine;
 

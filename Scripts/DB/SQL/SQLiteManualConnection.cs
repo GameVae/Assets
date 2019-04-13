@@ -1,41 +1,33 @@
 ﻿using UnityEngine;
 using System.Data;
 using Mono.Data.Sqlite;
-using System.IO;
 using System;
-using ManualTable.Interface;
 
-
-namespace ManualTable.SQL
+namespace DataTable.SQL
 {
     public class SQLiteManualConnection : MonoBehaviour, IDisposable
     {
+        [SerializeField] private string DBPath;
         public SqliteConnection DbConnection { get; private set; }
 
-        public string DBPath;
+        private bool inited = false;
+        private string connString;
 
-        private string ConnectionString;
-
-        private void Awake()
+        private void Initalize()
         {
-            Init();
-        }
-
-        public void Init()
-        {
-            if(ConnectionString == null)
+            if (!inited)
             {
                 DBPath = Application.dataPath + DBPath;
-                ConnectionString = "URI=file:" + DBPath;
-            }
-            if (DbConnection == null)
-            {
-                DbConnection = new SqliteConnection(ConnectionString);
+                connString = "URI=file:" + DBPath;
+                DbConnection = new SqliteConnection(connString);
+
+                inited = true;
             }
         }
 
-        public void LoadTable<T>(SQLiteTable<T> table) where T : IManualRow, new()
+        public void LoadTable<T>(SQLiteTable<T> table) where T : ISQLiteData, new()
         {
+            Initalize();
             try
             {
                 DbConnection.Open();
@@ -48,10 +40,8 @@ namespace ManualTable.SQL
                         table.Clear();
                         if (reader.Read())
                         {
-                            // LoadColumns(reader, table);
                             do
                             {
-                                //int fieldCount = table.FieldCount;
                                 int fieldCount = reader.FieldCount;
                                 string json = "";
                                 for (int i = 0; i < fieldCount; i++)
@@ -84,6 +74,17 @@ namespace ManualTable.SQL
             }
         }
 
+        public void Dispose()
+        {
+            if (DbConnection != null)
+            {
+                DbConnection.ConnectionString = "";
+                DbConnection.Close();
+                DbConnection.Dispose();
+                DbConnection = null;
+            }
+        }
+
         #region JSON Utilities
         public static string MakeJSONValue(string field, object value)
         {
@@ -97,17 +98,6 @@ namespace ManualTable.SQL
         {
             return "{" + valueString + "}";
         }
-        #endregion      
-
-        public void Dispose()
-        {
-            if (DbConnection != null)
-            {
-                DbConnection.ConnectionString = "";
-                DbConnection.Close();
-                DbConnection.Dispose();
-                DbConnection = null;
-            }
-        }
+        #endregion           
     }
 }

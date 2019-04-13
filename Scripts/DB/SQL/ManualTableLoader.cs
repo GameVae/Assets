@@ -1,10 +1,10 @@
-﻿using ManualTable.Interface;
-using ManualTable.Row;
-using ManualTable.SQL;
+﻿using DataTable;
+using DataTable.Row;
+using DataTable.SQL;
 using System.Linq;
 using UnityEngine;
 
-namespace ManualTable.Loader
+namespace DataTable.Loader
 {
     public sealed class ManualTableLoader : MonoBehaviour
     {
@@ -95,14 +95,9 @@ namespace ManualTable.Loader
             LoadTables();
         }
 
-        public void InitSQLConnection()
-        {
-            SQLDataConnection.Init();
-        }
 
         private void GetCurrentVersion()
         {
-            SQLVersionConnection.Init();
             if (versionTask == null)
                 Load(DBRowType.Version, Version);
 

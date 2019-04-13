@@ -1,9 +1,9 @@
 ﻿using DB;
 using EnumCollect;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Interface;
-using ManualTable.Row;
+using DataTable;
+using DataTable;
+using DataTable.Row;
 using Network.Data;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ public class TrainingWindow : BaseWindow
     private int elementCount;
 
     private TrainningCostRow refCostInfo;
-    private IManualRow refTypeTraining;
+    private ITableData refTypeTraining;
 
     private BaseUpgradeRow refType;
     private ListUpgrade selectedType;
@@ -89,7 +89,7 @@ public class TrainingWindow : BaseWindow
             ITable table = dBReference[tranningType];
             int level = SyncData.CurrentBaseUpgrade[tranningType].Level;
 
-            IManualRow typeInfo = table[level - 1];
+            ITableData typeInfo = table[level - 1];
 
             TranningProgress.Slider.MaxValue =
                 fieldReflection.GetPublicField<int>(typeInfo, "TrainingTime") * baseInfo.TrainingQuality;

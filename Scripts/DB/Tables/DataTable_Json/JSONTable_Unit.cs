@@ -1,18 +1,18 @@
-﻿using System;
-using ManualTable.Row;
+﻿using DataTable.Row;
+using System.Collections;
 using UnityEngine;
 
-namespace ManualTable
+namespace DataTable
 {
-    [CreateAssetMenu(fileName = "New UserInfo Table", menuName = "SQLiteTable/UserInfo JSONTable", order = 10)]
-    public sealed class UserInfoJSONTable : JSONTable<UserInfoRow>
+    [CreateAssetMenu(fileName = "New Unit Table", menuName = "DataTable/JsonTable/Unit JSONTable", order = 4)]
+    public sealed class JSONTable_Unit : JSONTable<UnitRow>
     {
         private void Sort()
         {
             Rows?.BinarySort_L();
         }
 
-        public UserInfoRow GetUser(int id)
+        public UnitRow GetUnit(int id)
         {
             int index = Rows.BinarySearch_L(0, Rows.Count - 1, id);
             return index >= 0 ? Rows[index] : null;
@@ -25,4 +25,3 @@ namespace ManualTable
         }
     }
 }
-

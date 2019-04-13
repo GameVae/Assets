@@ -1,8 +1,8 @@
 ﻿using DB;
 using EnumCollect;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using System.Linq;
 using UI.Widget;
 using UnityEngine;

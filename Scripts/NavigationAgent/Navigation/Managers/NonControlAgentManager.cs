@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using System.Collections.Generic;
 
 

@@ -1,5 +1,5 @@
-﻿using ManualTable;
-using ManualTable.Row;
+﻿using DataTable;
+using DataTable.Row;
 using UnityEngine;
 
 namespace Network.Sync
@@ -12,11 +12,11 @@ namespace Network.Sync
 
         public UserInfoRow MainUser;
 
-        public BaseUpgradeJSONTable CurrentBaseUpgrade
+        public JSONTable_BaseUpgrade CurrentBaseUpgrade
         {
             get { return BaseUpgrade[CurBaseIndex]; }
         }
-        public BaseDefendJSONTable CurrentBaseDefend
+        public JSONTable_BaseDefend CurrentBaseDefend
         {
             get { return BaseDefends[CurBaseIndex]; }
         }
@@ -39,17 +39,17 @@ namespace Network.Sync
             }
         }
 
-        public RSS_PositionJSONTable RSS_Position;
-        public PositionJSONTable Position;
+        public JSONTable_RSSPosition RSS_Position;
+        public JSONTable_Position Position;
 
-        public UserInfoJSONTable UserInfos;
-        public BaseInfoJSONTable BaseInfos;
+        public JSONTable_UserInfo UserInfos;
+        public JSONTable_BaseInfo BaseInfos;
 
-        public BaseUpgradeJSONTable[] BaseUpgrade;
-        public BaseDefendJSONTable[] BaseDefends;
+        public JSONTable_BaseUpgrade[] BaseUpgrade;
+        public JSONTable_BaseDefend[] BaseDefends;
 
-        public UnitJSONTable UnitTable;
-        public BasePlayerJSONTable BasePlayerTable;
+        public JSONTable_Unit UnitTable;
+        public JSONTable_BasePlayer BasePlayerTable;
 
         public void SyncUpdate()
         {

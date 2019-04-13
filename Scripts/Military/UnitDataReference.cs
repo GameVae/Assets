@@ -1,7 +1,7 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using Network.Data;
 using Network.Sync;
 using SocketIO;
@@ -19,8 +19,8 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
     public PlayerInfo PlayerInfo;
     public HexMap MapIns;
 
-    private UnitJSONTable UnitTable;
-    private UserInfoJSONTable Users;
+    private JSONTable_Unit UnitTable;
+    private JSONTable_UserInfo Users;
     private EventListenersController Events;
 
     protected override void Awake()

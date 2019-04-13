@@ -1,11 +1,11 @@
-﻿using ManualTable.Row;
+﻿using DataTable.Row;
 using UnityEngine;
 
 
-namespace ManualTable
+namespace DataTable
 {
-    [CreateAssetMenu(fileName = "New BaseUpg Table", menuName = "SQLiteTable/BaseUpg JSONTable", order = 6)]
-    public sealed class BaseUpgradeJSONTable : JSONTable<BaseUpgradeRow>
+    [CreateAssetMenu(fileName = "New BaseUpg Table", menuName = "DataTable/JsonTable/BaseUpg JSONTable", order = 5)]
+    public sealed class JSONTable_BaseUpgrade : JSONTable<BaseUpgradeRow>
     {
         public BaseUpgradeRow this[EnumCollect.ListUpgrade type]
         {

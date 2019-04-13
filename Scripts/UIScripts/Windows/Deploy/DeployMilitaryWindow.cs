@@ -1,8 +1,8 @@
 ﻿using DB;
 using EnumCollect;
 using Generic.Singleton;
-using ManualTable;
-using ManualTable.Row;
+using DataTable;
+using DataTable.Row;
 using Network.Data;
 using SocketIO;
 using System.Collections.Generic;
@@ -53,7 +53,7 @@ public class DeployMilitaryWindow : BaseWindow
 
         unitDataReference.Create(unit, user);
 
-        UnitJSONTable units = SyncData.UnitTable;
+        JSONTable_Unit units = SyncData.UnitTable;
         units.Rows.Add(unit);
         SelectAgentPanel.Add(unit);
         Debugger.Log("added " + unit.ID);
@@ -106,7 +106,7 @@ public class DeployMilitaryWindow : BaseWindow
     public override void Load(params object[] input)
     {
         RefreshTags();
-        BaseDefendJSONTable baseDefendData = SyncData.CurrentBaseDefend;
+        JSONTable_BaseDefend baseDefendData = SyncData.CurrentBaseDefend;
         for (int i = 0; i < baseDefendData.Count; i++)
         {
             BaseDefendRow row = baseDefendData.Rows[i];
@@ -157,7 +157,7 @@ public class DeployMilitaryWindow : BaseWindow
 
     private void DecreaseQuality()
     {
-        BaseDefendJSONTable baseDefend = SyncData.CurrentBaseDefend;
+        JSONTable_BaseDefend baseDefend = SyncData.CurrentBaseDefend;
 
         ListUpgrade unitType = refTag.Type;
         int quality = (int)refTag.Slider.Value;

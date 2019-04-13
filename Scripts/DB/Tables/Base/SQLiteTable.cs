@@ -1,14 +1,12 @@
 ﻿using Generic.Singleton;
-
-using ManualTable.Interface;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using Utils;
 
-namespace ManualTable
+namespace DataTable
 {
-    public class SQLiteTable<T> : ScriptableObject, ITable where T : IManualRow, new()
+    public class SQLiteTable<T> : ScriptableObject, ITable where T : ISQLiteData, new()
     {
         public string TableName;
         public List<T> Rows;
@@ -34,7 +32,7 @@ namespace ManualTable
             get { return (int)Rows?.Count; }
         }
 
-        public IManualRow this[int rowID]
+        public ITableData this[int rowID]
         {
             get { return Rows[rowID]; }
             set { Rows[rowID] = (T)value; }

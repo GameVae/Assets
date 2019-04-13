@@ -1,4 +1,4 @@
-﻿using ManualTable.Row;
+﻿using DataTable.Row;
 using UnityEngine;
 
 public enum Flag

@@ -1,16 +1,16 @@
 ﻿using Generic.Singleton;
-using ManualTable.Interface;
+using DataTable;
 using System.Collections.Generic;
 using UnityEngine;
 using Json;
 
-namespace ManualTable
+namespace DataTable
 {
-    public class JSONTable<T> : ScriptableObject, ITable where T : IManualRow
+    public class JSONTable<T> : ScriptableObject, ITable where T : ITableData
     {
         [SerializeField] public List<T> Rows;
 
-        public IManualRow this[int index]
+        public ITableData this[int index]
         {
             get
             {
