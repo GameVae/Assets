@@ -1,7 +1,9 @@
-﻿using SocketIO;
+﻿using DataTable;
+using SocketIO;
 
 public class SIO_AttackListener : Listener
 {
+    public JSONTable_Unit UnitTable;
     public override void RegisterCallback()
     {
         On("R_ATTACK", R_ATTACK);
@@ -11,5 +13,6 @@ public class SIO_AttackListener : Listener
     private void R_ATTACK(SocketIOEvent obj)
     {
         Debugger.Log(obj);
+        UnitTable.UpdateRow(obj.data["R_ATTACK"].ToString());
     }
 }

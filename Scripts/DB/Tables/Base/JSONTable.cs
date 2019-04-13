@@ -37,6 +37,7 @@ namespace DataTable
             if (Rows == null)
                 Rows = new List<T>();
             T row = JsonUtility.FromJson<T>(json);
+            //T row = ParseJson<T>(json);
             Rows.Add(row);
         }
 
@@ -77,6 +78,19 @@ namespace DataTable
         private void LoadRow(T r)
         {
             Rows.Add(r);
+        }
+
+        public static TResult ParseJson<TResult>(string json)
+        {
+            try
+            {
+                return JsonUtility.FromJson<TResult>(json);
+            }
+            catch(System.Exception e)
+            {
+                return default(TResult);
+            }
+
         }
     }
 }

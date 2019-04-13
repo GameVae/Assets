@@ -6,7 +6,7 @@ namespace DataTable
     [CreateAssetMenu(fileName = "New Container", menuName = "SQLiteTable/Container", order = 1)]
     public class TableContainer : ScriptableObject
     {
-        [SerializeField] public ScriptableObject Table;
-        [SerializeField] public DBRowType RowType;
+        public ScriptableObject Table;
+        public DBRowType RowType;
     }
 }

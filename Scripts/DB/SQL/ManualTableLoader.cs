@@ -45,7 +45,7 @@ namespace DataTable.Loader
             return result;
         }
 
-        public void Load(DBRowType ManualRowType, ScriptableObject TableData)
+        private void Load(DBRowType ManualRowType, ScriptableObject TableData)
         {
             switch (ManualRowType)
             {
@@ -62,6 +62,12 @@ namespace DataTable.Loader
                     SQLDataConnection.LoadTable(Cast<SQLiteTable_TrainningCost>(TableData));
                     break;
             }
+        }
+
+        private  void Load<T>(SQLiteTable<T> table)
+            where T: ISQLiteData, new ()
+        {           
+            SQLDataConnection.LoadTable<T>(table);
         }
 
         public T Cast<T>(ScriptableObject data) where T : ScriptableObject, ITable

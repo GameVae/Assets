@@ -65,7 +65,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             NavRemote agentRemote = agent.GetComponent<NavRemote>();
             bool isOwner = r.ID_User == PlayerInfo.Info.ID_User;
 
-            agentRemote.SetUnitData(r, user, isOwner);
+            agentRemote.SetUnitData(UnitTable, r, user, isOwner);
 
             if (isOwner)
             {
@@ -79,6 +79,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
                 NCAgentManager.Add(r.ID, nav);
                 agent.name = "other " + r.ID;
             }
+
             agent.SetActive(true);
         }
     }

@@ -48,13 +48,12 @@ namespace DataTable
 
         public void Clear()
         {
-            if (Rows != null)
-                Rows.Clear();
+            Rows?.Clear();
         }
 
         public void SQLInsert(IDbConnection dbConnection, T row)
         {
-            string colsString   = Helper.CreateColumnSequenceFrom(RowType,row);
+            string colsString = Helper.CreateColumnSequenceFrom(RowType, row);
             string valuesString = Helper.CreateValuesSequenceFrom(RowType, row);
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);

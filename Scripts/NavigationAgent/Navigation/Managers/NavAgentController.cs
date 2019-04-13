@@ -20,8 +20,8 @@ namespace Entities.Navigation
 
         private NestedCondition moveConditions;
 
-        public GUIOnOffSwitch SwitchButton;
         public Camera CameraRaycaster;
+        public GUIOnOffSwitch SwitchButton;
         public CursorController CursorController;
 
         public NavAgent CurrentAgent { get; private set; }
@@ -41,6 +41,7 @@ namespace Entities.Navigation
             }
             remove { moveConditions.Conditions -= value; }
         }
+
         protected override void Awake()
         {
             base.Awake();
@@ -57,8 +58,8 @@ namespace Entities.Navigation
 
         private void Start()
         {
-            mapIns = Singleton.Instance<HexMap>();
-            crossInput = Singleton.Instance<CrossInput>();
+            mapIns      = Singleton.Instance<HexMap>();
+            crossInput  = Singleton.Instance<CrossInput>();
             moveEvent?.Emit("S_UNIT");
         }
 
@@ -122,7 +123,7 @@ namespace Entities.Navigation
             }
             else
             {
-                if(!IsTargetEmpty())
+                if(CurrentAgent != null && !IsTargetEmpty())
                 {
                     CurrentAgent.Remote.Attack(CursorController.SelectedPosition);
                 }

@@ -3,6 +3,7 @@ using Generic.Singleton;
 using DataTable.Row;
 using Network.Data;
 using UnityEngine;
+using Generic.Observer;
 
 namespace Entities.Navigation
 {
@@ -28,7 +29,7 @@ namespace Entities.Navigation
         {
             get { return fixedMove ?? (fixedMove = GetComponent<FixedMovement>()); }
         }
-
+        private Observer_Unit observer;
         public AgentMoveability MainNavAgent
         {
             get
@@ -87,7 +88,7 @@ namespace Entities.Navigation
 
         private void Start()
         {
-            SyncPosition();           
+            SyncPosition();
         }
 
         private void SyncPosition()
@@ -110,13 +111,17 @@ namespace Entities.Navigation
                 NavAgentCtrl.SwitchToAgent(MainNavAgent as NavAgent);
         }
 
-        public void SetUnitData(UnitRow data, UserInfoRow user, bool isOwner)
+        public void SetUnitData(ISubject subject,UnitRow data, UserInfoRow user, bool isOwner)
         {
             UnitData = data;
             owner = user;
             IsOwner = isOwner;
 
             Label.SetInfo(data, user, isOwner);
+
+            observer = new Observer_Unit(data);
+            observer.OnSubjectUpdated += SubjectChanged;
+            subject.Register(observer);
         }
 
         public void Attack(Vector3Int position)
@@ -129,6 +134,17 @@ namespace Entities.Navigation
                     Singleton.Instance<EventListenersController>().Emit("S_ATTACK", attackData);
                 }
             }
+        }
+
+        private void SubjectChanged(Observer_Unit.Package package)
+        {
+            UnitRow data = package.Unit;
+            if (data.Quality <= 0)
+            {
+                Debugger.Log("DEAD");
+            }
+            else
+                Label.SetInfo(data, UserInfo, IsOwner);
         }
     }
 }
