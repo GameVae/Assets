@@ -140,11 +140,14 @@ namespace Entities.Navigation
         {
             UnitRow data = package.Unit;
             if (data.Quality <= 0)
-            {
+            { 
                 Debugger.Log("DEAD");
+                Label.SetInfo(data, UserInfo, IsOwner);
             }
             else
                 Label.SetInfo(data, UserInfo, IsOwner);
+            Debugger.Log(data.ID + " - " + data.Quality);
+
         }
     }
 }

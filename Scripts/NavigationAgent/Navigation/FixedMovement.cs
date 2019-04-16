@@ -9,16 +9,15 @@ namespace Entities.Navigation
     public sealed class FixedMovement : AgentMoveability
     {
         private float speed;
-
         private Vector3 target;
-        private AnimatorController Anim;
+        private AnimatorController anim;
         private MovementSerMessageHandler moveHandler;
 
         private void Awake()
         {
             IsMoving = false;
             moveHandler = new MovementSerMessageHandler(MapIns);
-            Anim = GetComponent<AnimatorController>();
+            anim = GetComponent<AnimatorController>();
 
         }
 
@@ -30,9 +29,8 @@ namespace Entities.Navigation
             IsMoving = true;
             Rotator.Target = target;
             Rotator.IsBlock = false;
-            Anim.Play(AnimState.Walking);
+            anim.Play(AnimState.Walking);
             Unbinding();
-
         }
 
         private void NextStep()
@@ -45,7 +43,7 @@ namespace Entities.Navigation
         {
             IsMoving = false;
             Rotator.IsBlock = true;
-            Anim.Stop(AnimState.Walking);
+            anim.Stop(AnimState.Walking);
             Binding();
             moveHandler.Clear();
         }

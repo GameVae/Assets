@@ -15,7 +15,7 @@ public class LookAt : MonoBehaviour
     public Transform GameObject;
     public ProjectionDir ProjectionDir;
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (Target == null || GameObject == null) return;
         switch (ProjectionDir)

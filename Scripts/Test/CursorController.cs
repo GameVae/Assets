@@ -6,41 +6,86 @@ using UnityEngine.Events;
 
 public class CursorController : MonoBehaviour
 {
+    private ResourceManager resourceManager;
     private NestedCondition selectConditions;
     private UnityAction<Vector3Int> selectedCallback;
 
-    private UnityEventSystem eventSystem;
+    private HexMap mapIns;
     private CrossInput crossInput;
-
+    private UnityEventSystem eventSystem;
     private Popup popupIns;
     private TowerNodeManager towerPositions;
 
-    public HexMap MapIns;
     public CursorPos Cursor;
     public CameraController CameraController;
-    private Camera CameraRaycaster;
 
     public event UnityAction<Vector3Int> SelectedCallback
     {
-        add     { selectedCallback += value; }
-        remove  { selectedCallback -= value; }
+        add { selectedCallback += value; }
+        remove { selectedCallback -= value; }
     }
     public Vector3Int SelectedPosition
     {
         get; private set;
     }
 
+    public HexMap MapIns
+    {
+        get
+        {
+            return mapIns ?? (mapIns = Singleton.Instance<HexMap>());
+        }
+    }
+    public Popup PopupIns
+    {
+        get
+        {
+            return popupIns ?? (popupIns = Singleton.Instance<Popup>());
+        }
+    }
+    public CrossInput CrossInput
+    {
+        get
+        {
+            return crossInput ?? (crossInput = EventSystem?.CrossInput);
+        }
+    }
+    public Camera CameraRaycaster
+    {
+        get
+        {
+            return CameraController.TargetCamera;
+        }
+    }
+    public UnityEventSystem EventSystem
+    {
+        get
+        {
+            return eventSystem ?? (eventSystem = eventSystem = Singleton.Instance<UnityEventSystem>());
+        }
+    }
+    public ResourceManager ResourceManager
+    {
+        get
+        {
+            return resourceManager ?? (resourceManager = Singleton.Instance<ResourceManager>());
+        }
+    }
+    public TowerNodeManager TowerNodeManager
+    {
+        get
+        {
+            return towerPositions ?? (towerPositions = Singleton.Instance<GlobalNodeManager>().TowerNode);
+        }
+    }
+
     private void Awake()
     {
-        popupIns = Singleton.Instance<Popup>();
-        eventSystem = Singleton.Instance<UnityEventSystem>();
-        crossInput = eventSystem.CrossInput;
-
         selectConditions = new NestedCondition();
         selectConditions.Conditions +=
             delegate
             {
-                return crossInput.IsTouch && !eventSystem.IsPointerDownOverUI;
+                return CrossInput.IsTouch && !EventSystem.IsPointerDownOverUI;
             };
         selectConditions.Conditions +=
             delegate
@@ -49,12 +94,7 @@ public class CursorController : MonoBehaviour
             };
 
         SelectedCallback += UpdateCursor;
-        CameraRaycaster = CameraController.TargetCamera;
-    }
-
-    private void Start()
-    {
-        towerPositions = Singleton.Instance<GlobalNodeManager>().TowerNode;
+        SelectedCallback += DetermineSelectedOnRSS;
     }
 
     private void Update()
@@ -73,7 +113,7 @@ public class CursorController : MonoBehaviour
                 SelectedPosition = MapIns.WorldToCell(hitInfo.point).ZToZero();
 
                 DetermineSelectedOnTower();
-                DetermineSelectedOnRSS(hitInfo);
+                // DetermineSelectedOnRSS(hitInfo);
 
                 selectedCallback?.Invoke(SelectedPosition);
             }
@@ -85,6 +125,7 @@ public class CursorController : MonoBehaviour
         Cursor.PositionCursor.SetPosTxt(position.x.ToString(), position.y.ToString());
         Cursor.updateCursor(MapIns.CellToWorld(position));
     }
+
     private void DetermineSelectedOnTower()
     {
         if (towerPositions.GetInfo(SelectedPosition, out NodeInfo result))
@@ -92,15 +133,15 @@ public class CursorController : MonoBehaviour
             SelectedPosition = MapIns.WorldToCell(result.GameObject.transform.position).ZToZero();
         }
     }
-    private void DetermineSelectedOnRSS(RaycastHit hitInfo)
+
+    private void DetermineSelectedOnRSS(Vector3Int position)
     {
-        bool isRss = LayerMask.NameToLayer("RSS") == hitInfo.transform.gameObject.layer;
+        bool isRss = ResourceManager.IsRssAtPosition(position, out int id);
         if (isRss)
         {
-            hitInfo.transform.GetComponent<NaturalResource>()?.OpenPopup(popupIns);
+            ResourceManager[id].OpenPopup(PopupIns);
         }
     }
-
 
     public Vector3Int Position;
     [ContextMenu("Set Position")]
@@ -108,4 +149,14 @@ public class CursorController : MonoBehaviour
     {
         Cursor.updateCursor(MapIns.CellToWorld(Position));
     }
+
+    //private void DetermineSelectedOnRSS(RaycastHit hitInfo)
+    //{
+    //    bool isRss = LayerMask.NameToLayer("RSS") == hitInfo.transform.gameObject.layer;
+    //    if (isRss)
+    //    {
+    //        hitInfo.transform.GetComponent<NaturalResource>()?.OpenPopup(PopupIns);
+    //    }
+    //}
+
 }

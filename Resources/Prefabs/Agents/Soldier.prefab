@@ -1645,6 +1645,7 @@ GameObject:
   - component: {fileID: 4826951270794861632}
   - component: {fileID: 6480722271264577063}
   - component: {fileID: 5947814136831088528}
+  - component: {fileID: 589818716471693721}
   m_Layer: 0
   m_Name: Soldier
   m_TagString: Untagged
@@ -1896,6 +1897,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04851216329001c4a95a9d51c04a97ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &589818716471693721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885978819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04f272224f08e844686f239c56ce6053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UserInfo:
+    ID_User: 0
+    Server_ID: 
+    NameInGame: 
+    ChatWorldColor: 
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 0
+    Killed: 0
+  UnitInfo:
+    ID: 0
+    ID_Unit: 0
+    ID_User: 0
+    BaseNumber: 0
+    Level: 0
+    Quality: 0
+    Hea_cur: 0
+    Health: 0
+    Position_Cell: 
+    Next_Cell: 
+    End_Cell: 
+    TimeMoveNextCell: 0
+    TimeFinishMove: 0
+    ListMove: []
+    Status: 0
+    Attack_Base_ID: 0
+    Attack_Unit_ID: 0
+    AttackedBool: 0
 --- !u!1 &2010609893
 GameObject:
   m_ObjectHideFlags: 0

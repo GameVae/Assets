@@ -12,6 +12,7 @@ public class SIO_MovementListener : Listener
     private NonControlAgentManager nCtrlAgentManager;
     private OwnerNavAgentManager ownerAgentManager;
     private JSONObject moveJSONObject;
+    
     private string moveJson;
 
     protected OwnerNavAgentManager OwnerAgentManager
@@ -98,6 +99,9 @@ public class SIO_MovementListener : Listener
             "}}";
 
         UserInfoRow user = SyncData.MainUser;
+        Vector3Int endPosition = tempPath[tempPath.Count - 1];
+        
+
 
         moveJson = string.Format(format,
             user.Server_ID,
@@ -106,7 +110,7 @@ public class SIO_MovementListener : Listener
             user.ID_User,
             curCellPosition.ToPositionString(),
             tempPath[0].ToPositionString(),
-            tempPath[tempPath.Count - 1].ToPositionString(),
+            endPosition.ToPositionString(),
             GMath.SecondToMilisecond(GMath.Round(separateTime[0], 3)),
             GMath.SecondToMilisecond(GMath.Round(separateTime.Sum(), 3)),
             GetJsonFrom1(tempPath, separateTime, tempPath[0])

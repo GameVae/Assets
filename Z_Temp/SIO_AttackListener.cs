@@ -13,6 +13,6 @@ public class SIO_AttackListener : Listener
     private void R_ATTACK(SocketIOEvent obj)
     {
         Debugger.Log(obj);
-        UnitTable.UpdateRow(obj.data["R_ATTACK"].ToString());
+        UnitTable.UpdateTable(obj.data["R_ATTACK"].ToString());
     }
 }

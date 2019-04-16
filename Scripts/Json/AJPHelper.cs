@@ -8,12 +8,12 @@ namespace Json
     {
         private AJPHelper() { }
 
-        public AsyncJsonParser<T> GetParser<T>()
+        public AsyncLoadTable<T> GetParser<T>()
         {
-            return Singleton.Instance<AsyncJsonParser<T>>();
+            return Singleton.Instance<AsyncLoadTable<T>>();
         }
 
-        public void Parse<T>(AsyncJsonParser<T>.ParseInfo info)
+        public void Parse<T>(AsyncLoadTable<T>.ParseInfo info)
         {
             GetParser<T>().Start(info);
         }

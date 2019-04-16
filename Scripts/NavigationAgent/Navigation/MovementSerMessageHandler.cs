@@ -1,5 +1,4 @@
 ﻿using DataTable.Row;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -95,9 +94,9 @@ public sealed class MovementSerMessageHandler
     private float CalculateSpeed(Vector3 pos, Vector3 tar, float lastTime, float targetTime)
     {
         float deltaTime = targetTime - lastTime;
-        if (deltaTime < 0)
+        if (deltaTime <= 0)
         {
-            path.Clear();
+            //path.Clear();
             return 0;
         }
         return Vector3.Distance(pos, tar) / deltaTime;

@@ -345,6 +345,17 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: isActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: ToggleSpriteState
+      value: 
+      objectReference: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf,
+        type: 2}
     - target: {fileID: 259202389608439454, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -450,17 +461,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: isActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: ToggleSpriteState
-      value: 
-      objectReference: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf,
-        type: 2}
     - target: {fileID: 259202390825213805, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_Sprite
@@ -1019,6 +1019,17 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: isActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: ToggleSpriteState
+      value: 
+      objectReference: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf,
+        type: 2}
     - target: {fileID: 259202389608439454, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1124,17 +1135,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: isActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: ToggleSpriteState
-      value: 
-      objectReference: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf,
-        type: 2}
     - target: {fileID: 259202390825213805, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_Sprite
@@ -1428,6 +1428,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: isActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 259202389608439454, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1532,11 +1537,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: isActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 259202390825213805, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
@@ -1773,7 +1773,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &566717440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1808,7 +1808,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566717439}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23a820a3450c6194199adc5d8fb06eed, type: 3}
   m_Name: 
@@ -1882,7 +1882,7 @@ MonoBehaviour:
   toggleSelectedEvt:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.24838,
+    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.28446,
       Culture=neutral, PublicKeyToken=null
   DefaultSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf, type: 2}
 --- !u!224 &618758969 stripped
@@ -2074,6 +2074,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: isActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 259202389608439454, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2179,11 +2184,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: isActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 259202390825213805, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
       propertyPath: m_Sprite
@@ -2258,6 +2258,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
+        type: 3}
+      propertyPath: isActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 259202389608439454, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}
@@ -2363,11 +2368,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 259202389608439457, guid: 7cc27b99c462c4945b280e667de89b24,
-        type: 3}
-      propertyPath: isActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 259202390825213805, guid: 7cc27b99c462c4945b280e667de89b24,
         type: 3}

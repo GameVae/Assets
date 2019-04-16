@@ -90,12 +90,27 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
         newGO.transform.SetParent(ResourceContainer.transform);
 
-        BoxCollider colli = newGO.gameObject.AddComponent<BoxCollider>();
-        colli.center = new Vector3(0, 1, 0);
-        colli.size = new Vector3(2, 2, 2);
-        colli.isTrigger = true;
+        //BoxCollider colli = newGO.gameObject.AddComponent<BoxCollider>();
+        //colli.center = new Vector3(0, 1, 0);
+        //colli.size = new Vector3(2, 2, 2);
+        //colli.isTrigger = true;
 
         return newGO;
+    }
+
+    public bool IsRssAtPosition(Vector3Int position,out int id)
+    {
+        id = -1;
+        foreach (KeyValuePair<int,NaturalResource> item in Resources)
+        {
+            Vector3Int rsPos = item.Value.Data.Position.Parse3Int().ToClientPosition();
+            if (rsPos == position)
+            {
+                id = item.Key;
+                return true;
+            }
+        }
+        return false;
     }
 
 #if UNITY_EDITOR

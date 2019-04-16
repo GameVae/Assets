@@ -359,10 +359,10 @@ namespace DataTable.Row
 
         public int CompareTo(object obj)
         {
-            if (obj.GetType() == typeof(UnitRow))
+            if (obj?.GetType() == typeof(UnitRow))
             {
                 UnitRow other = obj as UnitRow;
-                return ID.CompareTo(other?.ID);
+                return ID.CompareTo(other.ID);
             }
             else
             {

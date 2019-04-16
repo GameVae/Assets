@@ -15,6 +15,37 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using MultiThread;
 
+public class TestActionNode : ActionNode
+{
+    private string action;
+    public TestActionNode(string actionName)
+    {
+        action = actionName;
+    }
+
+    protected override void DoAction()
+    {
+        Debug.Log("Action node " + action);
+    }
+}
+
+public class TestDecisionNode : DecisionNode
+{
+    private bool branch;
+
+    public TestDecisionNode(DecisionTreeNode t,DecisionTreeNode f,bool branch)
+        : base(t, f)
+    {
+        this.branch = branch;
+    }
+
+    public override DecisionTreeNode GetBranch()
+    {
+        return branch == true ? trueNode : falseNode;
+    }
+}
+
+
 public class TestObj : MonoBehaviour
 {
     Ray ray;
@@ -35,43 +66,7 @@ public class TestObj : MonoBehaviour
     public JSONTable_Position rss_table3;
 
     public MultiThreadHelper ThreadHelper;
-    //void Update()
-    //{
-    //    RaycastHit hit;
-    //    if (Input.touchCount>0)
-    //    {
-    //        ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-
-    //        if (Physics.Raycast(ray, out hit))
-    //        {
-    //            string name = hit.transform.gameObject.name;
-    //            if (name == "Cube")
-    //                Debug.Log("hit Cube");
-    //        }
-
-    //        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-    //        Debug.Log("mouse: " + Input.mousePosition);
-    //        if (Physics.Raycast(ray, out hit))
-    //        {
-    //            string name = hit.transform.gameObject.name;
-    //            if (name == "Cube")
-    //                Debug.Log("hit Cube");
-    //        }
-    //    }
-    //    if (Input.GetButtonDown("Fire1"))
-    //    {
-    //        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-    //        Debug.Log("mouse: " + Input.mousePosition);
-    //        if (Physics.Raycast(ray, out hit))
-    //        {
-    //            string name = hit.transform.gameObject.name;
-    //            if (name == "Cube")
-    //                Debug.Log("hit Cube");
-    //        }
-    //    }
-    //}
+  
 
     private bool inited = false;
     private void Update()
@@ -83,10 +78,10 @@ public class TestObj : MonoBehaviour
         //        " Thread 2" + ": " + info2.Operation.Progress + "% " +
         //        " Thread 3" + ": " + info3.Operation.Progress + "% ");
         //}
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            StartCoroutine(LockMainThread());
-        }
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    StartCoroutine(LockMainThread());
+        //}
     }
     private void Start()
     {
@@ -94,14 +89,14 @@ public class TestObj : MonoBehaviour
         // moveEvent.On("R_MOVE", R_MOVE);
         //Debugger.Log("This is a log from Debugger");
 
-        VersionRow row = new VersionRow()
-        {
-            Comment = "comment",
-            Content = "content",
-            Id = 1,
-            Task = "for test"
+        //VersionRow row = new VersionRow()
+        //{
+        //    Comment = "comment",
+        //    Content = "content",
+        //    Id = 1,
+        //    Task = "for test"
 
-        };
+        //};
         // RefectionTest(row);
 
         // TestDBConnection();
@@ -116,8 +111,15 @@ public class TestObj : MonoBehaviour
 
         //SafeThreadTest();
 
-        th1 = new Thread(AnotherThreadExecute);
-        th1.Start();
+        //th1 = new Thread(AnotherThreadExecute);
+        //th1.Start();
+
+        TestActionNode move = new TestActionNode("Move");
+        TestActionNode attack = new TestActionNode("Attack");
+
+        TestDecisionNode selectOnEnemy = new TestDecisionNode(attack, move, true);
+
+        selectOnEnemy.MakeDecision();
     }
 
     private void AnotherThreadExecute()
@@ -214,10 +216,10 @@ public class TestObj : MonoBehaviour
         Debug.Log("parse thread started");
     }
 
-    AsyncJsonParser<PositionRow> parser;
-    AsyncJsonParser<PositionRow>.ParseInfo info1;
-    AsyncJsonParser<PositionRow>.ParseInfo info2;
-    AsyncJsonParser<PositionRow>.ParseInfo info3;
+    AsyncLoadTable<PositionRow> parser;
+    AsyncLoadTable<PositionRow>.ParseInfo info1;
+    AsyncLoadTable<PositionRow>.ParseInfo info2;
+    AsyncLoadTable<PositionRow>.ParseInfo info3;
 
     private void R_GET_RSS_Thread(SocketIO.SocketIOEvent evt)
     {
@@ -225,9 +227,9 @@ public class TestObj : MonoBehaviour
         string json = data.ToString();
         //        Debug.Log(json);
 
-        parser = Singleton.Instance<AsyncJsonParser<PositionRow>>();
+        parser = Singleton.Instance<AsyncLoadTable<PositionRow>>();
 
-        info1 = new AsyncJsonParser<PositionRow>.ParseInfo()
+        info1 = new AsyncLoadTable<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -237,9 +239,9 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table1, r);
                 }
             },
-            Operation = new AsyncJsonParser<PositionRow>.ParseOperation(),
+            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
         };
-        info2 = new AsyncJsonParser<PositionRow>.ParseInfo()
+        info2 = new AsyncLoadTable<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -249,10 +251,10 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table2, r);
                 }
             },
-            Operation = new AsyncJsonParser<PositionRow>.ParseOperation(),
+            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
 
         };
-        info3 = new AsyncJsonParser<PositionRow>.ParseInfo()
+        info3 = new AsyncLoadTable<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -262,7 +264,7 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table3, r);
                 }
             },
-            Operation = new AsyncJsonParser<PositionRow>.ParseOperation(),
+            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
         };
 
         parser.Start(info1);

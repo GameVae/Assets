@@ -317,7 +317,7 @@ public static class Extension
     private static int SearchInsertIndex_L<T>(List<T> list, int low, int high, object value)
        where T : IComparable
     {
-        int mid = -1;
+        int mid = 0;
         while (low <= high)
         {
             if (low == high) return low;

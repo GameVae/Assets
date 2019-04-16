@@ -32,13 +32,14 @@ namespace DataTable
         public System.Type RowType
         { get { return typeof(T); } }
 
-        public virtual void LoadRow(string json)
+        public virtual T LoadRow(string json)
         {
             if (Rows == null)
                 Rows = new List<T>();
             T row = JsonUtility.FromJson<T>(json);
             //T row = ParseJson<T>(json);
             Rows.Add(row);
+            return row;
         }
 
         public virtual void LoadTable(JSONObject data, bool clearPre = true)
@@ -67,11 +68,11 @@ namespace DataTable
                 if (clearPre)
                     Rows.Clear();
             }
-            Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncJsonParser<T>.ParseInfo()
+            Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncLoadTable<T>.ParseInfo()
             {
                 Obj = data,
                 ResultHandler = LoadRow,
-                Operation = new AsyncJsonParser<T>.ParseOperation(),
+                Operation = new AsyncLoadTable<T>.ParseOperation(),
             });
         }
 

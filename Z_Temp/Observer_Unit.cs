@@ -21,7 +21,11 @@ public class Observer_Unit : IObserver
 
     public event UnityAction<Package> OnSubjectUpdated
     {
-        add { actions.Add(value); }
+        add
+        {
+            if (actions == null) actions = new List<UnityAction<Package>>();
+            actions.Add(value);
+        }
         remove
         {
             int index = actions.IndexOf(value);
@@ -38,6 +42,8 @@ public class Observer_Unit : IObserver
     public void SubjectUpdated(object dataPacked)
     {
         package = dataPacked as Package;
+        Debugger.Log(package.Unit.ID + " - " + package.Unit.Quality + " -" + package.Unit.Hea_cur);
+
         if (unit.CompareTo(package.Unit) == 0)
         {
             unit = package.Unit;
@@ -50,7 +56,7 @@ public class Observer_Unit : IObserver
 
     public void Dispose()
     {
-        actions.Clear();
+        actions?.Clear();
         package = null;
         unit = null;
     }

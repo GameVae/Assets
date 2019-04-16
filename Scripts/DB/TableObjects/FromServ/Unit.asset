@@ -18,55 +18,37 @@ MonoBehaviour:
     ID_User: 9
     BaseNumber: 1
     Level: 1
-    Quality: 15
-    Hea_cur: 5.2
+    Quality: 16
+    Hea_cur: 4.2
     Health: 5.2
-    Position_Cell: 11,12,0
+    Position_Cell: 12,13,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
     TimeFinishMove: 0
     ListMove: []
-    Status: 6
+    Status: 4
     Attack_Base_ID: 0
     Attack_Unit_ID: 0
-    AttackedBool: 0
-  - ID: 11
-    ID_Unit: 16
-    ID_User: 9
-    BaseNumber: 1
-    Level: 1
-    Quality: 20
-    Hea_cur: 5.2
-    Health: 5.2
-    Position_Cell: 489,82,0
-    Next_Cell: 
-    End_Cell: 
-    TimeMoveNextCell: 0
-    TimeFinishMove: 0
-    ListMove: []
-    Status: 6
-    Attack_Base_ID: 0
-    Attack_Unit_ID: 0
-    AttackedBool: 0
+    AttackedBool: 1
   - ID: 12
     ID_Unit: 16
     ID_User: 9
     BaseNumber: 1
     Level: 1
-    Quality: 12
-    Hea_cur: 4.8
+    Quality: 23
+    Hea_cur: 4.2
     Health: 5.2
-    Position_Cell: 489,80,0
+    Position_Cell: 12,9,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
     TimeFinishMove: 0
     ListMove: []
-    Status: 0
+    Status: 6
     Attack_Base_ID: 0
     Attack_Unit_ID: 0
-    AttackedBool: 0
+    AttackedBool: 1
   - ID: 13
     ID_Unit: 16
     ID_User: 42
@@ -103,24 +85,6 @@ MonoBehaviour:
     Attack_Base_ID: 0
     Attack_Unit_ID: 0
     AttackedBool: 0
-  - ID: 16
-    ID_Unit: 16
-    ID_User: 42
-    BaseNumber: 1
-    Level: 2
-    Quality: 1
-    Hea_cur: 5.45
-    Health: 5.45
-    Position_Cell: 24,3,0
-    Next_Cell: 
-    End_Cell: 
-    TimeMoveNextCell: 0
-    TimeFinishMove: 0
-    ListMove: []
-    Status: 6
-    Attack_Base_ID: 0
-    Attack_Unit_ID: 0
-    AttackedBool: 0
   - ID: 17
     ID_Unit: 16
     ID_User: 42
@@ -129,7 +93,7 @@ MonoBehaviour:
     Quality: 3
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 19,14,0
+    Position_Cell: 27,5,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -183,7 +147,7 @@ MonoBehaviour:
     Quality: 3
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 277,13,0
+    Position_Cell: 283,13,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -201,7 +165,7 @@ MonoBehaviour:
     Quality: 8
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 255,2,0
+    Position_Cell: 305,20,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -255,7 +219,7 @@ MonoBehaviour:
     Quality: 6
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 314,5,0
+    Position_Cell: 306,20,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -291,7 +255,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 16,8,0
+    Position_Cell: 20,10,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -309,25 +273,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 14,4,0
-    Next_Cell: 
-    End_Cell: 
-    TimeMoveNextCell: 0
-    TimeFinishMove: 0
-    ListMove: []
-    Status: 6
-    Attack_Base_ID: 0
-    Attack_Unit_ID: 0
-    AttackedBool: 0
-  - ID: 28
-    ID_Unit: 16
-    ID_User: 42
-    BaseNumber: 1
-    Level: 2
-    Quality: 1
-    Hea_cur: 5.45
-    Health: 5.45
-    Position_Cell: 19,15,0
+    Position_Cell: 17,3,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -345,15 +291,15 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 17,5,0
+    Position_Cell: 13,9,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
     TimeFinishMove: 0
     ListMove: []
-    Status: 6
+    Status: 2
     Attack_Base_ID: 0
-    Attack_Unit_ID: 0
+    Attack_Unit_ID: 1
     AttackedBool: 0
   - ID: 30
     ID_Unit: 16
@@ -381,7 +327,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 15,6,0
+    Position_Cell: 19,1,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -399,7 +345,7 @@ MonoBehaviour:
     Quality: 1
     Hea_cur: 5.45
     Health: 5.45
-    Position_Cell: 312,27,0
+    Position_Cell: 299,18,0
     Next_Cell: 
     End_Cell: 
     TimeMoveNextCell: 0
@@ -426,4 +372,22 @@ MonoBehaviour:
     Status: 6
     Attack_Base_ID: 0
     Attack_Unit_ID: 0
+    AttackedBool: 0
+  - ID: 34
+    ID_Unit: 16
+    ID_User: 43
+    BaseNumber: 1
+    Level: 2
+    Quality: 2
+    Hea_cur: 5.45
+    Health: 5.45
+    Position_Cell: 301,0,0
+    Next_Cell: 
+    End_Cell: 
+    TimeMoveNextCell: 0
+    TimeFinishMove: 0
+    ListMove: []
+    Status: 2
+    Attack_Base_ID: 0
+    Attack_Unit_ID: 10
     AttackedBool: 0

@@ -1,7 +1,7 @@
 ﻿using DataTable.Row;
 using Generic.Observer;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace DataTable
@@ -9,40 +9,82 @@ namespace DataTable
     [CreateAssetMenu(fileName = "New Unit Table", menuName = "DataTable/JsonTable/Unit JSONTable", order = 4)]
     public sealed class JSONTable_Unit : JSONTable<UnitRow>, ISubject
     {
-        private void Sort()
+        private List<int> unitIds;
+
+
+        private List<int> UnitIds
         {
-            Rows?.BinarySort_L();
+            get { return unitIds ?? (unitIds = new List<int>()); }
         }
 
-        public UnitRow GetUnit(int id)
+        private List<int> GenIDs()
         {
-            int index = Rows.BinarySearch_L(0, Rows.Count - 1, id);
-            return index >= 0 ? Rows[index] : null;
+            UnitIds.Clear();
+            for (int i = 0; i < Rows.Count; i++)
+            {
+                UnitIds.Add(Rows[i].ID);
+            }
+            return UnitIds;
         }
 
-        public override void LoadTable(JSONObject data, bool clearPre = true)
+        public override UnitRow LoadRow(string json)
         {
-            base.LoadTable(data, clearPre);
-            Sort();
+            UnitRow r = ParseJson<UnitRow>(json);
+            if (r != null)
+            {
+                int insertIndex = Rows.BinarySearch_L(0, Rows.Count, r);
+                if (insertIndex >= 0) Rows.Insert(insertIndex, r);
+                return r;
+            }
+            return null;
         }
 
-        private List<Observer_Unit> observers;
-        private List<Observer_Unit> Observers
+        public UnitRow GetUnitById(int id)
+        {
+            List<int> ids = GenIDs();
+            int index = ids.BinarySearch_L<int>(0, ids.Count, id);
+            if (ids[index] == id)
+                return Rows[index];
+            return null;
+        }
+
+        public void UpdateTable(string json)
+        {
+            UnitRow r = LoadRow(json);
+            if (r != null)
+            {
+                int updateIndex = Rows.BinarySearch_L(0, Count, r);
+                if (Rows[updateIndex].ID == r.ID)
+                    Rows[updateIndex] = r;
+
+                for (int i = 0; i < Observers.Count; i++)
+                {
+                    if (((Observer_Unit)Observers[i]).UnitId == r.ID)
+                    {
+                        Notify(Observers[i]);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private List<IObserver> observers;
+        private List<IObserver> Observers
         {
             get
             {
-                return observers ?? (observers = new List<Observer_Unit>());
+                return observers ?? (observers = new List<IObserver>());
             }
         }
 
         public void Register(IObserver observer)
         {
-            Observers.Add((Observer_Unit)observer);
+            Observers.Add(observer);
         }
 
         public void Remove(IObserver observer)
         {
-            int index = Observers.IndexOf((Observer_Unit)observer);
+            int index = Observers.IndexOf(observer);
             if (index >= 0) Observers.RemoveAt(index);
         }
 
@@ -52,7 +94,7 @@ namespace DataTable
 
             Observer_Unit.Package package = new Observer_Unit.Package()
             {
-                Unit = Rows[unitObserver.UnitId]
+                Unit = GetUnitById(unitObserver.UnitId),
             };
 
             observer.SubjectUpdated(package);
@@ -63,23 +105,6 @@ namespace DataTable
             for (int i = 0; i < Observers.Count; i++)
             {
                 Notify(Observers[i]);
-            }
-        }
-
-        public void UpdateRow(string json)
-        {
-            UnitRow r = ParseJson<UnitRow>(json);
-            if (GetUnit(r.ID) == null)
-            {
-                LoadRow(json);
-            }
-            else
-            {
-                int index = Rows.BinarySearch_L(0, Rows.Count - 1, r.ID);
-                Rows[index] = r;
-                Observer_Unit obs = Observers.FirstOrDefault(x => x.UnitId == r.ID);
-                if (obs != default(Observer_Unit))
-                    obs.SubjectUpdated(r);
             }
         }
     }

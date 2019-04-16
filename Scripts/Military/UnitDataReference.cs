@@ -65,6 +65,10 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             NavRemote agentRemote = agent.GetComponent<NavRemote>();
             bool isOwner = r.ID_User == PlayerInfo.Info.ID_User;
 
+            AgentInfo info = agent.GetComponent<AgentInfo>();
+            info.UserInfo = user;
+            info.UnitInfo = r;
+
             agentRemote.SetUnitData(UnitTable, r, user, isOwner);
 
             if (isOwner)
