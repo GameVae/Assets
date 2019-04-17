@@ -6,7 +6,6 @@ public abstract class DecisionNode : DecisionTreeNode
 {
     protected DecisionTreeNode trueNode;
     protected DecisionTreeNode falseNode;
-    public object TestValue;
 
     public abstract DecisionTreeNode GetBranch();
 

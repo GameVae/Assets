@@ -23,10 +23,17 @@ public class SIO_MovementListener : Listener
         }
     }
 
+    public NonControlAgentManager NonCtrlAgentManager
+    {
+        get
+        {
+            return nCtrlAgentManager ?? (nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>());
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
-        nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>();
         moveJSONObject = new JSONObject(JSONObject.Type.BAKED);
 
         // Emit("S_UNIT");
@@ -65,25 +72,34 @@ public class SIO_MovementListener : Listener
     public void Move(List<Vector3Int> path,
         List<float> separateTime,
         Vector3Int curCellPosition,
-        ListUpgrade unit,
-        int id)
+        NavRemote ownerRemote,
+        NavRemote otherRemote)
     {
-        InitMessage(path, separateTime, curCellPosition, unit,id);
+        InitMessage(path, separateTime, curCellPosition, ownerRemote, otherRemote);
         Emit("S_MOVE"); ;
     }
 
-    private void InitMessage(List<Vector3Int> clientPath, 
-        List<float> separateTime, Vector3Int curCellPosition, ListUpgrade unit,int id)
+    private void InitMessage(
+        List<Vector3Int> clientPath, 
+        List<float>     separateTime, 
+        Vector3Int      curPosition, 
+        NavRemote       ownerRemote,
+        NavRemote       enemyRemote)
     {
-        curCellPosition = curCellPosition.ToSerPosition();
+        curPosition = curPosition.ToSerPosition();
 
-        List<Vector3Int> tempPath = new List<Vector3Int>(clientPath);
-        for (int i = 0; i < tempPath.Count; i++)
+        List<Vector3Int> serverPath = new List<Vector3Int>(clientPath);
+        for (int i = 0; i < serverPath.Count; i++)
         {
-            tempPath[i] = tempPath[i].ToSerPosition();
+            serverPath[i] = serverPath[i].ToSerPosition();
         }
-        tempPath = tempPath.Invert();
 
+        serverPath = serverPath.Invert();
+        int ownerUnitType = (int)ownerRemote.Type;
+        int ownerAgentId = ownerRemote.AgentID;
+
+        string attack_unit_id = "NULL";
+        
         const string format =
             "{{" +
             "\"Server_ID\":" + "{0}," +
@@ -95,25 +111,36 @@ public class SIO_MovementListener : Listener
             "\"End_Cell\":" + "\"{6}\"," +
             "\"TimeMoveNextCell\":" + "{7}," +
             "\"TimeFinishMove\":" + "{8}," +
-            "\"ListMove\":" + "{9}" +
+            "\"ListMove\":" + "{9}," +
+            "\"Attack_Unit_ID\":" + "\"{10}\"" +
             "}}";
 
-        UserInfoRow user = SyncData.MainUser;
-        Vector3Int endPosition = tempPath[tempPath.Count - 1];
-        
+        UserInfoRow user = ownerRemote.UserInfo;
+        Vector3Int endPosition = serverPath[serverPath.Count - 1];
 
+        if (enemyRemote != null)
+        {
+            UserInfoRow otherUser = enemyRemote.UserInfo;
+
+            attack_unit_id = string.Format("{0}_{1}_{2}_{3}",
+                user.Server_ID,
+                (int)enemyRemote.Type,
+                otherUser.ID_User,
+                enemyRemote.AgentID);
+        }
 
         moveJson = string.Format(format,
             user.Server_ID,
-            id,
-            (int)unit,
+            ownerAgentId,
+            ownerUnitType,
             user.ID_User,
-            curCellPosition.ToPositionString(),
-            tempPath[0].ToPositionString(),
+            curPosition.ToPositionString(),
+            serverPath[0].ToPositionString(),
             endPosition.ToPositionString(),
             GMath.SecondToMilisecond(GMath.Round(separateTime[0], 3)),
             GMath.SecondToMilisecond(GMath.Round(separateTime.Sum(), 3)),
-            GetJsonFrom1(tempPath, separateTime, tempPath[0])
+            GetJsonFrom1(serverPath, separateTime, serverPath[0]),
+            attack_unit_id
             );
 
         moveJson = string.Format("{{\"S_MOVE\":{0}}}", moveJson);
@@ -147,10 +174,9 @@ public class SIO_MovementListener : Listener
 
     public void R_MOVE(SocketIOEvent obj)
     {
-        Debugger.Log("R_MOVE");
-        // Debugger.Log(obj);
+        Debugger.Log(obj.ToString().Substring(0,150));
         JSONObject r_move = obj.data["R_MOVE"];
-        bool isOther = nCtrlAgentManager.MoveAgent(r_move);
+        bool isOther = NonCtrlAgentManager.MoveAgent(r_move);
         //if (!isOther)
         //{
         //    int id = -1;

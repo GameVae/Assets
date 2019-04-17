@@ -53,7 +53,7 @@ namespace Network.Sync
 
         public void SyncUpdate()
         {
-            for (int i = 0; i < BaseInfos?.Rows?.Count; i++)
+            for (int i = 0; i < BaseInfos.Count; i++)
             {
                 UpdateBaseInfo(i);
             }

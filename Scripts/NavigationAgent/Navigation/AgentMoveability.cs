@@ -4,57 +4,33 @@ using UnityEngine;
 
 namespace Entities.Navigation
 {
-    [RequireComponent(typeof(NavRemote), typeof(AgentWayPoint))]
+    [RequireComponent(typeof(NavRemote))]
     public abstract class AgentMoveability : MonoBehaviour
     {
         public bool IsMoving { get ; protected set; }
-        protected HexMap MapIns
-        {
-            get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
-        }
-        public Vector3Int CurrentPosition
-        {
-            get
-            {
-                if (MapIns != null)
-                    return MapIns.WorldToCell(transform.position);
-                return Vector3Int.zero;
-            }
-        }
 
-        private HexMap mapIns;
         private NavRemote remote;
-        private AgentWayPoint wayPoint;
         private VectorRotator rotator;
 
-        protected NavOffset Offset
+        protected HexMap MapIns
         {
-            get { return Remote.Offset; }
-        }
-
-        public WayPoint WayPoint
-        {
-            get { return wayPoint ?? (wayPoint = GetComponent<AgentWayPoint>()); }
+            get { return Remote.MapIns; }
         }
 
         public NavRemote Remote
         {
             get { return remote ?? (remote = GetComponent<NavRemote>()); }
         }
-
         public VectorRotator Rotator
         {
             get { return rotator ?? (rotator = GetComponent<VectorRotator>()); }
         }
-
-        protected bool Binding()
+        public Vector3Int CurrentPosition
         {
-            return WayPoint.Binding();
-        }
-
-        protected bool Unbinding()
-        {
-            return WayPoint.Unbinding();
+            get
+            {
+                return Remote.CurrentPosition;
+            }
         }
 
         protected abstract void UpdateMove();

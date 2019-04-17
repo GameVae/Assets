@@ -30,7 +30,7 @@ namespace Entities.Navigation
             Rotator.Target = target;
             Rotator.IsBlock = false;
             anim.Play(AnimState.Walking);
-            Unbinding();
+            Remote.Unbinding();
         }
 
         private void NextStep()
@@ -44,7 +44,7 @@ namespace Entities.Navigation
             IsMoving = false;
             Rotator.IsBlock = true;
             anim.Stop(AnimState.Walking);
-            Binding();
+            Remote.Binding();
             moveHandler.Clear();
         }
 
@@ -68,7 +68,7 @@ namespace Entities.Navigation
                 {
                     if (Remote.IsOwner)
                     {
-                        (Remote.MainNavAgent as NavAgent).MoveFinish();
+                        Remote.NavAgent.MoveFinish();
                     }
                     else
                         Stop();

@@ -41,9 +41,7 @@ public class Observer_Unit : IObserver
 
     public void SubjectUpdated(object dataPacked)
     {
-        package = dataPacked as Package;
-        Debugger.Log(package.Unit.ID + " - " + package.Unit.Quality + " -" + package.Unit.Hea_cur);
-
+        package = dataPacked as Package;       
         if (unit.CompareTo(package.Unit) == 0)
         {
             unit = package.Unit;

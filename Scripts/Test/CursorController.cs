@@ -128,7 +128,7 @@ public class CursorController : MonoBehaviour
 
     private void DetermineSelectedOnTower()
     {
-        if (towerPositions.GetInfo(SelectedPosition, out NodeInfo result))
+        if (TowerNodeManager.GetInfo(SelectedPosition, out NodeInfo result))
         {
             SelectedPosition = MapIns.WorldToCell(result.GameObject.transform.position).ZToZero();
         }

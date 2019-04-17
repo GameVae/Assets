@@ -1,16 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Leaf node
 /// </summary>
-public abstract class ActionNode : DecisionTreeNode
+public class ActionNode : DecisionTreeNode
 {
-    protected abstract void DoAction();
+    private UnityAction doAction;
+
+    public ActionNode(UnityAction actions)
+    {
+        doAction = actions;
+    }
+
     public override DecisionTreeNode MakeDecision()
     {
-        DoAction();
+        doAction?.Invoke();
         return this;
     }
 }

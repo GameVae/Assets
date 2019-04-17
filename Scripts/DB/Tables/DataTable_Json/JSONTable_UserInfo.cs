@@ -8,13 +8,13 @@ namespace DataTable
     {
         private void Sort()
         {
-            Rows?.BinarySort_L();
+            Rows.BinarySort_L();
         }
 
         public UserInfoRow GetUser(int id)
         {
-            int index = Rows.BinarySearch_L(0, Rows.Count - 1, id);
-            return index >= 0 ? Rows[index] : null;
+            int index = Rows.BinarySearch_L(0, Rows.Count, id);
+            return Rows[index].ID_User == id ? Rows[index] : null;
         }
 
         public override void LoadTable(JSONObject data, bool clearPre = true)

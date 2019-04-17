@@ -37,6 +37,15 @@ public static class Extension
         return newArr.ToArray();
     }
 
+    public static bool IsContaint<T>(this T[] arr, T value)
+    {
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i].Equals(value)) return true;
+        }
+        return false;
+    }
+
     #endregion
 
     #region List

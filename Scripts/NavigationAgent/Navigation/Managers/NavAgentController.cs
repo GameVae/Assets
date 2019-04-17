@@ -3,19 +3,22 @@ using UI.Widget;
 using Generic.Singleton;
 using Generic.CustomInput;
 using UI;
+using Generic.Contants;
+using MultiThread;
 
 namespace Entities.Navigation
 {
     public sealed class NavAgentController : MonoSingle<NavAgentController>
     {
         private SIO_MovementListener moveEvent;
+        private MultiThreadHelper threadHelper;
         private AgentNodeManager agentNodes;
 
         private Vector3Int startCell;
         private Vector3Int endCell;
         private bool isDisable;
 
-        private NestedCondition moveConditions;
+        private NestedCondition canMoveConditions;
 
         public Camera CameraRaycaster
         {
@@ -45,21 +48,28 @@ namespace Entities.Navigation
         {
             get { return CursorController.EventSystem; }
         }
-        public SIO_MovementListener MoveEvent
+        public SIO_MovementListener MovementListener
         {
             get { return moveEvent ?? (moveEvent = FindObjectOfType<SIO_MovementListener>()); }
         }
+        public MultiThreadHelper ThreadHelper
+        {
+            get
+            {
+                return threadHelper ?? (threadHelper = Singleton.Instance<MultiThreadHelper>());
+            }
+        }
 
-        public event System.Func<bool> MoveConditions
+        private event System.Func<bool> MoveConditions
         {
             add
             {
-                if (moveConditions == null)
-                    moveConditions = new NestedCondition();
+                if (canMoveConditions == null)
+                    canMoveConditions = new NestedCondition();
 
-                moveConditions.Conditions += value;
+                canMoveConditions.Conditions += value;
             }
-            remove { moveConditions.Conditions -= value; }
+            remove { canMoveConditions.Conditions -= value; }
         }
 
         protected override void Awake()
@@ -69,19 +79,20 @@ namespace Entities.Navigation
             SwitchButton.On += On;
             SwitchButton.Off += Off;
 
-            InitMoveCondition();
+            InitNestedConditios();
             CursorController.SelectedCallback += OnCursorSelected;
         }
 
         private void Start()
         {
-            MoveEvent?.Emit("S_UNIT");
+            MovementListener?.Emit("S_UNIT");
         }
 
-        private void AgentStartMove(Vector3Int start, Vector3Int end)
+        private void MoveActiveAgent(Vector3Int start, Vector3Int end, NavRemote enemy)
         {
             //bool foundPath = CurrentAgent.StartMove(start, end);
-            CurrentAgent.AsyncStartMove(start, end);
+            //CurrentAgent.AsyncStartMove(start, end);
+            MoveAgent(CurrentAgent, start, end, enemy);
         }
 
         public void SwitchToAgent(NavAgent agent)
@@ -99,45 +110,108 @@ namespace Entities.Navigation
             isDisable = false;
         }
 
-        private void InitMoveCondition()
+        private void InitNestedConditios()
         {
+            // move conditions
             MoveConditions += delegate
             {
                 return CurrentAgent != null && !isDisable;
             };
         }
 
-        private bool IsTargetEmpty()
+        private bool ShouldHandleSelect(Vector3Int selected)
         {
-            Vector3Int position = CursorController.SelectedPosition;
-            if (AgentNodes.IsHolding(position)) return false;
-            return true;
+            return !(!MapIns.IsValidCell(selected.x, selected.y) ||
+                    selected == CurrentAgent.CurrentPosition ||
+                    (CurrentAgent.IsMoving && selected == CurrentAgent.EndPosition));
         }
-
         private void OnCursorSelected(Vector3Int position)
         {
-            if (moveConditions.Evaluate())
+            if (canMoveConditions.Evaluate())
             {
                 Vector3Int selected = position;
 
-                if (!MapIns.IsValidCell(selected.x, selected.y) ||
-                    selected == CurrentAgent.CurrentPosition ||
-                    (CurrentAgent.IsMoving && selected == CurrentAgent.EndPosition))
+                if (!ShouldHandleSelect(position))
                 {
                     return;
                 }
 
-                endCell = selected;
-                startCell = CurrentAgent.CurrentPosition;
-                AgentStartMove(startCell, endCell);
+                Move_Action();
             }
+        }
+
+        //only main thread
+        private void EmitMoveEvent(NavAgent agent, bool isFound, NavRemote enemy)
+        {
+            if (isFound)
+            {
+                MovementListener.Move(
+                    agent.GetMovePath(),
+                    agent.GetTimes(),
+                    agent.CurrentPosition,
+                    agent.Remote,
+                    enemy);
+            }
+        }
+
+        public void MoveAgent(NavAgent agent, Vector3Int start, Vector3Int end, NavRemote enemy)
+        {
+            agent.AsyncStartMove(start, end, enemy);
+        }
+        public void FindPathDone_OnlyMainThread(NavAgent agent, bool found)
+        {
+            ThreadHelper.Invoke(() => EmitMoveEvent(agent, found, agent.TargetEnemy));
+        }
+
+        // Decision making
+        private NavRemote GetEnemyAt(Vector3Int position)
+        {
+            AgentNodes.GetInfo(position, out NodeInfo info);
+
+            if (info == null) return null;
             else
             {
-                if (CurrentAgent != null && !IsTargetEmpty())
-                {
-                    CurrentAgent.Remote.Attack(CursorController.SelectedPosition);
-                }
+                NavRemote otherAgent = info.GameObject.GetComponent<NavRemote>();
+                // is enemy
+                bool isEnemy = otherAgent.UserInfo.ID_User != CurrentAgent.Remote.UserInfo.ID_User;
+                return isEnemy == true ? otherAgent : null;
             }
+        }
+
+        public void Move_Action()
+        {
+            endCell = CursorController.SelectedPosition;
+            startCell = CurrentAgent.CurrentPosition;
+
+            MoveActiveAgent(startCell, endCell, GetEnemyAt(endCell));
+        }
+
+        public void Attack_Action()
+        {
+            if (CurrentAgent != null && !CurrentAgent.Remote.IsMoving())
+            {
+                JSONObject attackData = CurrentAgent.Remote.GetAttackData(CursorController.SelectedPosition);
+                MovementListener.Emit("S_ATTACK", attackData);
+            }
+        }
+
+        public bool IsEnemyAtTarget_Boolean()
+        {
+            Vector3Int position = CursorController.SelectedPosition;
+            return GetEnemyAt(position) != null;
+        }
+
+        public bool IsTargetInRange_Boolean(int attackRange)
+        {
+            if (CurrentAgent != null)
+            {
+                Vector3Int curPosition = CurrentAgent.CurrentPosition;
+                Vector3Int targetPosition = CursorController.SelectedPosition;
+
+                Vector3Int[] pattern = Constants.GetNeighboursRange(curPosition, attackRange);
+                return pattern.IsContaint(targetPosition);
+            }
+            return false;
         }
     }
 }

@@ -149,7 +149,7 @@ public class SIO_ServerHelperListener : Listener
             serId,
             id,
             (int)agent.Remote.Type,
-            agent.Remote.UnitData.ID_User,
+            agent.Remote.UnitInfo.ID_User,
             curCellPosition.ToPositionString(),
             tempPath[0].ToPositionString(),
             tempPath[tempPath.Count - 1].ToPositionString(),

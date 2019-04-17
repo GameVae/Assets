@@ -19,13 +19,9 @@ public class TestActionNode : ActionNode
 {
     private string action;
     public TestActionNode(string actionName)
+        :base(null)
     {
         action = actionName;
-    }
-
-    protected override void DoAction()
-    {
-        Debug.Log("Action node " + action);
     }
 }
 
@@ -275,7 +271,7 @@ public class TestObj : MonoBehaviour
 
     private void StartParse(JSONObject data)
     {
-        rss_table1.Rows?.Clear();
+        rss_table1.Rows.Clear();
         int count = data.Count;
         int i = 0;
         while (i < count)

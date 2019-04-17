@@ -1,6 +1,5 @@
-﻿using Generic.Singleton;
-using DataTable;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Generic.Singleton;
 using UnityEngine;
 using Json;
 
@@ -8,48 +7,50 @@ namespace DataTable
 {
     public class JSONTable<T> : ScriptableObject, ITable where T : ITableData
     {
-        [SerializeField] public List<T> Rows;
+        [SerializeField] private List<T> rows;
+        public List<T> Rows
+        {
+            get { return rows ?? (rows = new List<T>()); }
+        }
 
         public ITableData this[int index]
         {
             get
             {
-                if (index >= Rows.Count) return default(T);
-                return Rows[index];
+                if (index >= rows.Count) return default(T);
+                return rows[index];
             }
             set
             {
-                if (index < Rows.Count)
-                    Rows[index] = (T)value;
+                if (index < rows.Count)
+                    rows[index] = (T)value;
             }
         }
 
         public int Count
         {
-            get { return Rows.Count; }
+            get { return rows == null ? 0 : rows.Count; }
         }
 
         public System.Type RowType
         { get { return typeof(T); } }
 
-        public virtual T LoadRow(string json)
+        public virtual void LoadRow(string json)
         {
-            if (Rows == null)
-                Rows = new List<T>();
-            T row = JsonUtility.FromJson<T>(json);
-            //T row = ParseJson<T>(json);
-            Rows.Add(row);
-            return row;
+            if (rows == null)
+                rows = new List<T>();
+            T row = ParseJson<T>(json);
+            rows.Add(row);
         }
 
         public virtual void LoadTable(JSONObject data, bool clearPre = true)
         {
-            if (Rows == null)
-                Rows = new List<T>();
+            if (rows == null)
+                rows = new List<T>();
             else
             {
                 if (clearPre)
-                    Rows.Clear();
+                    rows.Clear();
             }
 
             int count = data.Count;
@@ -61,12 +62,12 @@ namespace DataTable
 
         public virtual void AsyncLoadTable(JSONObject data, bool clearPre = true)
         {
-            if (Rows == null)
-                Rows = new List<T>();
+            if (rows == null)
+                rows = new List<T>();
             else
             {
                 if (clearPre)
-                    Rows.Clear();
+                    rows.Clear();
             }
             Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncLoadTable<T>.ParseInfo()
             {
@@ -78,7 +79,7 @@ namespace DataTable
 
         private void LoadRow(T r)
         {
-            Rows.Add(r);
+            rows.Add(r);
         }
 
         public static TResult ParseJson<TResult>(string json)

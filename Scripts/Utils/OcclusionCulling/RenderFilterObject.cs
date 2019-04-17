@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class RenderFilterObject : MonoBehaviour
 {
-    private AgentMoveability agent;
+    private NavRemote agent;
 
     private void Awake()
     {
-        agent = GetComponent<AgentMoveability>();    
+        agent = GetComponent<NavRemote>();    
     }
 
     private void OnBecameVisible()

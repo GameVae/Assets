@@ -29,7 +29,7 @@ namespace Map
         {
             get
             {
-                return (Vector3Int)MapIns?.WorldToCell(transform.position).ZToZero();
+                return MapIns.WorldToCell(transform.position).ZToZero();
             }
         }
 

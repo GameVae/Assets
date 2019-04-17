@@ -20,6 +20,7 @@ namespace Entities.Navigation
                 return navController ?? (navController = Singleton.Instance<NavAgentController>());
             }
         }
+
         protected override void Awake()
         {
             base.Awake();
@@ -42,7 +43,7 @@ namespace Entities.Navigation
         public void ActiveNav(int id)
         {
             if (agentRemotes.ContainsKey(id))
-                agentRemotes[id].ActiveNav();
+                NavCtrl.SwitchToAgent(agentRemotes[id].NavAgent);
         }
 
         public bool IsOwnerAgent(int id)

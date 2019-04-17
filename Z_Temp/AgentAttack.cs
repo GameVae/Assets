@@ -26,8 +26,8 @@ public class AgentAttack : MonoBehaviour
     {
 
         attackData.Clear();
-        UnitRow ownerUnit = AgentRemote.UnitData;
-        UnitRow otherUnit = otherRemote.UnitData;
+        UnitRow ownerUnit = AgentRemote.UnitInfo;
+        UnitRow otherUnit = otherRemote.UnitInfo;
 
         attackData["Server_ID"] = "1";
 
@@ -49,8 +49,8 @@ public class AgentAttack : MonoBehaviour
     public void Attack(NavRemote otherRemote)
     {
         attackData.Clear();
-        UnitRow ownerUnit = AgentRemote.UnitData;
-        UnitRow otherUnit = otherRemote.UnitData;
+        UnitRow ownerUnit = AgentRemote.UnitInfo;
+        UnitRow otherUnit = otherRemote.UnitInfo;
 
         attackData["Server_ID"] = "1";
 

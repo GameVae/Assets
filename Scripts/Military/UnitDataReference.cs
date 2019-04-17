@@ -53,35 +53,31 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         StartCoroutine(AsyncCreateAgents());
     }
 
-    public void Create(UnitRow r, UserInfoRow user)
+    public void Create(UnitRow unitData, UserInfoRow user)
     {
-        GameObject agent = AgentSpawner.GetMilitary(r.ID_Unit);
-        if (agent == null || user == default(UserInfoRow))
+        GameObject agent = AgentSpawner.GetMilitary(unitData.ID_Unit);
+        if (agent == null || user == null)
             return;
         else
         {
-            agent.transform.position = MapIns.CellToWorld(r.Position_Cell.Parse3Int().ToClientPosition());
+            agent.transform.position = MapIns.CellToWorld(unitData.Position_Cell.Parse3Int().ToClientPosition());
 
             NavRemote agentRemote = agent.GetComponent<NavRemote>();
-            bool isOwner = r.ID_User == PlayerInfo.Info.ID_User;
+            bool isOwner = unitData.ID_User == PlayerInfo.Info.ID_User;
 
-            AgentInfo info = agent.GetComponent<AgentInfo>();
-            info.UserInfo = user;
-            info.UnitInfo = r;
-
-            agentRemote.SetUnitData(UnitTable, r, user, isOwner);
+            agentRemote.Initalize(UnitTable, unitData, user, isOwner);
 
             if (isOwner)
             {
                 agent.AddComponentNotExist<NavAgent>();
                 OwnerAgents.Add(agentRemote);
-                agent.name = "Owner " + r.ID;
+                agent.name = "Owner " + unitData.ID;
             }
             else
             {
                 FixedMovement nav = agentRemote.FixedMove;
-                NCAgentManager.Add(r.ID, nav);
-                agent.name = "other " + r.ID;
+                NCAgentManager.Add(unitData.ID, nav);
+                agent.name = "other " + unitData.ID;
             }
 
             agent.SetActive(true);
@@ -93,14 +89,14 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         int i = 0;
         int count = UnitTable.Count;
 
-        UnitRow r;
-        UserInfoRow user;
+        UnitRow unitData = null;
+        UserInfoRow user = null;
 
         while (i < count)
         {
-            r = UnitTable.Rows[i];
-            user = Users.GetUser(r.ID_User);
-            Create(r, user);
+            unitData = UnitTable.Rows[i];
+            user = Users.GetUser(unitData.ID_User);
+            Create(unitData, user);
 
             i++;
             yield return null;
