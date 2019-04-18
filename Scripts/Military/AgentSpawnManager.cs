@@ -1,5 +1,6 @@
 ﻿using Entities.Navigation;
 using EnumCollect;
+using Generic.Pooling;
 using Generic.Singleton;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using Utils;
 
 public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
 {
-    private Dictionary<int, Queue<GameObject>> agentsPool;
+    private Dictionary<int, Pooling<NavRemote>> agentsPool;
 
     private Dictionary<int, Object> agents;
 
@@ -19,40 +20,32 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
     {
         base.Awake();
         AssetUtil = Singleton.Instance<AssetUtils>();
-        agentsPool = new Dictionary<int, Queue<GameObject>>();
+        agentsPool = new Dictionary<int, Pooling<NavRemote>>();
         agents = new Dictionary<int, Object>();
         LoadAgents();
     }
 
-    public GameObject GetMilitary(ListUpgrade type)
+    public NavRemote GetMilitary(ListUpgrade type)
     {
-        Queue<GameObject> pool;
-        if (agentsPool.TryGetValue(type.GetHashCode(), out pool))
+        if (agentsPool.TryGetValue(type.GetHashCode(), out Pooling<NavRemote> pool))
         {
-            if (pool.Count > 0)
-                return pool.Dequeue();
-            else
-                return Create(type);
+            return pool.GetItem();
         }
         else
-        {
-            agentsPool[type.GetHashCode()] = new Queue<GameObject>();
-            return Create(type);
+        {            
+            return CreatePool(type).GetItem();
         }
     }
 
-    public void ReturnSolider(ListUpgrade type, GameObject agent)
+    public void Return(ListUpgrade type, NavRemote agent)
     {
-        agent.SetActive(false);
-        Queue<GameObject> pool;
-        if (agentsPool.TryGetValue(type.GetHashCode(), out pool))
+        if (agentsPool.TryGetValue(type.GetHashCode(), out Pooling<NavRemote> pool))
         {
-            pool.Enqueue(agent);
+            pool.Release(agent);
         }
         else
         {
-            agentsPool[type.GetHashCode()] = new Queue<GameObject>();
-            agentsPool[type.GetHashCode()].Enqueue(agent);
+            CreatePool(type).Release(agent);
         }
     }
 
@@ -67,11 +60,27 @@ public sealed class AgentSpawnManager : MonoSingle<AgentSpawnManager>
         }
     }
 
-    private GameObject Create(ListUpgrade type)
+    private NavRemote Create(ListUpgrade type)
     {
         agents.TryGetValue(type.GetHashCode(), out Object res);
         if (res == null)
             return null;
-        return Instantiate(res as GameObject, Container);
+        return Instantiate(res as GameObject, Container).GetComponent<NavRemote>();
+    }
+
+    private Pooling<NavRemote> CreatePool(ListUpgrade type)
+    {
+        int hashCode = type.GetHashCode();
+
+        agentsPool[hashCode] = new Pooling<NavRemote>();
+
+        agentsPool[hashCode].Initalize(delegate (int insId)
+        {
+            NavRemote remote = Create(type);
+            remote.FirstSetup(insId);
+            return remote;
+        }
+        );
+        return agentsPool[hashCode];
     }
 }

@@ -14,7 +14,7 @@ namespace Entities.Navigation
         private AnimatorController animator;
         private NavPathRenderer pathRenderer;
         private NavAgentController agentController;
-        private NavRemote enemy;
+        private NavRemote currentEnemy;
 
         #region A* Pathfinding
         private int maxSearchLevel;
@@ -43,7 +43,7 @@ namespace Entities.Navigation
         public Vector3Int StartPosition { get; private set; }
         public NavRemote TargetEnemy
         {
-            get { return enemy; }
+            get { return currentEnemy; }
         }
 
         #region Initalize
@@ -195,7 +195,7 @@ namespace Entities.Navigation
         {
             StartPosition = start;
             EndPosition = end;
-            enemy = targetEnemy;
+            currentEnemy = targetEnemy;
 
             if (curMoveStep >= maxMoveStep || (path != null && path.Count == 0))
             {
@@ -231,7 +231,7 @@ namespace Entities.Navigation
                 {
                     // StartMove(currentCell, result); // main thread
                     // AsyncStartMove(currentCell, result); // another thread
-                    AgentController.MoveAgent(this, currentCell, result, enemy);
+                    AgentController.MoveAgent(this, currentCell, result, currentEnemy);
                     curMoveStep = 0;
                 }
             }
@@ -292,6 +292,12 @@ namespace Entities.Navigation
         public List<Vector3Int> GetMovePath()
         {
             return aStar.Truncate(path, maxMoveStep);
+        }
+
+        public void Dead()
+        {
+            if (AgentController.CurrentAgent == this)
+                AgentController.UnSelectCurrentAgent();
         }
 
         private void OnDestroy()

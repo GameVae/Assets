@@ -579,6 +579,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5562583868121464309}
   - component: {fileID: 4345278771572930974}
+  - component: {fileID: 1125157465769898515}
   m_Layer: 0
   m_Name: HeadPoint
   m_TagString: Untagged
@@ -616,6 +617,43 @@ MonoBehaviour:
   Target: {fileID: 0}
   GameObject: {fileID: 2459613418223193220}
   ProjectionDir: 1
+--- !u!23 &1125157465769898515
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979294990528077613}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &5596763035309873855
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,12 +825,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea8b10e54f04e024d81ff53da316bbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Anim: {fileID: 4063669552023864824}
-  Offset:
-    MaxMoveStep: 20
-    MaxSearchLevel: 100
-    MaxSpeed: 2
-    MaxAngular: 5
 --- !u!114 &251875847784056986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,7 +849,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49decbdf546ff814790c936fd298ce08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 30
+  type: 0
+  offset: {fileID: 0}
+  agentInfo: {fileID: 0}
   Label: {fileID: 6906275843022264175}
 --- !u!1 &6263090960442026091
 GameObject:

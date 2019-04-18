@@ -14,6 +14,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using MultiThread;
+using Generic.Pooling;
 
 public class TestActionNode : ActionNode
 {
@@ -62,7 +63,11 @@ public class TestObj : MonoBehaviour
     public JSONTable_Position rss_table3;
 
     public MultiThreadHelper ThreadHelper;
-  
+
+    [Header("Test on screen label")]
+    public AgentLabelv2 prefabLabelv2;
+    public RectTransform canvas;
+    private Pooling<AgentLabelv2> labelPooling;
 
     private bool inited = false;
     private void Update()
@@ -79,8 +84,26 @@ public class TestObj : MonoBehaviour
         //    StartCoroutine(LockMainThread());
         //}
     }
+
+    private AgentLabelv2 CreatLabelv2(int id)
+    {
+        AgentLabelv2 item = Instantiate(prefabLabelv2, canvas);
+        item.FirstSetup(id);
+        return item;
+    }
     private void Start()
     {
+        labelPooling = new Pooling<AgentLabelv2>();
+        labelPooling.Initalize(CreatLabelv2);
+
+        for (int i = 0; i < 100; i++)
+        {
+            AgentLabelv2 item = labelPooling.GetItem();
+            Vector2 pos = new Vector2(UnityEngine.Random.Range(0, 1920), UnityEngine.Random.Range(0, 1080));
+            item.GetComponent<RectTransform>().SetPositionAndRotation(pos,Quaternion.identity);
+              
+            item.gameObject.SetActive(true);
+        }
         // moveEvent = Singleton.Instance<Connection>();
         // moveEvent.On("R_MOVE", R_MOVE);
         //Debugger.Log("This is a log from Debugger");
@@ -346,5 +369,15 @@ public class TestObj : MonoBehaviour
         th1.Start();
         th2.Start();
 
+    }
+
+    private void OnBecameInvisible()
+    {
+        Debug.Log(gameObject.name + " Invisible");
+    }
+
+    private void OnBecameVisible()
+    {
+        Debug.Log(gameObject.name + " Visible");
     }
 }

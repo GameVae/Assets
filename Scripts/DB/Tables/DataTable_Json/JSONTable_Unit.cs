@@ -2,6 +2,7 @@
 using DataTable.Row;
 using Generic.Observer;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DataTable
 {
@@ -25,11 +26,13 @@ namespace DataTable
 
         public UnitRow GetUnitById(int id)
         {
-            List<int> ids = UnitIds;
-            int index = ids.BinarySearch_L<int>(0, ids.Count, id);
-            if (ids[index] == id)
-                return Rows[index];
-            return null;
+            Rows.RemoveNull();
+            //List<int> ids = UnitIds;
+            //int index = ids.BinarySearch_L<int>(0, ids.Count, id);
+            //if (index < Count && ids[index] == id)
+            //    return Rows[index];
+            //return null;
+            return Rows.FirstOrDefault(unit => unit.ID == id);
         }
 
         public override void LoadRow(string json)
@@ -52,21 +55,33 @@ namespace DataTable
             UnitRow updateData = ParseJson<UnitRow>(json);
             if (updateData != null)
             {
-                int updateIndex = Rows.BinarySearch_L(0, Count, updateData);
-                if (Rows[updateIndex].ID == updateData.ID)
-                    Rows[updateIndex] = updateData;
+                //int updateIndex = Rows.BinarySearch_L(0, Count, updateData);
+                //if (Rows[updateIndex].ID == updateData.ID)
+                //    Rows[updateIndex] = updateData;
 
-                for (int i = 0; i < Observers.Count; i++)
+                int updateIndex = -1;
+                for (int i = 0; i < Count; i++)
                 {
-                    if (((Observer_Unit)Observers[i]).UnitId == updateData.ID)
+                    if (Rows[i].ID == updateData.ID)
                     {
-                        Notify(Observers[i]);
-                        return;
+                        updateIndex = i;
+                        Rows[i] = updateData;
+                        break;
                     }
                 }
+
+                if (updateIndex >= 0)
+                    for (int i = 0; i < Observers.Count; i++)
+                    {
+                        if (((Observer_Unit)Observers[i]).UnitId == updateData.ID)
+                        {
+                            Notify(Observers[i]);
+                            return;
+                        }
+                    }
             }
         }
-        
+
         public void Register(IObserver observer)
         {
             Observers.Add(observer);

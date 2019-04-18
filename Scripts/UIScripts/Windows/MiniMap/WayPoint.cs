@@ -7,15 +7,14 @@ namespace Map
     public abstract class WayPoint : MonoBehaviour
     {
         private NodeInfo info;
-        private HexMap hexMap;
-
-        protected GlobalNodeManager nodeManager;
+        private HexMap mapIns;
+        private GlobalNodeManager nodeManager;
 
         public HexMap MapIns
         {
             get
             {
-                return hexMap ?? (hexMap = Singleton.Instance<HexMap>());
+                return mapIns ?? (mapIns = Singleton.Instance<HexMap>());
             }
         }
 
@@ -33,6 +32,14 @@ namespace Map
             }
         }
 
+        public GlobalNodeManager NodeManager
+        {
+            get
+            {
+                return nodeManager ?? (nodeManager = Singleton.Instance<GlobalNodeManager>());
+            }
+        }
+
         protected virtual void Awake()
         {
             info = new NodeInfo()
@@ -40,7 +47,6 @@ namespace Map
                 Id = GlobalNodeManager.ID(),
                 GameObject = gameObject,
             };
-            nodeManager = Singleton.Instance<GlobalNodeManager>();
         }
 
         public abstract bool Binding();

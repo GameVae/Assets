@@ -3,6 +3,7 @@ using DataTable;
 using DataTable.Row;
 using Network.Sync;
 using UnityEngine;
+using Entities.Navigation;
 
 public class BaseDefendController : MonoBehaviour
 {
@@ -33,11 +34,11 @@ public class BaseDefendController : MonoBehaviour
             for (int j = 0; j < baseDefends[i].Count; j++)
             {
                 BaseDefendRow row = baseDefends[i].Rows[j];
-                GameObject agent = Manager.GetMilitary(row.ID_Unit);
+                NavRemote agent = Manager.GetMilitary(row.ID_Unit);
                 if (agent != null)
                 {
                     agent.transform.position = basePos;
-                    agent.SetActive(true);
+                    agent.gameObject.SetActive(true);
                 }
             }
         }

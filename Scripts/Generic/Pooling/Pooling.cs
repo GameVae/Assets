@@ -11,9 +11,11 @@ namespace Generic.Pooling
         private Queue<T> pooling;
         private Dictionary<int, T> activedItem;
 
+        public int ActiveCount { get { return activedItem.Count; } }
         public void Initalize(System.Func<int, T> creator, int initalizeSize = 0)
         {
             pooling = new Queue<T>();
+            activedItem = new Dictionary<int, T>();
             itemCreator = creator;
             for (int i = 0; i < initalizeSize; i++)
             {

@@ -1,28 +1,35 @@
 ﻿using EnumCollect;
-using Generic.Singleton;
 using DataTable.Row;
-using Network.Data;
 using UnityEngine;
 using Generic.Observer;
 using Map;
+using Generic.Pooling;
+using UnityEngine.Events;
 
 namespace Entities.Navigation
 {
     [RequireComponent(typeof(AgentWayPoint))]
-    public sealed class NavRemote : MonoBehaviour
+    public sealed class NavRemote : MonoBehaviour, IPoolable
     {
         [SerializeField] private ListUpgrade type;
         [SerializeField] private NavOffset offset;
 
         [SerializeField] // TODO:[TEST] for show in inspector
         private AgentInfo agentInfo;
-        
+
+        private UnityAction<NavRemote> deathEvents;
+        public event UnityAction<NavRemote> OnDead
+        {
+            add { deathEvents += value; }
+            remove { deathEvents -= value; }
+        }
+
+        private ISubject unitSubject;
+        private Observer_Unit observer;
+
         private NavAgent navAgent;
         private FixedMovement fixedMove;
         private AgentWayPoint waypoint;
-
-        private AgentAttack agentAttack;
-        private AgentNodeManager agentNodes;
 
         public NavAgent NavAgent
         {
@@ -36,27 +43,8 @@ namespace Entities.Navigation
         {
             get
             {
-                return waypoint ?? (waypoint = GetComponent<AgentWayPoint>());  
+                return waypoint ?? (waypoint = GetComponent<AgentWayPoint>());
             }
-        }
-
-        private Observer_Unit observer;
-
-        public AgentAttack AgentAttack
-        {
-            get
-            {
-                if (agentAttack == null)
-                {
-                    agentAttack = GetComponent<AgentAttack>();
-
-                }
-                return agentAttack ?? (agentAttack = gameObject.AddComponent<AgentAttack>());
-            }
-        }
-        public AgentNodeManager AgentNodes
-        {
-            get { return agentNodes ?? (agentNodes = Singleton.Instance<GlobalNodeManager>().AgentNode); }
         }
 
         public UserInfoRow UserInfo
@@ -70,7 +58,7 @@ namespace Entities.Navigation
                 return AgentInfo.UnitInfo;
             }
         }
-        
+
         public ListUpgrade Type
         {
             get { return type; }
@@ -113,9 +101,11 @@ namespace Entities.Navigation
             }
         }
 
+        public int ManagedId { get; private set; }
+
         private void Awake()
         {
-            // Label.LookAt(NavAgentCtrl.CameraRaycaster.transform);
+            Label.LookAt(Camera.main.transform);
         }
 
         private void Start()
@@ -137,8 +127,13 @@ namespace Entities.Navigation
             }
         }
 
-        public void Initalize(ISubject subject, UnitRow unitData, UserInfoRow user, bool isOwner)
+        public void Initalize(ISubject subject,
+            UnitRow unitData,
+            UserInfoRow user,
+            bool isOwner)
+
         {
+            unitSubject = subject;
             AgentInfo.UserInfo = user;
             AgentInfo.UnitInfo = unitData;
             IsOwner = isOwner;
@@ -150,22 +145,12 @@ namespace Entities.Navigation
             subject.Register(observer);
         }
 
-        public JSONObject GetAttackData(Vector3Int target)
-        {
-            if (AgentNodes.GetInfo(target, out NodeInfo info))
-            {
-                return AgentAttack.S_ATTACK(info.GameObject.GetComponent<NavRemote>());
-            }
-            return null;
-        }
-
         private void SubjectChanged(Observer_Unit.Package package)
         {
             UnitRow data = package.Unit;
             if (data.Quality <= 0)
             {
-                Debugger.Log("DEAD");
-                Label.SetInfo(data, UserInfo, IsOwner);
+                Dead();
             }
             else
                 Label.SetInfo(data, UserInfo, IsOwner);
@@ -186,6 +171,28 @@ namespace Entities.Navigation
         public bool Unbinding()
         {
             return WayPoint.Unbinding();
+        }
+
+        public void Dead()
+        {
+            deathEvents?.Invoke(this);
+            deathEvents = null;
+        }
+
+        // IPoolable.Interface
+        public void FirstSetup(int insId)
+        {
+            ManagedId = insId;
+        }
+
+        public void Dispose()
+        {
+            NavAgent?.Dead();
+            Unbinding();
+
+            unitSubject.Remove(observer);
+            observer.Dispose();
+            gameObject.SetActive(false);
         }
     }
 }

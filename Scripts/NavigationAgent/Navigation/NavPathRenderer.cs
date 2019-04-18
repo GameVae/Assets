@@ -53,7 +53,7 @@ public class NavPathRenderer
         if (isLineAnimation)
         {
             animLineCounter += Time.deltaTime;
-            if (animLineCounter >= 0.25f)
+            if (animLineCounter >= 0.2f)
             {
                 isLineAnimation = false;
                 animLineCounter = 0.0f;

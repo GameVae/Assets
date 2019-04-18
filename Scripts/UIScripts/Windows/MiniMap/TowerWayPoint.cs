@@ -13,7 +13,7 @@ namespace Map
         protected override void Awake()
         {
             base.Awake();
-            towerNode = nodeManager.TowerNode;
+            towerNode = NodeManager.TowerNode;
         }
 
         public override bool Binding()

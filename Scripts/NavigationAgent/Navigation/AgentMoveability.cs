@@ -1,6 +1,4 @@
-﻿using Generic.Singleton;
-using Map;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Entities.Navigation
 {

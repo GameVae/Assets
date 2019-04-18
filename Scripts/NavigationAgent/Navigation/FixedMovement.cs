@@ -13,29 +13,43 @@ namespace Entities.Navigation
         private AnimatorController anim;
         private MovementSerMessageHandler moveHandler;
 
+        public AnimatorController AnimatorController
+        {
+            get
+            {
+                return anim ?? (anim = GetComponent<AnimatorController>());
+            }
+        }
+
+        public MovementSerMessageHandler MoveHandler
+        {
+            get
+            {
+                return moveHandler ?? (moveHandler = new MovementSerMessageHandler(MapIns));
+            }
+        }
+
         private void Awake()
         {
             IsMoving = false;
-            moveHandler = new MovementSerMessageHandler(MapIns);
-            anim = GetComponent<AnimatorController>();
-
         }
 
         public void StartMove(JSONObject r_move)
         {
-            moveHandler.HandlerEvent(r_move);
-            speed = moveHandler.FirstStep(transform.position, out target);
+            MoveHandler.HandlerEvent(r_move);
+            speed = MoveHandler.FirstStep(transform.position, out target);
 
             IsMoving = true;
             Rotator.Target = target;
             Rotator.IsBlock = false;
-            anim.Play(AnimState.Walking);
+            AnimatorController.Play(AnimState.Walking);
+
             Remote.Unbinding();
         }
 
         private void NextStep()
         {
-            speed = moveHandler.NextStep(transform.position, out target);
+            speed = MoveHandler.NextStep(transform.position, out target);
             Rotator.Target = target;
         }
 
@@ -43,9 +57,10 @@ namespace Entities.Navigation
         {
             IsMoving = false;
             Rotator.IsBlock = true;
-            anim.Stop(AnimState.Walking);
+            AnimatorController.Stop(AnimState.Walking);
+            MoveHandler.Clear();
+
             Remote.Binding();
-            moveHandler.Clear();
         }
 
         protected override void UpdateMove()

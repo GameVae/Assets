@@ -63,6 +63,7 @@ public class NavigateIcon : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         if (!Icon.enabled) Icon.enabled = true;
-        trans.localPosition = position;
+        trans.anchoredPosition = position;
+        Debugger.Log(position);
     }
 }

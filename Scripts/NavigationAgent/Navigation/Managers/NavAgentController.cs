@@ -20,6 +20,7 @@ namespace Entities.Navigation
 
         private NestedCondition canMoveConditions;
 
+        public SelectAgentPanel SelectAgentPanel;
         public Camera CameraRaycaster
         {
             get
@@ -29,6 +30,7 @@ namespace Entities.Navigation
         }
         public GUIOnOffSwitch SwitchButton;
         public CursorController CursorController;
+        public AgentDecisionBehavior agentBehaviorMaking;
 
         public NavAgent CurrentAgent { get; private set; }
 
@@ -95,6 +97,11 @@ namespace Entities.Navigation
             MoveAgent(CurrentAgent, start, end, enemy);
         }
 
+        public void UnSelectCurrentAgent()
+        {
+            SelectAgentPanel.OnUnSelectAgent();
+        }
+
         public void SwitchToAgent(NavAgent agent)
         {
             CurrentAgent = agent;
@@ -136,7 +143,7 @@ namespace Entities.Navigation
                     return;
                 }
 
-                Move_Action();
+                agentBehaviorMaking.MakeDecision();
             }
         }
 
@@ -164,7 +171,7 @@ namespace Entities.Navigation
         }
 
         // Decision making
-        private NavRemote GetEnemyAt(Vector3Int position)
+        public NavRemote GetEnemyAt(Vector3Int position)
         {
             AgentNodes.GetInfo(position, out NodeInfo info);
 
@@ -184,15 +191,6 @@ namespace Entities.Navigation
             startCell = CurrentAgent.CurrentPosition;
 
             MoveActiveAgent(startCell, endCell, GetEnemyAt(endCell));
-        }
-
-        public void Attack_Action()
-        {
-            if (CurrentAgent != null && !CurrentAgent.Remote.IsMoving())
-            {
-                JSONObject attackData = CurrentAgent.Remote.GetAttackData(CursorController.SelectedPosition);
-                MovementListener.Emit("S_ATTACK", attackData);
-            }
         }
 
         public bool IsEnemyAtTarget_Boolean()

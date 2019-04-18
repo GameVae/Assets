@@ -84,7 +84,20 @@ namespace Generic.CustomInput
             }
         }
 
-        #region Touch Properties
+        public Vector3 Position
+        {
+            get
+            {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                if (TouchCount > 0)
+                    return GetTouch(0).position;
+#endif
+#if UNITY_EDITOR || UNITY_STANDALONE
+                return Input.mousePosition;
+#endif
+            }
+        }
+#region Touch Properties
         public int TouchCount
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
@@ -110,7 +123,7 @@ namespace Generic.CustomInput
 #endif
         }
 
-        #endregion
+#endregion
 
         protected override void Awake()
         {
@@ -221,16 +234,16 @@ namespace Generic.CustomInput
         }
 
 
-        #region Editor
+#region Editor
         private void RecordMouseState()
         {
             axises = Input.mousePosition - lastPosition;
             lastPosition = Input.mousePosition;
         }
 
-        #endregion
+#endregion
 
-        #region  Mobile
+#region  Mobile
 
         private float GetMobileZoomValue()
         {
@@ -250,6 +263,6 @@ namespace Generic.CustomInput
             }
             return (zoomValue * Constants.PixelDependencyDevice) / Time.deltaTime;
         }
-        #endregion
+#endregion
     }
 }

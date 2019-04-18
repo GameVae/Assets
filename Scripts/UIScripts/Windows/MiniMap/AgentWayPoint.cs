@@ -29,7 +29,7 @@ namespace Map
         protected override void Awake()
         {
             base.Awake();
-            agentNodeManager = nodeManager.AgentNode;
+            agentNodeManager = NodeManager.AgentNode;
         }
     }
 }

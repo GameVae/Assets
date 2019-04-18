@@ -10,11 +10,12 @@ public class MiniMap : BaseWindow
     private bool isClosing;
     private float closeCounter;
     [SerializeField]
-    private float DelayCloseMiniMap;
+    private float delayCloseMiniMap;
 
     private Vector3Int selectedCell;
     private CrossInput crossInput;
     private NestedCondition selectCondition;
+    private int opentAtFrame;
 
     public GUIInteractableIcon OpenButton;
 
@@ -44,16 +45,19 @@ public class MiniMap : BaseWindow
 
     protected override void Update()
     {
-        if (selectCondition.Evaluate())
+        if (!isClosing)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(MiniMapImage, Input.mousePosition, UICamera, out Vector2 local);
-            SetNavigateIcon(local);
+            if (selectCondition.Evaluate())
+            {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle
+                    (MiniMapImage, crossInput.Position, UICamera, out Vector2 local);
+                SetNavigateIcon(local);
+            }
         }
-
-        if (isClosing)
+        else
         {
             closeCounter += Time.deltaTime;
-            if (closeCounter >= DelayCloseMiniMap)
+            if (closeCounter >= delayCloseMiniMap)
             {
                 Close();
             }
@@ -129,7 +133,6 @@ public class MiniMap : BaseWindow
         }
     }
 
-
     private void MoveCameraToCell(Vector3Int cell)
     {
         CameraCtrl.Set(cell);
@@ -160,6 +163,7 @@ public class MiniMap : BaseWindow
     {
         base.Open();
         MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
+        opentAtFrame = Time.frameCount + 1;
     }
 
     protected override void Init()
@@ -174,8 +178,11 @@ public class MiniMap : BaseWindow
 
     private void InitSelectCondition()
     {
-        selectCondition.Conditions += delegate { return Window.activeInHierarchy; };
-        selectCondition.Conditions += delegate { return crossInput.IsPointerUp; };
+        selectCondition.Conditions += delegate { return crossInput.IsTouch; };
+        selectCondition.Conditions += delegate
+        {
+            return Window.activeInHierarchy && opentAtFrame != Time.frameCount;
+        };
     }
 }
 

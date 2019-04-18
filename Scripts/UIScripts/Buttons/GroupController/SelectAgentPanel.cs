@@ -4,15 +4,15 @@ using DataTable;
 using DataTable.Row;
 using Network.Data;
 using SocketIO;
-using System.Collections.Generic;
 using UI.Animation;
 using UI.Widget;
 using UnityEngine;
+using Generic.Pooling;
 
 public class SelectAgentPanel : MonoBehaviour
 {
     public JSONTable_Unit Units;
-    public GUIInteractableIcon Prefab;
+    public SelectableAgentElement Prefab;
     public RectTransform ScrollViewContent;
     public GUIInteractableIcon OpenButton;
     public GUIInteractableIcon UnSelectAgentButton;
@@ -24,7 +24,7 @@ public class SelectAgentPanel : MonoBehaviour
     private bool isInited;
     private bool isCanInit;
 
-    private Dictionary<int, GUIInteractableIcon> elements;
+    private Pooling<SelectableAgentElement> elementPooling;
     private EventListenersController Events;
 
     public void Awake()
@@ -32,7 +32,9 @@ public class SelectAgentPanel : MonoBehaviour
         isInited = false;
         isCanInit = false;
 
-        elements = new Dictionary<int, GUIInteractableIcon>();
+        elementPooling = new Pooling<SelectableAgentElement>();
+        elementPooling.Initalize(CreateElement);
+
         Events = Singleton.Instance<EventListenersController>();
 
         ResizeAnimation.CloseDoneEvt += delegate { ActiveContent(false); };
@@ -59,12 +61,14 @@ public class SelectAgentPanel : MonoBehaviour
             Init();
             isInited = true;
         }
-
-        ResizeAnimation.Action();
-        ActiveContent(true);
+        if (isInited)
+        {
+            ResizeAnimation.Action();
+            ActiveContent(true);
+        }
     }
 
-    private void OnUnSelectAgent()
+    public void OnUnSelectAgent()
     {
         OwnerNavController.UnSelectCurrentAgent();
         UnSelectAgentButton.gameObject.SetActive(false);
@@ -76,7 +80,7 @@ public class SelectAgentPanel : MonoBehaviour
         {
             Add(Units.Rows[i]);
         }
-        FitSize(elements.Count);
+        FitSize(elementPooling.ActiveCount);
     }
 
     public void OnSelectAgent()
@@ -87,37 +91,43 @@ public class SelectAgentPanel : MonoBehaviour
     public void Add(UnitRow agentInfo)
     {
         int id = agentInfo.ID;
-        if (!elements.ContainsKey(id) && OwnerNavController.IsOwnerAgent(id))
+        if (OwnerNavController.IsOwnerAgent(id))
         {
-            GUIInteractableIcon el = Instantiate(Prefab, ScrollViewContent);
-            el.Placeholder.text = id.ToString();
+            SelectableAgentElement el = elementPooling.GetItem();
+            el.PlaceholderComp.Text = id.ToString();
 
-            el.OnClickEvents += delegate 
+            NavRemote navRemote = OwnerNavController.GetNavRemote(id);
+            navRemote.OnDead += delegate
+            {
+                elementPooling.Release(el);
+                FitSize(elementPooling.ActiveCount);
+            };
+
+            el.SelectableComp.OnClickEvents += delegate 
             {
                 OwnerNavController.ActiveNav(id);
-                Vector3Int position = OwnerNavController.GetNavRemote(id).FixedMove.CurrentPosition;
-
+                ResizeAnimation.Close();
+                
+                Vector3Int position = navRemote.CurrentPosition;
                 CameraGroup.CameraMoveToAgent(position);
                 ActiveUnSelectButton();
             };
             el.gameObject.SetActive(true);
-
-            elements[id] = el;
         }
 
         if (isInited) // first init
-            FitSize(elements.Count);
+            FitSize(elementPooling.ActiveCount);
     }
 
     private void FitSize(int count)
     {
         if (count == 1)
         {
-            ResizeAnimation.MaxSize.y = 250;
+            ResizeAnimation.MaxSize.y = 220;
         }
         else if (count == 2)
         {
-            ResizeAnimation.MaxSize.y = 320;
+            ResizeAnimation.MaxSize.y = 280;
         }
         else
         {
@@ -133,5 +143,12 @@ public class SelectAgentPanel : MonoBehaviour
     private void ActiveUnSelectButton()
     {
         UnSelectAgentButton.gameObject.SetActive(true);
+    }
+
+    private SelectableAgentElement CreateElement(int id)
+    {
+        SelectableAgentElement el = Instantiate(Prefab, ScrollViewContent);
+        el.FirstSetup(id);
+        return el;
     }
 }

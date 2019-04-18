@@ -6,7 +6,7 @@ public sealed class VectorRotator : MonoBehaviour
     public float Angular = 5;
     public bool IsBlock;
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if(!IsBlock)
         {

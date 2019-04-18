@@ -14,7 +14,7 @@ namespace DataTable
         public UserInfoRow GetUser(int id)
         {
             int index = Rows.BinarySearch_L(0, Rows.Count, id);
-            return Rows[index].ID_User == id ? Rows[index] : null;
+            return index < Count && Rows[index].ID_User == id ? Rows[index] : null;
         }
 
         public override void LoadTable(JSONObject data, bool clearPre = true)

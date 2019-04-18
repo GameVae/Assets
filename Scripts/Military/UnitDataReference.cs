@@ -6,7 +6,6 @@ using Network.Data;
 using Network.Sync;
 using SocketIO;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 public class UnitDataReference : MonoSingle<UnitDataReference>
@@ -55,32 +54,35 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
 
     public void Create(UnitRow unitData, UserInfoRow user)
     {
-        GameObject agent = AgentSpawner.GetMilitary(unitData.ID_Unit);
-        if (agent == null || user == null)
+        NavRemote agentRemote = AgentSpawner.GetMilitary(unitData.ID_Unit);
+        if (agentRemote == null || user == null)
             return;
         else
         {
-            agent.transform.position = MapIns.CellToWorld(unitData.Position_Cell.Parse3Int().ToClientPosition());
+            agentRemote.transform.position = MapIns.CellToWorld(unitData.Position_Cell.Parse3Int().ToClientPosition());
+            agentRemote.OnDead += delegate
+            {
+                AgentSpawner.Return(agentRemote.Type, agentRemote);
+            };
 
-            NavRemote agentRemote = agent.GetComponent<NavRemote>();
             bool isOwner = unitData.ID_User == PlayerInfo.Info.ID_User;
 
             agentRemote.Initalize(UnitTable, unitData, user, isOwner);
 
             if (isOwner)
             {
-                agent.AddComponentNotExist<NavAgent>();
+                agentRemote.gameObject.AddComponentNotExist<NavAgent>();
                 OwnerAgents.Add(agentRemote);
-                agent.name = "Owner " + unitData.ID;
+                agentRemote.name = "Owner " + unitData.ID;
             }
             else
             {
                 FixedMovement nav = agentRemote.FixedMove;
                 NCAgentManager.Add(unitData.ID, nav);
-                agent.name = "other " + unitData.ID;
+                agentRemote.name = "other " + unitData.ID;
             }
 
-            agent.SetActive(true);
+            agentRemote.gameObject.SetActive(true);
         }
     }
 
