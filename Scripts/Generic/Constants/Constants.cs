@@ -170,12 +170,15 @@ namespace Generic.Contants
 
             List<Vector3Int> neighbours = new List<Vector3Int>();
             Vector3Int neighbour;
-            for (int i = 0; i < pattern.Length; i++)
+            if (pattern != null)
             {
-                neighbour = pattern[i] + cell;
-                if (IsValidCell(neighbour.x, neighbour.y))
+                for (int i = 0; i < pattern.Length; i++)
                 {
-                    neighbours.Add(neighbour);
+                    neighbour = pattern[i] + cell;
+                    if (IsValidCell(neighbour.x, neighbour.y))
+                    {
+                        neighbours.Add(neighbour);
+                    }
                 }
             }
             return neighbours.ToArray();

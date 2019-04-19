@@ -1,35 +1,27 @@
 ﻿using EnumCollect;
-using Generic.Singleton;
 using UnityEngine;
 
 namespace Map
 {
-    [RequireComponent(typeof(TowerWayPoint))]
+    [RequireComponent(typeof(ConstructWayPoint))]
     public class BaseTower : MonoBehaviour
     {
+        private ConstructWayPoint wayPoint;
         public WayPoint WayPoint
         {
-            get;
-            private set;
+            get
+            {
+                return wayPoint ?? (wayPoint = GetComponent<ConstructWayPoint>());
+            }
+            
         }
 
         [Header("Offset")]
         public TowerType Type;
         public Vector3Int ExactlyPosition;
 
-        private GlobalNodeManager nodeManager;
-        private TowerNodeManager towerNodeManager;
-
-        private void Awake()
-        {
-            WayPoint = GetComponent<TowerWayPoint>();
-        }
-
         private void Start()
         {
-            nodeManager = Singleton.Instance<GlobalNodeManager>();
-            towerNodeManager = nodeManager.TowerNode;
-
             WayPoint.Binding();
         }
 
@@ -51,7 +43,6 @@ namespace Map
 
             ExactlyPosition = exactlyPos;
             SetPosition();
-
             WayPoint.Binding();
         }
 

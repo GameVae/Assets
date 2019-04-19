@@ -3274,10 +3274,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1870925180}
   - {fileID: 822416003}
   - {fileID: 1376673208}
   - {fileID: 1547085467}
+  - {fileID: 1870925180}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6662,7 +6662,7 @@ Canvas:
   m_GameObject: {fileID: 757301824}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 282840813}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -7576,7 +7576,7 @@ RectTransform:
   - {fileID: 153457408}
   - {fileID: 1025676027}
   m_Father: {fileID: 340176693}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11860,7 +11860,7 @@ PrefabInstance:
     - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
@@ -11930,7 +11930,7 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000016302622
+      value: -0.000009747577
       objectReference: {fileID: 0}
     - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
@@ -13618,7 +13618,7 @@ RectTransform:
   m_Children:
   - {fileID: 387164043}
   m_Father: {fileID: 340176693}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -13639,7 +13639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.5803922}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -15021,13 +15021,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870925179}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 205810808}
   m_Father: {fileID: 340176693}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8008518}
   m_AnchorMax: {x: 0, y: 0.8008518}

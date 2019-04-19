@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce644527ec365641b025b15d88f1040, type: 3}
   m_Name: SoldierOffset
   m_EditorClassIdentifier: 
-  MaxMoveStep: 20
-  MaxSearchLevel: 120
-  MaxSpeed: 1
+  maxMoveStep: 20
+  maxSearchLevel: 250
+  maxSpeed: 2
+  attackRange: 1

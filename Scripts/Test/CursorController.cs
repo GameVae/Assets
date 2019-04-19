@@ -3,6 +3,7 @@ using Generic.Singleton;
 using UI;
 using UnityEngine;
 using UnityEngine.Events;
+using static NodeManagerProvider;
 
 public class CursorController : MonoBehaviour
 {
@@ -14,7 +15,9 @@ public class CursorController : MonoBehaviour
     private CrossInput crossInput;
     private UnityEventSystem eventSystem;
     private Popup popupIns;
-    private TowerNodeManager towerPositions;
+
+    private RangeWayPointManager towerPositions;
+    private NodeManagerProvider managerProvider;
 
     public CursorPos Cursor;
     public CameraController CameraController;
@@ -71,11 +74,21 @@ public class CursorController : MonoBehaviour
             return resourceManager ?? (resourceManager = Singleton.Instance<ResourceManager>());
         }
     }
-    public TowerNodeManager TowerNodeManager
+
+    public NodeManagerProvider ManagerProvider
     {
         get
         {
-            return towerPositions ?? (towerPositions = Singleton.Instance<GlobalNodeManager>().TowerNode);
+            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+        }
+    }
+
+    public RangeWayPointManager ConstructNodeManager
+    {
+        get
+        {
+            return towerPositions ?? (towerPositions = 
+                ManagerProvider.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
         }
     }
 
@@ -128,7 +141,7 @@ public class CursorController : MonoBehaviour
 
     private void DetermineSelectedOnTower()
     {
-        if (TowerNodeManager.GetInfo(SelectedPosition, out NodeInfo result))
+        if (ConstructNodeManager.GetInfo(SelectedPosition, out NodeInfo result))
         {
             SelectedPosition = MapIns.WorldToCell(result.GameObject.transform.position).ZToZero();
         }

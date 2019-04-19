@@ -3,6 +3,7 @@ using Generic.Singleton;
 using PathFinding;
 using System.Collections.Generic;
 using UnityEngine;
+using static NodeManagerProvider;
 
 public sealed class HexMap : MonoSingle<HexMap>
 {
@@ -11,16 +12,30 @@ public sealed class HexMap : MonoSingle<HexMap>
     public const int TotalCol = Constants.TOTAL_COL;
     public const int TotalRow = Constants.TOTAL_ROW;
 
-    private GlobalNodeManager nodeManager;
-    private AgentNodeManager agentNodeManager;
+    private NodeManagerProvider managerProvider;
+    public NodeManagerProvider ManagerProvider
+    {
+        get
+        {
+            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+        }
+    }
+
+    private SingleWayPointManager agentNodeManager;
+    public SingleWayPointManager AgentNodeManager
+    {
+        get
+        {
+            return agentNodeManager ??
+                (agentNodeManager =
+                ManagerProvider.GetManager<AgentWayPoint>(NodeType.Single) as SingleWayPointManager);
+        }
+    }
     private BreathFirstSearch breathFirstSearch;
 
     private void Start()
     {
-        nodeManager = Singleton.Instance<GlobalNodeManager>();
         breathFirstSearch = Singleton.Instance<BreathFirstSearch>();
-
-        agentNodeManager = nodeManager.AgentNode;
     }
 
     public int ConvertToIndex(int x, int y)
@@ -69,7 +84,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         {
             neighbour = pattern[i] + cell;
             if (IsValidCell(neighbour.x, neighbour.y) &&
-                !agentNodeManager.IsHolding(neighbour.ZToZero()))
+                !AgentNodeManager.IsHolding(neighbour.ZToZero()))
             {
                 neighbours.Add(neighbour);
             }

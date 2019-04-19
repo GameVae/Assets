@@ -2,22 +2,22 @@
 using Generic.CustomInput;
 using Generic.Singleton;
 using System.Collections.Generic;
+using UI.Composites;
 using UI.Widget;
 using UnityEngine;
+using static NodeManagerProvider;
 
 public class MiniMap : BaseWindow
 {
+    [SerializeField] private float delayCloseMiniMap;
     private bool isClosing;
     private float closeCounter;
-    [SerializeField]
-    private float delayCloseMiniMap;
 
     private Vector3Int selectedCell;
     private CrossInput crossInput;
     private NestedCondition selectCondition;
-    private int opentAtFrame;
 
-    public GUIInteractableIcon OpenButton;
+    public SelectableComp OpenButton;
 
     public CameraController CameraCtrl;
     public CursorPos cursor;
@@ -27,11 +27,29 @@ public class MiniMap : BaseWindow
     public RectTransform BuildingIcon;
     public Camera UICamera;
 
+    private RangeWayPointManager constructNodeManager;
+    private NodeManagerProvider managerProvider;
+
+    public NodeManagerProvider NodeManagerProvider
+    {
+        get
+        {
+            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+        }
+    }
+    public RangeWayPointManager ConstructNodeManager
+    {
+        get
+        {
+            return constructNodeManager ?? (constructNodeManager = NodeManagerProvider.
+                GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
         OpenButton.OnClickEvents += Open;
-
     }
 
     protected override void Start()
@@ -50,7 +68,9 @@ public class MiniMap : BaseWindow
             if (selectCondition.Evaluate())
             {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle
-                    (MiniMapImage, crossInput.Position, UICamera, out Vector2 local);
+                    (MiniMapImage, crossInput.Position, null, out Vector2 local);
+                //Debugger.Log("local: " + local);
+                //Debugger.Log("input pos: " + crossInput.Position);
                 SetNavigateIcon(local);
             }
         }
@@ -77,7 +97,7 @@ public class MiniMap : BaseWindow
 
     private bool TrySetNavOnBuild(Rect area, out Vector3Int cell)
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<GlobalNodeManager>().TowerPositions;
+        List<Vector3Int> buildingCell = ConstructNodeManager.Centers;
 
         for (int i = 0; i < buildingCell.Count; i++)
         {
@@ -103,7 +123,7 @@ public class MiniMap : BaseWindow
 
     private void SetupBuildingIcon()
     {
-        List<Vector3Int> buildingCell = Singleton.Instance<GlobalNodeManager>().TowerPositions;
+        List<Vector3Int> buildingCell = ConstructNodeManager.Centers;
 
         for (int i = 0; i < buildingCell.Count; i++)
         {
@@ -120,6 +140,7 @@ public class MiniMap : BaseWindow
         {
             Vector3Int currentSelectCell = GetCellOnMiniMap(position);
             MapSelectIcon.SetPosition(position);
+
             if (TrySetNavOnBuild(MapSelectIcon.Rectangle, out Vector3Int cell))
             {
                 selectedCell = cell;
@@ -127,7 +148,7 @@ public class MiniMap : BaseWindow
             }
             else
             {
-                selectedCell = currentSelectCell.ToClientPosition();
+                selectedCell = currentSelectCell;
             }
             StartClose();
         }
@@ -163,7 +184,6 @@ public class MiniMap : BaseWindow
     {
         base.Open();
         MapSelectIcon.SetPosition(CellToMiniMap(cursor.GetCurrentCell()));
-        opentAtFrame = Time.frameCount + 1;
     }
 
     protected override void Init()
@@ -178,11 +198,18 @@ public class MiniMap : BaseWindow
 
     private void InitSelectCondition()
     {
-        selectCondition.Conditions += delegate { return crossInput.IsTouch; };
+        selectCondition.Conditions += delegate { return crossInput.IsPointerUp; };
         selectCondition.Conditions += delegate
         {
-            return Window.activeInHierarchy && opentAtFrame != Time.frameCount;
+            return Window.activeInHierarchy;
         };
+    }
+
+    [ContextMenu("Mini Map Size")]
+    public void GetSize()
+    {
+        Debugger.Log("Size :" + MiniMapImage.Size());
+        Debugger.Log("rect: " + MiniMapImage.rect);
     }
 }
 

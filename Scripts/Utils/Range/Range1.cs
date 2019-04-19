@@ -11,7 +11,7 @@ public class Range1 : Range
             cellInfors = new Queue<NodeInfo>();
         else cellInfors.Clear();
 
-        Vector3Int currentCell = hexMap.WorldToCell(Owner.position).ZToZero();
+        Vector3Int currentCell = mapIns.WorldToCell(Owner.position).ZToZero();
         Vector3Int[] pattern = Constants.GetNeighboursRange(currentCell, 1);
 
         for (int i = 0; i < pattern.Length; i++)

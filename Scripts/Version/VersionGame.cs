@@ -120,7 +120,7 @@ public class VersionGame : MonoSingle<VersionGame>
                 {
                     Name = "check version",
                     GetProgress = delegate { return 1; },
-                    IsDone = delegate{ return checkVersionDone; },
+                    IsDone = delegate { return checkVersionDone; }, 
                     Start = delegate { StartCoroutine(CheckVersion()); },
                     Title = "Checking version ..."
                 }

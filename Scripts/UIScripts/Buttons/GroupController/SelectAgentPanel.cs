@@ -32,8 +32,7 @@ public class SelectAgentPanel : MonoBehaviour
         isInited = false;
         isCanInit = false;
 
-        elementPooling = new Pooling<SelectableAgentElement>();
-        elementPooling.Initalize(CreateElement);
+        elementPooling = new Pooling<SelectableAgentElement>(CreateElement);
 
         Events = Singleton.Instance<EventListenersController>();
 

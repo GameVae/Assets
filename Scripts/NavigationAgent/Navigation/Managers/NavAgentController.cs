@@ -12,7 +12,7 @@ namespace Entities.Navigation
     {
         private SIO_MovementListener moveEvent;
         private MultiThreadHelper threadHelper;
-        private AgentNodeManager agentNodes;
+        private SingleWayPointManager agentNodes;
 
         private Vector3Int startCell;
         private Vector3Int endCell;
@@ -42,9 +42,9 @@ namespace Entities.Navigation
         {
             get { return CursorController.CrossInput; }
         }
-        public AgentNodeManager AgentNodes
+        public SingleWayPointManager AgentNodes
         {
-            get { return agentNodes ?? (agentNodes = Singleton.Instance<GlobalNodeManager>().AgentNode); }
+            get { return agentNodes ?? (agentNodes = MapIns.AgentNodeManager); }
         }
         public UnityEventSystem EventSystem
         {

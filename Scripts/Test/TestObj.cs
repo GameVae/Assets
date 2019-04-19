@@ -20,7 +20,7 @@ public class TestActionNode : ActionNode
 {
     private string action;
     public TestActionNode(string actionName)
-        :base(null)
+        : base(null)
     {
         action = actionName;
     }
@@ -30,7 +30,7 @@ public class TestDecisionNode : DecisionNode
 {
     private bool branch;
 
-    public TestDecisionNode(DecisionTreeNode t,DecisionTreeNode f,bool branch)
+    public TestDecisionNode(DecisionTreeNode t, DecisionTreeNode f, bool branch)
         : base(t, f)
     {
         this.branch = branch;
@@ -65,13 +65,18 @@ public class TestObj : MonoBehaviour
     public MultiThreadHelper ThreadHelper;
 
     [Header("Test on screen label")]
-    public AgentLabelv2 prefabLabelv2;
+    public LightweightLabel prefabLabelv2;
     public RectTransform canvas;
-    private Pooling<AgentLabelv2> labelPooling;
+    private Pooling<LightweightLabel> labelPooling;
+    public Transform headPoint;
+    private LightweightLabel lable;
 
     private bool inited = false;
     private void Update()
     {
+        Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
+        lable.GetComponent<RectTransform>().
+                SetPositionAndRotation(position, Quaternion.identity);
         //if (inited)
         //{
         //    Debug.Log(
@@ -85,25 +90,44 @@ public class TestObj : MonoBehaviour
         //}
     }
 
-    private AgentLabelv2 CreatLabelv2(int id)
+    private LightweightLabel CreatLabelv2(int id)
     {
-        AgentLabelv2 item = Instantiate(prefabLabelv2, canvas);
+        LightweightLabel item = Instantiate(prefabLabelv2, canvas);
         item.FirstSetup(id);
         return item;
     }
     private void Start()
     {
-        labelPooling = new Pooling<AgentLabelv2>();
-        labelPooling.Initalize(CreatLabelv2);
+        labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
 
-        for (int i = 0; i < 100; i++)
-        {
-            AgentLabelv2 item = labelPooling.GetItem();
-            Vector2 pos = new Vector2(UnityEngine.Random.Range(0, 1920), UnityEngine.Random.Range(0, 1080));
-            item.GetComponent<RectTransform>().SetPositionAndRotation(pos,Quaternion.identity);
-              
-            item.gameObject.SetActive(true);
-        }
+        //for (int i = 0; i < 100; i++)
+        //{
+        //    LightweightLabel item = labelPooling.GetItem();
+        //    Vector2 pos = new Vector2(UnityEngine.Random.Range(0, 1920), UnityEngine.Random.Range(0, 1080));
+        //    item.GetComponent<RectTransform>().SetPositionAndRotation(pos,Quaternion.identity);
+
+        //    item.gameObject.SetActive(true);
+        //}
+
+        //for (int i = 0; i < 100; i++)
+        //{
+        //    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //    Vector3 pos =
+        //        new Vector3
+        //        (UnityEngine.Random.Range(-10, 20f),
+        //        UnityEngine.Random.Range(-10, 20f),
+        //        UnityEngine.Random.Range(-2f, 0));
+
+        //    obj.transform.position = pos;
+        //    labelPooling.GetItem().GetComponent<RectTransform>().
+        //        SetPositionAndRotation(Camera.main.WorldToScreenPoint(pos),Quaternion.identity);
+        //}
+
+        Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
+        lable = labelPooling.GetItem();
+        lable.GetComponent<RectTransform>().
+                SetPositionAndRotation(position,Quaternion.identity);
+
         // moveEvent = Singleton.Instance<Connection>();
         // moveEvent.On("R_MOVE", R_MOVE);
         //Debugger.Log("This is a log from Debugger");

@@ -7,10 +7,11 @@ using Network.Sync;
 using SocketIO;
 using System.Collections;
 using UnityEngine;
+using Generic.Pooling;
 
 public class UnitDataReference : MonoSingle<UnitDataReference>
 {
-    public AgentSpawnManager AgentSpawner;
+    public AgentPooling AgentPooling;
     public NonControlAgentManager NCAgentManager;
     public OwnerNavAgentManager OwnerAgents;
 
@@ -18,6 +19,11 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
     public PlayerInfo PlayerInfo;
     public HexMap MapIns;
 
+    [Header("Agent Health Bar")]
+    public LightweightLabel LabelPrefab;
+    public RectTransform LabelContainer;
+
+    private Pooling<LightweightLabel> labelPooling;
     private JSONTable_Unit UnitTable;
     private JSONTable_UserInfo Users;
     private EventListenersController Events;
@@ -32,6 +38,8 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         NCAgentManager = Singleton.Instance<NonControlAgentManager>();
         OwnerAgents = Singleton.Instance<OwnerNavAgentManager>();
         Events = Singleton.Instance<EventListenersController>();
+
+        labelPooling = new Pooling<LightweightLabel>(CreateLabel, 10);
 
         Events.On("R_UNIT", CreateAgents);
     }
@@ -52,26 +60,42 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         StartCoroutine(AsyncCreateAgents());
     }
 
+    private LightweightLabel CreateLabel(int id)
+    {
+        LightweightLabel label = Instantiate(LabelPrefab, LabelContainer);
+        label.FirstSetup(id);
+        return label;
+    }
+
     public void Create(UnitRow unitData, UserInfoRow user)
     {
-        NavRemote agentRemote = AgentSpawner.GetMilitary(unitData.ID_Unit);
+        NavRemote agentRemote = AgentPooling.GetItem(unitData.ID_Unit);
         if (agentRemote == null || user == null)
             return;
         else
         {
+            LightweightLabel label = labelPooling.GetItem();
+
             agentRemote.transform.position = MapIns.CellToWorld(unitData.Position_Cell.Parse3Int().ToClientPosition());
+
             agentRemote.OnDead += delegate
             {
-                AgentSpawner.Return(agentRemote.Type, agentRemote);
+                AgentPooling.Release(agentRemote.Type, agentRemote);
+                labelPooling.Release(label);
+
+                OwnerAgents.Remove(agentRemote.AgentID);
+                NCAgentManager.Remove(agentRemote.AgentID);
             };
 
+            label.Initalize(agentRemote, Camera.main);
             bool isOwner = unitData.ID_User == PlayerInfo.Info.ID_User;
-
-            agentRemote.Initalize(UnitTable, unitData, user, isOwner);
+            agentRemote.Initalize(UnitTable, label, unitData, user, isOwner);
 
             if (isOwner)
             {
-                agentRemote.gameObject.AddComponentNotExist<NavAgent>();
+                if(agentRemote.NavAgent == null)
+                    agentRemote.gameObject.AddComponent<NavAgent>();
+
                 OwnerAgents.Add(agentRemote);
                 agentRemote.name = "Owner " + unitData.ID;
             }

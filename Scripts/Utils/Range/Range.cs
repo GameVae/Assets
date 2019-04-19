@@ -13,15 +13,13 @@ public abstract class Range : MonoBehaviour
     }
 
     protected Queue<NodeInfo> cellInfors;
-    protected GlobalNodeManager nodeManager;
-    protected AgentNodeManager agentNodeManager;
-    protected HexMap hexMap;
+    protected SingleWayPointManager agentNodeManager;
+    protected HexMap mapIns;
 
     protected virtual void Awake()
     {
-        nodeManager = Singleton.Instance<GlobalNodeManager>();
-        agentNodeManager = nodeManager.AgentNode;
-        hexMap = Singleton.Instance<HexMap>();
+        mapIns = Singleton.Instance<HexMap>();
+        agentNodeManager = mapIns.AgentNodeManager;
     }
 
     public abstract Queue<NodeInfo> GetInfo();

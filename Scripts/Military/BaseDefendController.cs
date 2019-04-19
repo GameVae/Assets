@@ -8,7 +8,7 @@ using Entities.Navigation;
 public class BaseDefendController : MonoBehaviour
 {
     public Connection Conn;
-    public AgentSpawnManager Manager;
+    public AgentPooling Manager;
     public HexMap Map;
     public Sync SyncData;
 
@@ -34,7 +34,7 @@ public class BaseDefendController : MonoBehaviour
             for (int j = 0; j < baseDefends[i].Count; j++)
             {
                 BaseDefendRow row = baseDefends[i].Rows[j];
-                NavRemote agent = Manager.GetMilitary(row.ID_Unit);
+                NavRemote agent = Manager.GetItem(row.ID_Unit);
                 if (agent != null)
                 {
                     agent.transform.position = basePos;

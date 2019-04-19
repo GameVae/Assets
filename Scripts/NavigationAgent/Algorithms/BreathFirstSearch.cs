@@ -7,8 +7,7 @@ namespace PathFinding
     public class BreathFirstSearch : ISingleton
     {
         private HexMap mapIns;
-        private GlobalNodeManager nodeManager;
-        private AgentNodeManager agentNodeManager;
+        private SingleWayPointManager agentNodeManager;
 
         private List<Vector3Int> open;
         private List<Vector3Int> closed;
@@ -19,8 +18,7 @@ namespace PathFinding
             closed = new List<Vector3Int>();
             mapIns = Singleton.Instance<HexMap>();
 
-            nodeManager = Singleton.Instance<GlobalNodeManager>();
-            agentNodeManager = nodeManager.AgentNode;
+            agentNodeManager = mapIns.AgentNodeManager;
         }
 
         public bool GetNearestCell(Vector3Int center, out Vector3Int result)

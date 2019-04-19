@@ -13,6 +13,7 @@ namespace Entities.Navigation
     {
         [SerializeField] private ListUpgrade type;
         [SerializeField] private NavOffset offset;
+        [SerializeField] private Transform headPoint;
 
         [SerializeField] // TODO:[TEST] for show in inspector
         private AgentInfo agentInfo;
@@ -71,8 +72,12 @@ namespace Entities.Navigation
         {
             get { return UnitInfo.ID; }
         }
+        public Transform HeadPoint
+        {
+            get { return headPoint; }
+        }
 
-        public AgentLabel Label;
+        public LightweightLabel Label;
 
         public bool IsOwner
         {
@@ -103,11 +108,6 @@ namespace Entities.Navigation
 
         public int ManagedId { get; private set; }
 
-        private void Awake()
-        {
-            Label.LookAt(Camera.main.transform);
-        }
-
         private void Start()
         {
             SyncPosition();
@@ -128,17 +128,24 @@ namespace Entities.Navigation
         }
 
         public void Initalize(ISubject subject,
+            LightweightLabel label,
             UnitRow unitData,
             UserInfoRow user,
             bool isOwner)
 
         {
+            Label = label;
             unitSubject = subject;
+
             AgentInfo.UserInfo = user;
             AgentInfo.UnitInfo = unitData;
+
             IsOwner = isOwner;
 
-            Label.SetInfo(unitData, user, isOwner);
+            string format = IsOwner ? "{0}" : "<color=red>{0}</color>";
+            Label.NameInGame = string.Format(format,"Id " + unitData.ID + ": " + user.NameInGame);
+            Label.SetHP(unitData.Hea_cur, unitData.Health);
+            Label.Quality = unitData.Quality;
 
             observer = new Observer_Unit(unitData);
             observer.OnSubjectUpdated += SubjectChanged;
@@ -153,7 +160,10 @@ namespace Entities.Navigation
                 Dead();
             }
             else
-                Label.SetInfo(data, UserInfo, IsOwner);
+            {
+                Label.SetHP(data.Hea_cur, data.Health);
+                Label.Quality = data.Quality;
+            }
         }
 
         public bool IsMoving()
@@ -187,7 +197,6 @@ namespace Entities.Navigation
 
         public void Dispose()
         {
-            NavAgent?.Dead();
             Unbinding();
 
             unitSubject.Remove(observer);

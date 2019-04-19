@@ -1,9 +1,8 @@
-﻿using Generic.Singleton;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Generic.Pooling
 {
-    public class Pooling<T> : MonoSingle<Pooling<T>>
+    public class Pooling<T>
         where T : IPoolable
     {
         private int instanceID = int.MinValue;
@@ -12,7 +11,13 @@ namespace Generic.Pooling
         private Dictionary<int, T> activedItem;
 
         public int ActiveCount { get { return activedItem.Count; } }
-        public void Initalize(System.Func<int, T> creator, int initalizeSize = 0)
+
+        public Pooling(System.Func<int, T> creator, int initalizeSize = 0)
+        {
+            Initalize(creator, initalizeSize);
+        }
+
+        private void Initalize(System.Func<int, T> creator, int initalizeSize = 0)
         {
             pooling = new Queue<T>();
             activedItem = new Dictionary<int, T>();
@@ -30,8 +35,8 @@ namespace Generic.Pooling
                 item = pooling.Dequeue();
             else
                 item = itemCreator(instanceID++);
-
-            activedItem.Add(item.ManagedId,item);
+            if (item != null)
+                activedItem.Add(item.ManagedId, item);
             return item;
         }
 

@@ -1,5 +1,4 @@
 ﻿using Generic.Pooling;
-using Generic.Singleton;
 using System.Collections.Generic;
 using UI.Widget;
 
@@ -24,8 +23,7 @@ public class FriendListFunc : ToggleWindow
     protected override void Init()
     {
         tags = new Queue<FriendTag>();
-        tagsPooling = Singleton.Instance<Pooling<FriendTag>>();
-        tagsPooling.Initalize(TagCreator);
+        tagsPooling = new Pooling<FriendTag>(TagCreator);
     }
 
     public override void Close()
