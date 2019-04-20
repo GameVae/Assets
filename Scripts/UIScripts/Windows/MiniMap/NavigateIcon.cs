@@ -64,5 +64,10 @@ public class NavigateIcon : MonoBehaviour
     {
         if (!Icon.enabled) Icon.enabled = true;
         trans.localPosition = position;
+
+        //Debugger.Log("local pos: " + trans.localPosition);
+        //Debugger.Log("anchored pos: " + trans.anchoredPosition);
+        //Debugger.Log("world pos: " + trans.position);
+        //Debugger.Log(trans.rect);
     }
 }

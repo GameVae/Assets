@@ -24,7 +24,7 @@ namespace UI
         private List<MiniTaskWDOElement> pool;
         private DBReference dbRef;
         private FieldReflection fieldReflection;
-        protected override void Awake()
+        private void Awake()
         {
             OpenTaskBtn.On += On;
             OpenTaskBtn.Off += Off;

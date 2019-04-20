@@ -1,5 +1,4 @@
 ﻿using UI.Composites;
-using UI.Widget;
 using UnityEngine;
 
 public class WindowToggleGroup : BaseWindow
@@ -11,7 +10,7 @@ public class WindowToggleGroup : BaseWindow
     [SerializeField] protected ToggleGroupComp toggles;
     protected BaseWindow activeWindow;
 
-    protected override void Awake()
+    private void Awake()
     {
         OpenButton.OnClickEvents += Open;
         CloseButton.OnClickEvents += Close;

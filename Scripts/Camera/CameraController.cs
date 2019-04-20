@@ -8,18 +8,38 @@ public class CameraController : MonoBehaviour
 {
     private float direction;
     private float targetFov;
+    private Vector3 velocity;
     private CameraGesture gestureType;
 
-    private CrossInput crossInput;
     private UnityEventSystem eventSystem;
     private NestedCondition swipeConditions;
+    private Connection conn;
 
-    public Vector3 Velocity;
-    public CameraOption Option;
+    [SerializeField] private CameraOption option;
     public CameraBlindInsideMap CameraBlinding;
 
-    public Camera TargetCamera;
-    public Connection Conn;
+    public Connection Conn
+    {
+        get { return conn ?? (conn = Singleton.Instance<Connection>()); }
+    }
+    public Camera TargetCamera
+    {
+        get
+        {
+            return CameraBlinding.TargetCamera;
+        }
+    }
+    public CrossInput CrossInput
+    {
+        get { return EventSystem.CrossInput; }
+    }
+    public UnityEventSystem EventSystem
+    {
+        get
+        {
+            return eventSystem ?? (eventSystem = Singleton.Instance<UnityEventSystem>());
+        }
+    }
 
     public CameraGesture Gesture
     {
@@ -28,19 +48,15 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        eventSystem = Singleton.Instance<UnityEventSystem>();
-        Conn = Singleton.Instance<Connection>();
-        crossInput = eventSystem.CrossInput;
-
         SetStartupPosition();
-        targetFov = Option.DefaultFov;
-        direction = 1;
-
+        targetFov = option.DefaultFov;
+        direction = -1;
 
         swipeConditions = new NestedCondition();
         swipeConditions.Conditions += delegate
         {
-            return crossInput.CurrentState == CrossInput.PointerState.Swipe && !eventSystem.IsPointerDownOverUI;
+            return CrossInput.CurrentState == CrossInput.PointerState.Swipe && 
+            !EventSystem.IsPointerDownOverUI;
         };
     }
 
@@ -72,7 +88,7 @@ public class CameraController : MonoBehaviour
     public void Set(Vector3Int cell)
     {
         Vector3 worldPoint = Singleton.Instance<HexMap>().CellToWorld(cell);
-        worldPoint.y = Option.Height;         // const height
+        worldPoint.y = option.Height;         // const height
         TargetCamera.transform.position = worldPoint;
         CameraBlinding.CalculateBound();
         AlignCamera(worldPoint);
@@ -128,20 +144,20 @@ public class CameraController : MonoBehaviour
     private void ZoomHandle()
     {
         targetFov = Mathf.Clamp(
-            value: targetFov + crossInput.ZoomValue().Wrap(-Option.MaxZoomValue, Option.MaxZoomValue),
-            min: Option.FovClampValue.x,
-            max: Option.FovClampValue.y);
+            value: targetFov + CrossInput.ZoomValue().Wrap(-option.MaxZoomValue, option.MaxZoomValue),
+            min: option.FovClampValue.x,
+            max: option.FovClampValue.y);
     }
 
     private void SwipeHandle()
     {
-        Velocity += (new Vector3(crossInput.Axises.x, 0, crossInput.Axises.y) * direction) / Time.deltaTime;
-        Velocity = Velocity.Truncate(Option.SwipeMaxSpeed);
+        velocity += (new Vector3(CrossInput.Axises.x, 0, CrossInput.Axises.y) * direction) / Time.deltaTime;
+        velocity = velocity.Truncate(option.SwipeMaxSpeed);
     }
 
     private void DetermineGesture()
     {
-        switch (crossInput.TouchCount)
+        switch (CrossInput.TouchCount)
         {
             case 1: DetermineSwipe(ref gestureType); break;
             case 2: DetermineZoomAndRotate(ref gestureType); break;
@@ -173,7 +189,7 @@ public class CameraController : MonoBehaviour
 
     public void ResetCamera()
     {
-        targetFov = Option.DefaultFov;
+        targetFov = option.DefaultFov;
     }
     #endregion
 
@@ -193,15 +209,15 @@ public class CameraController : MonoBehaviour
     private void PositionValueUpdate()
     {
         Vector3 position = TargetCamera.transform.position;
-        position += Velocity * Time.deltaTime;
+        position += velocity * Time.deltaTime;
         TargetCamera.transform.position = position;
     }
 
     private void VelocityValueUpdate()
     {
-        if (Velocity.magnitude > Option.SwipeMinSpeed)
-            Velocity -= Velocity.normalized * Option.SwipeMaxSpeed * Time.deltaTime;
-        else Velocity = Vector3.zero;
+        if (velocity.magnitude > option.SwipeMinSpeed)
+            velocity -= velocity.normalized * option.SwipeMaxSpeed * Time.deltaTime;
+        else velocity = Vector3.zero;
 
     }
     #endregion
@@ -209,7 +225,7 @@ public class CameraController : MonoBehaviour
     #region Camera Zoom In Out
     private void FovValueUpdate()
     {
-        TargetCamera.fieldOfView = Mathf.SmoothStep(TargetCamera.fieldOfView, targetFov, Option.ZoomSmoothValue);
+        TargetCamera.fieldOfView = Mathf.SmoothStep(TargetCamera.fieldOfView, targetFov, option.ZoomSmoothValue);
     }
     #endregion
     #endregion

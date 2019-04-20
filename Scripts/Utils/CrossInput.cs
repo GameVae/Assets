@@ -91,6 +91,7 @@ namespace Generic.CustomInput
 #if UNITY_ANDROID && !UNITY_EDITOR
                 if (TouchCount > 0)
                     return GetTouch(0).position;
+                return Vector3.zero;
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE
                 return Input.mousePosition;

@@ -24,9 +24,8 @@ public class DeployMilitaryWindow : BaseWindow
     private UnitDataReference unitDataReference;
     private EventListenersController events;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         OpenButton.OnClickEvents += Open;
         events = Singleton.Instance<EventListenersController>();
     }

@@ -53,14 +53,12 @@ public class TrainingWindow : BaseWindow
     public GUISliderWithBtn TranningProgress;
     public GUIInteractableIcon OpenButton;
 
-
     [Range(0f, 1f)]
     public float ElementSize;
     private int quality;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
         QualitySlider.onValueChanged.AddListener((float value) => OnQualitySliderChanged(value));
 
         OpenButton.OnClickEvents += Open;

@@ -18,14 +18,10 @@ public abstract class BaseWindow : MonoBehaviour, IWindow
 
     protected Sync SyncData { get { return WDOCtrl?.Sync; } }
 
-    protected virtual void Awake()
-    {
-        //WDOCtrl.AddWindow(type, this);
-    }
-
     protected virtual void Start()
     {
-        WDOCtrl.AddWindow(type, this);
+        if (type != 0)
+            WDOCtrl.AddWindow(type, this);
     }
 
     protected virtual void Update() { }
@@ -41,11 +37,11 @@ public abstract class BaseWindow : MonoBehaviour, IWindow
 
     public virtual void Open()
     {
-        if(!inited)
+        if (!inited)
         {
             Init();
             inited = true;
         }
         Window.SetActive(true);
-    }  
+    }
 }

@@ -99,4 +99,26 @@ public class RangeWayPointManager : IWayPointManager
         }
         return false;
     }
+
+    public List<Vector3Int> GetSiblings(Vector3Int center)
+    {
+        List<Vector3Int> siblings = new List<Vector3Int>();
+        if (centers.Contains(center))
+        {
+            positions.TryGetValue(center, out RangeWayPoint wayPoint);
+
+            if (wayPoint != null)
+            {
+                Vector3Int[] bound = wayPoint.Bound();
+                for (int i = 0; i < bound.Length; i++)
+                {
+                    positions.TryGetValue(bound[i], out RangeWayPoint temp);
+                    if (wayPoint == temp)
+                        siblings.Add(bound[i]);
+                }
+            }
+        }
+
+        return siblings;
+    }
 }

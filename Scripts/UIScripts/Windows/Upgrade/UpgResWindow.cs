@@ -62,10 +62,8 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         get { return WindowGroupType.UpgradeResearchGroup; }
     }
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         dbReference = Singleton.Instance<DBReference>();
         fieldReflection = Singleton.Instance<FieldReflection>();
         listenersController = Singleton.Instance<EventListenersController>();

@@ -42,9 +42,9 @@ namespace Generic.Pooling
 
         public void Release(T item)
         {
-            item.Dispose();
             activedItem.Remove(item.ManagedId);
             pooling.Enqueue(item);
+            item.Dispose();
         }
     }
 }
