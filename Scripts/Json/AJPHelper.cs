@@ -1,4 +1,5 @@
-﻿using Generic.Singleton;
+﻿using DataTable;
+using Generic.Singleton;
 
 namespace Json
 {
@@ -6,16 +7,22 @@ namespace Json
     // Pattern: Factory
     public sealed class AJPHelper : ISingleton
     {
+        public class Operation
+        {
+            /// <summary>
+            /// Milisecond
+            /// </summary>
+            public int SpentTime;
+            public bool IsDone;
+            public float Progress;
+        }
+
         private AJPHelper() { }
 
-        public AsyncLoadTable<T> GetParser<T>()
+        public IAsyncHandler GetParser<T>()
+            where T : ITableData
         {
-            return Singleton.Instance<AsyncLoadTable<T>>();
-        }
-
-        public void Parse<T>(AsyncLoadTable<T>.ParseInfo info)
-        {
-            GetParser<T>().Start(info);
-        }
+            return Singleton.Instance<AsyncTableLoader<T>>();
+        }        
     }
 }

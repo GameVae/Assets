@@ -3,6 +3,7 @@ using DataTable;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Json;
 
 public sealed class ResourceManager : MonoSingle<ResourceManager>
 {
@@ -14,7 +15,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
     private Dictionary<int, NaturalResource> Resources;
 
-    public JSONTable_RSSPosition Datas;
+    public JSONTable_RSSPosition RSSPositionTable;
     public Transform Prefab;
 
     public NaturalResource this[int id]
@@ -58,18 +59,22 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
     private void Start()
     {
-        StartCoroutine(AsyncCreateRss());
+        StartCoroutine(StartCreateRss());
     }
 
-    private IEnumerator AsyncCreateRss()
+    private IEnumerator StartCreateRss()
     {
-        int count = Datas.Rows.Count;
+        AJPHelper.Operation oper = RSSPositionTable.Operation;
+        while (!oper.IsDone)
+            yield return null;
+
+        int count = RSSPositionTable.Rows.Count;
         int i = 0;
 
         while (i < count)
         {
             int id = i + 1;
-            NaturalResource rs = GenResource((RssType)Datas.Rows[i].RssType, Flag.Owner, id);
+            NaturalResource rs = GenResource((RssType)RSSPositionTable.Rows[i].RssType, Flag.Owner, id);
             rs.Initalize(id, this);
             Resources[id] = rs;
 

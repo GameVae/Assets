@@ -2,28 +2,23 @@
 using UnityEngine;
 using System.Threading;
 using Generic.Singleton;
+using DataTable;
 
 namespace Json
 {
-    public class AsyncLoadTable<T> : ISingleton
+    public class AsyncTableLoader<T> : ISingleton, IAsyncHandler
+        where T : ITableData
     {
-        public class ParseOperation
-        {
-            public bool IsDone;
-            public int SpentTime;
-            public float Progress;
-        }
-
         public struct ParseInfo
         {
             public JSONObject Obj;
             public Action<T> ResultHandler;
-            public ParseOperation Operation;
+            public AJPHelper.Operation Operation;
         }
 
-        private AsyncLoadTable() { }
+        private AsyncTableLoader() { }
 
-        private void Parse(JSONObject obj, Action<T> resultHanlder, ParseOperation oper)
+        private void Parse(JSONObject obj, Action<T> resultHanlder, AJPHelper.Operation oper)
         {
             // TODO: 
             // Debug.Log(Thread.CurrentThread.Name + " started");
@@ -50,7 +45,7 @@ namespace Json
                 oper.SpentTime = System.DateTime.Now.Millisecond - oper.SpentTime;
 
                 // TODO:
-                //Debug.Log(Thread.CurrentThread.ManagedThreadId + " elapsed time: " + oper.SpentTime);
+                Debug.Log("async handled: " + capacity);
             }
         }
 
@@ -60,9 +55,15 @@ namespace Json
             Parse(info.Obj, info.ResultHandler, info.Operation);
         }
 
-        public void Start(ParseInfo info)
+        private AJPHelper.Operation Start(ParseInfo info)
         {
             ThreadPool.QueueUserWorkItem(Callback, info);
+            return info.Operation;
+        }
+
+        public AJPHelper.Operation Start(object info)
+        {
+            return Start((ParseInfo)info);
         }
     }
 }

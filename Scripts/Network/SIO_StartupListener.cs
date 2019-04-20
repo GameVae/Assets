@@ -62,7 +62,7 @@ public sealed class SIO_StartupListener : Listener
     private void R_UNIT(SocketIOEvent obj)
     {
         //Debugger.Log(obj);
-        SyncData.UnitTable.LoadTable(obj.data["R_UNIT"]);
+        SyncData.UnitTable.AsyncLoadTable(obj.data["R_UNIT"]);
     }
 
     private void R_PLAYER_INFO(SocketIOEvent obj)

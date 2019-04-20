@@ -6379,6 +6379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 713133370}
   - component: {fileID: 713133371}
+  - component: {fileID: 713133372}
   m_Layer: 5
   m_Name: MultithreadHelper
   m_TagString: Untagged
@@ -6410,6 +6411,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97e8c1592ddca4f4ba07692b85f1b4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &713133372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 713133369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8630aeaf969e88145ac016b490cd55d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &739191850

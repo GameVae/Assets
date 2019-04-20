@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleWayPointManager : INodeManager
+public class SingleWayPointManager : IWayPointManager
 {
     private Dictionary<Vector3Int, SingleWayPoint> wayPoints;
 
@@ -18,7 +18,7 @@ public class SingleWayPointManager : INodeManager
         if (IsHolding(pos))
             return false;
         wayPoints.Add(pos, wayPoint);
-        Debugger.Log(wayPoint.gameObject.name + " add single");
+        // Debugger.Log(wayPoint.gameObject.name + " add single");
         return true;
     }
 
@@ -55,7 +55,7 @@ public class SingleWayPointManager : INodeManager
         {
             if (wayPoints[pos] == wayPoint)
             {
-                Debugger.Log(wayPoint.gameObject.name + " remove single");
+                // Debugger.Log(wayPoint.gameObject.name + " remove single");
                 return wayPoints.Remove(wayPoint.Position);
             }
         }

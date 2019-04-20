@@ -8,6 +8,7 @@ using SocketIO;
 using System.Collections;
 using UnityEngine;
 using Generic.Pooling;
+using Json;
 
 public class UnitDataReference : MonoSingle<UnitDataReference>
 {
@@ -40,8 +41,13 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         Events = Singleton.Instance<EventListenersController>();
 
         labelPooling = new Pooling<LightweightLabel>(CreateLabel, 10);
-
+       
         Events.On("R_UNIT", CreateAgents);
+    }
+
+    private void Start()
+    {
+        Events.Emit("S_UNIT");
     }
 
     private void CreateAgents(SocketIOEvent evt)
@@ -57,7 +63,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         //    Create(r, user);
         //}
 
-        StartCoroutine(AsyncCreateAgents());
+        StartCoroutine(StartCreateAgents());
     }
 
     private LightweightLabel CreateLabel(int id)
@@ -110,8 +116,12 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         }
     }
 
-    private IEnumerator AsyncCreateAgents()
+    private IEnumerator StartCreateAgents()
     {
+        AJPHelper.Operation oper = UnitTable.Operation;
+        while (!oper.IsDone)
+            yield return null;
+
         int i = 0;
         int count = UnitTable.Count;
 
@@ -128,5 +138,6 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
             yield return null;
         }
         yield break;
+
     }
 }

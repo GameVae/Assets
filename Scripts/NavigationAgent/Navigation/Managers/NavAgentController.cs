@@ -85,11 +85,6 @@ namespace Entities.Navigation
             CursorController.SelectedCallback += OnCursorSelected;
         }
 
-        private void Start()
-        {
-            MovementListener?.Emit("S_UNIT");
-        }
-
         private void MoveActiveAgent(Vector3Int start, Vector3Int end, NavRemote enemy)
         {
             //bool foundPath = CurrentAgent.StartMove(start, end);

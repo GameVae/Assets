@@ -8,28 +8,53 @@ namespace DataTable
     public class JSONTable<T> : ScriptableObject, ITable where T : ITableData
     {
         [SerializeField] private List<T> rows;
+        private AJPHelper ajpHelper;
+        private AJPHelper.Operation operation;
+
+        public AJPHelper.Operation Operation
+        {
+            get
+            {
+                if(operation == null)
+                {
+                    operation = new AJPHelper.Operation()
+                    {
+                        Progress = 1,
+                        IsDone = true,
+                        SpentTime = 0,
+                    };
+                }
+                return operation;
+            }
+            protected set { operation = value; }
+        }
+
         public List<T> Rows
         {
             get { return rows ?? (rows = new List<T>()); }
+        }
+        public AJPHelper AJPHelper
+        {
+            get { return ajpHelper ?? (ajpHelper = Singleton.Instance<AJPHelper>()); }
         }
 
         public ITableData this[int index]
         {
             get
             {
-                if (index >= rows.Count) return default(T);
+                if (index >= Count) return default(T);
                 return rows[index];
             }
             set
             {
-                if (index < rows.Count)
+                if (index < Count)
                     rows[index] = (T)value;
             }
         }
 
         public int Count
         {
-            get { return rows == null ? 0 : rows.Count; }
+            get { return Rows.Count; }
         }
 
         public System.Type RowType
@@ -37,21 +62,14 @@ namespace DataTable
 
         public virtual void LoadRow(string json)
         {
-            if (rows == null)
-                rows = new List<T>();
             T row = ParseJson<T>(json);
-            rows.Add(row);
+            Rows.Add(row);
         }
 
         public virtual void LoadTable(JSONObject data, bool clearPre = true)
         {
-            if (rows == null)
-                rows = new List<T>();
-            else
-            {
-                if (clearPre)
-                    rows.Clear();
-            }
+            if (clearPre)
+                Rows.Clear();
 
             int count = data.Count;
             for (int i = 0; i < count; i++)
@@ -62,18 +80,14 @@ namespace DataTable
 
         public virtual void AsyncLoadTable(JSONObject data, bool clearPre = true)
         {
-            if (rows == null)
-                rows = new List<T>();
-            else
-            {
-                if (clearPre)
-                    rows.Clear();
-            }
-            Singleton.Instance<AJPHelper>().GetParser<T>().Start(new AsyncLoadTable<T>.ParseInfo()
+            if (clearPre)
+                Rows.Clear();
+
+            Operation = AJPHelper.GetParser<T>().Start(new AsyncTableLoader<T>.ParseInfo()
             {
                 Obj = data,
                 ResultHandler = LoadRow,
-                Operation = new AsyncLoadTable<T>.ParseOperation(),
+                Operation = new AJPHelper.Operation(),
             });
         }
 
@@ -88,8 +102,9 @@ namespace DataTable
             {
                 return JsonUtility.FromJson<TResult>(json);
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
+                Debugger.Log(e.ToString());
                 return default(TResult);
             }
 

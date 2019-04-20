@@ -10,21 +10,21 @@ public class NodeManagerProvider : MonoSingle<NodeManagerProvider>
         Range
     }
 
-    private Dictionary<int, INodeManager> catcher;
-    private Dictionary<int,INodeManager> Catcher
+    private Dictionary<int, IWayPointManager> catcher;
+    private Dictionary<int,IWayPointManager> Catcher
     {
         get
         {
-            return catcher ?? (catcher = new Dictionary<int, INodeManager>());
+            return catcher ?? (catcher = new Dictionary<int, IWayPointManager>());
         }
     }
 
-    public INodeManager GetManager<T>(NodeType nodeType)
+    public IWayPointManager GetManager<T>(NodeType nodeType)
         where T : WayPoint
     {
         int hashCode = typeof(WayPointManager<T>).GetHashCode();
 
-        INodeManager result = GetFromCatcher<T>(hashCode);
+        IWayPointManager result = GetFromCatcher<T>(hashCode);
         if (result == null)
         {
             result = CreateNew<T>(nodeType);
@@ -36,13 +36,13 @@ public class NodeManagerProvider : MonoSingle<NodeManagerProvider>
         return result;
     }
 
-    private INodeManager GetFromCatcher<T>(int hashCode)
+    private IWayPointManager GetFromCatcher<T>(int hashCode)
     {
-        Catcher.TryGetValue(hashCode, out INodeManager value);
+        Catcher.TryGetValue(hashCode, out IWayPointManager value);
         return value;
     }
 
-    private INodeManager CreateNew<T>(NodeType nodeType)
+    private IWayPointManager CreateNew<T>(NodeType nodeType)
         where T : WayPoint
     {
         WayPointManager<T> node = Singleton.Instance<WayPointManager<T>>();

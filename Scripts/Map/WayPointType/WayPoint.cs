@@ -49,7 +49,7 @@ namespace Map
                     (nodeManagerProvider = Singleton.Instance<NodeManagerProvider>());
             }
         }
-        protected abstract INodeManager Manager
+        protected abstract IWayPointManager Manager
         {
             get;
         }

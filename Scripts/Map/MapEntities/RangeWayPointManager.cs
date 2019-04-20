@@ -2,7 +2,7 @@
 using Map;
 using UnityEngine;
 
-public class RangeWayPointManager : INodeManager
+public class RangeWayPointManager : IWayPointManager
 {
     private List<Vector3Int> centers;
     private Dictionary<Vector3Int, RangeWayPoint> positions;
@@ -65,7 +65,7 @@ public class RangeWayPointManager : INodeManager
             return false;
         }
         AddWayPoint(pos, (RangeWayPoint)wayPoint);
-        Debugger.Log(wayPoint.gameObject.name + " add range");
+        // Debugger.Log(wayPoint.gameObject.name + " add range");
         return true;
     }
 
@@ -82,7 +82,7 @@ public class RangeWayPointManager : INodeManager
 
     public bool IsHolding(Vector3Int position)
     {
-        return positions.ContainsKey(position);
+        return positions.ContainsKey(position) || Centers.Contains(position);
     }
 
     public bool Remove(WayPoint wayPoint)
@@ -92,7 +92,7 @@ public class RangeWayPointManager : INodeManager
         {
             if (positions[pos] == wayPoint)
             {
-                Debugger.Log(wayPoint.gameObject.name + " remove range");
+                // Debugger.Log(wayPoint.gameObject.name + " remove range");
                 RemoveWayPoint(pos, (RangeWayPoint)wayPoint);
                 return true;
             }

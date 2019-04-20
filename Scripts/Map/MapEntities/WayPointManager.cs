@@ -16,9 +16,9 @@ public class WayPointManager<T> : ISingleton
         type = 0;
     }
 
-    private INodeManager manager;
+    private IWayPointManager manager;
    
-    private INodeManager CreateIns()
+    private IWayPointManager CreateIns()
     {
         switch (type)
         {
@@ -31,7 +31,7 @@ public class WayPointManager<T> : ISingleton
         }
     }
 
-    public INodeManager Manager
+    public IWayPointManager Manager
     {
         get { return manager ?? (manager = CreateIns()); }
     }

@@ -259,10 +259,10 @@ public class TestObj : MonoBehaviour
         Debug.Log("parse thread started");
     }
 
-    AsyncLoadTable<PositionRow> parser;
-    AsyncLoadTable<PositionRow>.ParseInfo info1;
-    AsyncLoadTable<PositionRow>.ParseInfo info2;
-    AsyncLoadTable<PositionRow>.ParseInfo info3;
+    AsyncTableLoader<PositionRow> parser;
+    AsyncTableLoader<PositionRow>.ParseInfo info1;
+    AsyncTableLoader<PositionRow>.ParseInfo info2;
+    AsyncTableLoader<PositionRow>.ParseInfo info3;
 
     private void R_GET_RSS_Thread(SocketIO.SocketIOEvent evt)
     {
@@ -270,9 +270,9 @@ public class TestObj : MonoBehaviour
         string json = data.ToString();
         //        Debug.Log(json);
 
-        parser = Singleton.Instance<AsyncLoadTable<PositionRow>>();
+        parser = Singleton.Instance<AsyncTableLoader<PositionRow>>();
 
-        info1 = new AsyncLoadTable<PositionRow>.ParseInfo()
+        info1 = new AsyncTableLoader<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -282,9 +282,9 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table1, r);
                 }
             },
-            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
+            Operation = new AJPHelper.Operation(),
         };
-        info2 = new AsyncLoadTable<PositionRow>.ParseInfo()
+        info2 = new AsyncTableLoader<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -294,10 +294,10 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table2, r);
                 }
             },
-            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
+            Operation = new AJPHelper.Operation(),
 
         };
-        info3 = new AsyncLoadTable<PositionRow>.ParseInfo()
+        info3 = new AsyncTableLoader<PositionRow>.ParseInfo()
         {
             Obj = data,
             ResultHandler = delegate (PositionRow r)
@@ -307,7 +307,7 @@ public class TestObj : MonoBehaviour
                     LoadRowForTable(rss_table3, r);
                 }
             },
-            Operation = new AsyncLoadTable<PositionRow>.ParseOperation(),
+            Operation = new AJPHelper.Operation(),
         };
 
         parser.Start(info1);

@@ -3,7 +3,7 @@ using static NodeManagerProvider;
 public class ConstructWayPoint : RangeWayPoint
 {
     private RangeWayPointManager manager;
-    protected override INodeManager Manager
+    protected override IWayPointManager Manager
     {
         get
         {

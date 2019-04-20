@@ -4,7 +4,7 @@ using static NodeManagerProvider;
 public class AgentWayPoint : SingleWayPoint
 {
     private SingleWayPointManager manager;
-    protected override INodeManager Manager
+    protected override IWayPointManager Manager
     {
         get
         {
