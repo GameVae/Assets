@@ -1,0 +1,193 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9595b0089e98ef498c65c3adc0808ce, type: 3}
+  m_Name: TrainingCost
+  m_EditorClassIdentifier: 
+  TableName: TrainningCost
+  linkType: 2
+  rows:
+  - ID: 5
+    ID_Unit: 21
+    Unit: Slingshot
+    Range: 2
+    Speed: 1
+    MightBonus: 2
+    Storage: 30
+    FoodCost: 45
+    WoodCost: 0
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 13
+    ID_Unit: 31
+    Unit: Ballista
+    Range: 3
+    Speed: 1
+    MightBonus: 2
+    Storage: 38
+    FoodCost: 45
+    WoodCost: 0
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 9
+    ID_Unit: 26
+    Unit: Buffaloman
+    Range: 1
+    Speed: 1
+    MightBonus: 2
+    Storage: 40
+    FoodCost: 45
+    WoodCost: 0
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 1
+    ID_Unit: 16
+    Unit: Solider
+    Range: 1
+    Speed: 1
+    MightBonus: 2
+    Storage: 36
+    FoodCost: 50
+    WoodCost: 0
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 6
+    ID_Unit: 22
+    Unit: Sharpshooter
+    Range: 2
+    Speed: 1
+    MightBonus: 8
+    Storage: 34
+    FoodCost: 90
+    WoodCost: 120
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 10
+    ID_Unit: 27
+    Unit: Horseman
+    Range: 1
+    Speed: 1
+    MightBonus: 8
+    Storage: 74
+    FoodCost: 90
+    WoodCost: 120
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 14
+    ID_Unit: 32
+    Unit: Javalin Ballista
+    Range: 3
+    Speed: 1
+    MightBonus: 8
+    Storage: 70
+    FoodCost: 90
+    WoodCost: 120
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 2
+    ID_Unit: 17
+    Unit: TrainedSolider
+    Range: 1
+    Speed: 1
+    MightBonus: 8
+    Storage: 39
+    FoodCost: 100
+    WoodCost: 100
+    StoneCost: 0
+    MetalCost: 0
+  - ID: 7
+    ID_Unit: 23
+    Unit: Crossbow
+    Range: 2
+    Speed: 1
+    MightBonus: 24
+    Storage: 40
+    FoodCost: 180
+    WoodCost: 240
+    StoneCost: 220
+    MetalCost: 0
+  - ID: 15
+    ID_Unit: 33
+    Unit: Stone Thrower
+    Range: 3
+    Speed: 1
+    MightBonus: 24
+    Storage: 120
+    FoodCost: 180
+    WoodCost: 240
+    StoneCost: 220
+    MetalCost: 0
+  - ID: 11
+    ID_Unit: 28
+    Unit: War Elephant
+    Range: 1
+    Speed: 1
+    MightBonus: 24
+    Storage: 138
+    FoodCost: 180
+    WoodCost: 220
+    StoneCost: 240
+    MetalCost: 0
+  - ID: 3
+    ID_Unit: 18
+    Unit: ForbiddenGuard
+    Range: 1
+    Speed: 1
+    MightBonus: 24
+    Storage: 42
+    FoodCost: 200
+    WoodCost: 200
+    StoneCost: 200
+    MetalCost: 0
+  - ID: 8
+    ID_Unit: 24
+    Unit: Bomber
+    Range: 2
+    Speed: 1
+    MightBonus: 120
+    Storage: 52
+    FoodCost: 900
+    WoodCost: 1000
+    StoneCost: 900
+    MetalCost: 1200
+  - ID: 16
+    ID_Unit: 34
+    Unit: WarDestroyer
+    Range: 3
+    Speed: 1
+    MightBonus: 120
+    Storage: 140
+    FoodCost: 900
+    WoodCost: 900
+    StoneCost: 1200
+    MetalCost: 1200
+  - ID: 12
+    ID_Unit: 29
+    Unit: War Stormer
+    Range: 1
+    Speed: 1
+    MightBonus: 120
+    Storage: 152
+    FoodCost: 900
+    WoodCost: 900
+    StoneCost: 1000
+    MetalCost: 1200
+  - ID: 4
+    ID_Unit: 19
+    Unit: Heroic
+    Range: 1
+    Speed: 1
+    MightBonus: 120
+    Storage: 56
+    FoodCost: 1000
+    WoodCost: 1000
+    StoneCost: 1000
+    MetalCost: 1000

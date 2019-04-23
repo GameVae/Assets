@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using static SQLiteConnectProvider;
 
-[CreateAssetMenu(fileName = "Local Link",menuName = "DataTable/LocalLink",order = 1)]
+[CreateAssetMenu(fileName = "Local Link",menuName = "DataTable/LocalLink",order = 0)]
 public class SQLiteLocalLink : ScriptableObject
 {
     [SerializeField] private List<Link> links;

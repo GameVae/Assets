@@ -6,16 +6,8 @@ using UnityEngine;
 
 namespace DataTable.Row
 {
-    public enum DBRowType
-    {
-        MainBase,
-        Version,
-        Military,
-        TrainningCost
-    }
-
     [System.Serializable]
-    public sealed class TrainningCostRow : ISQLiteData
+    public sealed class TrainingCostRow : ISQLiteData
     {
         public int ID;
         public ListUpgrade ID_Unit;
@@ -28,6 +20,12 @@ namespace DataTable.Row
         public int WoodCost;
         public int StoneCost;
         public int MetalCost;
+
+        public int CompareTo(object obj)
+        {
+            TrainingCostRow other = obj as TrainingCostRow;
+            return MightBonus.CompareTo(other.MightBonus);
+        }
     }
 
     #region DB row
@@ -45,6 +43,12 @@ namespace DataTable.Row
         public int Required;
         public string Unlock;
         public ListUpgrade Unlock_ID;
+
+        public int CompareTo(object obj)
+        {
+            MainBaseRow other = obj as MainBaseRow;
+            return Level.CompareTo(other.Level);
+        }
     }
 
     [System.Serializable]
@@ -54,6 +58,12 @@ namespace DataTable.Row
         public string Task;
         public string Content;
         public string Comment;
+
+        public int CompareTo(object obj)
+        {
+            VersionRow other = obj as VersionRow;
+            return Task.CompareTo(other.Task);
+        }
     }
 
     [System.Serializable]
@@ -75,6 +85,12 @@ namespace DataTable.Row
         public int Required_ID;
         public int RequiredLevel;
         public int Unlock_ID;
+
+        public int CompareTo(object obj)
+        {
+            MilitaryRow other = obj as MilitaryRow;
+            return Level.CompareTo(other.Level);
+        }
     }
     #endregion
 
@@ -95,6 +111,12 @@ namespace DataTable.Row
         public string TimePrepare;
         public string TimeHarvestFinish;
         public string TimeRemove;
+
+        public int CompareTo(object obj)
+        {
+            RSS_PositionRow other = obj as RSS_PositionRow;
+            return ID.CompareTo(other.ID);
+        }
     }
 
     [System.Serializable]
@@ -105,6 +127,12 @@ namespace DataTable.Row
         public string Position_Cell;
         public string ID_Type;
         public string Comment;
+
+        public int CompareTo(object obj)
+        {
+            PositionRow other = obj as PositionRow;
+            return ID.CompareTo(other.ID);
+        }
     }
 
     [System.Serializable]
@@ -114,6 +142,12 @@ namespace DataTable.Row
         public string Name_Upgrade;
         public int Level;
         public int UpgradeType;
+
+        public int CompareTo(object obj)
+        {
+            BaseUpgradeRow other = obj as BaseUpgradeRow;
+            return ID.CompareTo(other.ID);
+        }
     }
 
     [System.Serializable]
@@ -272,25 +306,34 @@ namespace DataTable.Row
         public void SetUpgradeTime(double time)
         {
             UpgradeTime = time;
-            upgCounter.Start(UpgradeTime);
             IsUpgradeDone = false;
+
+            upgCounter.Start(UpgradeTime);
         }
         public void SetResearchTime(double time)
         {
-            researchCounter.Start(ResearchTime);
             ResearchTime = time;
             IsResearchDone = false;
+
+            researchCounter.Start(ResearchTime);
         }
         public void SetTrainingTime(double time)
         {
-            trainingCounter.Start(TrainingTime);
             TrainingTime = time;
             IsTrainingDone = false;
+
+            trainingCounter.Start(TrainingTime);
         }
 
         public bool IsEnoughtResource(int farm, int wood, int stone, int metal)
         {
             return (Farm >= farm && Wood >= wood && Stone >= stone && Metal >= metal);
+        }
+
+        public int CompareTo(object obj)
+        {
+            // TODO: 
+            return 0;
         }
     }
 
@@ -309,15 +352,8 @@ namespace DataTable.Row
 
         public int CompareTo(object obj)
         {
-            if (obj.GetType() == typeof(UserInfoRow))
-            {
-                UserInfoRow other = obj as UserInfoRow;
-                return ID_User.CompareTo(other?.ID_User);
-            }
-            else
-            {
-                return ID_User.CompareTo((int)obj);
-            }
+            UserInfoRow other = obj as UserInfoRow;
+            return ID_User.CompareTo(other.ID_User);
         }
     }
 
@@ -328,6 +364,12 @@ namespace DataTable.Row
         public int BaseNumber;
         public ListUpgrade ID_Unit;
         public int Quality;
+
+        public int CompareTo(object obj)
+        {
+            BaseDefendRow other = obj as BaseDefendRow;
+            return ID.CompareTo(other.ID);
+        }
     }
 
     [System.Serializable]
@@ -359,20 +401,13 @@ namespace DataTable.Row
 
         public int CompareTo(object obj)
         {
-            if (obj?.GetType() == typeof(UnitRow))
-            {
-                UnitRow other = obj as UnitRow;
-                return ID.CompareTo(other.ID);
-            }
-            else
-            {
-                return ID.CompareTo((int)obj);
-            }
+            UnitRow other = obj as UnitRow;
+            return ID.CompareTo(other.ID);
         }
     }
 
     [System.Serializable]
-    public class MoveStep : ITableData
+    public class MoveStep
     {
         public string Position_Cell;
         public string Next_Cell;
@@ -404,5 +439,11 @@ namespace DataTable.Row
         public string Position;
         public int BaseNumber;
         public int Level;
+
+        public int CompareTo(object obj)
+        {
+            BasePlayerRow other = obj as BasePlayerRow;
+            return ID_User.CompareTo(other.ID_User);
+        }
     }
 }

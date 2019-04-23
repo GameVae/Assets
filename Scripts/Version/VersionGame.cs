@@ -95,7 +95,7 @@ public class VersionGame : MonoSingle<VersionGame>
 
     private void ReloadDB()
     {
-        Loader.ReloadData();
+        Loader.ReloadAll();
     }
 
     private IEnumerator CheckVersion()

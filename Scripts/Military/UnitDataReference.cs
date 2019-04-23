@@ -131,7 +131,7 @@ public class UnitDataReference : MonoSingle<UnitDataReference>
         while (i < count)
         {
             unitData = UnitTable.Rows[i];
-            user = Users.GetUser(unitData.ID_User);
+            user = Users.GetUserById(unitData.ID_User);
             Create(unitData, user);
 
             i++;

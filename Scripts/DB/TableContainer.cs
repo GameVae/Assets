@@ -7,6 +7,5 @@ namespace DataTable
     public class TableContainer : ScriptableObject
     {
         public ScriptableObject Table;
-        public DBRowType RowType;
     }
 }

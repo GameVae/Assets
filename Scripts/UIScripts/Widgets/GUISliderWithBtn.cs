@@ -40,7 +40,8 @@ namespace UI.Widget
 
         protected void Start()
         {
-            Button.OnClickEvents += delegate { OnClickEvents?.Invoke(slider); };
+            if (Button)
+                Button.OnClickEvents += delegate { OnClickEvents?.Invoke(slider); };
         }
 
         public override void InteractableChange(bool value)
@@ -58,7 +59,7 @@ namespace UI.Widget
         public void SliderRatioChange(float value)
         {
             SliderRatio = value;
-            if(Slider && Button)
+            if (Slider && Button)
             {
                 RectTransform slider = Slider.transform as RectTransform;
                 RectTransform btn = Button.transform as RectTransform;

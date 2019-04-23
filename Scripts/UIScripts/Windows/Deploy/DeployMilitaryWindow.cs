@@ -48,7 +48,7 @@ public class DeployMilitaryWindow : BaseWindow
         Debugger.Log(obj);
         string json = obj.data["R_DEPLOY"].ToString();
         UnitRow unit = JsonUtility.FromJson<UnitRow>(json);
-        UserInfoRow user = SyncData.UserInfos.GetUser(unit.ID_User);
+        UserInfoRow user = SyncData.UserInfos.GetUserById(unit.ID_User);
 
         unitDataReference.Create(unit, user);
 

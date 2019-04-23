@@ -15,11 +15,12 @@ public class SQLiteConnectProvider : MonoSingle<SQLiteConnectProvider>
 
     public enum SQLiteLinkType
     {
-        Version = 1,
+        Task = 1,
         Infantry
     }
 
     [SerializeField] private SQLiteLocalLink links;
+
     private Dictionary<SQLiteLinkType, SQLiteManualConnection> connections;
     private Dictionary<SQLiteLinkType, SQLiteManualConnection> Connections
     {
@@ -44,6 +45,7 @@ public class SQLiteConnectProvider : MonoSingle<SQLiteConnectProvider>
 
     protected override void OnDestroy()
     {
+        Debugger.Log(Connections.Count + " connections");
         foreach (var conn in Connections)
         {
             conn.Value.Dispose();

@@ -2,10 +2,11 @@
 using System.Data;
 using Mono.Data.Sqlite;
 using System;
+using Json;
 
 namespace DataTable.SQL
 {
-    public class SQLiteManualConnection : MonoBehaviour, IDisposable
+    public class SQLiteManualConnection : IDisposable
     {
         [SerializeField] private string DBPath;
         public SqliteConnection DbConnection { get; private set; }
@@ -31,7 +32,8 @@ namespace DataTable.SQL
             }
         }
 
-        public void LoadTable<T>(SQLiteTable<T> table) where T : ISQLiteData, new()
+        public void LoadTable<T>(SQLiteTable<T> table)
+            where T : ISQLiteData
         {
             // TODO: remove in future
             Initalize();
@@ -53,10 +55,12 @@ namespace DataTable.SQL
                                 string json = "";
                                 for (int i = 0; i < fieldCount; i++)
                                 {
-                                    json += MakeJSONValue(reader.GetName(i), reader.GetValue(i)) + ((i < fieldCount - 1) ? "," : "");
+                                    json += MakeJSONValue
+                                        (reader.GetName(i), reader.GetValue(i)) + ((i < fieldCount - 1) ? "," : "");
                                 }
                                 json = FormatJSON(json);
-                                table.LoadRow(json);
+
+                                table.Add(AJPHelper.ParseJson<T>(json));
                             } while (reader.Read());
 
                         }

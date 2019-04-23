@@ -68,7 +68,8 @@ public sealed class SIO_StartupListener : Listener
     private void R_PLAYER_INFO(SocketIOEvent obj)
     {
         // Debugger.Log(obj);
-        SyncData.UserInfos.LoadTable(obj.data["R_PLAYER_INFO"], false);
+        // TODO: upgrade next time
+        SyncData.UserInfos.UpdateTable(obj.data["R_PLAYER_INFO"]);
 
     }
 

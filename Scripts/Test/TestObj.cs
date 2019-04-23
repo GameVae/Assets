@@ -1,11 +1,9 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
 using DataTable;
-using DataTable;
 using DataTable.Row;
 using DataTable.SQL;
 using Network.Data;
-using System;
 using Json;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,7 +51,9 @@ public class TestObj : MonoBehaviour
 
     [Header("Test SQL")]
     public SQLiteManualConnection DBConn;
-    public SQLiteTable_MainBase table;
+    public SQLiteTable_MainBase mainbase;
+    public SQLiteTable_Military military;
+    public SQLiteTable_TrainningCost trainningCost;
 
     [Header("Test Ser Event")]
     public EventListenersController events;
@@ -96,8 +96,19 @@ public class TestObj : MonoBehaviour
         item.FirstSetup(id);
         return item;
     }
+
+    private void Awake()
+    {
+        trainningCost.LoadTable();
+        trainningCost.Rows.BinarySort_R();
+    }
+
     private void Start()
     {
+        //mainbase.LoadTable();
+        //trainningCost.LoadTable();
+        //military.LoadTable();
+
         labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
 
         //for (int i = 0; i < 100; i++)
@@ -209,13 +220,13 @@ public class TestObj : MonoBehaviour
 
     private void TestDBConnection()
     {
-        DBConn.LoadTable(table);
+        DBConn.LoadTable(mainbase);
         //table.Rows[0] = new MainBaseRow(); 
         MainBaseRow r = new MainBaseRow()
         {
             StoneCost = 10000,
         };
-        table.SQLInsert(DBConn.DbConnection, r);
+        mainbase.SQLInsert(r);
     }
 
     private void RefectionTest(ITableData manualRow)
@@ -232,7 +243,7 @@ public class TestObj : MonoBehaviour
         li.BinarySort_R();
         Debug.Log("sorted list: ");
         li.Log(" - ");
-        Debug.Log("index: " + li.BinarySearch_L(0, li.Count - 1, 891));
+        Debug.Log("index: " + li.BinarySearch_R(891));
     }
 
     private void R_MOVE(SocketIO.SocketIOEvent ev)
@@ -323,7 +334,7 @@ public class TestObj : MonoBehaviour
         int i = 0;
         while (i < count)
         {
-            rss_table1.LoadRow(data[i].ToString());
+            // rss_table1.LoadRow(data[i].ToString());
             i++;
             Thread.Sleep(200);
         }

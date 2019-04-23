@@ -25,7 +25,7 @@ public class TrainingWindow : BaseWindow
     private GUIHorizontalGrid curRow;
     private int elementCount;
 
-    private TrainningCostRow refCostInfo;
+    private TrainingCostRow refCostInfo;
     private ITableData refTypeTraining;
 
     private BaseUpgradeRow refType;

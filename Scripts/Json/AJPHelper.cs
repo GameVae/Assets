@@ -1,5 +1,6 @@
 ﻿using DataTable;
 using Generic.Singleton;
+using UnityEngine;
 
 namespace Json
 {
@@ -23,6 +24,20 @@ namespace Json
             where T : ITableData
         {
             return Singleton.Instance<AsyncTableLoader<T>>();
-        }        
+        }
+
+        public static TResult ParseJson<TResult>(string json)
+        {
+            try
+            {
+                return JsonUtility.FromJson<TResult>(json);
+            }
+            catch (System.Exception e)
+            {
+                Debugger.Log(e.ToString());
+                return default(TResult);
+            }
+
+        }
     }
 }

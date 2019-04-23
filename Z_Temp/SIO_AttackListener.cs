@@ -24,7 +24,7 @@ public class SIO_AttackListener : Listener
     private void R_ATTACK(SocketIOEvent obj)
     {
         Debugger.Log(obj);
-        UnitTable.UpdateTable(obj.data["R_ATTACK"].ToString());
+        UnitTable.UpdateTable(obj.data["R_ATTACK"]);
     }
 
     public void S_ATTACK(NavRemote owner, NavRemote other)

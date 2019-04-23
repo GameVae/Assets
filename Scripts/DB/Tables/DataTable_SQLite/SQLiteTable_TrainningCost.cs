@@ -6,9 +6,9 @@ using UnityEngine;
 namespace DataTable
 {
     [CreateAssetMenu(fileName = "New TranningCost Table", menuName = "DataTable/SQLiteTable/TranningCost", order = 3)]
-    public class SQLiteTable_TrainningCost : SQLiteTable<TrainningCostRow>
+    public class SQLiteTable_TrainningCost : SQLiteTable<TrainingCostRow>
     {
-        public TrainningCostRow this[ListUpgrade type]
+        public TrainingCostRow this[ListUpgrade type]
         {
             get
             {

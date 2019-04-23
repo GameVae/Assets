@@ -70,7 +70,7 @@ namespace Network.Sync
             serMsg[0].GetField(ref User_ID, "ID_User");
 
             UserInfos.LoadTable(serMsg);
-            MainUser = UserInfos.GetUser(User_ID);
+            MainUser = UserInfos.GetUserById(User_ID);
         }
     }
 

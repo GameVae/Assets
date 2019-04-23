@@ -2,37 +2,37 @@
 using Generic.Singleton;
 using UnityEngine;
 using Json;
+using System;
 
 namespace DataTable
 {
-    public class JSONTable<T> : ScriptableObject, ITable where T : ITableData
+    public class JSONTable<T> : ScriptableObject, ITable
+        where T : ITableData
     {
         [SerializeField] private List<T> rows;
+
+        private Type rowType;
         private AJPHelper ajpHelper;
         private AJPHelper.Operation operation;
 
-        public AJPHelper.Operation Operation
+        public int Count
         {
-            get
-            {
-                if(operation == null)
-                {
-                    operation = new AJPHelper.Operation()
-                    {
-                        Progress = 1,
-                        IsDone = true,
-                        SpentTime = 0,
-                    };
-                }
-                return operation;
-            }
-            protected set { operation = value; }
+            get { return Rows.Count; }
         }
 
         public List<T> Rows
         {
             get { return rows ?? (rows = new List<T>()); }
         }
+
+        public Type RowType
+        {
+            get
+            {
+                return rowType ?? (rowType = typeof(T));
+            }
+        }
+
         public AJPHelper AJPHelper
         {
             get { return ajpHelper ?? (ajpHelper = Singleton.Instance<AJPHelper>()); }
@@ -52,62 +52,97 @@ namespace DataTable
             }
         }
 
-        public int Count
+        public AJPHelper.Operation Operation
         {
-            get { return Rows.Count; }
+            get
+            {
+                if (operation == null)
+                {
+                    operation = new AJPHelper.Operation()
+                    {
+                        Progress = 1,
+                        IsDone = true,
+                        SpentTime = 0,
+                    };
+                }
+                return operation;
+            }
+            protected set { operation = value; }
         }
 
-        public System.Type RowType
-        { get { return typeof(T); } }
-
-        public virtual void LoadRow(string json)
+        public void Clear()
         {
-            T row = ParseJson<T>(json);
-            Rows.Add(row);
+            Rows.Clear();
         }
 
-        public virtual void LoadTable(JSONObject data, bool clearPre = true)
+        private void LoadRow(T r)
         {
-            if (clearPre)
-                Rows.Clear();
+            Rows.Add(r);
+        }
 
-            int count = data.Count;
+        protected virtual void Add(T obj)
+        {
+            if (obj != null)
+                Rows.Add(obj);
+        }
+
+        public virtual void LoadTable(JSONObject jsonObj)
+        {
+            Clear();
+
+            int count = jsonObj.Count;
             for (int i = 0; i < count; i++)
             {
-                LoadRow(data[i].ToString());
+                T row = AJPHelper.ParseJson<T>(jsonObj[i].ToString());
+                Add(row);
             }
         }
 
-        public virtual void AsyncLoadTable(JSONObject data, bool clearPre = true)
+        public virtual void UpdateTable(JSONObject jsonObj)
         {
-            if (clearPre)
-                Rows.Clear();
+            int count = jsonObj.Count;
+            if (count == 0)
+            {
+                T updateData = AJPHelper.ParseJson<T>(jsonObj.ToString());
+                UpdateTableData(updateData);
+            }
+            else if (count > 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    T updateData = AJPHelper.ParseJson<T>(jsonObj[i].ToString());
+                    UpdateTableData(updateData);
+                }
+            }
+        }
+
+        public virtual void AsyncLoadTable(JSONObject jsonObj)
+        {
+            Clear();
 
             Operation = AJPHelper.GetParser<T>().Start(new AsyncTableLoader<T>.ParseInfo()
             {
-                Obj = data,
+                Obj = jsonObj,
                 ResultHandler = LoadRow,
                 Operation = new AJPHelper.Operation(),
             });
         }
 
-        private void LoadRow(T r)
+        protected virtual void UpdateTableData(T updateData)
         {
-            rows.Add(r);
-        }
-
-        public static TResult ParseJson<TResult>(string json)
-        {
-            try
+            // TODO: upgrade search
+            int count = Count;
+            for (int i = 0; i < count; i++)
             {
-                return JsonUtility.FromJson<TResult>(json);
-            }
-            catch (System.Exception e)
-            {
-                Debugger.Log(e.ToString());
-                return default(TResult);
+                if(updateData.CompareTo(Rows[i]) == 0)
+                {
+                    Rows[i] = updateData;
+                    return;
+                }
             }
 
+            // not exist update data - add it to rows
+            Add(updateData);
         }
     }
 }

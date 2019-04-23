@@ -1,17 +1,46 @@
-﻿using Generic.Singleton;
+﻿using DataTable.SQL;
+using Generic.Singleton;
+using Json;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using Utils;
+using static SQLiteConnectProvider;
 
 namespace DataTable
 {
-    public class SQLiteTable<T> : ScriptableObject, ITable where T : ISQLiteData, new()
+    public class SQLiteTable<T> : ScriptableObject, ISQLiteTable
+        where T : ISQLiteData
     {
         public string TableName;
+        [SerializeField] private SQLiteLinkType linkType;
+
         [SerializeField] private List<T> rows;
         [SerializeField] private System.Type rowType;
+
         private SQLiteHelper helper;
+        private SQLiteManualConnection sqlConn;
+        private SQLiteConnectProvider connProvider;
+
+        public SQLiteConnectProvider ConnectProvider
+        {
+            get
+            {
+                return connProvider ?? (connProvider = Singleton.Instance<SQLiteConnectProvider>());
+            }
+        }
+        public SQLiteManualConnection SQLiteConn
+        {
+            get
+            {
+                return sqlConn ?? (sqlConn = ConnectProvider.GetConnection(linkType));
+            }
+        }
+
+        public SQLiteLinkType LinkType
+        {
+            get { return linkType; }
+        }
 
         public List<T> Rows
         {
@@ -33,7 +62,7 @@ namespace DataTable
 
         public int Count
         {
-            get { return (int)Rows?.Count; }
+            get { return Rows.Count; }
         }
 
         public ITableData this[int rowID]
@@ -42,39 +71,47 @@ namespace DataTable
             set { Rows[rowID] = (T)value; }
         }
 
-        public void LoadRow(string json)
+        public void Add(T obj)
         {
-            T newRow = JsonUtility.FromJson<T>(json);
-            Rows.Add(newRow);
+            if (obj != null)
+                Rows.Add(obj);
         }
 
         public void Clear()
         {
-            Rows?.Clear();
+            Rows.Clear();
         }
 
-        public void SQLInsert(IDbConnection dbConnection, T row)
+        public void LoadTable()
+        {
+            SQLiteConn.LoadTable(this);
+        }
+
+        public void SQLInsert(T row)
         {
             string colsString = Helper.CreateColumnSequenceFrom(RowType, row);
             string valuesString = Helper.CreateValuesSequenceFrom(RowType, row);
 
             string cmd = SQLUtils.GetInsertCommand(TableName, colsString, valuesString);
-            if (dbConnection.InsertValue(cmd))
+
+            if (SQLiteConn.DbConnection.InsertValue(cmd))
                 Rows.Add(row);
         }
 
-        public void SQLUpdate(IDbConnection dbConnection, int rowID)
+        public void SQLUpdate(int rowID)
         {
             T row = Rows[rowID];
             string keyValuePairs = Helper.CreateUpdateValuesFrom(RowType, row);
             string cmd = SQLUtils.GetUpdateCommand(TableName, rowID + 1, keyValuePairs);
-            dbConnection.UpdateValue(cmd);
+
+            SQLiteConn.DbConnection.UpdateValue(cmd);
         }
 
-        public void SQLDelete(IDbConnection dbConnection, int rowId)
+        public void SQLDelete(int rowId)
         {
             string cmd = SQLUtils.GetDeleteCommand(TableName, string.Format(" _rowid_ = {0}", rowId + 1));
-            if (dbConnection.Delete(cmd))
+
+            if (SQLiteConn.DbConnection.Delete(cmd))
                 Rows.RemoveAt(rowId);
         }
     }

@@ -7,7 +7,7 @@ using System.Linq;
 namespace DataTable
 {
     [CreateAssetMenu(fileName = "New Unit Table", menuName = "DataTable/JsonTable/Unit JSONTable", order = 4)]
-    public sealed class JSONTable_Unit : JSONTable<UnitRow>, ISubject
+    public sealed class JSONTable_Unit : JSONTable<UnitRow>, ISubject, ISearchByObjectCompare<UnitRow>
     {
         private List<int> unitIds;
         private List<IObserver> observers;
@@ -24,35 +24,42 @@ namespace DataTable
             }
         }
 
-        public UnitRow GetUnitById(int id)
+        private UnitRow searchObject;
+        private UnitRow SearchObject
         {
-            Rows.RemoveNull();
-            //List<int> ids = UnitIds;
-            //int index = ids.BinarySearch_L<int>(0, ids.Count, id);
-            //if (index < Count && ids[index] == id)
-            //    return Rows[index];
-            //return null;
-            return Rows.FirstOrDefault(unit => unit.ID == id);
+            get
+            {
+                return searchObject ?? (searchObject = new UnitRow());
+            }
         }
 
-        public override void LoadRow(string json)
+        public UnitRow GetUnitById(int id)
         {
-            UnitRow unit = ParseJson<UnitRow>(json);
+            List<int> ids = UnitIds;
+            int index = ids.BinarySearch_R(id);
+            if (ids[index] == id)
+                return Rows[index];
+            return null;
+        }
+
+        protected override void Add(UnitRow unit)
+        {
             if (unit != null)
             {
-                int insertIndex = Rows.BinarySearch_L(0, Rows.Count, unit);
+                int unitID = unit.ID;
+                int insertIndex = Rows.BinarySearch_R(GetSearchObject(unitID));
 
                 if (insertIndex >= 0)
                 {
                     Rows.Insert(insertIndex, unit);
-                    UnitIds.Insert(insertIndex, unit.ID);
+                    UnitIds.Insert(insertIndex, unitID);
                 }
             }
         }
 
-        public void UpdateTable(string json)
+        public override void UpdateTable(JSONObject json)
         {
-            UnitRow updateData = ParseJson<UnitRow>(json);
+            UnitRow updateData = Json.AJPHelper.ParseJson<UnitRow>(json.ToString());
             if (updateData != null)
             {
                 //int updateIndex = Rows.BinarySearch_L(0, Count, updateData);
@@ -111,6 +118,12 @@ namespace DataTable
             {
                 Notify(Observers[i]);
             }
+        }
+
+        public UnitRow GetSearchObject(object obj)
+        {
+            SearchObject.ID = (int)obj;
+            return SearchObject;
         }
     }
 }

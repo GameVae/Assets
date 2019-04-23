@@ -1,6 +1,4 @@
-﻿using DataTable;
-using DataTable.Row;
-using DataTable.SQL;
+﻿using DataTable.Row;
 using System.Linq;
 using UnityEngine;
 
@@ -12,30 +10,20 @@ namespace DataTable.Loader
 
         public string ClientVersion;
         public string ServerVersion;
-        public SQLiteManualConnection SQLDataConnection;
-        public SQLiteManualConnection SQLVersionConnection;
+
         public SQLiteTable_Version Version;
-        public TableContainer[] Containers;
+        public ScriptableObject[] SQLiteTables;
 
         private void Awake()
         {
             GetCurrentVersion();
         }
 
-        private void OnApplicationQuit()
-        {
-            SQLDataConnection.Dispose();
-            SQLVersionConnection.Dispose();
-
-            System.GC.Collect(2, System.GCCollectionMode.Forced);
-            System.GC.WaitForPendingFinalizers();
-        }
-
         private void LoadTables()
         {
-            for (int i = 0; i < Containers.Length; i++)
+            for (int i = 0; i < SQLiteTables.Length; i++)
             {
-                Load(Containers[i].RowType, Containers[i].Table);
+                ((ISQLiteTable)SQLiteTables[i]).LoadTable();
             }
         }
 
@@ -45,47 +33,17 @@ namespace DataTable.Loader
             return result;
         }
 
-        private void Load(DBRowType ManualRowType, ScriptableObject TableData)
-        {
-            switch (ManualRowType)
-            {
-                case DBRowType.MainBase:
-                    SQLDataConnection.LoadTable(Cast<SQLiteTable_MainBase>(TableData));
-                    break;
-                case DBRowType.Military:
-                    SQLDataConnection.LoadTable(Cast<SQLiteTable_Military>(TableData));
-                    break;
-                case DBRowType.Version:
-                    SQLVersionConnection.LoadTable(Cast<SQLiteTable_Version>(TableData));
-                    break;
-                case DBRowType.TrainningCost:
-                    SQLDataConnection.LoadTable(Cast<SQLiteTable_TrainningCost>(TableData));
-                    break;
-            }
-        }
-
-        private  void Load<T>(SQLiteTable<T> table)
-            where T: ISQLiteData, new ()
-        {           
-            SQLDataConnection.LoadTable<T>(table);
-        }
-
-        public T Cast<T>(ScriptableObject data) where T : ScriptableObject, ITable
-        {
-            return (T)data;
-        }
-
         public bool CheckVersion()
         {
             return IsUpdateVersion(versionTask: ref versionTask);
         }
 
-        public void ReloadData()
+        public void ReloadAll()
         {
             if (versionTask != null)
             {
                 versionTask.Content = ServerVersion;
-                Version.SQLUpdate(SQLVersionConnection.DbConnection, Version.Rows.IndexOf(versionTask));
+                Version.SQLUpdate(Version.Rows.IndexOf(versionTask));
             }
             else
             {
@@ -96,16 +54,15 @@ namespace DataTable.Loader
                     Content = ServerVersion,
                     Comment = "None"
                 };
-                Version.SQLInsert(SQLVersionConnection.DbConnection, versionTask);
+                Version.SQLInsert(versionTask);
             }
             LoadTables();
         }
 
-
         private void GetCurrentVersion()
         {
             if (versionTask == null)
-                Load(DBRowType.Version, Version);
+                Version.LoadTable();
 
             versionTask = Version.Rows.FirstOrDefault(x => x.Task.CompareTo("Version") == 0);
             ClientVersion = versionTask?.Content;

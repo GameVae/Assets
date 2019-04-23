@@ -7,11 +7,10 @@ namespace DataTable
     [CreateAssetMenu(fileName = "New BaseInfo Table", menuName = "DataTable/JsonTable/BaseInfo JSONTable", order = 2)]
     public sealed class JSONTable_BaseInfo : JSONTable<BaseInfoRow>
     {
-        public override void LoadRow(string json)
+        protected override void Add(BaseInfoRow obj)
         {
-            base.LoadRow(json);
-            BaseInfoRow r = Rows[Count - 1];
-            r.Initalize();
+            base.Add(obj);            
+            obj.Initalize();
         }
     }
 }
