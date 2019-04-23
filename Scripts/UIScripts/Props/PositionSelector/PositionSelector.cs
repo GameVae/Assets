@@ -4,15 +4,15 @@ using UnityEngine;
 public class PositionSelector : MonoBehaviour
 {
     public GameObject Panel;
-    public InputFieldv2 InputK;
-    public InputFieldv2 InputX;
-    public InputFieldv2 InputY;
+    public CustomInputField InputK;
+    public CustomInputField InputX;
+    public CustomInputField InputY;
     public GUIInteractableIcon AcceptButton;
     public GUIInteractableIcon CloseButton;
     public CameraController CameraCtr;
 
     private Vector3Int Position;
-    private InputFieldv2 focusInputField;
+    private CustomInputField focusInputField;
 
     private void Awake()
     {
@@ -55,7 +55,7 @@ public class PositionSelector : MonoBehaviour
             Panel.SetActive(true);
     }
 
-    private void SetFocusInputField(InputFieldv2 inputField)
+    private void SetFocusInputField(CustomInputField inputField)
     {
         focusInputField = inputField;
     }
@@ -64,6 +64,7 @@ public class PositionSelector : MonoBehaviour
     {
         int.TryParse(value, out int v);
         v = Mathf.Clamp(v, 0, 512);
-        focusInputField.Keyboard.InputString = v.ToString();
+
+        focusInputField.SetContent(v.ToString());
     }
 }

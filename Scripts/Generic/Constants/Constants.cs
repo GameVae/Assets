@@ -31,14 +31,18 @@ namespace Generic.Contants
         /// Vector3Int (-5,-5,0)
         /// </summary>
         public static readonly Vector3Int ToSerPosition = new Vector3Int(-5, -5, 0);
-
-
-        // 1 / DPI
+        /// <summary>
+        /// 1.0f / DPI
+        /// </summary>
         public float PixelDependencyDevice { get; private set; }
-
+        /// <summary>
+        /// Raito of Screen (width / height)
+        /// </summary>
         public float ScreenRatio { get; private set; }
-        // neighbour cell patterns
-        public static class NeighbourHexCell
+        /// <summary>
+        ///  neighbour cell patterns
+        /// </summary>
+        public static class Neighbour
         {
             #region// y round
             public static readonly Vector3Int[] HexaPatternEven1 = new Vector3Int[]
@@ -139,13 +143,25 @@ namespace Generic.Contants
         }
 
         #region Util methods
+        /// <summary>
+        /// Get neighbour positions
+        /// </summary>
+        /// <param name="center"> current psoition</param>
+        /// <param name="range"> dectec range from 1 to 3</param>
+        /// <returns></returns>
         public static Vector3Int[] GetNeighboursRange(Vector3Int center, int range)
         {
             Vector3Int[] result = (center.y % 2 == 0) ? GetEvenRange(center, range) : GetOddRange(center, range);
             return result;
             
         }
-
+        
+        /// <summary>
+        /// determine client position is valid or not
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool IsValidCell(int x, int y)
         {
             return x >= 5 && x <= TOTAL_COL - 5 && y >= 5 && y <= TOTAL_ROW - 5;
@@ -158,13 +174,13 @@ namespace Generic.Contants
             switch (range)
             {
                 case 1:
-                    pattern = NeighbourHexCell.HexaPatternEven1;
+                    pattern = Neighbour.HexaPatternEven1;
                     break;
                 case 2:
-                    pattern = NeighbourHexCell.HexaPatternEven2;
+                    pattern = Neighbour.HexaPatternEven2;
                     break;
                 case 3:
-                    pattern = NeighbourHexCell.HexaPatternEven3;
+                    pattern = Neighbour.HexaPatternEven3;
                     break;
             }
 
@@ -190,13 +206,13 @@ namespace Generic.Contants
             switch (range)
             {
                 case 1:
-                    pattern = NeighbourHexCell.HexaPatternOdd1;
+                    pattern = Neighbour.HexaPatternOdd1;
                     break;
                 case 2:
-                    pattern = NeighbourHexCell.HexaPatternOdd2;
+                    pattern = Neighbour.HexaPatternOdd2;
                     break;
                 case 3:
-                    pattern = NeighbourHexCell.HexaPatternOdd3;
+                    pattern = Neighbour.HexaPatternOdd3;
                     break;
             }
 
@@ -220,6 +236,7 @@ namespace Generic.Contants
         protected override void Awake()
         {
             base.Awake();
+
             PixelDependencyDevice = 1.0f / Screen.dpi;
             ScreenRatio = Screen.width * 1.0f / Screen.height;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -228,13 +245,13 @@ namespace Generic.Contants
         private void Start()
         {
             // Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
-            System.Threading.ThreadPool.GetMaxThreads(out int maxWorkerNum, out int maxCompletionPort);
-            System.Threading.ThreadPool.GetMinThreads(out int minWorkerNum, out int minCompletionPort);
-            System.Threading.ThreadPool.GetAvailableThreads(out int avalWorkerNum, out int avalCompletionPort);
-
-            Debugger.Log("Max: " + maxWorkerNum + " - CompletionPort: " + maxCompletionPort);
-            Debugger.Log("Min: " + minWorkerNum + " - CompletionPort: " + minCompletionPort);
-            Debugger.Log("Aval: " + avalWorkerNum + " - CompletionPort: " + avalCompletionPort);
+            // TODO:[TEST]
+            //System.Threading.ThreadPool.GetMaxThreads(out int maxWorkerNum, out int maxCompletionPort);
+            //System.Threading.ThreadPool.GetMinThreads(out int minWorkerNum, out int minCompletionPort);
+            //System.Threading.ThreadPool.GetAvailableThreads(out int avalWorkerNum, out int avalCompletionPort);
+            //Debugger.Log("Max: " + maxWorkerNum + " - CompletionPort: " + maxCompletionPort);
+            //Debugger.Log("Min: " + minWorkerNum + " - CompletionPort: " + minCompletionPort);
+            //Debugger.Log("Aval: " + avalWorkerNum + " - CompletionPort: " + avalCompletionPort);
         }
         #endregion
     }

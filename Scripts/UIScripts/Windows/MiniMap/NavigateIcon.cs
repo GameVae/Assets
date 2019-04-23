@@ -60,6 +60,10 @@ public class NavigateIcon : MonoBehaviour
         Icon.enabled = false;
     }
 
+    /// <summary>
+    /// Set icon position
+    /// </summary>
+    /// <param name="position"> local position for icon</param>
     public void SetPosition(Vector3 position)
     {
         if (!Icon.enabled) Icon.enabled = true;

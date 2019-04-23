@@ -1,7 +1,10 @@
 ﻿using Generic.Singleton;
 using System.Collections.Generic;
 using UnityEngine;
-using static Keyboard;
+
+using UI.Keyboard;
+using static UI.Keyboard.Keyboard;
+
 
 public class KeyboardProvider : ISingleton
 {   

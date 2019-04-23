@@ -79,7 +79,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         List<Vector3Int> neighbours = new List<Vector3Int>();
         Vector3Int neighbour;
         Vector3Int[] pattern = (cell.y % 2 == 0) ?
-            Constants.NeighbourHexCell.HexaPatternEven1 : Constants.NeighbourHexCell.HexaPatternOdd1;
+            Constants.Neighbour.HexaPatternEven1 : Constants.Neighbour.HexaPatternOdd1;
         for (int i = 0; i < pattern.Length; i++)
         {
             neighbour = pattern[i] + cell;

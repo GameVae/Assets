@@ -1,83 +1,88 @@
 ﻿using UnityEngine;
-using static InputFieldv2;
+using static CustomInputField;
 
-public abstract class Keyboard : MonoBehaviour
+namespace UI.Keyboard
 {
-    public enum KeyboardType
+    public abstract class Keyboard : MonoBehaviour
     {
-        MobileNative,
-        Standalone,
-        Numpad,
-    }
-
-    protected abstract void HandleInput();
-
-    private bool isActive;
-    private string inputString;
-    protected ContentValidate contentValidate;
-
-    public string InputString
-    {
-        get
+        public enum KeyboardType
         {
-            return inputString;
+            MobileNative,
+            Standalone,
+            Numpad,
         }
-        set
+
+        protected abstract void HandleInput();
+        public abstract void SetInputString(string str);
+
+        private bool isActive;
+        private string inputString;
+        protected ContentValidate contentValidate;
+
+        public string InputString
         {
-            inputString = contentValidate != null ? contentValidate.CheckContent(value) : value;
-            InputField?.SetContent(inputString);
+            get
+            {
+                return inputString;
+            }
+            protected set
+            {
+                inputString = value;
+                InputField?.SetContent(inputString);
+            }
         }
-    }
 
-    public bool IsActive { get { return isActive; } }
+        public bool IsActive { get { return isActive; } }
 
-    public InputFieldv2 InputField { get; private set; }
+        public CustomInputField InputField { get; private set; }
 
-    private void UnAcive()
-    {
-        InputField?.Active(false);
-        InputField = null;
-
-        inputString = null;
-        contentValidate = null;
-    }
-
-    private void Active(InputFieldv2 inputField)
-    {
-        InputField?.Active(false); // last input field
-
-        InputField = inputField;
-        InputField?.Active(true); // current input field
-
-        inputString = InputField?.Text;
-        contentValidate = InputField?.Validator;
-    }
-
-    protected void Update()
-    {
-        if (isActive)
+        private void UnAcive()
         {
-            HandleInput();
+            InputField?.Active(false);
+            InputField = null;
+
+            inputString = null;
+            contentValidate = null;
         }
-    }
 
-    protected virtual void Active(bool value, InputFieldv2 inputField)
-    {
-        isActive = value;
+        private void Active(CustomInputField inputField)
+        {
+            InputField?.Active(false); // last input field
 
-        if (isActive)
-            Active(inputField);
-        else
-            UnAcive();
-    }
+            InputField = inputField;
+            InputField?.Active(true); // current input field
 
-    public void Close()
-    {
-        Active(false, null);
-    }
+            inputString = InputField?.Text;
+            contentValidate = InputField?.Validator;
+        }
 
-    public void Open(InputFieldv2 inputField)
-    {
-        Active(true, inputField);
+        protected void Update()
+        {
+            if (isActive)
+            {
+                HandleInput();
+            }
+        }
+
+        protected virtual void Active(bool value, CustomInputField inputField)
+        {
+            isActive = value;
+
+            if (isActive)
+                Active(inputField);
+            else
+                UnAcive();
+        }
+
+        public void Close()
+        {
+            Active(false, null);
+        }
+
+        public void Open(CustomInputField inputField)
+        {
+            Active(true, inputField);
+        }
+
     }
 }

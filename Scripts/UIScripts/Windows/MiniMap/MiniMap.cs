@@ -4,39 +4,49 @@ using Generic.Pooling;
 using Generic.Singleton;
 using System.Collections.Generic;
 using UI.Composites;
-using UI.Widget;
 using UnityEngine;
 using static NodeManagerProvider;
 
 public class MiniMap : BaseWindow
 {
     [SerializeField] private float delayCloseMiniMap;
+
+    private int openAtFrame;
     private bool isOpened;
     private bool isClosing;
     private float closeCounter;
+    private Vector2 uiMapSize;
+    private Vector2 pxPerNode;
 
-    private Vector3Int selectedCell;
     private CrossInput crossInput;
+    private Vector3Int selectedPosition;
     private NestedCondition selectCondition;
 
-    public ConstructIcon ConstructIconPrefab;
-    public SelectableComp OpenButton;
-
-    public CameraController CameraCtrl;
-    public CursorPos cursor;
+    private List<ConstructIcon> catcher;
+    private Pooling<ConstructIcon> iconPooling;
+    private NodeManagerProvider managerProvider;
+    private RangeWayPointManager constructNodeManager;
 
     public RectTransform MiniMapImage;
     public NavigateIcon MapSelectIcon;
-    public RectTransform BuildingIcon;
-    public Camera UICamera;
 
-    private Vector2Int uiMapSize;
-    private Vector2Int pxPerNode;
+    public CursorPos Cursor;
+    public SelectableComp OpenButton;
+    public CameraController CameraCtrl;
+    public ConstructIcon ConstructIconPrefab;
 
-    private Pooling<ConstructIcon> iconPooling;
-    private RangeWayPointManager constructNodeManager;
-    private NodeManagerProvider managerProvider;
+    private List<ConstructIcon> Catcher
+    {
+        get { return catcher ?? (catcher = new List<ConstructIcon>()); }
+    }
 
+    public CrossInput CrossInput
+    {
+        get
+        {
+            return crossInput ?? (crossInput = Singleton.Instance<CrossInput>());
+        }
+    }
     public NodeManagerProvider NodeManagerProvider
     {
         get
@@ -53,33 +63,11 @@ public class MiniMap : BaseWindow
         }
     }
 
-    private List<ConstructIcon> catcher;
-    private List<ConstructIcon> Catcher
-    {
-        get { return catcher ?? (catcher = new List<ConstructIcon>()); }
-    }
-
-    public CrossInput CrossInput
-    {
-        get
-        {
-            return crossInput ?? (crossInput = Singleton.Instance<CrossInput>());
-        }
-    }
-
     private void Awake()
     {
         OpenButton.OnClickEvents += Open;
 
         iconPooling = new Pooling<ConstructIcon>(CreateIcon, 10);
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-        selectCondition = new NestedCondition();
-
-        InitSelectCondition();
     }
 
     protected override void Update()
@@ -111,8 +99,9 @@ public class MiniMap : BaseWindow
         if (isClosing)
         {
             isClosing = false;
-            MoveCameraToCell(selectedCell);
-            cursor.updateCursor(cursor.CellToWorldPoint(selectedCell));
+            Vector3Int clientPos = selectedPosition.ToClientPosition();
+            MoveCameraToCell(clientPos);
+            Cursor.updateCursor(Cursor.CellToWorldPoint(clientPos));
         }
 
         isOpened = false;
@@ -121,33 +110,21 @@ public class MiniMap : BaseWindow
         base.Close();
     }
 
-    private void SetupBuildingIcon()
-    {
-        List<Vector3Int> constructPositions = ConstructNodeManager.Centers;
-
-        for (int i = 0; i < constructPositions.Count; i++)
-        {
-            Vector3 position = ToLocalFrom(constructPositions[i]);
-
-            ConstructIcon icon = iconPooling.GetItem();
-            icon.SetHoldingPositions(ConstructNodeManager, constructPositions[i]);
-            (icon.transform as RectTransform).localPosition = position;
-
-            Catcher.Add(icon);
-            icon.gameObject.SetActive(true);
-        }
-    }
-
     private void SetNavigateIcon(Vector2 local)
     {
-        if (!SetNavIconOnBuild(local))
+        if (!TrySetIconOnConstruct(local))
         {
-            selectedCell = To3IntFrom(local);
-            if (SetNavIconPosition(selectedCell))
+            selectedPosition = To3IntFrom(local);
+          
+            if (SetIconPosition(selectedPosition))
+            {
                 StartClose();
+            }
         }
         else
+        {
             StartClose();
+        }
     }
 
     private void MoveCameraToCell(Vector3Int cell)
@@ -166,13 +143,15 @@ public class MiniMap : BaseWindow
         base.Open();
         Load();
 
-        SetNavIconPosition(cursor.GetCurrentCell());
+        Vector3Int serPos = Cursor.GetCurrentCell().ToSerPosition();
+        SetIconPosition(serPos);
+        openAtFrame = Time.frameCount;
         isOpened = true;
     }
 
     protected override void Init()
     {
-        InitalizeOffset();
+        Initalize();
     }
 
     public override void Load(params object[] input)
@@ -180,74 +159,122 @@ public class MiniMap : BaseWindow
         SetupBuildingIcon();
     }
 
-    private void InitSelectCondition()
-    {
-        selectCondition.Conditions += delegate { return CrossInput.IsPointerUp; };
-        selectCondition.Conditions += delegate
-        {
-            return Window.activeInHierarchy;
-        };
-    }
-
-    private void OnSelectConstructIcon(ConstructIcon icon)
-    {
-        SetNavIconPosition(icon.Center);
-    }
-
-    private Vector3 ToLocalFrom(Vector3Int pos)
+    /// <summary>
+    /// convert from ser position to minimap position
+    /// </summary>
+    /// <param name="serPos">ser position</param>
+    /// <returns></returns>
+    private Vector3 ToLocalFrom(Vector3Int serPos)
     {
         Vector3 result = Vector3.zero;
-        result.x = pxPerNode.x * pos.x;
-        result.y = pxPerNode.x * pos.y;
+        result.x = pxPerNode.x * serPos.x;
+        result.y = pxPerNode.x * serPos.y;
         return result;
     }
 
-    private Vector3Int To3IntFrom(Vector2 pos)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="local">local position on mini map image</param>
+    /// <returns>Server position</returns>
+    private Vector3Int To3IntFrom(Vector2 local)
     {
         Vector3Int result = Vector3Int.zero;
-        result.x = (int)pos.x / pxPerNode.x;
-        result.y = (int)pos.y / pxPerNode.x;
+        result.x = (int)(local.x / pxPerNode.x);
+        result.y = (int)(local.y / pxPerNode.y);
         return result;
     }
 
-    private bool SetNavIconPosition(Vector3Int position)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="serPos">server position</param>
+    /// <returns></returns>
+    private bool SetIconPosition(Vector3Int serPos)
     {
-        if (Constants.IsValidCell(position.x, position.y))
+        Vector3Int clientPos = serPos.ToClientPosition();
+        if (Constants.IsValidCell(clientPos.x, clientPos.y))
         {
-            Vector3 localPos = ToLocalFrom(position);
+            Vector3 localPos = ToLocalFrom(serPos);
             MapSelectIcon.SetPosition(localPos);
             return true;
         }
         return false;
     }
 
-    private ConstructIcon CreateIcon(int id)
+    private void OnSelectConstructIcon(ConstructIcon icon)
     {
-        ConstructIcon build = Instantiate(ConstructIconPrefab, MiniMapImage);
-        build.FirstSetup(id);
-        return build;
+        SetIconPosition(icon.Center);
     }
 
-    private void InitalizeOffset()
-    {
-        uiMapSize = new Vector2Int((int)MiniMapImage.rect.size.x, (int)MiniMapImage.rect.size.y);
-
-        pxPerNode.x = uiMapSize.x / Constants.TOTAL_COL;
-        pxPerNode.y = uiMapSize.y / Constants.TOTAL_ROW;
-    }
-
-    private bool SetNavIconOnBuild(Vector2 local)
+    private bool TrySetIconOnConstruct(Vector2 local)
     {
         for (int i = 0; i < Catcher.Count; i++)
         {
             if (Catcher[i].IsPointerOver(local))
             {
                 OnSelectConstructIcon(Catcher[i]);
-                selectedCell = Catcher[i].Center;
+                selectedPosition = Catcher[i].Center;
                 return true;
             }
         }
         return false;
+    }
+
+    #region Initalize
+    private void InitSelectCondition()
+    {
+        selectCondition = new NestedCondition();
+        selectCondition.Conditions += delegate 
+        {
+            return CrossInput.IsPointerUp;
+        };
+        selectCondition.Conditions += delegate
+        {
+            return Window.activeInHierarchy;
+        };
+
+        selectCondition.Conditions += delegate
+         {
+             return openAtFrame != Time.frameCount;
+         };
+    }
+
+    private void SetupBuildingIcon()
+    {
+        List<Vector3Int> constructPositions = ConstructNodeManager.Centers;
+
+        for (int i = 0; i < constructPositions.Count; i++)
+        {
+            Vector3Int serPos = constructPositions[i].ToSerPosition();
+            Vector3 position = ToLocalFrom(serPos);
+
+            ConstructIcon icon = iconPooling.GetItem();
+            icon.SetHoldingPositions(ConstructNodeManager, serPos);
+            icon.transform.localPosition = position;
+
+            Catcher.Add(icon);
+            icon.gameObject.SetActive(true);
+        }
+    }
+
+    private void Initalize()
+    {
+        InitSelectCondition();
+
+        uiMapSize = MiniMapImage.rect.size;
+
+        pxPerNode.x = uiMapSize.x / (Constants.TOTAL_COL - 10);
+        pxPerNode.y = uiMapSize.y / (Constants.TOTAL_ROW - 10);
+    }
+    #endregion
+
+    #region Construct icon pooling
+    private ConstructIcon CreateIcon(int id)
+    {
+        ConstructIcon build = Instantiate(ConstructIconPrefab, MiniMapImage);
+        build.FirstSetup(id);
+        return build;
     }
 
     private void ReleaseIcon()
@@ -258,5 +285,6 @@ public class MiniMap : BaseWindow
             Catcher.RemoveAt(i);
         }
     }
+    #endregion
 }
 

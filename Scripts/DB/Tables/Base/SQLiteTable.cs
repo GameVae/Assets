@@ -9,11 +9,15 @@ namespace DataTable
     public class SQLiteTable<T> : ScriptableObject, ITable where T : ISQLiteData, new()
     {
         public string TableName;
-        public List<T> Rows;
-
+        [SerializeField] private List<T> rows;
         [SerializeField] private System.Type rowType;
-
         private SQLiteHelper helper;
+
+        public List<T> Rows
+        {
+            get { return rows ?? (rows = new List<T>()); }
+        }
+
         protected SQLiteHelper Helper
         {
             get { return helper ?? (helper = Singleton.Instance<SQLiteHelper>()); }
@@ -41,8 +45,6 @@ namespace DataTable
         public void LoadRow(string json)
         {
             T newRow = JsonUtility.FromJson<T>(json);
-            if (Rows == null)
-                Rows = new List<T>();
             Rows.Add(newRow);
         }
 

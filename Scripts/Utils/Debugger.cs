@@ -128,7 +128,7 @@ public sealed class Debugger : MonoSingle<Debugger>
         {
             TextMeshProUGUI mgs = ins.CreateSentence();
             if (mgs)
-                mgs.text = DateTime.Now.ToLongTimeString() + " : " + obj.ToString();
+                mgs.text = DateTime.Now.ToLongTimeString() + " : " + (obj == null ? obj : obj.ToString()) ;
         }
 #endif
 #if UNITY_EDITOR

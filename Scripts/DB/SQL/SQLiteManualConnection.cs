@@ -13,6 +13,12 @@ namespace DataTable.SQL
         private bool inited = false;
         private string connString;
 
+        public SQLiteManualConnection(string localPath)
+        {
+            DBPath = localPath;
+            Initalize();
+        }
+
         private void Initalize()
         {
             if (!inited)
@@ -27,6 +33,7 @@ namespace DataTable.SQL
 
         public void LoadTable<T>(SQLiteTable<T> table) where T : ISQLiteData, new()
         {
+            // TODO: remove in future
             Initalize();
             try
             {

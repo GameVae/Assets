@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
-using static InputFieldv2;
-using static InputFieldv2.ContentValidate;
+using static CustomInputField;
+using static CustomInputField.ContentValidate;
 
 public class ContentValidateProvider : ISingleton
 {

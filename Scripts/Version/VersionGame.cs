@@ -47,8 +47,8 @@ public class VersionGame : MonoSingle<VersionGame>
             // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"
             string link = obj.data["Data"].ToString().Trim('"');
 
-            //Debug.Log(obj.data["Data"]);
-            string saveAt = Application.dataPath + @"\Data\Infantry.sqlite";
+            Debugger.Log(obj.data["Data"]);
+            string saveAt = Application.dataPath + @"\Data\DB\Infantry.sqlite";
             try
             {
                 if (File.Exists(saveAt))

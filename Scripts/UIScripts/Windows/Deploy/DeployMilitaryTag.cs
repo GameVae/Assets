@@ -7,7 +7,7 @@ public class DeployMilitaryTag : MonoBehaviour
 {
     public GUIInteractableIcon Icon;
     public GUIProgressSlider Slider;
-    public InputFieldv2 InputField;
+    public CustomInputField InputField;
     public ListUpgrade Type;
 
     public DeployMilitaryWindow deployWind;
@@ -42,8 +42,8 @@ public class DeployMilitaryTag : MonoBehaviour
         int.TryParse(value, out int iValue);
 
         iValue = Mathf.Clamp(iValue, 0, (int)MaxQuality);
-        if (InputField.Keyboard != null)
-            InputField.Keyboard.InputString = (iValue).ToString();
+
+        InputField.SetContent(iValue.ToString());
 
         Slider.Value = iValue;
         FocusThisField();

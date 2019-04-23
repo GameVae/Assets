@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FindFriendFunc : ToggleWindow
 {
-    public InputFieldv2 UserNameInput;
+    public CustomInputField UserNameInput;
     public SelectableComp FindButton;
     public FriendTag FriendTagPrefab;
     public GUIScrollView ScrollView;

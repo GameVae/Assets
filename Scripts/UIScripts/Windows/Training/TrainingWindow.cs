@@ -2,7 +2,6 @@
 using EnumCollect;
 using Generic.Singleton;
 using DataTable;
-using DataTable;
 using DataTable.Row;
 using Network.Data;
 using System;
@@ -11,6 +10,7 @@ using TMPro;
 using UI.Widget;
 using UnityEngine;
 using UnityEngine.UI;
+using UI.Composites;
 
 public class TrainingWindow : BaseWindow
 {
@@ -46,8 +46,8 @@ public class TrainingWindow : BaseWindow
     [Header("Selected group")]
     public GUIInteractableIcon CurrentSelect;
     public Slider QualitySlider;
-    public GUIInteractableIcon AcceptBtn;
-    public InputField QualityInput;
+    public SelectableComp AcceptBtn;
+    public CustomInputField QualityInput;
 
     [Header("Main group")]
     public GUISliderWithBtn TranningProgress;
@@ -59,12 +59,12 @@ public class TrainingWindow : BaseWindow
 
     private void Awake()
     {
-        QualitySlider.onValueChanged.AddListener((float value) => OnQualitySliderChanged(value));
+        QualitySlider.onValueChanged.AddListener((float value) => OnSliderValueChanged(value));
 
         OpenButton.OnClickEvents += Open;
 
         AcceptBtn.OnClickEvents += OnAccept;
-        QualityInput.onValueChanged.AddListener((string value) => OnQualityInputChanged());
+        QualityInput.OnValueChanged += OnInputFieldhanged;
     }
 
     protected override void Start()
@@ -80,7 +80,8 @@ public class TrainingWindow : BaseWindow
 
     public override void Load(params object[] input)
     {
-        BaseInfoRow baseInfo = SyncData.CurrentMainBase as BaseInfoRow;
+        BaseInfoRow baseInfo = SyncData.CurrentMainBase;
+
         ListUpgrade tranningType = baseInfo.TrainingUnit_ID;
         if (tranningType.IsDefined())
         {
@@ -92,12 +93,12 @@ public class TrainingWindow : BaseWindow
             TranningProgress.Slider.MaxValue =
                 fieldReflection.GetPublicField<int>(typeInfo, "TrainingTime") * baseInfo.TrainingQuality;
 
-            AcceptBtn.InteractableChange(false);
+            AcceptBtn.Interactable = false;
             TranningProgress.gameObject.SetActive(true);
         }
         else
         {
-            AcceptBtn.InteractableChange(true);
+            AcceptBtn.Interactable = true;
             TranningProgress.gameObject.SetActive(false);
         }
     }
@@ -219,37 +220,7 @@ public class TrainingWindow : BaseWindow
         //Debug.Log("update");
     }
 
-    private void OnQualitySliderChanged(float value)
-    {
-        if (!selectedType.IsDefined())
-        {
-            quality = 0;
-            QualitySlider.value = 0;
-            return;
-        }
-
-        quality = (int)value;
-        QualityInput.text = quality.ToString();
-
-        bool isEnoughResource = CheckEnoughtResource();
-        if (isEnoughResource)
-        {
-            AcceptBtn.InteractableChange(true);
-            QualityNum.text = quality + "/" + QualitySlider.maxValue;
-        }
-        else
-        {
-            AcceptBtn.InteractableChange(false);
-            QualityNum.text = string.Format("<color=red>{0}</color>/{1}", quality, QualitySlider.maxValue);
-        }
-        SetCostInfo();
-
-        if (SyncData.CurrentMainBase.TrainingUnit_ID.IsDefined())
-        {
-            AcceptBtn.InteractableChange(false);
-        }
-
-    }
+   
 
     private void SetCostInfo()
     {
@@ -308,19 +279,52 @@ public class TrainingWindow : BaseWindow
         }
     }
 
-    private void OnQualityInputChanged()
+    private void OnSliderValueChanged(float value)
     {
         if (!selectedType.IsDefined())
         {
-            QualityInput.text = "0";
+            quality = 0;
+            QualitySlider.value = 0;
             return;
         }
 
-        int value = int.Parse(QualityInput.text);
-        int clampValue = (int)Mathf.Clamp(value, 0, QualitySlider.maxValue);
-        QualityInput.text = clampValue.ToString();
+        quality = (int)value;
+        bool isEnoughResource = CheckEnoughtResource();
+        if (isEnoughResource)
+        {
+            AcceptBtn.Interactable = true;
+            QualityNum.text = quality + "/" + QualitySlider.maxValue;
+        }
+        else
+        {
+            AcceptBtn.Interactable = false;
+            QualityNum.text = string.Format("<color=red>{0}</color>/{1}", quality, QualitySlider.maxValue);
+        }
+        SetCostInfo();
+
+        if (SyncData.CurrentMainBase.TrainingUnit_ID.IsDefined())
+        {
+            AcceptBtn.Interactable = false;
+        }
+
+        QualityInput.SetContent(quality.ToString());
+    }
+
+    private void OnInputFieldhanged(string str)
+    {
+        if (!selectedType.IsDefined())
+        {
+            QualityInput.SetContent("0");
+            return;
+        }
+
+        string parseValue = string.IsNullOrEmpty(str) ? "0" : str;
+
+        int value = int.Parse(parseValue);
+        int clampValue = Mathf.Clamp(value, 0, (int)QualitySlider.maxValue);
+
+        QualityInput.SetContent(clampValue.ToString()); // 
 
         QualitySlider.value = clampValue;
-        OnQualitySliderChanged(clampValue);
     }
 }

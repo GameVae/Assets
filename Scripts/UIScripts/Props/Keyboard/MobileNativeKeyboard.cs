@@ -1,38 +1,47 @@
 ﻿using UnityEngine;
 
-public class MobileNativeKeyboard : Keyboard
+namespace UI.Keyboard
 {
-    private TouchScreenKeyboard touchKeyboard;
-
-    protected override void HandleInput()
+    public class MobileNativeKeyboard : Keyboard
     {
-        if (touchKeyboard != null)
+        private TouchScreenKeyboard touchKeyboard;
+
+        protected override void HandleInput()
         {
-            if (touchKeyboard.status != TouchScreenKeyboard.Status.Visible)
+            if (touchKeyboard != null)
             {
-                Close();
-            }
-            else
-            {
-                if (touchKeyboard.text.CompareTo(InputString) != 0)
+                if (touchKeyboard.status != TouchScreenKeyboard.Status.Visible)
                 {
-                    InputString = touchKeyboard.text;
-                    touchKeyboard.text = InputString;
+                    Close();
+                }
+                else
+                {
+                    if (touchKeyboard.text.CompareTo(InputString) != 0)
+                    {
+                        InputString = contentValidate?.CheckContent(touchKeyboard.text);
+                        touchKeyboard.text = InputString;
+                    }
                 }
             }
         }
-    }
 
-    protected override void Active(bool value, InputFieldv2 inputField)
-    {
-        base.Active(value, inputField);
-        if(value)
+        protected override void Active(bool value, CustomInputField inputField)
         {
-            touchKeyboard = TouchScreenKeyboard.Open(InputString);
+            base.Active(value, inputField);
+            if (value)
+            {
+                touchKeyboard = TouchScreenKeyboard.Open(InputString);
+            }
+            else
+            {
+                touchKeyboard = null;
+            }
         }
-        else
+
+        public override void SetInputString(string str)
         {
-            touchKeyboard = null;
+            InputString = contentValidate?.CheckContent(str);
+            touchKeyboard.text = InputString;
         }
     }
 }
