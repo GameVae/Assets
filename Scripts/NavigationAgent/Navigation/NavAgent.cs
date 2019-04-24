@@ -14,7 +14,7 @@ namespace Entities.Navigation
         private AnimatorController animator;
         private NavPathRenderer pathRenderer;
         private NavAgentController agentController;
-        private NavRemote currentEnemy;
+        private AgentRemote currentEnemy;
 
         #region A* Pathfinding
         private int maxSearchLevel;
@@ -41,7 +41,7 @@ namespace Entities.Navigation
 
         public Vector3Int EndPosition { get; private set; }
         public Vector3Int StartPosition { get; private set; }
-        public NavRemote TargetEnemy
+        public AgentRemote TargetEnemy
         {
             get { return currentEnemy; }
         }
@@ -171,7 +171,7 @@ namespace Entities.Navigation
         {
             path = aStar.Path;
 
-            AgentController.ThreadHelper.Invoke(() => InitalizeMove(found));
+            AgentController.ThreadHelper.MainThreadInvoke(() => InitalizeMove(found));
             AgentController.FindPathDone_OnlyMainThread(this, found);
         }
 
@@ -191,7 +191,7 @@ namespace Entities.Navigation
                );
         }
 
-        public void AsyncStartMove(Vector3Int start, Vector3Int end, NavRemote targetEnemy)
+        public void AsyncStartMove(Vector3Int start, Vector3Int end, AgentRemote targetEnemy)
         {
             StartPosition = start;
             EndPosition = end;

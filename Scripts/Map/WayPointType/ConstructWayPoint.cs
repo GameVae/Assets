@@ -1,5 +1,5 @@
 ﻿using Map;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 public class ConstructWayPoint : RangeWayPoint
 {
     private RangeWayPointManager manager;
@@ -8,7 +8,7 @@ public class ConstructWayPoint : RangeWayPoint
         get
         {
             return manager ?? (manager = 
-                NodeManagerProvider.GetManager<ConstructWayPoint>(NodeType.Range)
+                NodeManagerFactory.GetManager<ConstructWayPoint>(NodeType.Range)
                 as RangeWayPointManager);
         }
     }

@@ -34,7 +34,7 @@ public class BaseDefendController : MonoBehaviour
             for (int j = 0; j < baseDefends[i].Count; j++)
             {
                 BaseDefendRow row = baseDefends[i].Rows[j];
-                NavRemote agent = Manager.GetItem(row.ID_Unit);
+                AgentRemote agent = Manager.GetItem(row.ID_Unit);
                 if (agent != null)
                 {
                     agent.transform.position = basePos;

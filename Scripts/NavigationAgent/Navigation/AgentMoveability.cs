@@ -2,12 +2,12 @@
 
 namespace Entities.Navigation
 {
-    [RequireComponent(typeof(NavRemote))]
+    [RequireComponent(typeof(AgentRemote))]
     public abstract class AgentMoveability : MonoBehaviour
     {
         public bool IsMoving { get ; protected set; }
 
-        private NavRemote remote;
+        private AgentRemote remote;
         private VectorRotator rotator;
 
         protected HexMap MapIns
@@ -15,9 +15,9 @@ namespace Entities.Navigation
             get { return Remote.MapIns; }
         }
 
-        public NavRemote Remote
+        public AgentRemote Remote
         {
-            get { return remote ?? (remote = GetComponent<NavRemote>()); }
+            get { return remote ?? (remote = GetComponent<AgentRemote>()); }
         }
         public VectorRotator Rotator
         {

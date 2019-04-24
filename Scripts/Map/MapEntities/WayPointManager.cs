@@ -1,6 +1,6 @@
 ﻿using Generic.Singleton;
 using Map;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 
 public class WayPointManager<T> : ISingleton
     where T : WayPoint

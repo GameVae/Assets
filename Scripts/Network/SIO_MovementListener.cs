@@ -72,8 +72,8 @@ public class SIO_MovementListener : Listener
     public void Move(List<Vector3Int> path,
         List<float> separateTime,
         Vector3Int curCellPosition,
-        NavRemote ownerRemote,
-        NavRemote otherRemote)
+        AgentRemote ownerRemote,
+        AgentRemote otherRemote)
     {
         InitMessage(path, separateTime, curCellPosition, ownerRemote, otherRemote);
         Emit("S_MOVE"); ;
@@ -83,8 +83,8 @@ public class SIO_MovementListener : Listener
         List<Vector3Int> clientPath, 
         List<float>     separateTime, 
         Vector3Int      curPosition, 
-        NavRemote       ownerRemote,
-        NavRemote       enemyRemote)
+        AgentRemote       ownerRemote,
+        AgentRemote       enemyRemote)
     {
         curPosition = curPosition.ToSerPosition();
 

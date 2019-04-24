@@ -1,9 +1,11 @@
-﻿using DataTable.Row;
+﻿using System;
+using DataTable.Row;
+using Generic.Pooling;
 using Generic.Observer;
-using System.Collections.Generic;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
-public class Observer_Unit : IObserver
+public class Observer_Unit : IObserver, IComparable, IPoolable
 {
     public class Package
     {
@@ -15,10 +17,13 @@ public class Observer_Unit : IObserver
         get { return unit.ID; }
     }
 
+    public int ManagedId { get; private set; }
+
+    private bool inited;
     private UnitRow unit;
     private Package package;
-    private List<UnityAction<Package>> actions;
 
+    private List<UnityAction<Package>> actions;
     public event UnityAction<Package> OnSubjectUpdated
     {
         add
@@ -34,15 +39,48 @@ public class Observer_Unit : IObserver
         }
     }
 
+    public UnitRow Subject
+    {
+        get
+        {
+            return unit;
+        }
+    }
+
+    public void Dispose()
+    {
+        actions?.Clear();
+        package = null;
+        unit = null;
+        inited = false;
+    }
+
+    public int CompareTo(object obj)
+    {
+        Observer_Unit other = obj as Observer_Unit;
+        return UnitId.CompareTo(other.UnitId);
+    }
+
+    public Observer_Unit() { }
     public Observer_Unit(UnitRow subject)
     {
         unit = subject;
+        inited = true;
+    }
+
+    public void RefreshSubject(UnitRow subject)
+    {
+        if (!inited)
+        {
+            unit = subject;
+            inited = true;
+        }
     }
 
     public void SubjectUpdated(object dataPacked)
     {
         package = dataPacked as Package;
-        Debugger.Log(package.Unit);
+        //Debugger.Log(package.Unit);
         if (unit.CompareTo(package.Unit) == 0)
         {
             unit = package.Unit;
@@ -53,10 +91,8 @@ public class Observer_Unit : IObserver
         }
     }
 
-    public void Dispose()
+    public void FirstSetup(int insId)
     {
-        actions?.Clear();
-        package = null;
-        unit = null;
+        ManagedId = insId;
     }
 }

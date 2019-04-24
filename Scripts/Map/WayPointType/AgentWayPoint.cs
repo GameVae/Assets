@@ -1,5 +1,5 @@
 ﻿using Map;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 
 public class AgentWayPoint : SingleWayPoint
 {
@@ -9,7 +9,7 @@ public class AgentWayPoint : SingleWayPoint
         get
         {
             return manager ??
-                (manager = NodeManagerProvider.GetManager<AgentWayPoint>(NodeType.Single) 
+                (manager = NodeManagerFactory.GetManager<AgentWayPoint>(NodeType.Single) 
                 as SingleWayPointManager);
         }
     }

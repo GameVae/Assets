@@ -60,7 +60,7 @@ namespace DataTable.SQL
                                 }
                                 json = FormatJSON(json);
 
-                                table.Add(AJPHelper.ParseJson<T>(json));
+                                table.Add(JsonUtility.FromJson<T>(json));
                             } while (reader.Read());
 
                         }

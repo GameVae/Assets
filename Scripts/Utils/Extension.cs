@@ -1,8 +1,5 @@
 ﻿using CustomAttr;
 using EnumCollect;
-using Json;
-
-using Network.Sync;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -265,120 +262,7 @@ public static class Extension
 
     #region Algorithm
 
-    #region Binary Search and Binary Insert Sort
-
-    private static int SearchInsertIndex_R<T>(List<T> list, int low, int high, object value)
-    where T : IComparable
-    {
-        if (low == high) return low;
-        int mid = low + (high - low) / 2;
-
-        int comparer = list[mid].CompareTo(value);
-
-        if (comparer > 0)
-            return SearchInsertIndex_R(list, low, mid, value);
-        else if (comparer < 0)
-            return SearchInsertIndex_R(list, mid + 1, high, value);
-
-        // reached target 
-        return mid;
-    }
-    /// <summary>
-    /// Search insert index for value inside list
-    /// Use recursion
-    /// </summary>
-    /// <typeparam name="T">datatype</typeparam>
-    /// <param name="list">collection of T</param>
-    /// <param name="low">search from index</param>
-    /// <param name="high">max index</param>
-    /// <param name="value">for compare</param>
-    /// <returns>Insert index</returns>
-    public static int BinarySearch_R<T>(this List<T> list, int low, int high, object value)
-        where T : IComparable
-    {
-        low     = Mathf.Clamp(low, 0, list.Count - 1);
-        high    = Mathf.Clamp(high, 0, list.Count - 1);
-
-        return SearchInsertIndex_R(list, low, high, value);
-    }
-    public static int BinarySearch_R<T>(this List<T> list,object value)
-        where T: IComparable
-    {
-        return BinarySearch_R<T>(list, 0, list.Count - 1, value);
-    }
-
-    /// <summary>
-    /// Binary insert sort recursion
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="list"></param>
-    public static void BinarySort_R<T>(this List<T> list)
-        where T : IComparable
-    {
-        int count = list.Count;
-        for (int i = 1; i < count; i++)
-        {
-            T value = list[i];
-            int index = SearchInsertIndex_R(list, 0, i, value);
-
-            list.Insert(index, value);
-            list.RemoveAt(i + 1);
-        }
-    }
-
-    #region Binary search and sort linear BUG
-    //public static void BinarySort_L<T>(this List<T> list)
-    //   where T : IComparable
-    //{
-    //    int count = list.Count;
-    //    for (int i = 1; i < count; i++)
-    //    {
-    //        T value = list[i];
-    //        int index = SearchInsertIndex_L(list, 0, i, value);
-
-    //        list.RemoveAt(i);
-    //        list.Insert(index, value);
-    //    }
-    //}
-    //private static int SearchInsertIndex_L<T>(List<T> list, int low, int high, object value)
-    //   where T : IComparable
-    //{
-    //    int mid = 0;
-    //    while (low <= high)
-    //    {
-    //        if (low == high) return low;
-    //        mid = low + (high - low) / 2;
-
-    //        int comparer = list[mid].CompareTo(value);
-    //        if (comparer > 0)
-    //            high = mid;
-    //        else if (comparer < 0)
-    //            low = mid + 1;
-    //        else
-    //            return mid;
-
-    //    }
-    //    return mid;
-    //}
-    ///// <summary>
-    ///// Search insert index for value inside list
-    ///// Use while loop O(n)
-    ///// </summary>
-    ///// <typeparam name="T">datatype</typeparam>
-    ///// <param name="list">collection of T</param>
-    ///// <param name="low">search from index</param>
-    ///// <param name="high">max index</param>
-    ///// <param name="value">for compare</param>
-    ///// <returns>Insert index</returns>
-    //public static int BinarySearch_L<T>(this List<T> list, int low, int high, object value)
-    //   where T : IComparable
-    //{
-    //    return SearchInsertIndex_L(list, low, high, value);
-    //}
-    #endregion
-
-    #endregion
-
+   
     #endregion
 
     #region UI.SpriteState

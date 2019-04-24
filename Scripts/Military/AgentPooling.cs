@@ -8,9 +8,9 @@ using Utils;
 
 public sealed class AgentPooling : MonoSingle<AgentPooling>
 {
-    private Dictionary<int, Pooling<NavRemote>> agentsPool;
+    private Dictionary<int, Pooling<AgentRemote>> agentsPool;
 
-    private Dictionary<int, NavRemote> agentPrefabs;
+    private Dictionary<int, AgentRemote> agentPrefabs;
 
     private AssetUtils assetUtil;
 
@@ -23,18 +23,18 @@ public sealed class AgentPooling : MonoSingle<AgentPooling>
             return assetUtil ?? (assetUtil = Singleton.Instance<AssetUtils>());
         }
     }
-    public Dictionary<int, Pooling<NavRemote>>  AgentPools
+    public Dictionary<int, Pooling<AgentRemote>>  AgentPools
     {
         get
         {
-            return agentsPool ?? (agentsPool = new Dictionary<int, Pooling<NavRemote>>());
+            return agentsPool ?? (agentsPool = new Dictionary<int, Pooling<AgentRemote>>());
         }
     }
-    private Dictionary<int, NavRemote> AgentPrefabs
+    private Dictionary<int, AgentRemote> AgentPrefabs
     {
         get
         {
-            return agentPrefabs ?? (agentPrefabs = new Dictionary<int, NavRemote>());
+            return agentPrefabs ?? (agentPrefabs = new Dictionary<int, AgentRemote>());
         }
     }
     
@@ -44,9 +44,9 @@ public sealed class AgentPooling : MonoSingle<AgentPooling>
         LoadAgents();
     }
 
-    public NavRemote GetItem(ListUpgrade type)
+    public AgentRemote GetItem(ListUpgrade type)
     {
-        if (AgentPools.TryGetValue(type.GetHashCode(), out Pooling<NavRemote> pool))
+        if (AgentPools.TryGetValue(type.GetHashCode(), out Pooling<AgentRemote> pool))
         {
             return pool.GetItem();
         }
@@ -56,9 +56,9 @@ public sealed class AgentPooling : MonoSingle<AgentPooling>
         }
     }
 
-    public void Release(ListUpgrade type, NavRemote agent)
+    public void Release(ListUpgrade type, AgentRemote agent)
     {
-        if (AgentPools.TryGetValue(type.GetHashCode(), out Pooling<NavRemote> pool))
+        if (AgentPools.TryGetValue(type.GetHashCode(), out Pooling<AgentRemote> pool))
         {
             pool.Release(agent);
         }
@@ -74,25 +74,25 @@ public sealed class AgentPooling : MonoSingle<AgentPooling>
         for (int i = 0; i < objs.Length; i++)
         {
             GameObject go = objs[i] as GameObject;
-            NavRemote remote = go.GetComponent<NavRemote>();
+            AgentRemote remote = go.GetComponent<AgentRemote>();
             int hashCode = remote.Type.GetHashCode();
             AgentPrefabs[hashCode] = remote;
         }
     }
 
-    private NavRemote Create(ListUpgrade type)
+    private AgentRemote Create(ListUpgrade type)
     {
-        AgentPrefabs.TryGetValue(type.GetHashCode(), out NavRemote res);
+        AgentPrefabs.TryGetValue(type.GetHashCode(), out AgentRemote res);
         if (res == null)
             return null;
         return Instantiate(res, Container);
     }
 
-    private Pooling<NavRemote> CreatePool(ListUpgrade type)
+    private Pooling<AgentRemote> CreatePool(ListUpgrade type)
     {
         int hashCode = type.GetHashCode();
 
-        AgentPools[hashCode] = new Pooling<NavRemote>(
+        AgentPools[hashCode] = new Pooling<AgentRemote>(
             delegate (int insId)
             {
                 return CreatePoolingItem(insId, type);
@@ -101,9 +101,9 @@ public sealed class AgentPooling : MonoSingle<AgentPooling>
         return AgentPools[hashCode];
     }
 
-    private NavRemote CreatePoolingItem(int id,ListUpgrade type)
+    private AgentRemote CreatePoolingItem(int id,ListUpgrade type)
     {
-        NavRemote remote = Create(type);
+        AgentRemote remote = Create(type);
         remote?.FirstSetup(id);
         return remote;
     }

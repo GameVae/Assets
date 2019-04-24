@@ -85,7 +85,7 @@ namespace Entities.Navigation
             CursorController.SelectedCallback += OnCursorSelected;
         }
 
-        private void MoveActiveAgent(Vector3Int start, Vector3Int end, NavRemote enemy)
+        private void MoveActiveAgent(Vector3Int start, Vector3Int end, AgentRemote enemy)
         {
             //bool foundPath = CurrentAgent.StartMove(start, end);
             //CurrentAgent.AsyncStartMove(start, end);
@@ -143,7 +143,7 @@ namespace Entities.Navigation
         }
 
         //only main thread
-        private void EmitMoveEvent(NavAgent agent, bool isFound, NavRemote enemy)
+        private void EmitMoveEvent(NavAgent agent, bool isFound, AgentRemote enemy)
         {
             if (isFound)
             {
@@ -156,24 +156,24 @@ namespace Entities.Navigation
             }
         }
 
-        public void MoveAgent(NavAgent agent, Vector3Int start, Vector3Int end, NavRemote enemy)
+        public void MoveAgent(NavAgent agent, Vector3Int start, Vector3Int end, AgentRemote enemy)
         {
             agent.AsyncStartMove(start, end, enemy);
         }
         public void FindPathDone_OnlyMainThread(NavAgent agent, bool found)
         {
-            ThreadHelper.Invoke(() => EmitMoveEvent(agent, found, agent.TargetEnemy));
+            ThreadHelper.MainThreadInvoke(() => EmitMoveEvent(agent, found, agent.TargetEnemy));
         }
 
         // Decision making
-        public NavRemote GetEnemyAt(Vector3Int position)
+        public AgentRemote GetEnemyAt(Vector3Int position)
         {
             AgentNodes.GetInfo(position, out NodeInfo info);
 
             if (info == null) return null;
             else
             {
-                NavRemote otherAgent = info.GameObject.GetComponent<NavRemote>();
+                AgentRemote otherAgent = info.GameObject.GetComponent<AgentRemote>();
                 // is enemy
                 bool isEnemy = otherAgent.UserInfo.ID_User != CurrentAgent.Remote.UserInfo.ID_User;
                 return isEnemy == true ? otherAgent : null;

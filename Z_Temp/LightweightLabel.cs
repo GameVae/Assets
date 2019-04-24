@@ -11,7 +11,7 @@ public class LightweightLabel : MonoBehaviour,IPoolable
 
     private bool active;
     private Camera canvasCamera;
-    private NavRemote navRemote;
+    private AgentRemote navRemote;
     private RectTransform rectTrans;
 
     public Image HealthFill;
@@ -72,7 +72,7 @@ public class LightweightLabel : MonoBehaviour,IPoolable
         }
     }
 
-    public void Initalize(NavRemote remote,Camera cam)
+    public void Initalize(AgentRemote remote,Camera cam)
     {
         canvasCamera = cam;
         navRemote = remote;

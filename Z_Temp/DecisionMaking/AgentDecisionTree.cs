@@ -33,8 +33,8 @@ public class AgentDecisionTree : DecisionTreeNode
 
     private void Attack_Action()
     {
-        NavRemote owner = navAgentController.CurrentAgent.Remote;
-        NavRemote enemy = navAgentController.GetEnemyAt(navAgentController.CursorController.SelectedPosition);
+        AgentRemote owner = navAgentController.CurrentAgent.Remote;
+        AgentRemote enemy = navAgentController.GetEnemyAt(navAgentController.CursorController.SelectedPosition);
 
         sio_attackListener.S_ATTACK(owner, enemy);
     }

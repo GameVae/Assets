@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static SQLiteConnectProvider;
+using static SQLiteConnectFactory;
 
 [CreateAssetMenu(fileName = "Local Link",menuName = "DataTable/LocalLink",order = 0)]
 public class SQLiteLocalLink : ScriptableObject

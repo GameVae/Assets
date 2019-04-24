@@ -14,7 +14,7 @@ public class AttackInfoGenerator
         }
     }
 
-    public JSONObject CreateAttackInfo(NavRemote ownerRemote, NavRemote otherRemote)
+    public JSONObject CreateAttackInfo(AgentRemote ownerRemote, AgentRemote otherRemote)
     {
         InfoDict.Clear();
         UnitRow ownerUnit = ownerRemote.UnitInfo;

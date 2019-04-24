@@ -59,7 +59,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
     private void Start()
     {
-        StartCoroutine(StartCreateRss());
+        // StartCoroutine(StartCreateRss());
     }
 
     private IEnumerator StartCreateRss()

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using Utils;
-using static SQLiteConnectProvider;
+using static SQLiteConnectFactory;
 
 namespace DataTable
 {
@@ -20,20 +20,20 @@ namespace DataTable
 
         private SQLiteHelper helper;
         private SQLiteManualConnection sqlConn;
-        private SQLiteConnectProvider connProvider;
+        private SQLiteConnectFactory connFactory;
 
-        public SQLiteConnectProvider ConnectProvider
+        public SQLiteConnectFactory ConnectFactory
         {
             get
             {
-                return connProvider ?? (connProvider = Singleton.Instance<SQLiteConnectProvider>());
+                return connFactory ?? (connFactory = Singleton.Instance<SQLiteConnectFactory>());
             }
         }
         public SQLiteManualConnection SQLiteConn
         {
             get
             {
-                return sqlConn ?? (sqlConn = ConnectProvider.GetConnection(linkType));
+                return sqlConn ?? (sqlConn = ConnectFactory.GetConnection(linkType));
             }
         }
 

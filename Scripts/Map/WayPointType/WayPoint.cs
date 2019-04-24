@@ -40,13 +40,13 @@ namespace Map
             }
         }
 
-        private NodeManagerProvider nodeManagerProvider;
-        public NodeManagerProvider NodeManagerProvider
+        private NodeManagerFactory nodeManagerFactory;
+        public NodeManagerFactory NodeManagerFactory
         {
             get
             {
-                return nodeManagerProvider ?? 
-                    (nodeManagerProvider = Singleton.Instance<NodeManagerProvider>());
+                return nodeManagerFactory ?? 
+                    (nodeManagerFactory = Singleton.Instance<NodeManagerFactory>());
             }
         }
         protected abstract IWayPointManager Manager

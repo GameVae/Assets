@@ -191,7 +191,7 @@ public class SIO_ServerHelperListener : Listener
     #region MULTI-THREAD CALLBACK
     private void FindPathDoneCallback(AStarAlgorithm aStar, bool found)
     {
-        ThreadHelper.Invoke(() =>
+        ThreadHelper.MainThreadInvoke(() =>
         {
             FindPathDone(aStar, found);
         });

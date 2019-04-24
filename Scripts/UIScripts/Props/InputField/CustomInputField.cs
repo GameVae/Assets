@@ -24,34 +24,34 @@ public partial class CustomInputField : MonoBehaviour
 
     [Space, Header("Keyboard type")]
     [SerializeField] private Keyboard.KeyboardType keyboardType;
-    private KeyboardProvider keyboardProvider;
+    private KeyboardFactory keyboardFactory;
     private Keyboard keyboard;
 
     [Space, Header("Content validate type")]
     [SerializeField] private ContentValidate.ContentType contentType;
-    private ContentValidateProvider validateProvider;
+    private ContentValidateFactory validateFactory;
     private ContentValidate validator;
 
     // Auto-Properties
     // CONTENT VALIDATOR
-    public ContentValidateProvider ValidateProvider
+    public ContentValidateFactory ValidateFactory
     {
-        get { return validateProvider ?? (validateProvider = Singleton.Instance<ContentValidateProvider>()); }
+        get { return validateFactory ?? (validateFactory = Singleton.Instance<ContentValidateFactory>()); }
     }
     public ContentValidate Validator
     {
         get
         {
-            return validator ?? (validator = ValidateProvider.GetValidator(contentType));
+            return validator ?? (validator = ValidateFactory.GetValidator(contentType));
         }
     }
     /////////////////////////////
     // KEYBOARD
-    protected KeyboardProvider Provider
+    protected KeyboardFactory KeyboardFactory
     {
         get
         {
-            return keyboardProvider ?? (keyboardProvider = Singleton.Instance<KeyboardProvider>());
+            return keyboardFactory ?? (keyboardFactory = Singleton.Instance<KeyboardFactory>());
         }
     }
     public Keyboard Keyboard
@@ -141,7 +141,7 @@ public partial class CustomInputField : MonoBehaviour
         if (keyboardType == Keyboard.KeyboardType.Standalone)
             keyboardType = Keyboard.KeyboardType.MobileNative;
 #endif
-        keyboard = Provider.GetKeyboard(keyboardType);
+        keyboard = KeyboardFactory.GetKeyboard(keyboardType);
         keyboard?.Open(this);
     }
 

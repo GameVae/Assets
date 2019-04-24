@@ -1,112 +1,86 @@
 ﻿using UnityEngine;
 using DataTable.Row;
+using Generic.Pooling;
 using Generic.Observer;
+using Generic.BinarySearch;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DataTable
 {
     [CreateAssetMenu(fileName = "New Unit Table", menuName = "DataTable/JsonTable/Unit JSONTable", order = 4)]
-    public sealed class JSONTable_Unit : JSONTable<UnitRow>, ISubject, ISearchByObjectCompare<UnitRow>
+    public sealed class JSONTable_Unit :
+        JSONTable<UnitRow>,
+        ISubject<Observer_Unit>
     {
-        private List<int> unitIds;
-        private List<IObserver> observers;
+        private List<Observer_Unit> observers;
+        private Pooling<Observer_Unit> observerPooling;
 
-        private List<int> UnitIds
-        {
-            get { return unitIds ?? (unitIds = new List<int>()); }
-        }
-        private List<IObserver> Observers
+        private List<Observer_Unit> Observers
         {
             get
             {
-                return observers ?? (observers = new List<IObserver>());
+                return observers ?? (observers = new List<Observer_Unit>());
             }
         }
-
-        private UnitRow searchObject;
-        private UnitRow SearchObject
+        private Pooling<Observer_Unit> ObserverPooling
         {
             get
             {
-                return searchObject ?? (searchObject = new UnitRow());
+                return observerPooling ??
+                    (observerPooling = new Pooling<Observer_Unit>(CreateObserver));
             }
         }
-
-        public UnitRow GetUnitById(int id)
+        private Observer_Unit CreateObserver(int id)
         {
-            List<int> ids = UnitIds;
-            int index = ids.BinarySearch_R(id);
-            if (ids[index] == id)
-                return Rows[index];
-            return null;
+            Observer_Unit observer = new Observer_Unit();
+            observer.FirstSetup(id);
+            return observer;
         }
 
-        protected override void Add(UnitRow unit)
+        protected override bool UpdateOrAdd(UnitRow updateData)
         {
-            if (unit != null)
+            bool isUpdate = base.UpdateOrAdd(updateData);
+
+            if (isUpdate)
             {
-                int unitID = unit.ID;
-                int insertIndex = Rows.BinarySearch_R(GetSearchObject(unitID));
+                Observer_Unit tempObs = ObserverPooling.GetItem();
+                tempObs.RefreshSubject(updateData);
 
-                if (insertIndex >= 0)
-                {
-                    Rows.Insert(insertIndex, unit);
-                    UnitIds.Insert(insertIndex, unitID);
-                }
+                Observer_Unit notifyObserver = Observers.FirstOrDefault_R(tempObs);
+                ObserverPooling.Release(tempObs);
+
+                if (notifyObserver != null)
+                    Notify(notifyObserver);
             }
+
+            return isUpdate;
         }
 
-        public override void UpdateTable(JSONObject json)
+        public override void UpdateTable(JSONObject jsonObj)
         {
-            UnitRow updateData = Json.AJPHelper.ParseJson<UnitRow>(json.ToString());
-            if (updateData != null)
+            // base.UpdateTable(jsonObj);
+            if (jsonObj != null)
             {
-                //int updateIndex = Rows.BinarySearch_L(0, Count, updateData);
-                //if (Rows[updateIndex].ID == updateData.ID)
-                //    Rows[updateIndex] = updateData;
-
-                int updateIndex = -1;
-                for (int i = 0; i < Count; i++)
-                {
-                    if (Rows[i].ID == updateData.ID)
-                    {
-                        updateIndex = i;
-                        Rows[i] = updateData;
-                        break;
-                    }
-                }
-
-                if (updateIndex >= 0)
-                    for (int i = 0; i < Observers.Count; i++)
-                    {
-                        if (((Observer_Unit)Observers[i]).UnitId == updateData.ID)
-                        {
-                            Notify(Observers[i]);
-                            return;
-                        }
-                    }
+                UnitRow updateData = JsonUtility.FromJson<UnitRow>(jsonObj.ToString());
+                UpdateOrAdd(updateData);
             }
         }
 
-        public void Register(IObserver observer)
+        public void Register(Observer_Unit observer)
         {
-            Observers.Add(observer);
+            Observers.UpdateOrInsert_R(observer);
         }
 
-        public void Remove(IObserver observer)
+        public void Remove(Observer_Unit observer)
         {
-            int index = Observers.IndexOf(observer);
-            if (index >= 0) Observers.RemoveAt(index);
+            Observers.Remove_R(observer);
         }
 
-        public void Notify(IObserver observer)
+        public void Notify(Observer_Unit observer)
         {
-            Observer_Unit unitObserver = (Observer_Unit)observer;
-
             Observer_Unit.Package package = new Observer_Unit.Package()
             {
-                Unit = GetUnitById(unitObserver.UnitId),
+                Unit = Rows.FirstOrDefault_R(observer.Subject),
             };
 
             observer.SubjectUpdated(package);
@@ -120,10 +94,5 @@ namespace DataTable
             }
         }
 
-        public UnitRow GetSearchObject(object obj)
-        {
-            SearchObject.ID = (int)obj;
-            return SearchObject;
-        }
     }
 }

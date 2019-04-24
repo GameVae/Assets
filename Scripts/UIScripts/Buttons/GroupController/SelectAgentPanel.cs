@@ -95,7 +95,7 @@ public class SelectAgentPanel : MonoBehaviour
             SelectableAgentElement el = elementPooling.GetItem();
             el.PlaceholderComp.Text = id.ToString();
 
-            NavRemote navRemote = OwnerNavController.GetNavRemote(id);
+            AgentRemote navRemote = OwnerNavController.GetNavRemote(id);
             navRemote.OnDead += delegate
             {
                 elementPooling.Release(el);

@@ -27,7 +27,7 @@ public class SIO_AttackListener : Listener
         UnitTable.UpdateTable(obj.data["R_ATTACK"]);
     }
 
-    public void S_ATTACK(NavRemote owner, NavRemote other)
+    public void S_ATTACK(AgentRemote owner, AgentRemote other)
     {
         JSONObject attackInfo = AttackInfoGenerator.CreateAttackInfo(owner, other);
         Emit("S_ATTACK", attackInfo);

@@ -5,7 +5,7 @@ using Generic.Singleton;
 using System.Collections.Generic;
 using UI.Composites;
 using UnityEngine;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 
 public class MiniMap : BaseWindow
 {
@@ -24,7 +24,7 @@ public class MiniMap : BaseWindow
 
     private List<ConstructIcon> catcher;
     private Pooling<ConstructIcon> iconPooling;
-    private NodeManagerProvider managerProvider;
+    private NodeManagerFactory managerFactory;
     private RangeWayPointManager constructNodeManager;
 
     public RectTransform MiniMapImage;
@@ -47,18 +47,18 @@ public class MiniMap : BaseWindow
             return crossInput ?? (crossInput = Singleton.Instance<CrossInput>());
         }
     }
-    public NodeManagerProvider NodeManagerProvider
+    public NodeManagerFactory NodeManagerFactory
     {
         get
         {
-            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+            return managerFactory ?? (managerFactory = Singleton.Instance<NodeManagerFactory>());
         }
     }
     public RangeWayPointManager ConstructNodeManager
     {
         get
         {
-            return constructNodeManager ?? (constructNodeManager = NodeManagerProvider.
+            return constructNodeManager ?? (constructNodeManager = NodeManagerFactory.
                 GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
         }
     }

@@ -26,18 +26,18 @@ namespace Json
             return Singleton.Instance<AsyncTableLoader<T>>();
         }
 
-        public static TResult ParseJson<TResult>(string json)
-        {
-            try
-            {
-                return JsonUtility.FromJson<TResult>(json);
-            }
-            catch (System.Exception e)
-            {
-                Debugger.Log(e.ToString());
-                return default(TResult);
-            }
+        //public static TResult ParseJson<TResult>(string json)
+        //{
+        //    try
+        //    {
+        //        return JsonUtility.FromJson<TResult>(json);
+        //    }
+        //    catch (System.Exception e)
+        //    {
+        //        Debugger.Log(e.ToString());
+        //        return default(TResult);
+        //    }
 
-        }
+        //}
     }
 }

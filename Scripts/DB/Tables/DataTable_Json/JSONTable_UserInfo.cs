@@ -1,10 +1,12 @@
 ﻿using DataTable.Row;
 using UnityEngine;
+using Generic.BinarySearch;
 
 namespace DataTable
 {
     [CreateAssetMenu(fileName = "New UserInfo Table", menuName = "DataTable/JsonTable/UserInfo JSONTable", order = 9)]
-    public sealed class JSONTable_UserInfo : JSONTable<UserInfoRow>, ISearchByObjectCompare<UserInfoRow>
+    public sealed class JSONTable_UserInfo : JSONTable<UserInfoRow>, 
+        ISearchByFakeCompare<UserInfoRow>
     {
         private UserInfoRow searchObject;
         private UserInfoRow SearchObject
@@ -15,16 +17,20 @@ namespace DataTable
             }
         }
 
-        private void Sort()
+        public UserInfoRow GetUserById(int id)
         {
-            Rows.BinarySort_R();
+            return Rows.FirstOrDefault_R(GetSearchObject(id));
         }
 
-        public UserInfoRow GetUserById(int id)
-        {          
-            int index = Rows.BinarySearch_R(GetSearchObject(id));
-
-            return Rows[index].ID_User == id ? Rows[index] : null;
+        /// <summary>
+        /// Compare by user id
+        /// </summary>
+        /// <param name="obj">User Id</param>
+        /// <returns></returns>
+        public UserInfoRow GetSearchObject(object obj)
+        {
+            SearchObject.ID_User = (int)obj;
+            return SearchObject;
         }
 
         public override void LoadTable(JSONObject data)
@@ -33,11 +39,6 @@ namespace DataTable
             Sort();
         }
 
-        public UserInfoRow GetSearchObject(object obj)
-        {
-            SearchObject.ID_User = (int)obj;
-            return SearchObject;
-        }
     }
 }
 

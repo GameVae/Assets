@@ -24,7 +24,7 @@ namespace DataTable.Row
         public int CompareTo(object obj)
         {
             TrainingCostRow other = obj as TrainingCostRow;
-            return MightBonus.CompareTo(other.MightBonus);
+            return ID.CompareTo(other.ID);
         }
     }
 
@@ -368,7 +368,7 @@ namespace DataTable.Row
         public int CompareTo(object obj)
         {
             BaseDefendRow other = obj as BaseDefendRow;
-            return ID.CompareTo(other.ID);
+            return ID_Unit.CompareTo(other.ID_Unit);
         }
     }
 
@@ -391,7 +391,7 @@ namespace DataTable.Row
         public List<MoveStep> ListMove;
         public int Status;
         public int Attack_Base_ID;
-        public int Attack_Unit_ID;
+        public string Attack_Unit_ID;
         public bool AttackedBool;
 
         public AgentStatus AgentStatus

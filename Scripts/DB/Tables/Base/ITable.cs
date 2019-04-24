@@ -2,7 +2,7 @@
 
 namespace DataTable
 {
-    public interface ISearchByObjectCompare<T>
+    public interface ISearchByFakeCompare<T>
         where T : ITableData
     {
         T GetSearchObject(object obj);

@@ -3,7 +3,7 @@ using Generic.Singleton;
 using UI;
 using UnityEngine;
 using UnityEngine.Events;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 
 public class CursorController : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class CursorController : MonoBehaviour
     private Popup popupIns;
 
     private RangeWayPointManager towerPositions;
-    private NodeManagerProvider managerProvider;
+    private NodeManagerFactory managerFactory;
 
     public CursorPos Cursor;
     public CameraController CameraController;
@@ -75,11 +75,11 @@ public class CursorController : MonoBehaviour
         }
     }
 
-    public NodeManagerProvider ManagerProvider
+    public NodeManagerFactory ManagerFactory
     {
         get
         {
-            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+            return managerFactory ?? (managerFactory = Singleton.Instance<NodeManagerFactory>());
         }
     }
 
@@ -88,7 +88,7 @@ public class CursorController : MonoBehaviour
         get
         {
             return towerPositions ?? (towerPositions = 
-                ManagerProvider.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
+                ManagerFactory.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
         }
     }
 

@@ -10,7 +10,7 @@ namespace Entities.Navigation
 {
     public sealed class OwnerNavAgentManager : MonoSingle<OwnerNavAgentManager>
     {
-        private Dictionary<int, NavRemote> agentRemotes;
+        private Dictionary<int, AgentRemote> agentRemotes;
         private NavAgentController navController;
 
         private NavAgentController NavCtrl
@@ -24,10 +24,10 @@ namespace Entities.Navigation
         protected override void Awake()
         {
             base.Awake();
-            agentRemotes = new Dictionary<int, NavRemote>();
+            agentRemotes = new Dictionary<int, AgentRemote>();
         }
 
-        public void Add(NavRemote agentRemote)
+        public void Add(AgentRemote agentRemote)
         {
             if (!agentRemotes.ContainsKey(agentRemote.AgentID))
             {
@@ -51,9 +51,9 @@ namespace Entities.Navigation
             return agentRemotes.ContainsKey(id);
         }
 
-        public NavRemote GetNavRemote(int id)
+        public AgentRemote GetNavRemote(int id)
         {
-            agentRemotes.TryGetValue(id, out NavRemote value);
+            agentRemotes.TryGetValue(id, out AgentRemote value);
             return value;
         }
 

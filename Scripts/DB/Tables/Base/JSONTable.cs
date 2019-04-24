@@ -3,6 +3,7 @@ using Generic.Singleton;
 using UnityEngine;
 using Json;
 using System;
+using Generic.BinarySearch;
 
 namespace DataTable
 {
@@ -11,9 +12,18 @@ namespace DataTable
     {
         [SerializeField] private List<T> rows;
 
+        private object locker;
         private Type rowType;
         private AJPHelper ajpHelper;
         private AJPHelper.Operation operation;
+
+        protected object Locker
+        {
+            get
+            {
+                return locker ?? (locker = new object());
+            }
+        }
 
         public int Count
         {
@@ -75,15 +85,9 @@ namespace DataTable
             Rows.Clear();
         }
 
-        private void LoadRow(T r)
+        public void Sort()
         {
-            Rows.Add(r);
-        }
-
-        protected virtual void Add(T obj)
-        {
-            if (obj != null)
-                Rows.Add(obj);
+            Rows.BinarySort_R();
         }
 
         public virtual void LoadTable(JSONObject jsonObj)
@@ -93,25 +97,26 @@ namespace DataTable
             int count = jsonObj.Count;
             for (int i = 0; i < count; i++)
             {
-                T row = AJPHelper.ParseJson<T>(jsonObj[i].ToString());
-                Add(row);
+                T row = JsonUtility.FromJson<T>(jsonObj[i].ToString());
+                Insert(row);
             }
         }
 
         public virtual void UpdateTable(JSONObject jsonObj)
         {
             int count = jsonObj.Count;
+            Debugger.Log("count: " + count);
             if (count == 0)
             {
-                T updateData = AJPHelper.ParseJson<T>(jsonObj.ToString());
-                UpdateTableData(updateData);
+                T updateData = JsonUtility.FromJson<T>(jsonObj.ToString());
+                UpdateOrAdd(updateData);
             }
             else if (count > 0)
             {
                 for (int i = 0; i < count; i++)
                 {
-                    T updateData = AJPHelper.ParseJson<T>(jsonObj[i].ToString());
-                    UpdateTableData(updateData);
+                    T updateData = JsonUtility.FromJson<T>(jsonObj[i].ToString());
+                    UpdateOrAdd(updateData);
                 }
             }
         }
@@ -123,26 +128,33 @@ namespace DataTable
             Operation = AJPHelper.GetParser<T>().Start(new AsyncTableLoader<T>.ParseInfo()
             {
                 Obj = jsonObj,
-                ResultHandler = LoadRow,
+                ResultHandler = (T result) => Insert(result),
                 Operation = new AJPHelper.Operation(),
             });
         }
 
-        protected virtual void UpdateTableData(T updateData)
+        protected virtual int Insert(T obj)
         {
-            // TODO: upgrade search
-            int count = Count;
-            for (int i = 0; i < count; i++)
+            lock (Locker)
             {
-                if(updateData.CompareTo(Rows[i]) == 0)
+                if (obj != null)
                 {
-                    Rows[i] = updateData;
-                    return;
+                    return Rows.Insert_R(obj);
                 }
             }
+            return -1;
+        }
 
-            // not exist update data - add it to rows
-            Add(updateData);
+        /// <summary>
+        /// Find T and update or add new
+        /// true: => update
+        /// false: => add
+        /// </summary>
+        /// <param name="updateData">data for update</param>
+        /// <returns></returns>
+        protected virtual bool UpdateOrAdd(T updateData)
+        {
+            return Rows.UpdateOrInsert_R(updateData);
         }
     }
 }

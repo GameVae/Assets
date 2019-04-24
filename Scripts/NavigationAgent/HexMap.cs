@@ -3,7 +3,7 @@ using Generic.Singleton;
 using PathFinding;
 using System.Collections.Generic;
 using UnityEngine;
-using static NodeManagerProvider;
+using static NodeManagerFactory;
 
 public sealed class HexMap : MonoSingle<HexMap>
 {
@@ -12,12 +12,12 @@ public sealed class HexMap : MonoSingle<HexMap>
     public const int TotalCol = Constants.TOTAL_COL;
     public const int TotalRow = Constants.TOTAL_ROW;
 
-    private NodeManagerProvider managerProvider;
-    public NodeManagerProvider ManagerProvider
+    private NodeManagerFactory managerFactory;
+    public NodeManagerFactory ManagerFactory
     {
         get
         {
-            return managerProvider ?? (managerProvider = Singleton.Instance<NodeManagerProvider>());
+            return managerFactory ?? (managerFactory = Singleton.Instance<NodeManagerFactory>());
         }
     }
 
@@ -28,7 +28,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         {
             return agentNodeManager ??
                 (agentNodeManager =
-                ManagerProvider.GetManager<AgentWayPoint>(NodeType.Single) as SingleWayPointManager);
+                ManagerFactory.GetManager<AgentWayPoint>(NodeType.Single) as SingleWayPointManager);
         }
     }
     private BreathFirstSearch breathFirstSearch;

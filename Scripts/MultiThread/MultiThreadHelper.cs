@@ -39,17 +39,22 @@ namespace MultiThread
             }
         }
 
-        public void Invoke(Action action)
+        public void MainThreadInvoke(Action action)
         {
             if (IsMainThreadRunning)
                 action?.Invoke();
             else
             {
-                lock(locker)
+                lock (locker)
                 {
                     actions.Enqueue(action);
                 }
             }
+        }
+
+        public static void ThreadInvoke(WaitCallback callback, object state)
+        {
+            ThreadPool.QueueUserWorkItem(callback, state);
         }
     }
 }

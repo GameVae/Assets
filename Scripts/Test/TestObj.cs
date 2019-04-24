@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using MultiThread;
 using Generic.Pooling;
+using Generic.BinarySearch;
 
 public class TestActionNode : ActionNode
 {
@@ -74,9 +75,9 @@ public class TestObj : MonoBehaviour
     private bool inited = false;
     private void Update()
     {
-        Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
-        lable.GetComponent<RectTransform>().
-                SetPositionAndRotation(position, Quaternion.identity);
+        //Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
+        //lable.GetComponent<RectTransform>().
+        //        SetPositionAndRotation(position, Quaternion.identity);
         //if (inited)
         //{
         //    Debug.Log(
@@ -99,8 +100,22 @@ public class TestObj : MonoBehaviour
 
     private void Awake()
     {
+        TrainingCostRow cost = new TrainingCostRow()
+        {
+            ID = -1,
+        };
+
         trainningCost.LoadTable();
         trainningCost.Rows.BinarySort_R();
+
+        TrainingCostRow rs = trainningCost.Rows.FirstOrDefault_R(cost);
+
+        Debug.Log("JSON: " + JsonUtility.ToJson(rs));
+        Debug.Log("index: " + trainningCost.Rows.BinarySearch_R(cost));
+
+        Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
+        trainningCost.Rows.UpdateOrInsert_R(cost);
+        Debug.Log("removed: " +  trainningCost.Rows.Remove_R(cost));
     }
 
     private void Start()
@@ -134,10 +149,10 @@ public class TestObj : MonoBehaviour
         //        SetPositionAndRotation(Camera.main.WorldToScreenPoint(pos),Quaternion.identity);
         //}
 
-        Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
-        lable = labelPooling.GetItem();
-        lable.GetComponent<RectTransform>().
-                SetPositionAndRotation(position,Quaternion.identity);
+        //Vector3 position = Camera.main.WorldToScreenPoint(headPoint.position);
+        //lable = labelPooling.GetItem();
+        //lable.GetComponent<RectTransform>().
+        //        SetPositionAndRotation(position,Quaternion.identity);
 
         // moveEvent = Singleton.Instance<Connection>();
         // moveEvent.On("R_MOVE", R_MOVE);
@@ -168,12 +183,12 @@ public class TestObj : MonoBehaviour
         //th1 = new Thread(AnotherThreadExecute);
         //th1.Start();
 
-        TestActionNode move = new TestActionNode("Move");
-        TestActionNode attack = new TestActionNode("Attack");
+        //TestActionNode move = new TestActionNode("Move");
+        //TestActionNode attack = new TestActionNode("Attack");
 
-        TestDecisionNode selectOnEnemy = new TestDecisionNode(attack, move, true);
+        //TestDecisionNode selectOnEnemy = new TestDecisionNode(attack, move, true);
 
-        selectOnEnemy.MakeDecision();
+        //selectOnEnemy.MakeDecision();
     }
 
     private void AnotherThreadExecute()
@@ -188,7 +203,7 @@ public class TestObj : MonoBehaviour
             }
             );
         th2.Start();
-        ThreadHelper.Invoke(() =>
+        ThreadHelper.MainThreadInvoke(() =>
         {
             for (int i = 0; i < 1000; i++)
             {

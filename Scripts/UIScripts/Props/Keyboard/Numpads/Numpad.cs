@@ -91,7 +91,7 @@ namespace UI.Keyboard
                 {
                     if (intergerValidator == null)
                     {
-                        intergerValidator = inputField.ValidateProvider
+                        intergerValidator = inputField.ValidateFactory
                             .GetValidator(ContentValidate.ContentType.Interger);
                     }
                     contentValidate = intergerValidator;

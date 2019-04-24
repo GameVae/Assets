@@ -21,7 +21,7 @@ public class DeployMilitaryWindow : BaseWindow
     private DBReference dbRef;
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
-    private UnitDataReference unitDataReference;
+    private AllAgent unitDataReference;
     private EventListenersController events;
 
     private void Awake()
@@ -40,7 +40,7 @@ public class DeployMilitaryWindow : BaseWindow
 
 
         dbRef = Singleton.Instance<DBReference>();
-        unitDataReference = Singleton.Instance<UnitDataReference>();
+        unitDataReference = Singleton.Instance<AllAgent>();
     }
 
     private void R_DEPLOY(SocketIOEvent obj)
