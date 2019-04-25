@@ -5,6 +5,8 @@ using Network.Sync;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.ObjectModel;
+using DataTable.Row;
 
 public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
 {
@@ -42,9 +44,11 @@ public class BaseInfoDataReference : MonoSingle<BaseInfoDataReference>
         CreateBase(Player.Info?.NameInGame,
             SyncData.CurrentBaseUpgrade[EnumCollect.ListUpgrade.MainBase].Level,
             Player.BaseInfo?.Position);
+
+        ReadOnlyCollection<BasePlayerRow> rows = basePlayer.ReadOnlyRows;
         for (int i = 0; i < basePlayer.Count; i++)
         {
-            CreateBase(basePlayer.Rows[i].NameInGame, basePlayer.Rows[i].Level, basePlayer.Rows[i].Position);
+            CreateBase(rows[i].NameInGame, rows[i].Level, rows[i].Position);
         }
     }
 }

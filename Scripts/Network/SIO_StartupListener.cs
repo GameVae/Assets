@@ -18,7 +18,7 @@ public sealed class SIO_StartupListener : Listener
         SyncData.BaseInfos.LoadTable(obj.data["R_BASE_INFO"]);
 
         if (Player != null)
-            Player.BaseInfo = SyncData.BaseInfos.Rows[0];
+            Player.BaseInfo = SyncData.BaseInfos.ReadOnlyRows[0];
     }
 
     public void R_USER_INFO(SocketIOEvent obj)

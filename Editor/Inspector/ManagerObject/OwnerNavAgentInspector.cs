@@ -4,14 +4,14 @@ using UnityEditor;
 using UnityEngine;
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(OwnerNavAgentManager))]
+[CustomEditor(typeof(MyAgentRemoteManager))]
 public class OwnerNavAgentInspector : Editor
 {
-    private OwnerNavAgentManager owner;
+    private MyAgentRemoteManager owner;
     private int id;
     private void OnEnable()
     {
-        owner = target as OwnerNavAgentManager;
+        owner = target as MyAgentRemoteManager;
     }
 
     public override void OnInspectorGUI()

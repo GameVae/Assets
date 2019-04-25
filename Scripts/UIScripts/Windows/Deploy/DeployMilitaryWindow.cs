@@ -21,7 +21,7 @@ public class DeployMilitaryWindow : BaseWindow
     private DBReference dbRef;
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
-    private AllAgent unitDataReference;
+    private AgentRemoteManager unitDataReference;
     private EventListenersController events;
 
     private void Awake()
@@ -40,7 +40,7 @@ public class DeployMilitaryWindow : BaseWindow
 
 
         dbRef = Singleton.Instance<DBReference>();
-        unitDataReference = Singleton.Instance<AllAgent>();
+        unitDataReference = Singleton.Instance<AgentRemoteManager>();
     }
 
     private void R_DEPLOY(SocketIOEvent obj)
@@ -53,8 +53,8 @@ public class DeployMilitaryWindow : BaseWindow
         unitDataReference.Create(unit, user);
 
         JSONTable_Unit units = SyncData.UnitTable;
-        units.Rows.Add(unit);
-        SelectAgentPanel.Add(unit);
+        units.Insert(unit);
+        //SelectAgentPanel.Add(unit);
         Debugger.Log("added " + unit.ID);
     }
 
@@ -108,7 +108,7 @@ public class DeployMilitaryWindow : BaseWindow
         JSONTable_BaseDefend baseDefendData = SyncData.CurrentBaseDefend;
         for (int i = 0; i < baseDefendData.Count; i++)
         {
-            BaseDefendRow row = baseDefendData.Rows[i];
+            BaseDefendRow row = baseDefendData.ReadOnlyRows[i];
             CreateType(row.ID_Unit, row.Quality);
         }
     }
@@ -161,7 +161,7 @@ public class DeployMilitaryWindow : BaseWindow
         ListUpgrade unitType = refTag.Type;
         int quality = (int)refTag.Slider.Value;
 
-        BaseDefendRow baseDefendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == unitType);
+        BaseDefendRow baseDefendRow = baseDefend.ReadOnlyRows.FirstOrDefault(r => r.ID_Unit == unitType);
         baseDefendRow.Quality -= quality;
     }
 }

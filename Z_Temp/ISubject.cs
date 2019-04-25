@@ -5,7 +5,6 @@ namespace Generic.Observer
     {
         void Register(IObserver observer);
         void Remove(IObserver observer);
-        void Notify(IObserver observer);
         void NotifyAll();
     }
 

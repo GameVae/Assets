@@ -1,5 +1,4 @@
-﻿
-using EnumCollect;
+﻿using EnumCollect;
 using UnityEngine;
 
 namespace Animation
@@ -9,22 +8,41 @@ namespace Animation
         protected override void RegisterAnimationState()
         {
             AddState(state: AnimState.Walking,
-                play: delegate { Walking(true); },
-                stop: delegate { Walking(false); });
+                    info: new StateInfo(
+                        isTrigger: false,
+                        play: () => Walking(true),
+                        stop: () => Walking(false))
+                    );
 
             AddState(state: AnimState.Attack1,
-                play: Attack1,
-                stop: null);
+                    info: new StateInfo(
+                        isTrigger: false,
+                        play: () => Attack1(true),
+                        stop: () => Attack1(false))
+                    );
+
+            AddState(state: AnimState.Dead, 
+                    info: new StateInfo(
+                        isTrigger: true,
+                        play: Dead,
+                        stop: null)
+                    );
         }
 
         private void Walking(bool value)
         {
+            Stop(AnimState.Attack1);
             Animator.SetBool("walking", value);
         }
 
-        private void Attack1()
+        private void Attack1(bool value)
         {
-            Animator.SetTrigger("attack");
+            Animator.SetBool("attack", value);
+        }
+
+        private void Dead()
+        {
+            Animator.SetTrigger("death");
         }
     }
 }

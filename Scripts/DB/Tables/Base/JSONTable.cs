@@ -4,6 +4,7 @@ using UnityEngine;
 using Json;
 using System;
 using Generic.BinarySearch;
+using System.Collections.ObjectModel;
 
 namespace DataTable
 {
@@ -30,9 +31,14 @@ namespace DataTable
             get { return Rows.Count; }
         }
 
-        public List<T> Rows
+        protected List<T> Rows
         {
             get { return rows ?? (rows = new List<T>()); }
+        }
+
+        public ReadOnlyCollection<T> ReadOnlyRows
+        {
+            get { return Rows.AsReadOnly(); }
         }
 
         public Type RowType
@@ -133,7 +139,7 @@ namespace DataTable
             });
         }
 
-        protected virtual int Insert(T obj)
+        public virtual int Insert(T obj)
         {
             lock (Locker)
             {

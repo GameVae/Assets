@@ -38,7 +38,7 @@ public class NaturalResource : MonoBehaviour
     public void Initalize(int id,ResourceManager manager)
     {
         Id = id;
-        Data = manager.RSSPositionTable.Rows[id - 1];
+        Data = manager.RSSPositionTable.ReadOnlyRows[id - 1];
             
         if (Data != null)
         {

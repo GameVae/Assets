@@ -1,17 +1,16 @@
 ﻿using Entities.Navigation;
 using Generic.Singleton;
-using DataTable;
-using DataTable.Row;
-using Network.Data;
-using SocketIO;
 using UI.Animation;
 using UI.Widget;
 using UnityEngine;
 using Generic.Pooling;
+using Generic.Observer;
+using System.Collections.Generic;
 
-public class SelectAgentPanel : MonoBehaviour
+public class SelectAgentPanel : MonoBehaviour, IObserver
 {
-    public JSONTable_Unit Units;
+    private int selectedId;
+
     public SelectableAgentElement Prefab;
     public RectTransform ScrollViewContent;
     public GUIInteractableIcon OpenButton;
@@ -19,33 +18,38 @@ public class SelectAgentPanel : MonoBehaviour
 
     public CameraButtonGroup CameraGroup;
     public ResizeAnimation ResizeAnimation;
-    public OwnerNavAgentManager OwnerNavController;
 
-    private bool isInited;
-    private bool isCanInit;
+    private MyAgentRemoteManager myAgentManager;
+    private Pooling<SelectableAgentElement> selectablePooling;
+    private List<SelectableAgentElement> catcher;
 
-    private Pooling<SelectableAgentElement> elementPooling;
-    private EventListenersController Events;
+    public MyAgentRemoteManager MyAgentManager
+    {
+        get
+        {
+            return myAgentManager ?? (myAgentManager = Singleton.Instance<MyAgentRemoteManager>());
+        }
+    }
+    public List<SelectableAgentElement> Catcher
+    {
+        get
+        {
+            return catcher ?? (catcher = new List<SelectableAgentElement>());
+        }
+    }
 
     public void Awake()
     {
-        isInited = false;
-        isCanInit = false;
-
-        elementPooling = new Pooling<SelectableAgentElement>(CreateElement);
-
-        Events = Singleton.Instance<EventListenersController>();
+        selectablePooling = new Pooling<SelectableAgentElement>(CreateButton);
 
         ResizeAnimation.CloseDoneEvt += delegate { ActiveContent(false); };
         OpenButton.OnClickEvents += OnOpenButton;
-        UnSelectAgentButton.OnClickEvents += OnUnSelectAgent;
-
-        Events.On("R_UNIT", UnitAlreadyForInit);
+        UnSelectAgentButton.OnClickEvents += TurnOffUnselectButton;
     }
 
-    private void UnitAlreadyForInit(SocketIOEvent obj)
+    private void Start()
     {
-        isCanInit = true;
+        MyAgentManager.Register(this);
     }
 
     private void ActiveContent(bool value)
@@ -55,67 +59,30 @@ public class SelectAgentPanel : MonoBehaviour
 
     private void OnOpenButton()
     {
-        if (isCanInit && !isInited)
-        {
-            Init();
-            isInited = true;
-        }
-        if (isInited)
-        {
-            ResizeAnimation.Action();
-            ActiveContent(true);
-        }
+        ResizeAnimation.Action();
+        ActiveContent(true);
     }
-
-    public void OnUnSelectAgent()
+ 
+    private void CreateSelecables()
     {
-        OwnerNavController.UnSelectCurrentAgent();
-        UnSelectAgentButton.gameObject.SetActive(false);
-    }
-
-    private void Init()
-    {
-        for (int i = 0; i < Units.Count; i++)
+        Dictionary<int, AgentRemote> agentRemotes = MyAgentManager.MyAgentRemotes;
+        foreach (var agent in agentRemotes)
         {
-            Add(Units.Rows[i]);
+            Add(agent.Value);
         }
-        FitSize(elementPooling.ActiveCount);
+        FitSize(selectablePooling.ActiveCount);
     }
 
-    public void OnSelectAgent()
+    private void OnSelected(AgentRemote remote)
     {
         ResizeAnimation.Close();
-    }
+        MyAgentManager.ActiveNav(remote.AgentID);
 
-    public void Add(UnitRow agentInfo)
-    {
-        int id = agentInfo.ID;
-        if (OwnerNavController.IsOwnerAgent(id))
-        {
-            SelectableAgentElement el = elementPooling.GetItem();
-            el.PlaceholderComp.Text = id.ToString();
+        Vector3Int position = remote.CurrentPosition;
+        CameraGroup.CameraMoveToAgent(position);
+        TurnOnUnselectButton();
 
-            AgentRemote navRemote = OwnerNavController.GetNavRemote(id);
-            navRemote.OnDead += delegate
-            {
-                elementPooling.Release(el);
-                FitSize(elementPooling.ActiveCount);
-            };
-
-            el.SelectableComp.OnClickEvents += delegate 
-            {
-                OwnerNavController.ActiveNav(id);
-                ResizeAnimation.Close();
-                
-                Vector3Int position = navRemote.CurrentPosition;
-                CameraGroup.CameraMoveToAgent(position);
-                ActiveUnSelectButton();
-            };
-            el.gameObject.SetActive(true);
-        }
-
-        if (isInited) // first init
-            FitSize(elementPooling.ActiveCount);
+        selectedId = remote.AgentID;
     }
 
     private void FitSize(int count)
@@ -133,21 +100,78 @@ public class SelectAgentPanel : MonoBehaviour
             ResizeAnimation.MaxSize.y = 450;
         }
 
-        if(ResizeAnimation.IsOpen)
+        if (ResizeAnimation.IsOpen)
         {
             ResizeAnimation.ForceMaxSize();
         }
     }
 
-    private void ActiveUnSelectButton()
+    private void TurnOnUnselectButton()
     {
         UnSelectAgentButton.gameObject.SetActive(true);
     }
 
-    private SelectableAgentElement CreateElement(int id)
+    private void TurnOffUnselectButton()
+    {
+        selectedId = -1;
+        MyAgentManager.UnActiveNav();
+        UnSelectAgentButton.gameObject.SetActive(false);
+    }
+
+    public void Refresh()
+    {
+        ReleasePoolObject();
+        CreateSelecables();
+    }
+
+    public void Add(AgentRemote remote)
+    {
+        SelectableAgentElement el = selectablePooling.GetItem();
+        el.PlaceholderComp.Text = remote.AgentID.ToString();
+
+        el.SelectableComp.OnClickEvents += delegate
+        {
+            OnSelected(remote);
+        };
+
+        el.gameObject.SetActive(true);
+        Catcher.Add(el);
+    }
+
+    #region Observer
+    public void SubjectUpdated(object dataPacked)
+    {
+        if(!MyAgentManager.IsOwnerAgent(selectedId))
+        {
+            selectedId = -1;
+            TurnOffUnselectButton();
+        }
+        Refresh();
+    }
+
+    public void Dispose()
+    {
+        ReleasePoolObject();
+        MyAgentManager.Remove(this);
+    }
+    #endregion
+
+    #region Pooling
+    private void ReleasePoolObject()
+    {
+        int count = Catcher.Count;
+        for (int i = 0; i < count; i++)
+        {
+            selectablePooling.Release(Catcher[i]);
+        }
+        Catcher.Clear();
+    }
+
+    private SelectableAgentElement CreateButton(int id)
     {
         SelectableAgentElement el = Instantiate(Prefab, ScrollViewContent);
         el.FirstSetup(id);
         return el;
     }
+    #endregion
 }

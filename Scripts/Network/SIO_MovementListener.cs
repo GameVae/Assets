@@ -9,26 +9,21 @@ using UnityEngine;
 
 public class SIO_MovementListener : Listener
 {
-    private NonControlAgentManager nCtrlAgentManager;
-    private OwnerNavAgentManager ownerAgentManager;
-    private JSONObject moveJSONObject;
-    
     private string moveJson;
+    private JSONObject moveJSONObject;
+    private AgentRemoteManager agentManager;
+    private MyAgentRemoteManager ownerAgentManager;
 
-    protected OwnerNavAgentManager OwnerAgentManager
+    protected MyAgentRemoteManager MyAgentManager
     {
         get
         {
-            return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<OwnerNavAgentManager>());
+            return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<MyAgentRemoteManager>());
         }
     }
-
-    public NonControlAgentManager NonCtrlAgentManager
+    public AgentRemoteManager AgentManager
     {
-        get
-        {
-            return nCtrlAgentManager ?? (nCtrlAgentManager = Singleton.Instance<NonControlAgentManager>());
-        }
+        get { return agentManager ?? (agentManager = Singleton.Instance<AgentRemoteManager>()); }
     }
 
     protected override void Start()
@@ -80,11 +75,11 @@ public class SIO_MovementListener : Listener
     }
 
     private void InitMessage(
-        List<Vector3Int> clientPath, 
-        List<float>     separateTime, 
-        Vector3Int      curPosition, 
-        AgentRemote       ownerRemote,
-        AgentRemote       enemyRemote)
+        List<Vector3Int> clientPath,
+        List<float> separateTime,
+        Vector3Int curPosition,
+        AgentRemote ownerRemote,
+        AgentRemote enemyRemote)
     {
         curPosition = curPosition.ToSerPosition();
 
@@ -99,7 +94,7 @@ public class SIO_MovementListener : Listener
         int ownerAgentId = ownerRemote.AgentID;
 
         string attack_unit_id = "NULL";
-        
+
         const string format =
             "{{" +
             "\"Server_ID\":" + "{0}," +
@@ -174,15 +169,15 @@ public class SIO_MovementListener : Listener
 
     public void R_MOVE(SocketIOEvent obj)
     {
-        Debugger.Log(obj.ToString().Substring(0,150));
+        // Debugger.Log(obj.ToString().Substring(0,150));
         JSONObject r_move = obj.data["R_MOVE"];
-        bool isOther = NonCtrlAgentManager.MoveAgent(r_move);
-        //if (!isOther)
-        //{
-        //    int id = -1;
-        //    r_move.GetField(ref id, "ID");
-        //    OwnerAgentManager.GetNavRemote(id)?.FixedMove.StartMove(r_move);
-        //}
+        int id = -1;
+        r_move.GetField(ref id, "ID");
+        if (!MyAgentManager.IsOwnerAgent(id))
+        {
+            AgentRemote agent = AgentManager.GetAgentRemote(id);
+            agent?.FixedMove.StartMove(r_move);
+        }
     }
 }
 

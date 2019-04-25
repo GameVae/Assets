@@ -344,7 +344,7 @@ public class TestObj : MonoBehaviour
 
     private void StartParse(JSONObject data)
     {
-        rss_table1.Rows.Clear();
+        rss_table1.Clear();
         int count = data.Count;
         int i = 0;
         while (i < count)
@@ -358,7 +358,7 @@ public class TestObj : MonoBehaviour
     private void LoadRowForTable<T>(JSONTable<T> table, T value)
         where T : ITableData
     {
-        table.Rows.Add(value);
+        table.Insert(value);
     }
 
     private void StartThread(JSONObject data)

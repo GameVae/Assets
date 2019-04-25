@@ -281,11 +281,11 @@ namespace DataTable.Row
         {
             UserInfoRow user = sync.MainUser;
             JSONTable_BaseDefend baseDefend = sync.CurrentBaseDefend;
-            BaseDefendRow defendRow = baseDefend.Rows.FirstOrDefault(r => r.ID_Unit == TrainingUnit_ID);
+            BaseDefendRow defendRow = baseDefend.ReadOnlyRows.FirstOrDefault(r => r.ID_Unit == TrainingUnit_ID);
 
             if (defendRow == null)
             {
-                baseDefend.Rows.Add(new BaseDefendRow()
+                baseDefend.Insert(new BaseDefendRow()
                 {
                     BaseNumber = BaseNumber,
                     ID_Unit = TrainingUnit_ID,

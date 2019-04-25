@@ -67,6 +67,7 @@ public class CursorController : MonoBehaviour
             return eventSystem ?? (eventSystem = eventSystem = Singleton.Instance<UnityEventSystem>());
         }
     }
+
     public ResourceManager ResourceManager
     {
         get

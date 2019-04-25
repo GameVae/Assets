@@ -87,14 +87,7 @@ namespace Entities.Navigation
 
         private void MoveActiveAgent(Vector3Int start, Vector3Int end, AgentRemote enemy)
         {
-            //bool foundPath = CurrentAgent.StartMove(start, end);
-            //CurrentAgent.AsyncStartMove(start, end);
             MoveAgent(CurrentAgent, start, end, enemy);
-        }
-
-        public void UnSelectCurrentAgent()
-        {
-            SelectAgentPanel.OnUnSelectAgent();
         }
 
         public void SwitchToAgent(NavAgent agent)
@@ -160,6 +153,7 @@ namespace Entities.Navigation
         {
             agent.AsyncStartMove(start, end, enemy);
         }
+
         public void FindPathDone_OnlyMainThread(NavAgent agent, bool found)
         {
             ThreadHelper.MainThreadInvoke(() => EmitMoveEvent(agent, found, agent.TargetEnemy));

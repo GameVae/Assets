@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Json;
+using System.Collections.ObjectModel;
+using DataTable.Row;
 
 public sealed class ResourceManager : MonoSingle<ResourceManager>
 {
@@ -68,13 +70,15 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         while (!oper.IsDone)
             yield return null;
 
-        int count = RSSPositionTable.Rows.Count;
+        int count = RSSPositionTable.ReadOnlyRows.Count;
+        ReadOnlyCollection<RSS_PositionRow> rows = RSSPositionTable.ReadOnlyRows;
+
         int i = 0;
 
         while (i < count)
         {
             int id = i + 1;
-            NaturalResource rs = GenResource((RssType)RSSPositionTable.Rows[i].RssType, Flag.Owner, id);
+            NaturalResource rs = GenResource((RssType)rows[i].RssType, Flag.Owner, id);
             rs.Initalize(id, this);
             Resources[id] = rs;
 

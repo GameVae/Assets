@@ -61,7 +61,7 @@ namespace Network.Sync
 
         private void UpdateBaseInfo(int i)
         {
-            BaseInfoRow baseInfo = BaseInfos.Rows[i];
+            BaseInfoRow baseInfo = BaseInfos.ReadOnlyRows[i];
             baseInfo.Update(this);      
         }
 

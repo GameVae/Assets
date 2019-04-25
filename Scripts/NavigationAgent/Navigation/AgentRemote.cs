@@ -2,11 +2,11 @@
 using DataTable.Row;
 using UnityEngine;
 using Generic.Observer;
-using Map;
 using Generic.Pooling;
 using UnityEngine.Events;
 using Animation;
 using Generic.Singleton;
+using System;
 
 namespace Entities.Navigation
 {
@@ -34,6 +34,7 @@ namespace Entities.Navigation
         private FixedMovement fixedMove;
         private AgentWayPoint waypoint;
         private AnimatorController animator;
+        private AgentRemoteManager agentRemoteManager;
 
         public AnimatorController Animator
         {
@@ -52,6 +53,14 @@ namespace Entities.Navigation
             get
             {
                 return waypoint ?? (waypoint = GetComponent<AgentWayPoint>());
+            }
+        }
+        public AgentRemoteManager AgentRemoteManager
+        {
+            get
+            {
+                return agentRemoteManager ??
+                    (agentRemoteManager = Singleton.Instance<AgentRemoteManager>());
             }
         }
 
@@ -112,26 +121,11 @@ namespace Entities.Navigation
                 return WayPoint.Position;
             }
         }
-
-        public int ManagedId { get; private set; }
-
-        private NonControlAgentManager otherAgents;
-        public NonControlAgentManager OtherAgent
+        public int ManagedId
         {
-            get
-            {
-                return otherAgents ?? (otherAgents = Singleton.Instance<NonControlAgentManager>());
-            }
+            get; private set;
         }
 
-        private OwnerNavAgentManager ownerAgents;
-        public OwnerNavAgentManager OwnerAgents
-        {
-            get
-            {
-                return ownerAgents ?? (ownerAgents = Singleton.Instance<OwnerNavAgentManager>());
-            }
-        }
 
         private void Start()
         {
@@ -180,31 +174,39 @@ namespace Entities.Navigation
 
         private void SubjectChanged(Observer_Unit.Package package)
         {
-            UnitRow data = package.Unit;
-            if (data.Quality <= 0)
+            agentInfo.UnitInfo = package.Unit;
+
+            if (UnitInfo.Quality <= 0)
             {
-                Dead();
+                // Dead();
+                Animator.Play(AnimState.Dead);
             }
             else
             {
-                Label.SetHP(data.Hea_cur, data.Health);
-                Label.Quality = data.Quality;
-
-                if (!string.IsNullOrEmpty(data.Attack_Unit_ID) &&
-                    data.Attack_Unit_ID != "NULL")
-                {
-                    string[] strs = data.Attack_Unit_ID.Split('_');
-                    int otherID = int.Parse(strs[3]);
-
-                    if (otherID != AgentID)
-                    {
-                        Animator.Play(AnimState.Attack1);
-                        FixedMovement other = OtherAgent.GetAgent(otherID);
-                        transform.forward = (other.transform.position - transform.position).normalized;
-                    }
-                }
+                SetLabel();
+                CheckAttack();
             }
 
+        }
+
+        private void SetLabel()
+        {
+            Label.SetHP(UnitInfo.Hea_cur, UnitInfo.Health);
+            Label.Quality = UnitInfo.Quality;
+        }
+
+        private void CheckAttack()
+        {
+            if (!string.IsNullOrEmpty(UnitInfo.Attack_Unit_ID) &&
+                     UnitInfo.Attack_Unit_ID.ToLower() != "null")
+            {
+                string[] strs = UnitInfo.Attack_Unit_ID.Split('_');
+                int otherID = int.Parse(strs[3]);
+
+                AgentRemote other = AgentRemoteManager.GetAgentRemote(otherID);
+                transform.forward = (other.transform.position - transform.position).normalized;
+                Animator.Play(AnimState.Attack1);
+            }
         }
 
         public bool IsMoving()
@@ -226,6 +228,8 @@ namespace Entities.Navigation
 
         public void Dead()
         {
+            Debugger.Log("dead called from animation");
+            unitSubject.Remove(observer);
             deathEvents?.Invoke(this);
             deathEvents = null;
         }

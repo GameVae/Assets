@@ -16,26 +16,24 @@ public class SIO_ServerHelperListener : Listener
     private JSONObject r_new_pos;
     private BreathFirstSearch breathFS;
     private AStarAlgorithm aStarAlgorithm;
-    private NonControlAgentManager nonCtrlAgents;
-    private OwnerNavAgentManager ownerAgentManager;
+    private AgentRemoteManager agentManager;
 
     private bool isInited;
-    private FixedMovement agent;
+    private AgentRemote agentRemote;
     private Vector3Int agentTargetPosition;
     private MultiThreadHelper threadHelper;
 
+    public AgentRemoteManager AgentManager
+    {
+        get
+        {
+            return agentManager ?? (agentManager = Singleton.Instance<AgentRemoteManager>());
+        }
+    }
     private MultiThreadHelper ThreadHelper
     {
         get { return threadHelper ?? (threadHelper = Singleton.Instance<MultiThreadHelper>()); }
     }
-    private OwnerNavAgentManager OwnerAgentManager
-    {
-        get
-        {
-            return ownerAgentManager ?? (ownerAgentManager = Singleton.Instance<OwnerNavAgentManager>());
-        }
-    }
-
     public NavOffset SoldierOffset;
 
     #region REGISTER EVENTS
@@ -61,7 +59,7 @@ public class SIO_ServerHelperListener : Listener
             agentTargetPosition = FindNextValidPosition(id);
             AStarAlgorithm.FindInfo info = new AStarAlgorithm.FindInfo()
             {
-                StartPosition = agent.CurrentPosition,
+                StartPosition = agentRemote.CurrentPosition,
                 EndPosition = agentTargetPosition,
                 DoneCallback = FindPathDoneCallback
             };
@@ -79,7 +77,6 @@ public class SIO_ServerHelperListener : Listener
         mapIns = Singleton.Instance<HexMap>();
         breathFS = Singleton.Instance<BreathFirstSearch>();
         aStarAlgorithm = new AStarAlgorithm(mapIns, maxDeep);
-        nonCtrlAgents = Singleton.Instance<NonControlAgentManager>();
     }
 
     private void InitalizeOffset()
@@ -92,11 +89,15 @@ public class SIO_ServerHelperListener : Listener
     #region FORMAT DATA
     private Vector3Int FindNextValidPosition(int unitId)
     {
-        agent = nonCtrlAgents.GetAgent(unitId);
-        if (agent != null)
+        bool isOwnerAgent = AgentManager.IsOwnerAgent(unitId);
+        if (!isOwnerAgent)
         {
-            breathFS.GetNearestCell(agent.CurrentPosition, out Vector3Int res);
-            return res;
+            agentRemote = AgentManager.GetAgentRemote(unitId);
+            if (agentRemote != null)
+            {
+                breathFS.GetNearestCell(agentRemote.CurrentPosition, out Vector3Int res);
+                return res;
+            }
         }
         return Generic.Contants.Constants.InvalidPosition;
     }
@@ -148,8 +149,8 @@ public class SIO_ServerHelperListener : Listener
         string moveJson = string.Format(format,
             serId,
             id,
-            (int)agent.Remote.Type,
-            agent.Remote.UnitInfo.ID_User,
+            (int)agentRemote.Type,
+            agentRemote.UnitInfo.ID_User,
             curCellPosition.ToPositionString(),
             tempPath[0].ToPositionString(),
             tempPath[tempPath.Count - 1].ToPositionString(),
@@ -208,8 +209,8 @@ public class SIO_ServerHelperListener : Listener
         {
             string data = ResponseMessage(
                 clientPath: aStar.Path,
-                separateTime: GetTimes(aStar.Path, agent.transform.position),
-                curCellPosition: agent.CurrentPosition,
+                separateTime: GetTimes(aStar.Path, agentRemote.transform.position),
+                curCellPosition: agentRemote.CurrentPosition,
                 id: id,
                 serId: serId);
 

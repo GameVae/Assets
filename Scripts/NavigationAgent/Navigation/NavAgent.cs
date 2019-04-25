@@ -294,12 +294,6 @@ namespace Entities.Navigation
             return aStar.Truncate(path, maxMoveStep);
         }
 
-        public void Dead()
-        {
-            if (AgentController.CurrentAgent == this)
-                AgentController.UnSelectCurrentAgent();
-        }
-
         private void OnDestroy()
         {
             if (!IsMoving)
