@@ -27,14 +27,15 @@ public class KeyboardFactory : ISingleton
     }
 
     private Keyboard CreateKeyboard(KeyboardType type)
-    {
-        GameObject keyboardObject = new GameObject("Keyboard::" + type.ToString());
+    {        
         switch (type)
         {
             case KeyboardType.Standalone:
-                return keyboardObject.AddComponent<StandaloneKeyboard>();
+                return new GameObject("Keyboard::" + type.ToString())
+                    .AddComponent<StandaloneKeyboard>();
             case KeyboardType.MobileNative:
-                return keyboardObject.AddComponent<MobileNativeKeyboard>();
+                return new GameObject("Keyboard::" + type.ToString())
+                    .AddComponent<MobileNativeKeyboard>();
             case KeyboardType.Numpad:
                 return Resources.FindObjectsOfTypeAll<Numpad>()[0];
         }

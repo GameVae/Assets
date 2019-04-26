@@ -2,12 +2,14 @@
 
 public class BooleanDecisionNode : DecisionNode
 {
-    private readonly System.Func<bool> booleanFunc;
+    public System.Func<bool> booleanFunc;
     public BooleanDecisionNode(DecisionTreeNode tN, DecisionTreeNode fN,System.Func<bool> func) :
         base(tN, fN)
     {
         booleanFunc = func;
     }
+
+    public BooleanDecisionNode() { }
 
     public override DecisionTreeNode GetBranch()
     {

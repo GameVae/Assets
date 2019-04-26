@@ -3,7 +3,8 @@ using Utils;
 
 namespace Generic.Singleton
 {
-    public abstract class MonoSingle<T> : UnityEngine.MonoBehaviour, ISingleton where T : UnityEngine.Component
+    public abstract class MonoSingle<T> : UnityEngine.MonoBehaviour, ISingleton 
+        where T : UnityEngine.Component
     {
         private static ISingleton instance;
         public static ISingleton Instance

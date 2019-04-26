@@ -111,7 +111,7 @@ public class AStarAlgorithm
         if (currentPos == target) return true;
 
         // add neigbours to queue
-        Vector3Int[] neighbours = mapIns.GetNeighbours(currentPos);
+        Vector3Int[] neighbours = mapIns.GetNeighboursRange1(currentPos);
         for (int i = 0; i < neighbours.Length; i++)
         {
             HexCell cell = Singleton.Instance<PoolHexCell>().CreateCell(neighbours[i].x, neighbours[i].y);

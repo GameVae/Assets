@@ -17,7 +17,6 @@ public class CursorController : MonoBehaviour
     private Popup popupIns;
 
     private RangeWayPointManager towerPositions;
-    private NodeManagerFactory managerFactory;
 
     public CursorPos Cursor;
     public CameraController CameraController;
@@ -76,11 +75,11 @@ public class CursorController : MonoBehaviour
         }
     }
 
-    public NodeManagerFactory ManagerFactory
+    public NodeManagerFactory NodeManagerFactory
     {
         get
         {
-            return managerFactory ?? (managerFactory = Singleton.Instance<NodeManagerFactory>());
+            return MapIns.NodeManagerFactory;
         }
     }
 
@@ -89,7 +88,7 @@ public class CursorController : MonoBehaviour
         get
         {
             return towerPositions ?? (towerPositions = 
-                ManagerFactory.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
+                NodeManagerFactory.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
         }
     }
 
@@ -163,14 +162,4 @@ public class CursorController : MonoBehaviour
     {
         Cursor.updateCursor(MapIns.CellToWorld(Position));
     }
-
-    //private void DetermineSelectedOnRSS(RaycastHit hitInfo)
-    //{
-    //    bool isRss = LayerMask.NameToLayer("RSS") == hitInfo.transform.gameObject.layer;
-    //    if (isRss)
-    //    {
-    //        hitInfo.transform.GetComponent<NaturalResource>()?.OpenPopup(PopupIns);
-    //    }
-    //}
-
 }

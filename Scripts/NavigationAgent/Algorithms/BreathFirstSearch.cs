@@ -45,7 +45,7 @@ namespace PathFinding
             open.RemoveAt(0);
             closed.Add(currentCell);
 
-            Vector3Int[] neighbours = mapIns.GetNeighbours(currentCell);
+            Vector3Int[] neighbours = mapIns.GetNeighboursRange1(currentCell);
 
             for (int i = 0; i < neighbours.Length; i++)
             {

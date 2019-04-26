@@ -108,7 +108,7 @@ namespace Animation
             AddState(key, info);
         }
 
-        public virtual StateInfo Play(string state)
+        public bool Play(string state)
         {
             //playlist.TryGetValue(state + SUFFIX_PLAY, out UnityAction value);
             //value?.Invoke();
@@ -116,13 +116,13 @@ namespace Animation
             StateList.TryGetValue(state, out StateInfo info);
             if (info != null)
             {
-                info.Play();
+                return info.Play();
             }
 
-            return info;
+            return false;
         }
 
-        public virtual StateInfo Stop(string state)
+        public bool Stop(string state)
         {
             //playlist.TryGetValue(state + SUFFIX_STOP, out UnityAction value);
             //value?.Invoke();
@@ -130,18 +130,18 @@ namespace Animation
             StateList.TryGetValue(state, out StateInfo info);
             if (info != null)
             {
-                info.Stop();
+                return info.Stop();
             }
-            return info;
+            return false;
         }
 
-        public StateInfo Play(AnimState state)
+        public virtual bool Play(AnimState state)
         {
             string key = state.ToString() + state.GetType().GetHashCode();
             return Play(key);
         }
-
-        public StateInfo Stop(AnimState state)
+                
+        public virtual bool Stop(AnimState state)
         {
             string key = state.ToString() + state.GetType().GetHashCode();
             return Stop(key);

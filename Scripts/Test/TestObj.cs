@@ -14,6 +14,10 @@ using UnityEngine.EventSystems;
 using MultiThread;
 using Generic.Pooling;
 using Generic.BinarySearch;
+using System.Xml.Linq;
+using System.Xml;
+using System;
+using UnityEngine.Events;
 
 public class TestActionNode : ActionNode
 {
@@ -115,7 +119,7 @@ public class TestObj : MonoBehaviour
 
         Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
         trainningCost.Rows.UpdateOrInsert_R(cost);
-        Debug.Log("removed: " +  trainningCost.Rows.Remove_R(cost));
+        Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
     }
 
     private void Start()
@@ -126,6 +130,52 @@ public class TestObj : MonoBehaviour
 
         labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
 
+        string path = Application.dataPath + @"/Z_Temp/DecisionMaking/AgentDecisionTree.xml";
+        //XElement xElement = XElement.Load(path);
+        XmlDocument doc = new XmlDocument();
+        doc.Load(path);
+
+        string methodName = doc.FirstChild.Attributes.Item(0).Value;
+
+        string property = doc.FirstChild.FirstChild.Attributes[0].Value;
+
+        string text = doc.ChildNodes[0].InnerText;
+
+        string itemName = "Name";
+        XmlNode node = doc.FirstChild.Attributes.GetNamedItem(itemName);
+        Debug.Log(itemName + " " + node);
+        //AgentDecisionTree decisionTree = new AgentDecisionTree();
+
+        //DecisionTreeNode root = decisionTree.Root(path);
+        //Debug.Log(root);
+        //Debug.Log(methodName);
+
+        //Type classType = typeof(MyClass);
+        //MyClass myclass = new MyClass() { Interger = 10, };
+        ////MethodInfo info = thisType.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+        //// info.Invoke(this, new object[] { text });
+        ////MyDelegate method = (MyDelegate)Delegate.CreateDelegate(typeof(MyDelegate), this, info.Name);
+        ////method.Invoke(text);
+        //Debug.Log("Before: " + myclass.Interger);
+        //PropertyInfo propertyInfo = classType.GetProperty(property);
+        //Debug.Log("Property: " + propertyInfo + " type: " + propertyInfo.PropertyType);
+        //var interger = Convert.ChangeType(text, propertyInfo.PropertyType);
+        //Debug.Log("After convert: " + interger.GetType());
+        //propertyInfo.SetValue(myclass,interger);
+        //Debug.Log("After: " + myclass.Interger);
+
+
+        //Type type = Type.GetType("System.Int32");
+        //var reflection = Activator.CreateInstance(type);
+        ////reflection = text;
+        //Debug.Log("Create by Activator.CreateInstance - value: " + reflection + " type: " + reflection.GetType());
+
+        //InvokeDynamic(method as UnityAction<string>, text);
+
+        //Debug.Log(xElement);
+        //LogXml(doc.ChildNodes);
+
+        #region
         //for (int i = 0; i < 100; i++)
         //{
         //    LightweightLabel item = labelPooling.GetItem();
@@ -189,6 +239,40 @@ public class TestObj : MonoBehaviour
         //TestDecisionNode selectOnEnemy = new TestDecisionNode(attack, move, true);
 
         //selectOnEnemy.MakeDecision();
+        #endregion
+    }
+    delegate void MyDelegate(string v);
+    class MyClass
+    {
+        public int Interger { get; set; }
+    }
+    private void InvokeDynamic(UnityAction<string> action, string v)
+    {
+        action.Invoke(v);
+    }
+    private void LogXml(XmlNodeList list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            Debug.Log(list[i].LocalName);
+            LogAttributes(list[i].Attributes);
+            LogXml(list[i].ChildNodes);
+        }
+    }
+
+    private void LogAttributes(XmlAttributeCollection attrs)
+    {
+        if (attrs == null) return;
+        for (int i = 0; i < attrs.Count; i++)
+        {
+            Debug.Log("attri - name: " + attrs[i].Name + " value: " + attrs[i].Value);
+            LogAttributes(attrs[i].Attributes);
+        }
+    }
+
+    private void XmlMethod(string v)
+    {
+        Debug.Log("Reflection from xml file: " + v);
     }
 
     private void AnotherThreadExecute()

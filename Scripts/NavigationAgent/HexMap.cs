@@ -13,7 +13,7 @@ public sealed class HexMap : MonoSingle<HexMap>
     public const int TotalRow = Constants.TOTAL_ROW;
 
     private NodeManagerFactory managerFactory;
-    public NodeManagerFactory ManagerFactory
+    public NodeManagerFactory NodeManagerFactory
     {
         get
         {
@@ -28,7 +28,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         {
             return agentNodeManager ??
                 (agentNodeManager =
-                ManagerFactory.GetManager<AgentWayPoint>(NodeType.Single) as SingleWayPointManager);
+                NodeManagerFactory.GetManager<AgentWayPoint>(NodeType.Single) as SingleWayPointManager);
         }
     }
     private BreathFirstSearch breathFirstSearch;
@@ -53,7 +53,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         return result;
     }
 
-    public Vector3Int[] GetNeighbours(Vector3Int cell)
+    public Vector3Int[] GetNeighboursRange1(Vector3Int center)
     {
         #region old
         //List<Vector3Int> neighbours = new List<Vector3Int>();
@@ -70,7 +70,7 @@ public sealed class HexMap : MonoSingle<HexMap>
         //return neighbours.ToArray();
         #endregion
 
-        return Constants.GetNeighboursRange(cell, 1);
+        return Constants.GetNeighboursRange(center, 1);
     }
 
     #region Not use
@@ -98,9 +98,9 @@ public sealed class HexMap : MonoSingle<HexMap>
     }
     #endregion
 
-    public Vector3 CellToWorld(Vector3Int cell)
+    public Vector3 CellToWorld(Vector3Int position)
     {
-        return HexGrid.CellToWorld(cell);
+        return HexGrid.CellToWorld(position);
     }
 
     public Vector3Int WorldToCell(Vector3 position)
@@ -110,12 +110,12 @@ public sealed class HexMap : MonoSingle<HexMap>
         return Vector3Int.zero;
     }
 
-    public List<Vector3> CellToWorld(List<Vector3Int> cells)
+    public List<Vector3> CellToWorld(List<Vector3Int> list)
     {
         List<Vector3> rs = new List<Vector3>();
-        for (int i = 0; i < cells.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            rs.Add(CellToWorld(cells[i]));
+            rs.Add(CellToWorld(list[i]));
         }
         return rs;
     }

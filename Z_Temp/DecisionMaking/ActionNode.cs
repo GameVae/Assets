@@ -8,12 +8,14 @@ using UnityEngine.Events;
 /// </summary>
 public class ActionNode : DecisionTreeNode
 {
-    private UnityAction doAction;
+    public UnityAction doAction;
 
     public ActionNode(UnityAction actions)
     {
         doAction = actions;
     }
+
+    public ActionNode() { }
 
     public override DecisionTreeNode MakeDecision()
     {

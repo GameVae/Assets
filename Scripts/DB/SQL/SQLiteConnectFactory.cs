@@ -1,6 +1,5 @@
 ﻿using DataTable.SQL;
 using Generic.Singleton;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,7 +44,7 @@ public class SQLiteConnectFactory : MonoSingle<SQLiteConnectFactory>
 
     protected override void OnDestroy()
     {
-        Debugger.Log(Connections.Count + " connections");
+        // Debugger.Log(Connections.Count + " connections");
         foreach (var conn in Connections)
         {
             conn.Value.Dispose();

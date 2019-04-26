@@ -1,0 +1,11 @@
+<DecisionTreeNode name="AgentDecisionTree">
+	<BooleanDecisionNode name="root" type="BooleanDecisionNode">
+			<BooleanDecisionNode condition="true">
+				<ActionNode condition="true">Attack_Action</ActionNode>	
+				<ActionNode condition="false">Move_Action</ActionNode>	
+				<Evaluator>IsEnemyInAttackRange_Boolean</Evaluator>
+			</BooleanDecisionNode>
+			<ActionNode condition="false">Move_Action</ActionNode>
+			<Evaluator>IsEnemyAtTarget_Boolean</Evaluator>			
+	</BooleanDecisionNode>
+</DecisionTreeNode>

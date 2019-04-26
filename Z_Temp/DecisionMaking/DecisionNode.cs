@@ -4,8 +4,8 @@ using UnityEngine;
 
 public abstract class DecisionNode : DecisionTreeNode
 {
-    protected DecisionTreeNode trueNode;
-    protected DecisionTreeNode falseNode;
+    public DecisionTreeNode trueNode;
+    public DecisionTreeNode falseNode;
 
     public abstract DecisionTreeNode GetBranch();
 
@@ -14,6 +14,8 @@ public abstract class DecisionNode : DecisionTreeNode
         trueNode = tN;
         falseNode = fN;
     }
+
+    public DecisionNode() { }
 
     public override DecisionTreeNode MakeDecision()
     {

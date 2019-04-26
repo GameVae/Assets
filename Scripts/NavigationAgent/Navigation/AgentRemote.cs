@@ -207,6 +207,14 @@ namespace Entities.Navigation
                 transform.forward = (other.transform.position - transform.position).normalized;
                 Animator.Play(AnimState.Attack1);
             }
+            else
+            {
+                AnimatorController.StateInfo attackState = Animator.GetStateInfo(AnimState.Attack1);
+                if(attackState != null && attackState.IsPlaying)
+                {
+                    attackState.Stop();
+                }
+            }
         }
 
         public bool IsMoving()
