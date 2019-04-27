@@ -3,7 +3,7 @@ using Generic.Singleton;
 using UnityEngine;
 using Json;
 using System;
-using Generic.BinarySearch;
+using Extensions.BinarySearch;
 using System.Collections.ObjectModel;
 
 namespace DataTable

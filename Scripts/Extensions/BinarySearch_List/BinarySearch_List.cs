@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Generic.BinarySearch
+namespace Extensions.BinarySearch
 {
     public static class BinarySearch_List
     {

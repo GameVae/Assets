@@ -13,11 +13,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using MultiThread;
 using Generic.Pooling;
-using Generic.BinarySearch;
+using Extensions.BinarySearch;
 using System.Xml.Linq;
 using System.Xml;
 using System;
 using UnityEngine.Events;
+using Extensions.Xml;
 
 public class TestActionNode : ActionNode
 {
@@ -130,20 +131,28 @@ public class TestObj : MonoBehaviour
 
         labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
 
-        string path = Application.dataPath + @"/Z_Temp/DecisionMaking/AgentDecisionTree.xml";
+        string path = Application.dataPath + @"/Z_Temp/DecisionMaking/XmlTest.xml";
         //XElement xElement = XElement.Load(path);
         XmlDocument doc = new XmlDocument();
         doc.Load(path);
+        //string text = doc.ChildNodes[0].InnerText;
+        //string methodName = doc.FirstChild.Attributes.Item(0).Value;
 
-        string methodName = doc.FirstChild.Attributes.Item(0).Value;
+        //Debug.Log(methodName);
+        //MethodReflection methodRef = Singleton.Instance<MethodReflection>();
+        //BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+        //UnityAction action = methodRef.CreateDelegate(typeof(UnityAction), methodName, this, flags) as UnityAction;
+        //action.Invoke();
 
-        string property = doc.FirstChild.FirstChild.Attributes[0].Value;
+        //XmlNode boolean = doc.FirstChild.GetChildNode("BooleanDecisionNode");
+        //Debug.Log("boolean: " + boolean.Name + " -- " + boolean.InnerXml);
+        //Debug.Log(boolean.FirstChildByAttribute("condition", "true")
+        //    .FirstChildByAttribute("condition", "true").InnerXml);
+        //Debug.Log(boolean.GetChildNode("Evaluator").InnerXml);
 
-        string text = doc.ChildNodes[0].InnerText;
 
-        string itemName = "Name";
-        XmlNode node = doc.FirstChild.Attributes.GetNamedItem(itemName);
-        Debug.Log(itemName + " " + node);
+        //string property = doc.FirstChild.FirstChild.Attributes[0].Value;
+
         //AgentDecisionTree decisionTree = new AgentDecisionTree();
 
         //DecisionTreeNode root = decisionTree.Root(path);
@@ -242,6 +251,8 @@ public class TestObj : MonoBehaviour
         #endregion
     }
     delegate void MyDelegate(string v);
+
+    delegate void NoParamsDelegate();
     class MyClass
     {
         public int Interger { get; set; }
@@ -270,7 +281,12 @@ public class TestObj : MonoBehaviour
         }
     }
 
-    private void XmlMethod(string v)
+    private void XmlMethod()
+    {
+        Debug.Log("Reflection from xml file no params");
+    }
+
+    private void XMLMethod(string v)
     {
         Debug.Log("Reflection from xml file: " + v);
     }

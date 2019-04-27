@@ -1,6 +1,6 @@
 ﻿using DataTable.Row;
 using UnityEngine;
-using Generic.BinarySearch;
+using Extensions.BinarySearch;
 
 namespace DataTable
 {

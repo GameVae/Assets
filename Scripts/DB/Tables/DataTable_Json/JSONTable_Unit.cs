@@ -2,7 +2,7 @@
 using DataTable.Row;
 using Generic.Pooling;
 using Generic.Observer;
-using Generic.BinarySearch;
+using Extensions.BinarySearch;
 using System.Collections.Generic;
 
 namespace DataTable

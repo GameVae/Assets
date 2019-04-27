@@ -204,8 +204,11 @@ namespace Entities.Navigation
                 int otherID = int.Parse(strs[3]);
 
                 AgentRemote other = AgentRemoteManager.GetAgentRemote(otherID);
-                transform.forward = (other.transform.position - transform.position).normalized;
-                Animator.Play(AnimState.Attack1);
+                if (other != null)
+                {
+                    transform.forward = (other.transform.position - transform.position).normalized;
+                    Animator.Play(AnimState.Attack1);
+                }
             }
             else
             {
@@ -236,7 +239,7 @@ namespace Entities.Navigation
 
         public void Dead()
         {
-            Debugger.Log("dead called from animation");
+            Debugger.Log(AgentID + ": dead called from animation");
             unitSubject.Remove(observer);
             deathEvents?.Invoke(this);
             deathEvents = null;
