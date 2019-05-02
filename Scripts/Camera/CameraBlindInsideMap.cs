@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Generic.Singleton;
+using UnityEngine;
 
 public class CameraBlindInsideMap : MonoBehaviour
 {
@@ -16,10 +17,17 @@ public class CameraBlindInsideMap : MonoBehaviour
     private float minZ;
     private float minX;
 
+    public Vector3[] Conners
+    {
+        get
+        {
+            return conners;
+        }
+    }
+
     private void Update()
     {
-        
-        ClampCameraPosition();
+        // ClampCameraPosition();
     }
 
     private void ClampCameraPosition()
@@ -40,7 +48,32 @@ public class CameraBlindInsideMap : MonoBehaviour
             minX = float.IsInfinity(minX) ? 0 : minX;
             minZ = float.IsInfinity(minZ) ? 0 : minZ;
         }
+        ClampCameraPosition();
     }
 
+#if  UNITY_EDITOR
+    public void OnDrawGizmos()
+    {
+        if (conners != null)
+        {
+            Gizmos.color = Color.blue;
+
+            for (int i = 0; i < conners.Length; i++)
+            {
+                Gizmos.DrawSphere(conners[i], 1);
+            }
+        }
+    }
+
+    [ContextMenu("Log Conners")]
+    public void LogConners()
+    {
+        CalculateBound();
+        for (int i = 0; i < conners.Length; i++)
+        {
+            Debug.Log(Singleton.Instance<HexMap>().WorldToCell(conners[i]));
+        }
+    }
+#endif
 }
 

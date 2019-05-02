@@ -3,6 +3,7 @@ using Generic.CustomInput;
 using Generic.Singleton;
 using UI;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CameraController : MonoBehaviour
 {
@@ -11,12 +12,14 @@ public class CameraController : MonoBehaviour
     private Vector3 velocity;
     private CameraGesture gestureType;
 
+    private UnityAction cameraChanged;
+
     private UnityEventSystem eventSystem;
     private NestedCondition swipeConditions;
     private Connection conn;
 
     [SerializeField] private CameraOption option;
-    public CameraBlindInsideMap CameraBlinding;
+    public CameraBlindInsideMap CameraBinding;
 
     public Connection Conn
     {
@@ -26,7 +29,7 @@ public class CameraController : MonoBehaviour
     {
         get
         {
-            return CameraBlinding.TargetCamera;
+            return CameraBinding.TargetCamera;
         }
     }
     public CrossInput CrossInput
@@ -40,10 +43,20 @@ public class CameraController : MonoBehaviour
             return eventSystem ?? (eventSystem = Singleton.Instance<UnityEventSystem>());
         }
     }
+    public event UnityAction CameraChanged
+    {
+        add { cameraChanged += value; }
+        remove { cameraChanged -= value; }
+    }
 
     public CameraGesture Gesture
     {
         get { return gestureType; }
+    }
+
+    public void Awake()
+    {
+        CameraChanged += CameraBinding.CalculateBound;
     }
 
     private void Start()
@@ -90,8 +103,10 @@ public class CameraController : MonoBehaviour
         Vector3 worldPoint = Singleton.Instance<HexMap>().CellToWorld(cell);
         worldPoint.y = option.Height;         // const height
         TargetCamera.transform.position = worldPoint;
-        CameraBlinding.CalculateBound();
+        //CameraBinding.CalculateBound();
         AlignCamera(worldPoint);
+
+        //cameraChanged?.Invoke();
     }
 
     private void SetStartupPosition()
@@ -138,7 +153,10 @@ public class CameraController : MonoBehaviour
                 SwipeHandle(); break;
         }
         if (gestureType == CameraGesture.Zoom || gestureType == CameraGesture.Rotate)
-            CameraBlinding.CalculateBound();
+        {
+            //CameraBinding.CalculateBound();
+            cameraChanged?.Invoke();
+        }
     }
 
     private void ZoomHandle()
@@ -208,9 +226,14 @@ public class CameraController : MonoBehaviour
 
     private void PositionValueUpdate()
     {
-        Vector3 position = TargetCamera.transform.position;
-        position += velocity * Time.deltaTime;
-        TargetCamera.transform.position = position;
+        if (velocity != Vector3.zero)
+        {
+            Vector3 position = TargetCamera.transform.position;
+            position += velocity * Time.deltaTime;
+            TargetCamera.transform.position = position;
+
+            cameraChanged?.Invoke();
+        }
     }
 
     private void VelocityValueUpdate()
@@ -225,7 +248,11 @@ public class CameraController : MonoBehaviour
     #region Camera Zoom In Out
     private void FovValueUpdate()
     {
-        TargetCamera.fieldOfView = Mathf.SmoothStep(TargetCamera.fieldOfView, targetFov, option.ZoomSmoothValue);
+        if (TargetCamera.fieldOfView != targetFov)
+        {
+            TargetCamera.fieldOfView = Mathf.SmoothStep(TargetCamera.fieldOfView, targetFov, option.ZoomSmoothValue);
+            cameraChanged?.Invoke();
+        }
     }
     #endregion
     #endregion

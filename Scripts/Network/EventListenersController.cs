@@ -1,5 +1,6 @@
 ﻿using Generic.Singleton;
 using SocketIO;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,23 +18,25 @@ namespace Network.Data
             get { return conn ?? (conn = Singleton.Instance<Connection>()); }
         }
 
-        protected override void Awake()
+        private Dictionary<string, Func<JSONObject>> Emitter
         {
-            base.Awake();
-            emitter = new Dictionary<string, System.Func<JSONObject>>();
+            get
+            {
+                return emitter ?? (emitter = new Dictionary<string, Func<JSONObject>>());
+            }
         }
 
         public void AddEmiter(string ev, System.Func<JSONObject> getData)
         {
-            emitter[ev] = getData;
+            Emitter[ev] = getData;
         }
 
         public void Emit(string ev)
         {
             try
             {
-                if (emitter.ContainsKey(ev))
-                    conn.Emit(ev, emitter[ev]?.Invoke());
+                if (Emitter.ContainsKey(ev))
+                    conn.Emit(ev, Emitter[ev]?.Invoke());
             }
             catch (System.Exception ex)
             {
@@ -43,7 +46,7 @@ namespace Network.Data
             }
         }
 
-        public void Emit(string ev,JSONObject data)
+        public void Emit(string ev, JSONObject data)
         {
             Conn.Emit(ev, data);
         }

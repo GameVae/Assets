@@ -120,6 +120,16 @@ public sealed class HexMap : MonoSingle<HexMap>
         return rs;
     }
 
+    public List<Vector3Int> WorldToCell(Vector3[] list)
+    {
+        List<Vector3Int> rs = new List<Vector3Int>();
+        for (int i = 0; i < list.Length; i++)
+        {
+            rs.Add(WorldToCell(list[i]));
+        }
+        return rs;
+    }
+
     public bool GetNearestPosition(Vector3Int center, out Vector3Int result)
     {
         return breathFirstSearch.GetNearestCell(center, out result);

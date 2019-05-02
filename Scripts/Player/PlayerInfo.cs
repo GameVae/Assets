@@ -1,11 +1,12 @@
 ﻿using Generic.Singleton;
 using DataTable;
 using DataTable.Row;
+using UnityEngine;
 
 public sealed class PlayerInfo : MonoSingle<PlayerInfo>
 {
-    private UserInfoRow userInfo;
-    private BaseInfoRow baseInfo;
+    [SerializeField] private UserInfoRow userInfo;
+    [SerializeField] private BaseInfoRow baseInfo;
 
     public UserInfoRow Info
     {

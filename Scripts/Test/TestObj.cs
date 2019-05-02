@@ -77,6 +77,11 @@ public class TestObj : MonoBehaviour
     public Transform headPoint;
     private LightweightLabel lable;
 
+    [Header("Test Quadtree")]
+    public JSONTable_RSSPosition PositionTable;
+    public CameraBlindInsideMap CameraBinding;
+    public QuadNode quadRoot;
+
     private bool inited = false;
     private void Update()
     {
@@ -105,22 +110,58 @@ public class TestObj : MonoBehaviour
 
     private void Awake()
     {
-        TrainingCostRow cost = new TrainingCostRow()
+        //TrainingCostRow cost = new TrainingCostRow()
+        //{
+        //    ID = -1,
+        //};
+
+        //trainningCost.LoadTable();
+        //trainningCost.Rows.BinarySort_R();
+
+        //TrainingCostRow rs = trainningCost.Rows.FirstOrDefault_R(cost);
+
+        //Debug.Log("JSON: " + JsonUtility.ToJson(rs));
+        //Debug.Log("index: " + trainningCost.Rows.BinarySearch_R(cost));
+
+        //Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
+        //trainningCost.Rows.UpdateOrInsert_R(cost);
+        //Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
+
+        quadRoot = new QuadNode(0,0,
+            new Vector3Int(0, 0, 0),
+            new Vector3Int(512, 512, 0));
+
+        int count = PositionTable.Count;
+        int pause = 100;
+        for (int i = 0; i < count; i++)
         {
-            ID = -1,
-        };
+            quadRoot.Insert(PositionTable.ReadOnlyRows[i].Position.Parse3Int());
+        }
 
-        trainningCost.LoadTable();
-        trainningCost.Rows.BinarySort_R();
+        //quadRoot.Log();
+        //Debug.Log("Empty: " + QuadNode.EmptyCount);
+        //Debug.Log("Not Empty: " + QuadNode.NotEmptyCount);
+        //Debug.Log("Quad Count: " + QuadNode.QuadCount);
+        //Debug.Log("Depth: " + QuadNode.Depth);
 
-        TrainingCostRow rs = trainningCost.Rows.FirstOrDefault_R(cost);
+        QuadNode node = quadRoot.Retrieve(new Vector3Int(0, 0, 0));
 
-        Debug.Log("JSON: " + JsonUtility.ToJson(rs));
-        Debug.Log("index: " + trainningCost.Rows.BinarySearch_R(cost));
+        Debug.Log("Level: " + node.Depth);
+        node.LogPoints();
+    }
 
-        Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
-        trainningCost.Rows.UpdateOrInsert_R(cost);
-        Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
+    [ContextMenu("Log Points Overlap Camera")]
+    public void LogPoints()
+    {
+        CameraBinding.CalculateBound();
+        List<Vector3Int> conners = Singleton.Instance<HexMap>().WorldToCell(CameraBinding.Conners);
+
+        for (int i = 0; i < conners.Count; i++)
+        {
+            QuadNode node = quadRoot.Retrieve(conners[i]);
+            Debug.Log("Level: " + node.Depth);
+            node.LogPoints();
+        }
     }
 
     private void Start()
@@ -129,12 +170,12 @@ public class TestObj : MonoBehaviour
         //trainningCost.LoadTable();
         //military.LoadTable();
 
-        labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
+        //labelPooling = new Pooling<LightweightLabel>(CreatLabelv2);
 
-        string path = Application.dataPath + @"/Z_Temp/DecisionMaking/XmlTest.xml";
-        //XElement xElement = XElement.Load(path);
-        XmlDocument doc = new XmlDocument();
-        doc.Load(path);
+        //string path = Application.dataPath + @"/Z_Temp/DecisionMaking/XmlTest.xml";
+        ////XElement xElement = XElement.Load(path);
+        //XmlDocument doc = new XmlDocument();
+        //doc.Load(path);
         //string text = doc.ChildNodes[0].InnerText;
         //string methodName = doc.FirstChild.Attributes.Item(0).Value;
 

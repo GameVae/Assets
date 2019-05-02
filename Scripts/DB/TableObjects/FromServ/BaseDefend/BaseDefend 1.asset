@@ -4,19 +4,16 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9401c2b742bfb604f9e8f11437a0497d, type: 3}
   m_Name: BaseDefend 1
   m_EditorClassIdentifier: 
-  Rows:
-  - ID: 1
-    BaseNumber: 1
-    ID_Unit: 17
-    Quality: 13
-  - ID: 2
-    BaseNumber: 1
-    ID_Unit: 16
-    Quality: 22
+  rows:
+  - ID: 0
+    BaseNumber: 0
+    ID_Unit: 0
+    Quality: 0

@@ -10,16 +10,34 @@ using DataTable.Row;
 public sealed class ResourceManager : MonoSingle<ResourceManager>
 {
     private HexMap mapIns;
+    private QuadNode rssPositionTree;
     private GameObject ResourceContainer;
     private GameObject[] resourceTypes;
     private GameObject[] flags;
 
+    private bool isCreateComplete;
+    private bool isWaiting;
+    private bool treeInited;
 
     private Dictionary<int, NaturalResource> Resources;
+    private List<int> createdNodes;
+    private List<Vector3Int> waitForCreate;
 
     public JSONTable_RSSPosition RSSPositionTable;
+    public CameraController CameraController;
+    public CameraBlindInsideMap CameraBinding
+    {
+        get
+        {
+            return CameraController.CameraBinding;
+        }
+    }
     public Transform Prefab;
 
+    public HexMap MapIns
+    {
+        get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
+    }
     public NaturalResource this[int id]
     {
         get
@@ -32,9 +50,15 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
             Resources[id] = value;
         }
     }
-    public HexMap MapIns
+    public QuadNode RSSPositionTree
     {
-        get { return mapIns ?? (mapIns = Singleton.Instance<HexMap>()); }
+        get
+        {
+            return rssPositionTree ??
+                (rssPositionTree = new QuadNode(0, 0,
+                new Vector3Int(5, 5, 0),
+                new Vector3Int(517, 517, 0)));
+        }
     }
 
     protected override void Awake()
@@ -55,6 +79,9 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
             Prefab.GetChild(6).gameObject,
         };
 
+        createdNodes = new List<int>();
+        waitForCreate = new List<Vector3Int>();
+
         Resources = new Dictionary<int, NaturalResource>();
         ResourceContainer = new GameObject("RESOURCE_CONTAINER");
     }
@@ -62,6 +89,10 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
     private void Start()
     {
         // StartCoroutine(StartCreateRss());
+        isCreateComplete = true;
+        isWaiting = false;
+
+        CameraController.CameraChanged += CameraChanged;
     }
 
     private IEnumerator StartCreateRss()
@@ -107,10 +138,10 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         return newGO;
     }
 
-    public bool IsRssAtPosition(Vector3Int position,out int id)
+    public bool IsRssAtPosition(Vector3Int position, out int id)
     {
         id = -1;
-        foreach (KeyValuePair<int,NaturalResource> item in Resources)
+        foreach (KeyValuePair<int, NaturalResource> item in Resources)
         {
             Vector3Int rsPos = item.Value.Data.Position.Parse3Int().ToClientPosition();
             if (rsPos == position)
@@ -120,6 +151,92 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
             }
         }
         return false;
+    }
+
+    private void CameraChanged()
+    {
+        if (!isWaiting)
+        {
+            List<Vector3Int> conners = MapIns.WorldToCell(CameraBinding.Conners);
+            bool isCreateNew = false;
+            for (int i = 0; i < conners.Count; i++)
+            {
+                QuadNode overlapNode = RSSPositionTree.Retrieve(conners[i]);
+                if (overlapNode != null)
+                {
+                    isCreateNew = isCreateNew || AddPositionForCreate(overlapNode);
+                }
+            }
+            if (isCreateNew)
+                StartCoroutine(WaitForCreateComplete());
+        }
+    }
+
+    private bool AddPositionForCreate(QuadNode node)
+    {
+        if (!createdNodes.Contains(node.Id))
+        {
+            ReadOnlyCollection<Vector3Int> positions = node.Points;
+            for (int i = 0; i < positions.Count; i++)
+            {
+                waitForCreate.Add(positions[i]);
+            }
+            createdNodes.Add(node.Id);
+            return true;
+        }
+        return false;
+    }
+
+    private IEnumerator WaitForCreateComplete()
+    {
+        isWaiting = true;
+        while (!isCreateComplete)
+        {
+            yield return null;
+        }
+        isWaiting = false;
+        StartCoroutine(StartCreateRssWaiting());
+        yield break;
+    }
+
+    private IEnumerator StartCreateRssWaiting()
+    {
+        AJPHelper.Operation oper = RSSPositionTable.Operation;
+        while (!oper.IsDone)
+            yield return null;
+        if (!treeInited)
+        {
+            int rssCount = RSSPositionTable.Count;
+            for (int iter = 0; iter < rssCount; iter++)
+            {
+                rssPositionTree.Insert
+                    (RSSPositionTable.ReadOnlyRows[iter].Position.Parse3Int().ToClientPosition());
+            }
+            treeInited = true;
+        }
+
+        isCreateComplete = false;
+        int count = waitForCreate.Count;
+        int i = count - 1;
+
+        while (i >= 0 && !isCreateComplete)
+        {
+            RSS_PositionRow rssData = RSSPositionTable.GetRssAt(waitForCreate[i].ToSerPosition());
+            if (rssData != null)
+            {
+                NaturalResource rs = GenResource((RssType)rssData.RssType, Flag.Owner, rssData.ID);
+                rs.Initalize(rssData.ID, this);
+                Resources[rssData.ID] = rs;
+
+                Debug.Log("Created " + rssData.ID + " - " + rssData.Position);
+            }
+
+            waitForCreate.RemoveAt(i);
+            i--;
+            yield return null;
+        }
+        isCreateComplete = true;
+        yield break;
     }
 
 #if UNITY_EDITOR
