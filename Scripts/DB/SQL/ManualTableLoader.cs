@@ -14,11 +14,6 @@ namespace DataTable.Loader
         public SQLiteTable_Version Version;
         public ScriptableObject[] SQLiteTables;
 
-        private void Awake()
-        {
-            GetCurrentVersion();
-        }
-
         private void LoadTables()
         {
             for (int i = 0; i < SQLiteTables.Length; i++)
@@ -59,7 +54,7 @@ namespace DataTable.Loader
             LoadTables();
         }
 
-        private void GetCurrentVersion()
+        public void GetCurrentVersion()
         {
             if (versionTask == null)
                 Version.LoadTable();

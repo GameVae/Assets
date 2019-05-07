@@ -12,6 +12,7 @@ public class AgentDecisionBehavior : MonoBehaviour
 
     public void MakeDecision()
     {
-        agentDecisionMaking.MakeDecision();
+        DecisionTreeNode action = agentDecisionMaking.MakeDecision();
+        //Debugger.Log(action);
     }
 }

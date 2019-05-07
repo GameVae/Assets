@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     private float direction;
     private float targetFov;
     private Vector3 velocity;
+    private Vector3 accelerate;
     private CameraGesture gestureType;
 
     private UnityAction cameraChanged;
@@ -155,7 +156,7 @@ public class CameraController : MonoBehaviour
         if (gestureType == CameraGesture.Zoom || gestureType == CameraGesture.Rotate)
         {
             //CameraBinding.CalculateBound();
-            cameraChanged?.Invoke();
+            //cameraChanged?.Invoke();
         }
     }
 
@@ -169,7 +170,12 @@ public class CameraController : MonoBehaviour
 
     private void SwipeHandle()
     {
-        velocity += (new Vector3(CrossInput.Axises.x, 0, CrossInput.Axises.y) * direction) / Time.deltaTime;
+        //Vector3 accelerate = new Vector3(CrossInput.Axises.x, 0, CrossInput.Axises.y);
+
+        accelerate.x = CrossInput.Axises.x;
+        accelerate.z = CrossInput.Axises.y;
+
+        velocity += (accelerate * direction) / Time.deltaTime;
         velocity = velocity.Truncate(option.SwipeMaxSpeed);
     }
 
@@ -192,8 +198,6 @@ public class CameraController : MonoBehaviour
 
     private void DetermineSwipe(ref CameraGesture type)
     {
-        //if (type == CameraGesture.Touch && CrossInput.Axises.magnitude / Time.deltaTime >= Option.SwipeMinSpeed)
-        //if (type == CameraGesture.Touch && swipeConditions.Evaluate())
         if (swipeConditions.Evaluate())
             type = CameraGesture.Swipe;
         else type = CameraGesture.None;
@@ -240,7 +244,8 @@ public class CameraController : MonoBehaviour
     {
         if (velocity.magnitude > option.SwipeMinSpeed)
             velocity -= velocity.normalized * option.SwipeMaxSpeed * Time.deltaTime;
-        else velocity = Vector3.zero;
+        else
+            velocity = Vector3.zero;
 
     }
     #endregion

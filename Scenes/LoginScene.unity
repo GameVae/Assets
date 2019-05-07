@@ -365,7 +365,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Connection: {fileID: 626425698}
-  Loader: {fileID: 515165242}
+  SqlTableLoader: {fileID: 515165242}
+  SqlValidator: {fileID: 1617905141}
 --- !u!4 &76850891
 Transform:
   m_ObjectHideFlags: 0
@@ -392,7 +393,7 @@ GameObject:
   - component: {fileID: 77327105}
   - component: {fileID: 77327104}
   - component: {fileID: 77327108}
-  - component: {fileID: 77327107}
+  - component: {fileID: 77327102}
   m_Layer: 0
   m_Name: SCENE_CONTROLLER
   m_TagString: Untagged
@@ -400,6 +401,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &77327102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 77327101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8630aeaf969e88145ac016b490cd55d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &77327103
 Transform:
   m_ObjectHideFlags: 0
@@ -416,6 +429,7 @@ Transform:
   - {fileID: 515165241}
   - {fileID: 56121114}
   - {fileID: 626425697}
+  - {fileID: 1617905140}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -441,18 +455,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f736b92951fb1b449829ed201f969c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &77327107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 77327101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8630aeaf969e88145ac016b490cd55d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &77327108
@@ -6377,7 +6379,6 @@ GameObject:
   m_Component:
   - component: {fileID: 713133370}
   - component: {fileID: 713133371}
-  - component: {fileID: 713133372}
   m_Layer: 5
   m_Name: MultithreadHelper
   m_TagString: Untagged
@@ -6409,18 +6410,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97e8c1592ddca4f4ba07692b85f1b4a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &713133372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 713133369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8630aeaf969e88145ac016b490cd55d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &739191850
@@ -6759,6 +6748,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df06152fbfe2e04d9e63a834226bdf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userInfo:
+    ID_User: 0
+    Server_ID: 
+    NameInGame: 
+    ChatWorldColor: 
+    Guild_ID: 
+    Guild_Name: 
+    LastGuildID: 
+    Might: 0
+    Killed: 0
+  baseInfo:
+    ID_User: 0
+    BaseNumber: 0
+    Position: 
+    Farm: 0
+    Wood: 0
+    Stone: 0
+    Metal: 0
+    UpgradeWait_ID: 0
+    UpgradeWait_Might: 0
+    UpgradeTime: 0
+    ResearchWait_ID: 0
+    ResearchWait_Might: 0
+    ResearchTime: 0
+    UnitTransferType: 
+    UnitTransferQuality: 
+    UnitTransferTime: 
+    UnitTransfer_ID_Base: 
+    TrainingUnit_ID: 0
+    TrainingTime: 0
+    TrainingQuality: 0
+    Training_Might: 0
+    SumUnitQuality: 0
 --- !u!1 &779423026
 GameObject:
   m_ObjectHideFlags: 0
@@ -11897,7 +11919,7 @@ PrefabInstance:
     - target: {fileID: 224537906771871112, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000066016114
+      value: -0.000014709724
       objectReference: {fileID: 0}
     - target: {fileID: 114256922716520360, guid: 024e8c9dd4d849a4697eb95e884604f3,
         type: 3}
@@ -11906,11 +11928,16 @@ PrefabInstance:
       objectReference: {fileID: 713133371}
     - target: {fileID: 1521316941867674, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1120362298944884, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114897059501838348, guid: 024e8c9dd4d849a4697eb95e884604f3,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 024e8c9dd4d849a4697eb95e884604f3, type: 3}
@@ -13784,6 +13811,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1617905139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617905140}
+  - component: {fileID: 1617905141}
+  m_Layer: 0
+  m_Name: SqliteOnGameStarted
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1617905140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617905139}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 77327103}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1617905141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617905139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e9b8b054e36e4047a89714643ba66eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SqliteLinks: {fileID: 11400000, guid: 91dd76b44ba0d2945b1a910d2c6d8eac, type: 2}
 --- !u!1 &1635270879
 GameObject:
   m_ObjectHideFlags: 0

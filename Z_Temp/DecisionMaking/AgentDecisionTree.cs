@@ -16,23 +16,27 @@ public class AgentDecisionTree : DecisionTreeNode
     public AgentDecisionTree(SIO_AttackListener attackListener)
     {
         isLoaded = false;
-        xmlPath = Application.dataPath + @"/Z_Temp/DecisionMaking/AgentDecisionTree.xml";
+        xmlPath = Application.persistentDataPath + @"/DecisionMaking/AgentDecisionTree.xml";
 
         TreeLoader = Singleton.Instance<DecisionTreeLoader>();
         NavAgentController = Singleton.Instance<NavAgentController>();
         SIO_AttackListener = attackListener;
 
-        DecisionTreeLoader.TreeInfo info = new DecisionTreeLoader.TreeInfo()
-        {
-            XmlLocalPath = xmlPath,
-            MethodContainer = this,
-            ResultHanlder = LoadTreeComplete
-        };
-        TreeLoader.AsyncCreateNode(info);
+        //DecisionTreeLoader.TreeInfo info = new DecisionTreeLoader.TreeInfo()
+        //{
+        //    XmlLocalPath = xmlPath,
+        //    MethodContainer = this,
+        //    ResultHanlder = LoadTreeComplete
+        //};
+        //TreeLoader.AsyncCreateNode(info);
 
-        // TODO:[for test]
-        // ManualLoadTree();
-        // root = Root(xmlPath);
+        //root = TreeLoader.CreateNode(xmlPath, this);
+        //isLoaded = true;
+
+        ////TODO:[for test]
+
+        ManualLoadTree();
+        //root = Root(xmlPath);
     }
 
     private void ManualLoadTree()
@@ -49,6 +53,7 @@ public class AgentDecisionTree : DecisionTreeNode
             IsEnemyAtTarget_Boolean
             );
 
+        isLoaded = true;
         root = isEnemyAtSelectedPosition;
     }
 

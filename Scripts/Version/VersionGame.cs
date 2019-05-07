@@ -14,47 +14,57 @@ using Utils;
 public class VersionGame : MonoSingle<VersionGame>
 {
     public Connection Connection;
-    public ManualTableLoader Loader;
+    public ManualTableLoader SqlTableLoader;
+    public SqliteFileValidator SqlValidator;
 
     private bool checkVersionDone;
     private LoadingPanel gameTask;
-  
+
     private void Start()
     {
         Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
 
         checkVersionDone = false;
-        InitProg();
+        //InitProg();
+        StartCoroutine(SqlCheck());
     }
 
     public void S_CHECK_VERSION()
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
-        data["Version"] = Loader.ClientVersion;
-        Debugger.Log(Loader.ClientVersion);
-       
+
+        SqlTableLoader.GetCurrentVersion();
+        data["Version"] = SqlTableLoader.ClientVersion;
+        Debugger.Log(SqlTableLoader.ClientVersion);
+
         Connection.Emit("S_CHECK_VERSION", new JSONObject(data));
     }
 
     private void R_CHECK_VERSION(SocketIOEvent obj)
     {
-        Loader.ServerVersion = obj.data.GetField("Version").ToString().Trim('"');
-        // Debugger.Log(obj.data.GetField("Version"));
-        bool isUpdate = Loader.CheckVersion();
-        // Debugger.Log(isUpdate);
+        SqlTableLoader.ServerVersion = obj.data.GetField("Version").ToString().Trim('"');
+        Debugger.Log(obj.data);
+        bool isUpdate = SqlTableLoader.CheckVersion();
+
+        Debugger.Log("isupdate " + isUpdate);
         if (isUpdate)
         {
-            // @"file://DESKTOP-FHHKHH7/FileDownload/Infantry.sqlite"
+            // @"file://DESKTOP-FHHKHH7/FileDownload/DB.sqlite"
             string link = obj.data["Data"].ToString().Trim('"');
 
             Debugger.Log(obj.data["Data"]);
-            string saveAt = Application.dataPath + @"\Data\DB\Infantry.sqlite";
+            //string saveAt = Application.dataPath + @"\Data\DB\Infantry.sqlite";
+            string saveAt = UnityPath.Combinate(@"DB\Infantry.sqlite", UnityPath.AssetPath.Persistent);
             try
             {
-                if (File.Exists(saveAt))
+                if (UnityPath.Exist(saveAt))
                 {
                     File.Delete(saveAt);
                     Debugger.Log("DELETED FILE: " + saveAt);
+                }
+                else
+                {
+                    UnityPath.CreateFileAnywhere(saveAt);
                 }
                 DownloadFile(link, saveAt);
             }
@@ -95,7 +105,7 @@ public class VersionGame : MonoSingle<VersionGame>
 
     private void ReloadDB()
     {
-        Loader.ReloadAll();
+        SqlTableLoader.ReloadAll();
     }
 
     private IEnumerator CheckVersion()
@@ -120,11 +130,22 @@ public class VersionGame : MonoSingle<VersionGame>
                 {
                     Name = "check version",
                     GetProgress = delegate { return 1; },
-                    IsDone = delegate { return checkVersionDone; }, 
+                    IsDone = delegate { return checkVersionDone; },
                     Start = delegate { StartCoroutine(CheckVersion()); },
                     Title = "Checking version ..."
                 }
             );
         gameTask.AddTask(prog);
+    }
+
+    private IEnumerator SqlCheck()
+    {
+        SqlValidator.OnStared();
+        while (!SqlValidator.IsDone)
+        {
+            yield return null;
+        }
+        InitProg();
+        yield break;
     }
 }

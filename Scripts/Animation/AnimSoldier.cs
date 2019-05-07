@@ -16,7 +16,7 @@ namespace Animation
 
             AddState(state: AnimState.Attack1,
                     info: new StateInfo(
-                        isTrigger: false,
+                        isTrigger: true,
                         play: () => Attack1(true),
                         stop: () => Attack1(false))
                     );
@@ -37,7 +37,8 @@ namespace Animation
 
         private void Attack1(bool value)
         {
-            Animator.SetBool("attack", value);
+            //Animator.SetBool("attack", value);
+            Animator.SetTrigger("attack");
         }
 
         private void Dead()

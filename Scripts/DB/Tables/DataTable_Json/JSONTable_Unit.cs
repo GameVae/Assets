@@ -37,9 +37,9 @@ namespace DataTable
             return observer;
         }
 
-        protected override bool UpdateOrAdd(UnitRow updateData)
+        protected override bool UpdateOrInsert(UnitRow updateData)
         {
-            bool isUpdate = base.UpdateOrAdd(updateData);
+            bool isUpdate = base.UpdateOrInsert(updateData);
 
             if (isUpdate)
             {
@@ -62,7 +62,7 @@ namespace DataTable
             if (jsonObj != null)
             {
                 UnitRow updateData = JsonUtility.FromJson<UnitRow>(jsonObj.ToString());
-                UpdateOrAdd(updateData);
+                UpdateOrInsert(updateData);
             }
         }
 

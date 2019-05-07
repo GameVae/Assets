@@ -18,27 +18,9 @@ namespace DataTable
         private AJPHelper ajpHelper;
         private AJPHelper.Operation operation;
 
-        protected object Locker
-        {
-            get
-            {
-                return locker ?? (locker = new object());
-            }
-        }
-
         public int Count
         {
             get { return Rows.Count; }
-        }
-
-        protected List<T> Rows
-        {
-            get { return rows ?? (rows = new List<T>()); }
-        }
-
-        public ReadOnlyCollection<T> ReadOnlyRows
-        {
-            get { return Rows.AsReadOnly(); }
         }
 
         public Type RowType
@@ -46,6 +28,19 @@ namespace DataTable
             get
             {
                 return rowType ?? (rowType = typeof(T));
+            }
+        }
+
+        protected List<T> Rows
+        {
+            get { return rows ?? (rows = new List<T>()); }
+        }
+
+        protected object Locker
+        {
+            get
+            {
+                return locker ?? (locker = new object());
             }
         }
 
@@ -86,6 +81,11 @@ namespace DataTable
             protected set { operation = value; }
         }
 
+        public ReadOnlyCollection<T> ReadOnlyRows
+        {
+            get { return Rows.AsReadOnly(); }
+        }
+
         public void Clear()
         {
             Rows.Clear();
@@ -94,6 +94,18 @@ namespace DataTable
         public void Sort()
         {
             Rows.BinarySort_R();
+        }
+
+        public virtual int Insert(T obj)
+        {
+            lock (Locker)
+            {
+                if (obj != null)
+                {
+                    return Rows.Insert_R(obj);
+                }
+            }
+            return -1;
         }
 
         public virtual void LoadTable(JSONObject jsonObj)
@@ -115,14 +127,14 @@ namespace DataTable
             if (count == 0)
             {
                 T updateData = JsonUtility.FromJson<T>(jsonObj.ToString());
-                UpdateOrAdd(updateData);
+                UpdateOrInsert(updateData);
             }
             else if (count > 0)
             {
                 for (int i = 0; i < count; i++)
                 {
                     T updateData = JsonUtility.FromJson<T>(jsonObj[i].ToString());
-                    UpdateOrAdd(updateData);
+                    UpdateOrInsert(updateData);
                 }
             }
         }
@@ -139,18 +151,6 @@ namespace DataTable
             });
         }
 
-        public virtual int Insert(T obj)
-        {
-            lock (Locker)
-            {
-                if (obj != null)
-                {
-                    return Rows.Insert_R(obj);
-                }
-            }
-            return -1;
-        }
-
         /// <summary>
         /// Find T and update or add new
         /// true: => update
@@ -158,7 +158,7 @@ namespace DataTable
         /// </summary>
         /// <param name="updateData">data for update</param>
         /// <returns></returns>
-        protected virtual bool UpdateOrAdd(T updateData)
+        protected virtual bool UpdateOrInsert(T updateData)
         {
             return Rows.UpdateOrInsert_R(updateData);
         }

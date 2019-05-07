@@ -164,8 +164,10 @@ public class TestObj : MonoBehaviour
         }
     }
 
+    public string path;
     private void Start()
     {
+        UnityPath.CreateFileAnywhere(UnityPath.Combinate(path,UnityPath.AssetPath.Persistent));
         //mainbase.LoadTable();
         //trainningCost.LoadTable();
         //military.LoadTable();

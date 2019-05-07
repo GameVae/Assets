@@ -1816,6 +1816,8 @@ MonoBehaviour:
   canvas: {fileID: 765654371}
   headPoint: {fileID: 1460220142}
   PositionTable: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
+  CameraBinding: {fileID: 0}
+  path: /Unity/TestDirectory/bbb
 --- !u!1 &605469872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1874,7 +1876,7 @@ MonoBehaviour:
   toggleSelectedEvt:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.18015,
+    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.25296,
       Culture=neutral, PublicKeyToken=null
   DefaultSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf, type: 2}
 --- !u!224 &618758969 stripped
@@ -2273,6 +2275,8 @@ MonoBehaviour:
   canvas: {fileID: 0}
   headPoint: {fileID: 0}
   PositionTable: {fileID: 0}
+  CameraBinding: {fileID: 0}
+  path: 
 --- !u!65 &1010543705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3259,6 +3263,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3952365730068608545, guid: 758295eb99f9fc341a7a612674933ffe,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1885978823, guid: 758295eb99f9fc341a7a612674933ffe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3301,11 +3310,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885978823, guid: 758295eb99f9fc341a7a612674933ffe, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3952365730068608545, guid: 758295eb99f9fc341a7a612674933ffe,
-        type: 3}
-      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3787814654612232489, guid: 758295eb99f9fc341a7a612674933ffe,
@@ -3731,26 +3735,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Label
       objectReference: {fileID: 0}
-    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3899417706794479366, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3855,6 +3839,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d131ffe9b4aa1e444a2af94a9b8975ad, type: 3}

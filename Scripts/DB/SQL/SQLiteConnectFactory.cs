@@ -32,7 +32,7 @@ public class SQLiteConnectFactory : MonoSingle<SQLiteConnectFactory>
         Connections.TryGetValue(sqlLinkType, out SQLiteManualConnection value);
         if(value == null)
         {
-            string sqlPath = links[sqlLinkType];
+            string sqlPath = UnityPath.Combinate(links[sqlLinkType],UnityPath.AssetPath.Persistent);
             if(!string.IsNullOrEmpty(sqlPath))
             {
                 value = new SQLiteManualConnection(sqlPath);

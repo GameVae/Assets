@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuadNode
 {
-    private const int MAX_SIZE = 20;
+    private const int MAX_SIZE = 10;
 
     public readonly int Depth;
     public readonly int Id;

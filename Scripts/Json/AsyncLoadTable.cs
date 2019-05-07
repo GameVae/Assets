@@ -35,8 +35,6 @@ namespace Json
 
                 i++;
                 oper.Progress = (float)Math.Round(i * 1.0f / capacity, 3);
-
-                // Thread.Sleep(10);
             }
 
             if (!oper.IsDone)
@@ -45,7 +43,7 @@ namespace Json
                 oper.SpentTime = System.DateTime.Now.Millisecond - oper.SpentTime;
 
                 // TODO:
-                Debug.Log("async handled: " + capacity);
+                Debugger.Log("async handled: " + capacity);
             }
         }
 

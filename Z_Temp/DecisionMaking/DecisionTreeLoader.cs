@@ -52,11 +52,26 @@ public class DecisionTreeLoader : ISingleton
     {
         TreeInfo info = obj as TreeInfo;
 
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.Load(info.XmlLocalPath);
-        DecisionTreeNode tree = CreateNode(xmlDoc.FirstChild, info.MethodContainer);
+        try
+        {
+            // TODO:
+            Debugger.Log(info.XmlLocalPath);
 
-        info.ResultHanlder.Invoke(tree);
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(info.XmlLocalPath);
+
+            DecisionTreeNode tree = CreateNode(xmlDoc.FirstChild, info.MethodContainer);
+
+            // TODO:
+            Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
+            Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
+
+            info.ResultHanlder.Invoke(tree);
+        }
+        catch(Exception e)
+        {
+            Debugger.Log(e);
+        }
     }
 
     public DecisionTreeNode CreateNode(XmlNode node, object target)
@@ -85,5 +100,29 @@ public class DecisionTreeLoader : ISingleton
     public void AsyncCreateNode(TreeInfo info)
     {
         MultiThreadHelper.ThreadInvoke(Callback, info);
+    }
+
+    public DecisionTreeNode CreateNode(string xmlPath,object target)
+    {
+        try
+        {
+            // TODO:
+            Debugger.Log(xmlPath);
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(xmlPath);
+
+            DecisionTreeNode tree = CreateNode(xmlDoc.FirstChild,target);
+
+            // TODO:
+            Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
+            Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
+            return tree;
+        }
+        catch (Exception e)
+        {
+            Debugger.Log(e);
+            return null;
+        }
     }
 }

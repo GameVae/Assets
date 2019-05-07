@@ -56,5 +56,10 @@ namespace MultiThread
         {
             ThreadPool.QueueUserWorkItem(callback, state);
         }
+
+        public static void ThreadInvoke(WaitCallback callback)
+        {
+            ThreadPool.QueueUserWorkItem(callback);
+        }
     }
 }

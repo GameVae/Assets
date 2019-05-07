@@ -222,13 +222,14 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         while (i >= 0 && !isCreateComplete)
         {
             RSS_PositionRow rssData = RSSPositionTable.GetRssAt(waitForCreate[i].ToSerPosition());
-            if (rssData != null)
+            if (rssData != null && 
+                !Resources.ContainsKey(rssData.ID))
             {
                 NaturalResource rs = GenResource((RssType)rssData.RssType, Flag.Owner, rssData.ID);
                 rs.Initalize(rssData.ID, this);
                 Resources[rssData.ID] = rs;
 
-                Debug.Log("Created " + rssData.ID + " - " + rssData.Position);
+                // Debugger.Log("Created " + rssData.ID + " - " + rssData.Position);
             }
 
             waitForCreate.RemoveAt(i);

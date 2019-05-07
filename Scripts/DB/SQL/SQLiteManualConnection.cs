@@ -3,40 +3,32 @@ using System.Data;
 using Mono.Data.Sqlite;
 using System;
 using Json;
+using System.Collections;
 
 namespace DataTable.SQL
 {
     public class SQLiteManualConnection : IDisposable
     {
-        [SerializeField] private string DBPath;
+        private string dBPath;
         public SqliteConnection DbConnection { get; private set; }
 
-        private bool inited = false;
         private string connString;
 
         public SQLiteManualConnection(string localPath)
         {
-            DBPath = localPath;
+            dBPath = localPath;
             Initalize();
         }
 
         private void Initalize()
         {
-            if (!inited)
-            {
-                DBPath = Application.dataPath + DBPath;
-                connString = "URI=file:" + DBPath;
+                connString = "URI=file:" + dBPath;
                 DbConnection = new SqliteConnection(connString);
-
-                inited = true;
-            }
         }
 
         public void LoadTable<T>(SQLiteTable<T> table)
             where T : ISQLiteData
         {
-            // TODO: remove in future
-            Initalize();
             try
             {
                 DbConnection.Open();

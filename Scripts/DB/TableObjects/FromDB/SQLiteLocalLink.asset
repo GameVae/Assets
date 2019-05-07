@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   links:
   - LocalLink: 1
-    DBPath: \Data\DB\Task.sqlite
+    DBPath: DB/Task.sqlite
   - LocalLink: 2
-    DBPath: \Data\DB\Infantry.sqlite
+    DBPath: DB/Infantry.sqlite

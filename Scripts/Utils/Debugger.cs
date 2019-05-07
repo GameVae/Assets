@@ -126,9 +126,11 @@ public sealed class Debugger : MonoSingle<Debugger>
 #if UNITY_ANDROID
         if (ins.IsMainThread())
         {
-            TextMeshProUGUI mgs = ins.CreateSentence();
-            if (mgs)
-                mgs.text = DateTime.Now.ToLongTimeString() + " : " + (obj == null ? obj : obj.ToString()) ;
+            LogByGUI(obj);
+        }
+        else
+        {
+            Singleton.Instance<MultiThreadHelper>().MainThreadInvoke(() => LogByGUI(obj));
         }
 #endif
 #if UNITY_EDITOR
@@ -146,6 +148,13 @@ public sealed class Debugger : MonoSingle<Debugger>
     {
         string format = "<color={0}>{1}</color>";
         Log(string.Format(format, "red", obj.ToString()));
+    }
+
+    private static void LogByGUI(object obj)
+    {
+        TextMeshProUGUI mgs = ins.CreateSentence();
+        if (mgs)
+            mgs.text = DateTime.Now.ToLongTimeString() + " : " + (obj == null ? "null" : obj.ToString());
     }
 
 }
