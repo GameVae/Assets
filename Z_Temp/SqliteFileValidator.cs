@@ -1,14 +1,16 @@
 ﻿using Generic.Singleton;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityGameTask;
 
-public class SqliteFileValidator : MonoBehaviour
+public class SqliteFileValidator : IGameTask
 {
     private bool isDone = false;
-    private CopyAssetsAndroid androidCopy;
+    private float progress;
 
-    public SQLiteLocalLink SqliteLinks;
+    private CopyAssetsAndroid androidCopy;
+    private SQLiteLocalLink sqliteLinks;
+
 
     public bool IsDone
     {
@@ -17,6 +19,17 @@ public class SqliteFileValidator : MonoBehaviour
             return isDone;
         }
         private set { isDone = value; }
+    }  
+    public float Progress
+    {
+        get
+        {
+            return progress;
+        }
+        private set
+        {
+            progress = value;
+        }
     }
     public CopyAssetsAndroid AndroidCopy
     {
@@ -26,15 +39,18 @@ public class SqliteFileValidator : MonoBehaviour
         }
     }
 
-    public void OnStared()
+    public SqliteFileValidator(SQLiteLocalLink links)
     {
-        StartCoroutine(CheckFileIsExist());
+        sqliteLinks = links;
     }
-
-    private IEnumerator CheckFileIsExist()
+    public IEnumerator Action()
     {
-        List<SQLiteConnectFactory.Link> links = SqliteLinks.Links;
+        List<SQLiteConnectFactory.Link> links = sqliteLinks.Links;
         int linkCount = links.Count - 1;
+        int capacity = linkCount + 1;
+
+        IsDone = false;
+        Progress = 0.0f;
 
         while (linkCount >= 0)
         {
@@ -49,10 +65,15 @@ public class SqliteFileValidator : MonoBehaviour
                     yield return null;
                 }
             }
+
             linkCount--;
+            Progress = 1.0f - ((linkCount + 1) * 1.0f / capacity);
+            Debugger.Log("Sqlite: " + Progress);
+            yield return null;
         }
 
         IsDone = true;
+        Progress = 1.0f;
         yield break;
     }
 }

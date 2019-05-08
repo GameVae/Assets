@@ -8,52 +8,77 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using UnityGameTask;
 using UnityEngine;
-using Utils;
 
-public class VersionGame : MonoSingle<VersionGame>
+public class VersionGame : IGameTask
 {
-    public Connection Connection;
-    public ManualTableLoader SqlTableLoader;
-    public SqliteFileValidator SqlValidator;
 
-    private bool checkVersionDone;
-    private LoadingPanel gameTask;
-
-    private void Start()
+    public bool IsDone
     {
-        Connection.Socket.On("R_CHECK_VERSION", R_CHECK_VERSION);
-
-        checkVersionDone = false;
-        //InitProg();
-        StartCoroutine(SqlCheck());
+        get { return isDone; }
+        private set { isDone = value;}
+    }
+    public float Progress
+    {
+        get { return progress; }
+        private set { progress = value; }
+    }
+    public Connection Connection
+    {
+        get
+        {
+            return connection ?? (connection = Singleton.Instance<Connection>());
+        }
+    }
+    public LoadingPanel LoadingPanel
+    {
+        get
+        {
+            return Singleton.Instance<LoadingPanel>();
+        }
     }
 
-    public void S_CHECK_VERSION()
+    private bool isDone;
+    private float progress;
+    //private LoadingPanel gameTask;
+    private Connection connection;
+    private ManualTableLoader sqlTableLoader;
+
+    public VersionGame(ManualTableLoader tableLoader)
+    {
+        Connection.On("R_CHECK_VERSION", R_CHECK_VERSION);
+        sqlTableLoader = tableLoader;
+
+        IsDone = false;
+        Progress = 0.0f;
+    }
+
+    private void S_CHECK_VERSION()
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
 
-        SqlTableLoader.GetCurrentVersion();
-        data["Version"] = SqlTableLoader.ClientVersion;
-        Debugger.Log(SqlTableLoader.ClientVersion);
+        sqlTableLoader.GetCurrentVersion();
+        data["Version"] = sqlTableLoader.ClientVersion;
 
-        Connection.Emit("S_CHECK_VERSION", new JSONObject(data));
+        JSONObject verObj = new JSONObject(data);
+        Connection.Emit("S_CHECK_VERSION", verObj);
+        //Debugger.Log(verObj);
+
     }
-
     private void R_CHECK_VERSION(SocketIOEvent obj)
     {
-        SqlTableLoader.ServerVersion = obj.data.GetField("Version").ToString().Trim('"');
+        sqlTableLoader.ServerVersion = obj.data.GetField("Version").ToString().Trim('"');
+        bool isUpdate = sqlTableLoader.CheckVersion();
+        
         Debugger.Log(obj.data);
-        bool isUpdate = SqlTableLoader.CheckVersion();
-
         Debugger.Log("isupdate " + isUpdate);
+
         if (isUpdate)
         {
             // @"file://DESKTOP-FHHKHH7/FileDownload/DB.sqlite"
             string link = obj.data["Data"].ToString().Trim('"');
-
-            Debugger.Log(obj.data["Data"]);
-            //string saveAt = Application.dataPath + @"\Data\DB\Infantry.sqlite";
+            
             string saveAt = UnityPath.Combinate(@"DB\Infantry.sqlite", UnityPath.AssetPath.Persistent);
             try
             {
@@ -76,7 +101,7 @@ public class VersionGame : MonoSingle<VersionGame>
         else
         {
             ReloadDB();
-            checkVersionDone = true;
+            CheckVerisonComplete();
         }
     }
 
@@ -90,62 +115,58 @@ public class VersionGame : MonoSingle<VersionGame>
             client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
         }
     }
-
     private void DownloadProgressChange(object sender, DownloadProgressChangedEventArgs e)
     {
 
     }
-
     private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
     {
         ReloadDB();
-        checkVersionDone = true;
+        CheckVerisonComplete();
         Debugger.Log("Download file complete");
     }
 
     private void ReloadDB()
     {
-        SqlTableLoader.ReloadAll();
+        sqlTableLoader.ReloadAll();
+    }   
+
+    //private void InitProg()
+    //{
+    //    gameTask = Singleton.Instance<LoadingPanel>();
+    //    GameProgress prog = new GameProgress
+    //        (
+    //            doneAct: null,
+    //            t: new GameProgress.Task()
+    //            {
+    //                Name = "check version",
+    //                GetProgress = delegate { return 1; },
+    //                IsDone = delegate { return IsDone; },
+    //                //Start = delegate { StartCoroutine(Action()); },
+    //                Start = null,
+    //                Title = "Checking version ..."
+    //            }
+    //        );
+    //    gameTask.AddTask(prog);
+    //}
+
+    private void CheckVerisonComplete()
+    {
+        IsDone = true;
+        Progress = 1.0f;
+        LoadingPanel.SetValue(Progress);
+
     }
 
-    private IEnumerator CheckVersion()
+    public IEnumerator Action()
     {
         while (!Connection.IsServerConnected)
         {
             yield return null;
         }
 
-        Debugger.Log("Server connected: " + Connection.IsServerConnected);
+        //Debugger.Log("Server connected: " + Connection.IsServerConnected);
         S_CHECK_VERSION();
-        yield break;
-    }
-
-    private void InitProg()
-    {
-        gameTask = Singleton.Instance<LoadingPanel>();
-        GameProgress prog = new GameProgress
-            (
-                doneAct: null,
-                t: new GameProgress.Task()
-                {
-                    Name = "check version",
-                    GetProgress = delegate { return 1; },
-                    IsDone = delegate { return checkVersionDone; },
-                    Start = delegate { StartCoroutine(CheckVersion()); },
-                    Title = "Checking version ..."
-                }
-            );
-        gameTask.AddTask(prog);
-    }
-
-    private IEnumerator SqlCheck()
-    {
-        SqlValidator.OnStared();
-        while (!SqlValidator.IsDone)
-        {
-            yield return null;
-        }
-        InitProg();
         yield break;
     }
 }

@@ -15,7 +15,7 @@ namespace UI
         protected override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
 
         public void LoadScene(int index)

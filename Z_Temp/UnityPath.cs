@@ -39,18 +39,6 @@ public static class UnityPath
             return -1;
         }
     }
-    public static string GetExtension(string path)
-    {
-        try
-        {
-            return Path.GetExtension(path);
-        }
-        catch (System.Exception e)
-        {
-            Debugger.ErrorLog(e.ToString());
-            return "";
-        }
-    }
     public static void CreateFileAnywhere(string path)
     {
         if (string.IsNullOrEmpty(GetExtension(path)))
@@ -118,6 +106,22 @@ public static class UnityPath
         }
     }
 
+    public static string GetDirectory(string path)
+    {
+        return Path.GetDirectoryName(path);
+    }
+    public static string GetExtension(string path)
+    {
+        try
+        {
+            return Path.GetExtension(path);
+        }
+        catch (System.Exception e)
+        {
+            Debugger.ErrorLog(e.ToString());
+            return "";
+        }
+    }
     public static string GetPath(AssetPath type)
     {
         switch (type)

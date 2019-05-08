@@ -1,11 +1,13 @@
 ﻿using Generic.Singleton;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UI;
 using UI.Widget;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityGameTask;
 using static GameProgress;
 
 public sealed class LoadingPanel : MonoSingle<LoadingPanel>
@@ -15,109 +17,53 @@ public sealed class LoadingPanel : MonoSingle<LoadingPanel>
     public GUIProgressSlider ProgressBar;
     public TextMeshProUGUI LoadingInfo;
 
-    private bool isDone;
-    private GameProgress gameTask;
-    private Queue<GameProgress> progSequence;
-    private Task curTask;
+    private bool isOpen;
+    private bool isClosing;
+    private float targetProgress;
 
-    private SceneLoader sceneLoader;
-
-    protected override void Awake()
+    public float TargetProgress
     {
-        base.Awake();
-        progSequence = new Queue<GameProgress>();
-        isDone = true;
-    }
-
-    private void Start()
-    {
-        sceneLoader = Singleton.Instance<SceneLoader>();
+        get
+        {
+            return  targetProgress;
+        }
     }
 
     private void Update()
     {
-        if (!isDone)
+        if (isOpen)
         {
-            if (curTask != null && (!curTask.IsDone() || ProgressBar.Value != curTask.GetProgress()))
+            ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, targetProgress, Time.deltaTime);
+            if (ProgressBar.Value == targetProgress && isClosing)
             {
-                ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, curTask.GetProgress(), Time.deltaTime);
-            }
-            else
-            {
-                NextTask();
-                if (curTask == null)
-                {
-                    NextProg();
-                }
-            }
-        }
-    }
-
-    public void LoadScene(int index)
-    {
-        GameProgress loadProg = new GameProgress
-            (
-            doneAct: null,
-            t: new Task()
-            {
-                IsDone = delegate { return sceneLoader.IsActiveDone; },
-                GetProgress = delegate { return sceneLoader.Progress; },
-                Name = "LoadScene",
-                Title = "Entrancing game ...",
-                Start = delegate
-                {
-                    sceneLoader.LoadScene(index);
-                    sceneLoader.ActiveScene();
-                }
-            }
-            );
-        AddTask(loadProg);
-    }
-
-    public void AddTask(GameProgress progs)
-    {
-        progSequence.Enqueue(progs);
-        if (isDone)
-        {
-            Panel.SetActive(true);
-            isDone = false;
-            NextProg();
-        }
-    }
-
-    private void NextProg()
-    {
-        if (gameTask == null)
-        {
-            if (progSequence.Count > 0)
-            {
-                gameTask = progSequence.Dequeue();
-                NextTask();
-            }
-        }
-        else
-        { 
-            gameTask?.Done();
-            if (progSequence.Count > 0)
-            {
-                gameTask = progSequence.Dequeue();
-            }
-            else
-            {
-                gameTask = null;
-                isDone = true;
                 Panel.SetActive(false);
-                return;
+                isOpen = false;
             }
         }
-       
     }
 
-    private void NextTask()
+    public void Open()
     {
+        isOpen = true;
+        isClosing = false;
+
+        Panel.SetActive(true);
         ProgressBar.Value = 0;
-        curTask = gameTask.GetTask();
-        curTask?.Start?.Invoke();
-        LoadingInfo.text = curTask?.Title;
+    }
+
+    public void Close()
+    {
+        isClosing = true;
+    }
+
+    public void SetValue(float value)
+    {
+        ProgressBar.Value = value;
+        Debugger.Log(value);
+    }
+
+    public void UpdateValue(float value)
+    {
+        targetProgress = value;
     }
 }

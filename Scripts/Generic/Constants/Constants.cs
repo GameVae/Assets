@@ -237,8 +237,8 @@ namespace Generic.Contants
         {
             base.Awake();
 
-            //QualitySettings.vSyncCount = 0;
-            //Application.targetFrameRate = 30;
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 30;
 
             PixelDependencyDevice = 1.0f / Screen.dpi;
             ScreenRatio = Screen.width * 1.0f / Screen.height;

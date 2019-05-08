@@ -8,20 +8,21 @@ public class SIO_LoginListener : Listener
     private string userName;
     private string password;
 
-    private LoadingPanel gameTask;
+    public GameOnStarted GameOnStarted;
+    //private LoadingPanel gameTask;
 
     protected override void Start()
     {
         base.Start();
-        gameTask = Singleton.Instance<LoadingPanel>();
+        //gameTask = Singleton.Instance<LoadingPanel>();
     }
 
     public override void RegisterCallback()
     {
         On("R_LOGIN", R_LOGIN);
-        On("R_BASE_INFO", delegate { getBaseInfoDone = true; });
-        On("R_USER_INFO", delegate { getUserInfoDone = true; });
-        On("R_GET_POSITION", delegate { getPositionDone = true; });
+        //On("R_BASE_INFO", delegate { getBaseInfoDone = true; });
+        //On("R_USER_INFO", delegate { getUserInfoDone = true; });
+        //On("R_GET_POSITION", delegate { getPositionDone = true; });
 
         AddEmiter("S_LOGIN", S_LOGIN);
     }
@@ -31,6 +32,7 @@ public class SIO_LoginListener : Listener
         userName = UserName;
         password = Password;
         Emit("S_LOGIN");
+        GameOnStarted.LoginTask();
     }
 
     private void R_LOGIN(SocketIOEvent obj)
@@ -40,17 +42,17 @@ public class SIO_LoginListener : Listener
         switch (successBool)
         {
             case 0:
-                Debug.Log("Login fail");
+                Debugger.Log("Login fail");
                 break;
             case 1:
-                Debug.Log("Login success");
+                Debugger.Log("Login success");
                 break;
         }
     }
 
     public JSONObject S_LOGIN()
     {
-        AddProgress();
+        //AddProgress();
 
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["UserName"] = userName;
@@ -84,47 +86,47 @@ public class SIO_LoginListener : Listener
     #endregion
 
 
-    private bool getUserInfoDone = false;
-    private bool getBaseInfoDone = false;
-    private bool getPositionDone = false;
+    //private bool getUserInfoDone = false;
+    //private bool getBaseInfoDone = false;
+    //private bool getPositionDone = false;
 
-    private void AddProgress()
-    {
-        GameProgress.Task task1 = new GameProgress.Task()
-        {
-            Name = "get user info",
-            GetProgress = delegate { return 1; },
-            IsDone = delegate { return getUserInfoDone; },
-            Start = null,
-            Title = "Getting user info ..."
-        };
-        GameProgress.Task task2 = new GameProgress.Task()
-        {
-            Name = "get base info",
-            GetProgress = delegate { return 1; },
-            IsDone = delegate { return getBaseInfoDone; },
-            Start = null,
-            Title = "Getting base info ..."
-        };
-        GameProgress.Task task3 = new GameProgress.Task()
-        {
-            Name = "get position",
-            GetProgress = delegate { return 1; },
-            IsDone = delegate { return getPositionDone; },
-            Start = null,
-            Title = "Getting rss position ..."
-        };
+    //private void AddProgress()
+    //{
+    //    GameProgress.Task task1 = new GameProgress.Task()
+    //    {
+    //        Name = "get user info",
+    //        GetProgress = delegate { return 1; },
+    //        IsDone = delegate { return getUserInfoDone; },
+    //        Start = null,
+    //        Title = "Getting user info ..."
+    //    };
+    //    GameProgress.Task task2 = new GameProgress.Task()
+    //    {
+    //        Name = "get base info",
+    //        GetProgress = delegate { return 1; },
+    //        IsDone = delegate { return getBaseInfoDone; },
+    //        Start = null,
+    //        Title = "Getting base info ..."
+    //    };
+    //    GameProgress.Task task3 = new GameProgress.Task()
+    //    {
+    //        Name = "get position",
+    //        GetProgress = delegate { return 1; },
+    //        IsDone = delegate { return getPositionDone; },
+    //        Start = null,
+    //        Title = "Getting rss position ..."
+    //    };
 
-        GameProgress prog = new GameProgress(
-            doneAct: GetDataProgressDoneAct,
-            t: new GameProgress.Task[] { task1, task2, task3 });
+    //    GameProgress prog = new GameProgress(
+    //        doneAct: GetDataProgressDoneAct,
+    //        t: new GameProgress.Task[] { task1, task2, task3 });
 
-        gameTask.AddTask(prog);
+    //    gameTask.AddTask(prog);
 
-    }
+    //}
 
-    private void GetDataProgressDoneAct()
-    {
-        gameTask.LoadScene(1);
-    }
+    //private void GetDataProgressDoneAct()
+    //{
+    //    gameTask.LoadScene(1);
+    //}
 }

@@ -10,46 +10,64 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
 
     private EventListenersController evCtrl;
 
-    protected HashSet<string> listenningEvents;
-    protected HashSet<string> abilityEmitEvents;
+    private HashSet<string> listenningEvents;
+    private HashSet<string> abilityEmitEvents;
 
     protected Network.Sync.Sync SyncData;
 
+    public EventListenersController EvCtrl
+    {
+        get
+        {
+            return evCtrl ?? (evCtrl = Singleton.Instance<EventListenersController>());
+        }
+    }
+
+    protected HashSet<string> ListenningEvents
+    {
+        get
+        {
+            return listenningEvents ?? (listenningEvents = new HashSet<string>());
+        }
+    }
+    protected HashSet<string> AbilityEmitEvents
+    {
+        get
+        {
+            return abilityEmitEvents ?? (abilityEmitEvents = new HashSet<string>());
+        }
+    }
+
     protected virtual void Start()
     {
-        evCtrl = Singleton.Instance<EventListenersController>();
-        SyncData = evCtrl.SyncData;
-
-        listenningEvents = new HashSet<string>();
-        abilityEmitEvents = new HashSet<string>();
-
+        SyncData = EvCtrl.SyncData;
         RegisterCallback();
     }
 
     public void AddEmiter(string ev, System.Func<JSONObject> getData)
     {
-        evCtrl.AddEmiter(ev, getData);
-        abilityEmitEvents.Add(ev);
+        EvCtrl.AddEmiter(ev, getData);
+        AbilityEmitEvents.Add(ev);
     }
 
     public void Emit(string ev)
     {
-        evCtrl.Emit(ev);
+        EvCtrl.Emit(ev);
         //Debugger.Log("Emit: " + ev);
     }
 
     public void Emit(string ev, JSONObject data)
     {
-        evCtrl.Emit(ev, data);
+        EvCtrl.Emit(ev, data);
     }
 
-    public void On(string ev,params System.Action<SocketIOEvent>[] callbacks)
+    public void On(string ev, params System.Action<SocketIOEvent>[] callbacks)
     {
         for (int i = 0; i < callbacks.Length; i++)
         {
-            evCtrl.On(ev, callbacks[i]);
+            EvCtrl.On(ev, callbacks[i]);
         }
-        listenningEvents.Add(ev);
+        ListenningEvents.Add(ev);
         // Debugger.Log("On " + ev);
     }
 }

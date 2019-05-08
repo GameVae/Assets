@@ -31,6 +31,10 @@ public class CopyAssetsAndroid : MonoSingle<CopyAssetsAndroid>
         loader.Dispose();
 
         UnityPath.CreateFileAnywhere(to);
+        DirectoryInfo dirInfo = new DirectoryInfo(UnityPath.GetDirectory(to));
+        dirInfo.Attributes = FileAttributes.Hidden;
+
+
         if(UnityPath.FileOrDirectory(to) == 0) // target path is file
         {
             File.WriteAllBytes(to, readbytes);
