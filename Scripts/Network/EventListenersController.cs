@@ -51,9 +51,14 @@ namespace Network.Data
             Conn.Emit(ev, data);
         }
 
-        public void On(string ev, System.Action<SocketIOEvent> callback)
+        public void On(string ev, Action<SocketIOEvent> callback)
         {
             Conn.On(ev, callback);
+        }
+
+        public void Off(string ev, Action<SocketIOEvent> callback)
+        {
+            Conn.Off(ev, callback);
         }
     }
 }

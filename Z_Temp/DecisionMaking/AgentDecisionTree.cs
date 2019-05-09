@@ -22,20 +22,20 @@ public class AgentDecisionTree : DecisionTreeNode
         NavAgentController = Singleton.Instance<NavAgentController>();
         SIO_AttackListener = attackListener;
 
-        //DecisionTreeLoader.TreeInfo info = new DecisionTreeLoader.TreeInfo()
-        //{
-        //    XmlLocalPath = xmlPath,
-        //    MethodContainer = this,
-        //    ResultHanlder = LoadTreeComplete
-        //};
-        //TreeLoader.AsyncCreateNode(info);
+        DecisionTreeLoader.TreeInfo info = new DecisionTreeLoader.TreeInfo()
+        {
+            XmlLocalPath = xmlPath,
+            MethodContainer = this,
+            ResultHanlder = LoadTreeComplete
+        };
+        TreeLoader.AsyncCreateNode(info);
 
         //root = TreeLoader.CreateNode(xmlPath, this);
         //isLoaded = true;
 
         ////TODO:[for test]
 
-        ManualLoadTree();
+        //ManualLoadTree();
         //root = Root(xmlPath);
     }
 

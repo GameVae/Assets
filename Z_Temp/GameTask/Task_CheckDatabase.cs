@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityGameTask;
 
-public class SqliteFileValidator : IGameTask
+public class Task_CheckDatabase : IGameTask
 {
     private bool isDone = false;
     private float progress;
@@ -11,26 +11,17 @@ public class SqliteFileValidator : IGameTask
     private CopyAssetsAndroid androidCopy;
     private SQLiteLocalLink sqliteLinks;
 
-
     public bool IsDone
     {
-        get
-        {
-            return isDone;
-        }
+        get { return isDone; }
         private set { isDone = value; }
-    }  
+    }
     public float Progress
     {
-        get
-        {
-            return progress;
-        }
-        private set
-        {
-            progress = value;
-        }
+        get { return progress; }
+        private set { progress = value; }
     }
+
     public CopyAssetsAndroid AndroidCopy
     {
         get
@@ -39,41 +30,35 @@ public class SqliteFileValidator : IGameTask
         }
     }
 
-    public SqliteFileValidator(SQLiteLocalLink links)
+    public Task_CheckDatabase(SQLiteLocalLink links)
     {
         sqliteLinks = links;
     }
+
     public IEnumerator Action()
     {
         List<SQLiteConnectFactory.Link> links = sqliteLinks.Links;
-        int linkCount = links.Count - 1;
-        int capacity = linkCount + 1;
+        int completed = 0;
+        int capacity = links.Count;
 
         IsDone = false;
         Progress = 0.0f;
 
-        while (linkCount >= 0)
+        while (completed < capacity)
         {
-            string assetPath = links[linkCount].DBPath;
+            string assetPath = links[completed].DBPath;
             string persistentPath = UnityPath.Combinate(assetPath, UnityPath.AssetPath.Persistent);
 
             if (!UnityPath.Exist(persistentPath))
             {
-                AndroidCopy.Copy(assetPath, persistentPath);
-                while (!AndroidCopy.IsDone)
-                {
-                    yield return null;
-                }
+                yield return AndroidCopy.Copy(assetPath, persistentPath);
             }
 
-            linkCount--;
-            Progress = 1.0f - ((linkCount + 1) * 1.0f / capacity);
-            Debugger.Log("Sqlite: " + Progress);
-            yield return null;
+            completed++;
+            Progress = completed * 1.0f / capacity;
+            Debugger.Log("Copy progress: " + Progress);
         }
-
         IsDone = true;
-        Progress = 1.0f;
         yield break;
     }
 }

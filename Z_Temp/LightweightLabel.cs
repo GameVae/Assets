@@ -30,7 +30,11 @@ public class LightweightLabel : MonoBehaviour,IPoolable
         }
         set
         {
-            qualityText.text = value.ToString();
+             int.TryParse(qualityText.text, out int currentQ);
+            if (currentQ != value)
+            {
+                qualityText.text = value.ToString();
+            }
         }
     }
     public RectTransform RectTransform
@@ -59,7 +63,11 @@ public class LightweightLabel : MonoBehaviour,IPoolable
 
     public void SetHP(float cur,float max)
     {
-        HealthFill.fillAmount = cur / max;
+        float hp = cur / max;
+        if (!Mathf.Approximately(hp, HealthFill.fillAmount))
+        {
+            HealthFill.fillAmount = hp;
+        }
     }
 
     public void Update()

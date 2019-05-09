@@ -128,6 +128,11 @@ public sealed class Connection : MonoSingle<Connection>
         SocketComponent.On(ev, callback);
     }
 
+    public void Off(string ev, System.Action<SocketIOEvent> callback)
+    {
+        SocketComponent.Off(ev, callback);
+    }
+
     public void Emit(string v, JSONObject data)
     {
         SocketComponent.Emit(v, data);

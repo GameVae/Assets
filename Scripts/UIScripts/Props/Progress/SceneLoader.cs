@@ -2,33 +2,26 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityGameTask;
 
 namespace UI
 {
-    public sealed class SceneLoader : MonoSingle<SceneLoader>
+    public sealed class SceneLoader : MonoSingle<SceneLoader>,
+        IGameTask
     {
         private AsyncOperation asyncOperation;
+        private int loadAtIndex;
 
-        public bool IsActiveDone { get; private set; }
+        public bool IsDone { get; private set; }
         public float Progress { get; private set; }
-
-        protected override void Awake()
+       
+        private IEnumerator LoadSceneAt(int index)
         {
-            base.Awake();
-            //DontDestroyOnLoad(gameObject);
-        }
-
-        public void LoadScene(int index)
-        {
-            IsActiveDone = false;
+            IsDone = false;
             Progress = 0.0f;
-            StartCoroutine(StartLoadScene(index));
-        }
 
-        private IEnumerator StartLoadScene(int index)
-        {
             asyncOperation = SceneManager.LoadSceneAsync(index);
-            asyncOperation.allowSceneActivation = false;
+            asyncOperation.allowSceneActivation = true;
 
             while (Progress < 1f || !asyncOperation.isDone)
             {
@@ -36,13 +29,25 @@ namespace UI
                 yield return null;
             }
 
-            IsActiveDone = true;
+            IsDone = true;
+            asyncOperation = null;
+
             yield break;
         }
 
-        public void ActiveScene()
+        public IEnumerator Action()
+        {
+            return LoadSceneAt(loadAtIndex);
+        }
+
+        public void AutoScene()
         {
             asyncOperation.allowSceneActivation = true;
+        }
+
+        public void SetLoadScene(int index)
+        {
+            loadAtIndex = index;
         }
     }
 }

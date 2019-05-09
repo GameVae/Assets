@@ -8,7 +8,6 @@ using UI.Widget;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameTask;
-using static GameProgress;
 
 public sealed class LoadingPanel : MonoSingle<LoadingPanel>
 {
@@ -17,53 +16,54 @@ public sealed class LoadingPanel : MonoSingle<LoadingPanel>
     public GUIProgressSlider ProgressBar;
     public TextMeshProUGUI LoadingInfo;
 
-    private bool isOpen;
-    private bool isClosing;
-    private float targetProgress;
-
-    public float TargetProgress
+    private Queue<IGameTask> gameTasks;
+    private Queue<IGameTask> GameTasks
     {
         get
         {
-            return  targetProgress;
+            return gameTasks ?? (gameTasks = new Queue<IGameTask>());
         }
     }
 
-    private void Update()
+    private Queue<string> descriptions;
+    private Queue<string> Descriptions
     {
-        if (isOpen)
+        get
         {
-            ProgressBar.Value = Mathf.MoveTowards(ProgressBar.Value, targetProgress, Time.deltaTime);
-            if (ProgressBar.Value == targetProgress && isClosing)
-            {
-                Panel.SetActive(false);
-                isOpen = false;
-            }
+            return descriptions ?? (descriptions = new Queue<string>());
         }
     }
 
     public void Open()
     {
-        isOpen = true;
-        isClosing = false;
-
         Panel.SetActive(true);
-        ProgressBar.Value = 0;
+        StartCoroutine(StartUIHandle());
     }
 
-    public void Close()
+    public void Add(IGameTask task, string description = "")
     {
-        isClosing = true;
+        GameTasks.Enqueue(task);
+        Descriptions.Enqueue(description);
     }
 
-    public void SetValue(float value)
+    private IEnumerator StartUIHandle()
     {
-        ProgressBar.Value = value;
-        Debugger.Log(value);
-    }
+        while (GameTasks.Count > 0)
+        {
+            IGameTask task = GameTasks.Dequeue();
 
-    public void UpdateValue(float value)
-    {
-        targetProgress = value;
+            StartCoroutine(task.Action());
+            LoadingInfo.text = Descriptions.Dequeue();
+
+            while (!task.IsDone || task.Progress != ProgressBar.Value)
+            {
+                ProgressBar.Value
+                    = Mathf.MoveTowards(ProgressBar.Value, task.Progress, Time.deltaTime);
+                yield return null;
+            }
+            ProgressBar.Value = 0;
+        }
+        Panel.SetActive(false);
+        yield break;
     }
 }

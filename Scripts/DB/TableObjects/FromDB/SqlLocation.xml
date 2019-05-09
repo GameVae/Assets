@@ -1,0 +1,10 @@
+<SQLiteLocalLink>
+	<Link>
+		<Type>Task</Type>
+		<URI>DB/Task.sqlite</URI>
+	</Link>
+	<Link>
+		<Type>Infantry</Type>
+		<URI>DB/Infantry.sqlite</URI>
+	</Link>
+</SQLiteLocalLink>

@@ -6,14 +6,6 @@ using UnityEngine.Networking;
 
 public class CopyAssetsAndroid : MonoSingle<CopyAssetsAndroid>
 {
-    private bool isDone = true;
-    public bool IsDone
-    {
-        get
-        {
-            return isDone;
-        }
-    }
 
     /// <summary>
     /// 
@@ -21,9 +13,8 @@ public class CopyAssetsAndroid : MonoSingle<CopyAssetsAndroid>
     /// <param name="from">file inside streaming assets folder</param>
     /// <param name="to">create or override file at</param>
     /// <returns></returns>
-    private IEnumerator CopyFileOnAndroid(string from,string to)
+    private IEnumerator CopyFileOnAndroid(string from, string to)
     {
-        isDone = false;
         UnityWebRequest loader = UnityWebRequest.Get(UnityPath.Combinate(from, UnityPath.AssetPath.StreamingAsset));
         yield return loader.SendWebRequest();
 
@@ -31,16 +22,17 @@ public class CopyAssetsAndroid : MonoSingle<CopyAssetsAndroid>
         loader.Dispose();
 
         UnityPath.CreateFileAnywhere(to);
-        DirectoryInfo dirInfo = new DirectoryInfo(UnityPath.GetDirectory(to));
-        dirInfo.Attributes = FileAttributes.Hidden;
+        DirectoryInfo dirInfo = new DirectoryInfo(UnityPath.GetDirectory(to))
+        {
+            Attributes = FileAttributes.Hidden
+        };
 
 
-        if(UnityPath.FileOrDirectory(to) == 0) // target path is file
+        if (UnityPath.FileOrDirectory(to) == 0) // target path is file
         {
             File.WriteAllBytes(to, readbytes);
             Debugger.Log("Copy from: " + from + " to: " + to + " data size: " + readbytes.Length);
         }
-        isDone = true;
     }
 
     /// <summary>
@@ -49,12 +41,9 @@ public class CopyAssetsAndroid : MonoSingle<CopyAssetsAndroid>
     /// <param name="from">file inside streaming assets folder</param>
     /// <param name="to">create or override file at</param>
     /// <returns></returns>
-    public void Copy(string from,string to)
+    public IEnumerator Copy(string from, string to)
     {
-        if (IsDone)
-        {
-            StartCoroutine(CopyFileOnAndroid(from, to));
-        }
+        yield return CopyFileOnAndroid(from, to);
     }
 }
 #endif

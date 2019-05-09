@@ -15,7 +15,8 @@ public class SQLiteConnectFactory : MonoSingle<SQLiteConnectFactory>
     public enum SQLiteLinkType
     {
         Task = 1,
-        Infantry
+        Infantry,
+        XML
     }
 
     [SerializeField] private SQLiteLocalLink links;

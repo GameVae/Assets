@@ -165,9 +165,28 @@ public class TestObj : MonoBehaviour
     }
 
     public string path;
+
+    private IEnumerator Coroutine()
+    {
+        Debug.Log("start");
+        yield return Enumerator();
+        Debug.Log("end");
+    }
+
+    private IEnumerator Enumerator()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Debug.Log(i);
+            yield return i;
+        }
+    }
+
     private void Start()
     {
-        UnityPath.CreateFileAnywhere(UnityPath.Combinate(path,UnityPath.AssetPath.Persistent));
+        StartCoroutine(Coroutine());
+        #region 
+        //UnityPath.CreateFileAnywhere(UnityPath.Combinate(path,UnityPath.AssetPath.Persistent));
         //mainbase.LoadTable();
         //trainningCost.LoadTable();
         //military.LoadTable();
@@ -226,7 +245,7 @@ public class TestObj : MonoBehaviour
 
         //Debug.Log(xElement);
         //LogXml(doc.ChildNodes);
-
+        #endregion
         #region
         //for (int i = 0; i < 100; i++)
         //{
@@ -293,13 +312,7 @@ public class TestObj : MonoBehaviour
         //selectOnEnemy.MakeDecision();
         #endregion
     }
-    delegate void MyDelegate(string v);
 
-    delegate void NoParamsDelegate();
-    class MyClass
-    {
-        public int Interger { get; set; }
-    }
     private void InvokeDynamic(UnityAction<string> action, string v)
     {
         action.Invoke(v);

@@ -9,11 +9,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using UnityGameTask;
-using UnityEngine;
 
-public class VersionGame : IGameTask
+public class Task_CheckVersion : IGameTask
 {
-
     public bool IsDone
     {
         get { return isDone; }
@@ -31,21 +29,13 @@ public class VersionGame : IGameTask
             return connection ?? (connection = Singleton.Instance<Connection>());
         }
     }
-    public LoadingPanel LoadingPanel
-    {
-        get
-        {
-            return Singleton.Instance<LoadingPanel>();
-        }
-    }
 
     private bool isDone;
     private float progress;
-    //private LoadingPanel gameTask;
     private Connection connection;
     private ManualTableLoader sqlTableLoader;
 
-    public VersionGame(ManualTableLoader tableLoader)
+    public Task_CheckVersion(ManualTableLoader tableLoader)
     {
         Connection.On("R_CHECK_VERSION", R_CHECK_VERSION);
         sqlTableLoader = tableLoader;
@@ -111,14 +101,10 @@ public class VersionGame : IGameTask
         WebClient client = DownloadFileAsync.Instance.DownloadFile(link, saveAt);
         if (client != null)
         {
-            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChange);
             client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadComplete);
         }
     }
-    private void DownloadProgressChange(object sender, DownloadProgressChangedEventArgs e)
-    {
 
-    }
     private void DownloadComplete(object sender, AsyncCompletedEventArgs e)
     {
         ReloadDB();
@@ -131,31 +117,10 @@ public class VersionGame : IGameTask
         sqlTableLoader.ReloadAll();
     }   
 
-    //private void InitProg()
-    //{
-    //    gameTask = Singleton.Instance<LoadingPanel>();
-    //    GameProgress prog = new GameProgress
-    //        (
-    //            doneAct: null,
-    //            t: new GameProgress.Task()
-    //            {
-    //                Name = "check version",
-    //                GetProgress = delegate { return 1; },
-    //                IsDone = delegate { return IsDone; },
-    //                //Start = delegate { StartCoroutine(Action()); },
-    //                Start = null,
-    //                Title = "Checking version ..."
-    //            }
-    //        );
-    //    gameTask.AddTask(prog);
-    //}
-
     private void CheckVerisonComplete()
     {
         IsDone = true;
         Progress = 1.0f;
-        LoadingPanel.SetValue(Progress);
-
     }
 
     public IEnumerator Action()

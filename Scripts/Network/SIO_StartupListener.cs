@@ -29,7 +29,7 @@ public sealed class SIO_StartupListener : Listener
             Player.Info = SyncData.MainUser;
 
         //string data = obj.data["R_USER_INFO"].ToString();
-        //Debugger.Log(obj);
+        Debugger.Log(obj);
     }
 
     public void R_GET_POSITION(SocketIOEvent obj)

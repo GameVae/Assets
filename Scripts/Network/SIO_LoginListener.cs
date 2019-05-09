@@ -1,5 +1,4 @@
-﻿using Generic.Singleton;
-using SocketIO;
+﻿using SocketIO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,30 +8,20 @@ public class SIO_LoginListener : Listener
     private string password;
 
     public GameOnStarted GameOnStarted;
-    //private LoadingPanel gameTask;
-
-    protected override void Start()
-    {
-        base.Start();
-        //gameTask = Singleton.Instance<LoadingPanel>();
-    }
 
     public override void RegisterCallback()
     {
         On("R_LOGIN", R_LOGIN);
-        //On("R_BASE_INFO", delegate { getBaseInfoDone = true; });
-        //On("R_USER_INFO", delegate { getUserInfoDone = true; });
-        //On("R_GET_POSITION", delegate { getPositionDone = true; });
-
         AddEmiter("S_LOGIN", S_LOGIN);
     }
 
     public void Login(string UserName, string Password)
     {
+        GameOnStarted.LoginTask();
+
         userName = UserName;
         password = Password;
         Emit("S_LOGIN");
-        GameOnStarted.LoginTask();
     }
 
     private void R_LOGIN(SocketIOEvent obj)
@@ -52,14 +41,11 @@ public class SIO_LoginListener : Listener
 
     public JSONObject S_LOGIN()
     {
-        //AddProgress();
-
         Dictionary<string, string> data = new Dictionary<string, string>();
         data["UserName"] = userName;
         data["Password"] = md5String(password);
         data["Model_Device"] = SystemInfo.deviceModel;
         data["Ram_Device"] = SystemInfo.systemMemorySize.ToString();
-        //socketIO.Emit("S_LOGIN", new JSONObject(data));
         return new JSONObject(data);
     }
 
@@ -84,49 +70,5 @@ public class SIO_LoginListener : Listener
         return hashString.PadLeft(32, '0');
     }
     #endregion
-
-
-    //private bool getUserInfoDone = false;
-    //private bool getBaseInfoDone = false;
-    //private bool getPositionDone = false;
-
-    //private void AddProgress()
-    //{
-    //    GameProgress.Task task1 = new GameProgress.Task()
-    //    {
-    //        Name = "get user info",
-    //        GetProgress = delegate { return 1; },
-    //        IsDone = delegate { return getUserInfoDone; },
-    //        Start = null,
-    //        Title = "Getting user info ..."
-    //    };
-    //    GameProgress.Task task2 = new GameProgress.Task()
-    //    {
-    //        Name = "get base info",
-    //        GetProgress = delegate { return 1; },
-    //        IsDone = delegate { return getBaseInfoDone; },
-    //        Start = null,
-    //        Title = "Getting base info ..."
-    //    };
-    //    GameProgress.Task task3 = new GameProgress.Task()
-    //    {
-    //        Name = "get position",
-    //        GetProgress = delegate { return 1; },
-    //        IsDone = delegate { return getPositionDone; },
-    //        Start = null,
-    //        Title = "Getting rss position ..."
-    //    };
-
-    //    GameProgress prog = new GameProgress(
-    //        doneAct: GetDataProgressDoneAct,
-    //        t: new GameProgress.Task[] { task1, task2, task3 });
-
-    //    gameTask.AddTask(prog);
-
-    //}
-
-    //private void GetDataProgressDoneAct()
-    //{
-    //    gameTask.LoadScene(1);
-    //}
+ 
 }

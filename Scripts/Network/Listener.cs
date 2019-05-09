@@ -68,6 +68,14 @@ public abstract class Listener : MonoBehaviour, Network.Interface.IListener
             EvCtrl.On(ev, callbacks[i]);
         }
         ListenningEvents.Add(ev);
-        // Debugger.Log("On " + ev);
+        //Debugger.Log("On " + ev);
+    }
+
+    public void Off(string ev, params System.Action<SocketIOEvent>[] callbacks)
+    {
+        for (int i = 0; i < callbacks.Length; i++)
+        {
+            EvCtrl.Off(ev, callbacks[i]);
+        }
     }
 }
