@@ -23,7 +23,7 @@ public class NetworkUI : MonoBehaviour
             Conn = Singleton.Instance<Connection>();
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (!isActive)
         {

@@ -188,10 +188,13 @@ namespace Entities.Navigation
             return GetEnemyAt(position) != null;
         }
 
-        public bool IsTargetInRange_Boolean(int attackRange)
+        public bool IsTargetInRange_Boolean()
         {
             if (CurrentAgent != null)
             {
+                int attackRange = CurrentAgent.Remote.Offset.AttackRange;
+                Debugger.Log("Attack range: " + attackRange);
+
                 Vector3Int curPosition = CurrentAgent.CurrentPosition;
                 Vector3Int targetPosition = CursorController.SelectedPosition;
 

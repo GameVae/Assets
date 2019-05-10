@@ -6,7 +6,7 @@ using System.Reflection;
 using Generic.Singleton;
 using UnityEngine.Events;
 
-public class DecisionTreeLoader : ISingleton
+public sealed class DecisionTreeLoader : ISingleton
 {
     public class TreeInfo
     {

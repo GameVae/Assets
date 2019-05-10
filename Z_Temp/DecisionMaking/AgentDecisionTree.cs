@@ -16,7 +16,7 @@ public class AgentDecisionTree : DecisionTreeNode
     public AgentDecisionTree(SIO_AttackListener attackListener)
     {
         isLoaded = false;
-        xmlPath = Application.persistentDataPath + @"/DecisionMaking/AgentDecisionTree.xml";
+        xmlPath = Application.persistentDataPath + @"/DecisionMaking/AgentDecisionTree.config";
 
         TreeLoader = Singleton.Instance<DecisionTreeLoader>();
         NavAgentController = Singleton.Instance<NavAgentController>();
@@ -79,7 +79,7 @@ public class AgentDecisionTree : DecisionTreeNode
 
     private bool IsEnemyInAttackRange_Boolean()
     {
-        return NavAgentController.IsTargetInRange_Boolean(1);
+        return NavAgentController.IsTargetInRange_Boolean();
     }
 
     private bool IsEnemyAtTarget_Boolean()
