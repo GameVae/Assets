@@ -127,16 +127,16 @@ public class TestObj : MonoBehaviour
         //trainningCost.Rows.UpdateOrInsert_R(cost);
         //Debug.Log("removed: " + trainningCost.Rows.Remove_R(cost));
 
-        quadRoot = new QuadNode(0,0,
-            new Vector3Int(0, 0, 0),
-            new Vector3Int(512, 512, 0));
+        //quadRoot = new QuadNode(0,0,
+        //    new Vector3Int(0, 0, 0),
+        //    new Vector3Int(512, 512, 0));
 
-        int count = PositionTable.Count;
-        int pause = 100;
-        for (int i = 0; i < count; i++)
-        {
-            quadRoot.Insert(PositionTable.ReadOnlyRows[i].Position.Parse3Int());
-        }
+        //int count = PositionTable.Count;
+        //int pause = 100;
+        //for (int i = 0; i < count; i++)
+        //{
+        //    quadRoot.Insert(PositionTable.ReadOnlyRows[i].Position.Parse3Int());
+        //}
 
         //quadRoot.Log();
         //Debug.Log("Empty: " + QuadNode.EmptyCount);
@@ -144,10 +144,10 @@ public class TestObj : MonoBehaviour
         //Debug.Log("Quad Count: " + QuadNode.QuadCount);
         //Debug.Log("Depth: " + QuadNode.Depth);
 
-        QuadNode node = quadRoot.Retrieve(new Vector3Int(0, 0, 0));
+        //QuadNode node = quadRoot.Retrieve(new Vector3Int(0, 0, 0));
 
-        Debug.Log("Level: " + node.Depth);
-        node.LogPoints();
+        //Debug.Log("Level: " + node.Depth);
+        //node.LogPoints();
     }
 
     [ContextMenu("Log Points Overlap Camera")]
@@ -184,7 +184,7 @@ public class TestObj : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(Coroutine());
+        //StartCoroutine(Coroutine());
         #region 
         //UnityPath.CreateFileAnywhere(UnityPath.Combinate(path,UnityPath.AssetPath.Persistent));
         //mainbase.LoadTable();
@@ -311,6 +311,29 @@ public class TestObj : MonoBehaviour
 
         //selectOnEnemy.MakeDecision();
         #endregion
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        Thread[] threads = new Thread[4];
+        for (int i = 0; i < threads.Length; i++)
+        {
+            int capture = i;
+            threads[i] = new Thread(() => ThreadTestJoin(capture));
+            threads[i].Start();
+        }
+
+        for (int i = 0; i < threads.Length; i++)
+        {
+            threads[i].Join();
+        }
+        UnityEngine.Debug.Log("DONE: " + stopwatch.ElapsedMilliseconds);
+    }
+
+
+    private void ThreadTestJoin(int i)
+    {
+        UnityEngine.Debug.Log("Thread " + i + " Started");
+
+        Thread.Sleep(2000);
+        Debug.Log("Thread " + i + " done");
     }
 
     private void InvokeDynamic(UnityAction<string> action, string v)

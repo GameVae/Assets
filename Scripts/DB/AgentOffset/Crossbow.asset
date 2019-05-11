@@ -15,4 +15,4 @@ MonoBehaviour:
   maxMoveStep: 20
   maxSearchLevel: 250
   maxSpeed: 2
-  attackRange: 1
+  attackRange: 2

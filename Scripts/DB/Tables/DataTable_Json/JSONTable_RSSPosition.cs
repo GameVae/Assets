@@ -34,12 +34,15 @@ namespace DataTable
 
         private void GeneratePositionDict()
         {
-            PositionDict.Clear();
-            int count = Count;
-            for (int i = 0; i < count; i++)
+            lock (Locker)
             {
-                int key = UniqueId(Rows[i].Position.Parse3Int());
-                PositionDict[key] = Rows[i].ID;
+                PositionDict.Clear();
+                int count = Count;
+                for (int i = 0; i < count; i++)
+                {
+                    int key = UniqueId(Rows[i].Position.Parse3Int());
+                    PositionDict[key] = Rows[i].ID;
+                }
             }
         }
 
@@ -106,6 +109,5 @@ namespace DataTable
             }
             return isUpdate;
         }
-
     }
 }

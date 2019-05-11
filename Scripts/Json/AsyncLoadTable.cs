@@ -43,7 +43,7 @@ namespace Json
                 oper.SpentTime = System.DateTime.Now.Millisecond - oper.SpentTime;
 
                 // TODO:
-                Debugger.Log("async handled: " + capacity);
+                // Debugger.Log("async handled: " + capacity);
             }
         }
 

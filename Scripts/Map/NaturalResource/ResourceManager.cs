@@ -164,7 +164,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
                 QuadNode overlapNode = RSSPositionTree.Retrieve(conners[i]);
                 if (overlapNode != null)
                 {
-                    isCreateNew = isCreateNew || AddPositionForCreate(overlapNode);
+                    isCreateNew = AddPositionForCreate(overlapNode) || isCreateNew ;
                 }
             }
             if (isCreateNew)
