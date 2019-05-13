@@ -32,19 +32,30 @@ namespace DataTable
             }
         }
 
-        private void GeneratePositionDict()
+        public override int Insert(RSS_PositionRow obj)
         {
-            lock (Locker)
+            int result = base.Insert(obj);
+            if(result != -1)
             {
-                PositionDict.Clear();
-                int count = Count;
-                for (int i = 0; i < count; i++)
-                {
-                    int key = UniqueId(Rows[i].Position.Parse3Int());
-                    PositionDict[key] = Rows[i].ID;
-                }
+                int key = UniqueId(obj.Position.Parse3Int());
+                PositionDict[key] = obj.ID;
+                //Debugger.Log("Added key " + key + " count " + PositionDict.Count );
             }
+            return result;
         }
+        //private void GeneratePositionDict()
+        //{
+        //    lock (Locker)
+        //    {
+        //        PositionDict.Clear();
+        //        int count = Count;
+        //        for (int i = 0; i < count; i++)
+        //        {
+        //            int key = UniqueId(Rows[i].Position.Parse3Int());
+        //            PositionDict[key] = Rows[i].ID;
+        //        }
+        //    }
+        //}
 
         private int UniqueId(Vector3Int serPosition)
         {
@@ -60,42 +71,35 @@ namespace DataTable
             return Constants.InvalidPosition;
         }
 
-        private void WaitForAsyncLoadComplete(object obj)
-        {
-            while (!Operation.IsDone)
-            {
-                Thread.Sleep(20);
-            }
-            ThreadHelper.MainThreadInvoke(GeneratePositionDict);
-        }
+        //private void WaitForAsyncLoadComplete(object obj)
+        //{
+        //    while (!Operation.IsDone)
+        //    {
+        //        Thread.Sleep(20);
+        //    }
+        //    ThreadHelper.MainThreadInvoke(GeneratePositionDict);
+        //}
 
-        public override void LoadTable(JSONObject jsonObj)
-        {
-            base.LoadTable(jsonObj);
-            GeneratePositionDict();
-        }
+        //public override void LoadTable(JSONObject jsonObj)
+        //{
+        //    base.LoadTable(jsonObj);
+        //    GeneratePositionDict();
+        //}
 
-        public override void AsyncLoadTable(JSONObject jsonObj)
-        {
-            base.AsyncLoadTable(jsonObj);
-            MultiThreadHelper.ThreadInvoke(WaitForAsyncLoadComplete);
-        }
+        //public override void AsyncLoadTable(JSONObject jsonObj)
+        //{
+        //    base.AsyncLoadTable(jsonObj);
+        //    MultiThreadHelper.ThreadInvoke(WaitForAsyncLoadComplete);
+        //}
 
         public RSS_PositionRow GetRssAt(Vector3Int serPosition)
         {
             int key = UniqueId(serPosition);
-            int id = PositionDict[key];
-            return Rows[id - 1];
-
-            //int count = Count;
-            //string position = serPosition.ToPositionString();
-
-            //for (int i = 0; i < count; i++)
-            //{
-            //    if (Rows[i].Position.CompareTo(position) == 0)
-            //        return Rows[i];
-            //}
-            //return null;
+            if (PositionDict.TryGetValue(key, out int id))
+            {
+                return Rows[id - 1];
+            }
+            return null;           
         }
 
         protected override bool UpdateOrInsert(RSS_PositionRow updateData)

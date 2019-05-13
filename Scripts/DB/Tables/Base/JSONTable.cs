@@ -123,7 +123,7 @@ namespace DataTable
         public virtual void UpdateTable(JSONObject jsonObj)
         {
             int count = jsonObj.Count;
-            Debugger.Log("count: " + count);
+            //Debugger.Log("update table object count: " + count);
             if (count == 0)
             {
                 T updateData = JsonUtility.FromJson<T>(jsonObj.ToString());

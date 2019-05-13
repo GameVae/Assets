@@ -56,7 +56,7 @@ public class Task_CheckDatabase : IGameTask
 
             completed++;
             Progress = completed * 1.0f / capacity;
-            Debugger.Log("Copy progress: " + Progress);
+            //Debugger.Log("Copy progress: " + Progress);
         }
         IsDone = true;
         yield break;
