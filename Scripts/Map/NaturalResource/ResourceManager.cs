@@ -15,8 +15,6 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
     private QuadNode rssPositionTree;
     private GameObject resourceContainer;
     private Pooling<NaturalResource> rssPooling;
-    //private GameObject[] resourceTypes;
-    //private GameObject[] flags;
 
     private bool isCreateComplete;
     private bool isWaiting;
@@ -77,7 +75,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         get
         {
             return rssPositionTree ??
-                (rssPositionTree = new QuadNode(0, 0,
+                (rssPositionTree = new QuadNode(0, 0,null,
                 new Vector3Int(5, 5, 0),
                 new Vector3Int(517, 517, 0)));
         }
@@ -102,124 +100,15 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         }
     }
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
-        #region old
-        //resourceTypes = new GameObject[]
-        //{
-        //    Prefab.GetChild(0).gameObject,
-        //    Prefab.GetChild(1).gameObject,
-        //    Prefab.GetChild(2).gameObject,
-        //    Prefab.GetChild(3).gameObject,
-        //};
-        //flags = new GameObject[]
-        //{
-        //    Prefab.GetChild(4).gameObject,
-        //    Prefab.GetChild(5).gameObject,
-        //    Prefab.GetChild(6).gameObject,
-        //};
-        #endregion
-
         isCreateComplete = true;
         isWaiting = false;
 
         resourceContainer = new GameObject("RESOURCE_CONTAINER");
         currentOverlapNodeId = new int[4] { -1, -1, -1, -1 };
-    }
 
-    private void Start()
-    {
-        // StartCoroutine(StartCreateRss());       
         CameraController.CameraChanged += CameraChanged;
-    }
-
-    #region Old
-    //private IEnumerator StartCreateRss()
-    //{
-    //    AJPHelper.Operation oper = RSSPositionTable.Operation;
-    //    while (!oper.IsDone)
-    //        yield return null;
-
-    //    int count = RSSPositionTable.ReadOnlyRows.Count;
-    //    ReadOnlyCollection<RSS_PositionRow> rows = RSSPositionTable.ReadOnlyRows;
-
-    //    int i = 0;
-
-    //    while (i < count)
-    //    {
-    //        int id = i + 1;
-    //        NaturalResource rs = GenResource((RssType)rows[i].RssType, Flag.Owner, id);
-    //        rs.Initalize(id, this);
-    //        Resources[id] = rs;
-
-    //        i++;
-    //        yield return null;
-    //    }
-    //    yield break;
-    //}
-
-    //private NaturalResource GenResource(RssType rssType, Flag group, int id)
-    //{
-    //    NaturalResource newGO = new GameObject("Resource" + rssType.ToString() + id).AddComponent<NaturalResource>();
-    //    newGO.gameObject.layer = LayerMask.NameToLayer("RSS");
-
-    //    //newGO.Id = id;
-    //    Instantiate(resourceTypes[((int)rssType - 1)], newGO.transform);    // resource
-    //    Instantiate(flags[(int)group], newGO.transform);                         // flag
-
-    //    newGO.transform.SetParent(resourceContainer.transform);
-
-    //    //BoxCollider colli = newGO.gameObject.AddComponent<BoxCollider>();
-    //    //colli.center = new Vector3(0, 1, 0);
-    //    //colli.size = new Vector3(2, 2, 2);
-    //    //colli.isTrigger = true;
-
-    //    return newGO;
-    //}
-    #endregion
-
-    public bool IsRssAtPosition(Vector3Int position, out int id)
-    {
-        id = -1;
-        foreach (KeyValuePair<int, NaturalResource> item in Resources)
-        {
-            Vector3Int rsPos = item.Value.Data.Position.Parse3Int().ToClientPosition();
-            if (rsPos == position)
-            {
-                id = item.Key;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool ReturnRSS(NaturalResource rss)
-    {
-        int id = rss.Id;
-        RssPooling.Release(rss);
-
-        if (Resources.ContainsKey(id))
-        {
-            return Resources.Remove(id);
-        }
-        return false;
-    }
-
-    public bool ReturnRSS(int id)
-    {
-        if (Resources.ContainsKey(id))
-        {
-            RssPooling.Release(Resources[id]);
-            //Debugger.Log("Released " + id);
-            return Resources.Remove(id);
-        }
-        else
-        {
-            //Debugger.Log("release failure: " + id);
-            return false;
-        }
     }
 
     private void CameraChanged()
@@ -251,7 +140,7 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
     {
         ReleaseNodes.Clear();
         //Debugger.Log("Current overlap node: ");
-        currentOverlapNodeId.Log(" ");
+        //currentOverlapNodeId.Log(" ");
         foreach (int key in CreatedNodes.Keys)
         {
             if (!currentOverlapNodeId.IsContaint(key))
@@ -321,14 +210,21 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         while (!oper.IsDone)
             yield return null;
 
+        //if (!treeInited)
+        //{
+        //    int rssCount = RSSPositionTable.Count;
+        //    for (int iter = 0; iter < rssCount; iter++)
+        //    {
+        //        rssPositionTree.Insert
+        //            (RSSPositionTable.ReadOnlyRows[iter].Position.Parse3Int().ToClientPosition());
+        //    }
+        //    treeInited = true;
+        //}
+
         if (!treeInited)
         {
-            int rssCount = RSSPositionTable.Count;
-            for (int iter = 0; iter < rssCount; iter++)
-            {
-                rssPositionTree.Insert
-                    (RSSPositionTable.ReadOnlyRows[iter].Position.Parse3Int().ToClientPosition());
-            }
+            rssPositionTree.AsyncCreateTree(GetRssPositionEnumerable());
+            while (rssPositionTree.IsAsyncCreateComplete) { yield return null; }
             treeInited = true;
         }
 
@@ -344,7 +240,6 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
             {
 
                 /// Using pool object for natural resource
-                //NaturalResource rs = GenResource((RssType)rssData.RssType, Flag.Owner, rssData.ID);
                 NaturalResource rs = RssPooling.GetItem();
                 rs.gameObject.name = "Resource" + rssData.RssType.ToString() + rssData.ID;
 
@@ -369,5 +264,44 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         NaturalResource rss = Instantiate(RssPrefab, resourceContainer.transform);
         rss.FirstSetup(insId);
         return rss;
+    }
+
+    public bool ReturnRSS(int id)
+    {
+        if (Resources.ContainsKey(id))
+        {
+            RssPooling.Release(Resources[id]);
+            //Debugger.Log("Released " + id);
+            return Resources.Remove(id);
+        }
+        else
+        {
+            //Debugger.Log("release failure: " + id);
+            return false;
+        }
+    }
+
+    public bool IsRssAtPosition(Vector3Int position, out int id)
+    {
+        id = -1;
+        foreach (KeyValuePair<int, NaturalResource> item in Resources)
+        {
+            Vector3Int rsPos = item.Value.Data.Position.Parse3Int().ToClientPosition();
+            if (rsPos == position)
+            {
+                id = item.Key;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEnumerable<Vector3Int> GetRssPositionEnumerable()
+    {
+        int rssCount = RSSPositionTable.Count;
+        for (int iter = 0; iter < rssCount; iter++)
+        {
+            yield return RSSPositionTable.ReadOnlyRows[iter].Position.Parse3Int().ToClientPosition();
+        }
     }
 }

@@ -23,13 +23,6 @@ public class NaturalResource : MonoBehaviour, IPoolable
     private GameObject rss;
     private GameObject flag;
 
-    public RSS_PositionRow Data
-    {
-        get
-        {
-            return data;
-        }
-    }
     public int Id
     {
         get
@@ -37,10 +30,23 @@ public class NaturalResource : MonoBehaviour, IPoolable
             return Data.ID;
         }
     }
-
-    public Vector3Int Position { get; private set; }
-
-    public int ManagedId { get; private set; }
+    public int ManagedId
+    {
+        get;
+        private set;
+    }
+    public Vector3Int Position
+    {
+        get;
+        private set;
+    }
+    public RSS_PositionRow Data
+    {
+        get
+        {
+            return data;
+        }
+    }
 
     public void OpenPopup(Popup popupIns)
     {
@@ -53,7 +59,6 @@ public class NaturalResource : MonoBehaviour, IPoolable
 
     public void SetResourceData(RSS_PositionRow _data, Flag group, Vector3 worldPosition)
     {
-        //data = manager.RSSPositionTable.ReadOnlyRows[id - 1];
         data = _data;
         if (Data != null)
         {
@@ -65,19 +70,10 @@ public class NaturalResource : MonoBehaviour, IPoolable
 
             // parse position
             Position = Data.Position.Parse3Int().ToClientPosition();
-            //transform.position = manager.MapIns.CellToWorld(Position.ToClientPosition());
 
             transform.position = worldPosition;
-            //AddLookAtComponent();
+            LookAtCamera();
         }
-    }
-
-    private void AddLookAtComponent()
-    {
-        LookAt look = gameObject.AddComponent<LookAt>();
-        //look.GameObject = flag.transform;
-        look.Target = Camera.main.transform;
-        look.ProjectionDir = ProjectionDir.Right;
     }
 
     public void FirstSetup(int insId)
@@ -92,5 +88,11 @@ public class NaturalResource : MonoBehaviour, IPoolable
         flag.SetActive(false);
         Position = Vector3Int.one * -1;
         gameObject.SetActive(false);
+    }
+
+    private void LookAtCamera()
+    {
+        Transform Target = Camera.main.transform;
+        flag.transform.LookAt(Vector3.ProjectOnPlane(flag.transform.position, Target.right));
     }
 }

@@ -262,11 +262,13 @@ public class CameraController : MonoBehaviour
     #endregion
     #endregion
 
+#if UNITY_EDITOR
     public Vector3Int Position;
     [ContextMenu("Set Camera")]
     public void Set()
     {
         Set(Position);
     }
+#endif
 }
 

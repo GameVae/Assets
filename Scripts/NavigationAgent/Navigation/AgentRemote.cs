@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using Animation;
 using Generic.Singleton;
 using System;
+using DataTable;
 
 namespace Entities.Navigation
 {
@@ -27,7 +28,7 @@ namespace Entities.Navigation
             remove { deathEvents -= value; }
         }
 
-        private ISubject<Observer_Unit> unitSubject;
+        private JSONTable_Unit unitSubject;
         private Observer_Unit observer;
 
         private NavAgent navAgent;
@@ -147,7 +148,7 @@ namespace Entities.Navigation
         }
 
         public void Initalize(
-            ISubject<Observer_Unit> subject,
+            JSONTable_Unit subject,
             LightweightLabel label,
             UnitRow unitData,
             UserInfoRow user,
@@ -167,7 +168,9 @@ namespace Entities.Navigation
             Label.SetHP(unitData.Hea_cur, unitData.Health);
             Label.Quality = unitData.Quality;
 
-            observer = new Observer_Unit(unitData);
+            observer= subject.ObserverPooling.GetItem();
+            //observer = new Observer_Unit(unitData);
+            observer.RefreshSubject(unitData);
             observer.OnSubjectUpdated += SubjectChanged;
             subject.Register(observer);
         }
@@ -204,7 +207,7 @@ namespace Entities.Navigation
                 int otherID = int.Parse(strs[3]);
 
                 AgentRemote other = AgentRemoteManager.GetAgentRemote(otherID);
-                if (other != null)
+                if (other != null && !IsMoving())
                 {
                     transform.forward = (other.transform.position - transform.position).normalized;
                     Animator.Play(AnimState.Attack1);
@@ -256,7 +259,8 @@ namespace Entities.Navigation
             Unbinding();
 
             unitSubject.Remove(observer);
-            observer.Dispose();
+            unitSubject.ObserverPooling.Release(observer);
+            
             gameObject.SetActive(false);
         }
     }

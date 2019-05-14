@@ -8,6 +8,10 @@ namespace Generic.Contants
     public sealed class Constants : MonoSingle<Constants>
     {
         /// <summary>
+        /// Streaming Assets path for config file
+        /// </summary>
+        public const string ConfigFilePath = "/Config/.config";
+        /// <summary>
         /// Length base on cell
         /// </summary>
         public const int TOTAL_COL = 522;

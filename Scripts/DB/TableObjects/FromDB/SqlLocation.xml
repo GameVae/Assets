@@ -1,3 +1,4 @@
+<Config>
 <SQLiteLocalLink>
 	<Link>
 		<Type>Task</Type>
@@ -8,3 +9,4 @@
 		<URI>DB/Infantry.sqlite</URI>
 	</Link>
 </SQLiteLocalLink>
+</Config>

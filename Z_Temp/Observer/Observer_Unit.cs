@@ -12,18 +12,23 @@ public class Observer_Unit : IObserver, IComparable, IPoolable
         public UnitRow Unit;
     }
 
+    private bool inited;
+    private UnitRow unit;
+    private Package package;
+    private List<UnityAction<Package>> actions;
+
     public int UnitId
     {
         get { return unit.ID; }
     }
-
-    public int ManagedId { get; private set; }
-
-    private bool inited;
-    private UnitRow unit;
-    private Package package;
-
-    private List<UnityAction<Package>> actions;
+    public int ManagedId
+    {
+        get; private set;
+    }
+    public UnitRow Subject
+    {
+        get { return unit; }
+    }
     public event UnityAction<Package> OnSubjectUpdated
     {
         add
@@ -38,13 +43,12 @@ public class Observer_Unit : IObserver, IComparable, IPoolable
                 actions.RemoveAt(index);
         }
     }
-
-    public UnitRow Subject
+      
+    public Observer_Unit() { }
+    public Observer_Unit(UnitRow subject)
     {
-        get
-        {
-            return unit;
-        }
+        unit = subject;
+        inited = true;
     }
 
     public void Dispose()
@@ -54,20 +58,15 @@ public class Observer_Unit : IObserver, IComparable, IPoolable
         unit = null;
         inited = false;
     }
-
     public int CompareTo(object obj)
     {
         Observer_Unit other = obj as Observer_Unit;
         return UnitId.CompareTo(other.UnitId);
     }
-
-    public Observer_Unit() { }
-    public Observer_Unit(UnitRow subject)
+    public void FirstSetup(int insId)
     {
-        unit = subject;
-        inited = true;
+        ManagedId = insId;
     }
-
     public void RefreshSubject(UnitRow subject)
     {
         if (!inited)
@@ -76,7 +75,6 @@ public class Observer_Unit : IObserver, IComparable, IPoolable
             inited = true;
         }
     }
-
     public void SubjectUpdated(object dataPacked)
     {
         package = dataPacked as Package;
@@ -89,10 +87,5 @@ public class Observer_Unit : IObserver, IComparable, IPoolable
                 actions[i].Invoke(package);
             }
         }
-    }
-
-    public void FirstSetup(int insId)
-    {
-        ManagedId = insId;
     }
 }

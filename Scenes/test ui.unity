@@ -1393,6 +1393,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306089949}
   m_CullTransparentMesh: 0
+--- !u!1 &322200750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 322200751}
+  - component: {fileID: 322200752}
+  m_Layer: 0
+  m_Name: xmlSer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &322200751
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322200750}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 566717441}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &322200752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 322200750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff4440c90640a64fb26607ac805b159, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  links:
+    Links:
+    - Persistent: DB/Infantry.sqlite
+      Local: 
+      Type: 0
+    - Persistent: DB/Task.sqlite
+      Local: 
+      Type: 0
+    - Persistent: Xml/AgentDecisionTree.config
+      Local: 
+      Type: 1
+  deserLinks:
+    Links: []
 --- !u!224 &411400777 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224612869638922312, guid: 024e8c9dd4d849a4697eb95e884604f3,
@@ -1785,6 +1841,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1395682794}
+  - {fileID: 322200751}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1800,24 +1857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a820a3450c6194199adc5d8fb06eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AgentTest: {fileID: 0}
-  moveEvent: {fileID: 0}
-  eventSystem: {fileID: 0}
-  mainbase: {fileID: 11400000, guid: c29a9e8656513124ba1af8f29cf09ba7, type: 2}
-  military: {fileID: 11400000, guid: 5ed5adb73bc9e4948a69b968c8827d5b, type: 2}
-  trainningCost: {fileID: 11400000, guid: 94279d21dc538df4f837c4ae7e4ecf32, type: 2}
-  events: {fileID: 283400426}
-  loginEvent: {fileID: 1778894004}
-  rss_table1: {fileID: 11400000, guid: e124cee6300e59547bb4d24f4e073e7f, type: 2}
-  rss_table2: {fileID: 11400000, guid: 50a070702fda4a4499f3cf1df06e34b8, type: 2}
-  rss_table3: {fileID: 11400000, guid: c223aede01939ff489929c1baafc17ed, type: 2}
-  ThreadHelper: {fileID: 15553922}
-  prefabLabelv2: {fileID: 1556557048}
-  canvas: {fileID: 765654371}
-  headPoint: {fileID: 1460220142}
-  PositionTable: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
-  CameraBinding: {fileID: 0}
-  path: /Unity/TestDirectory/bbb
 --- !u!1 &605469872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1876,7 +1915,7 @@ MonoBehaviour:
   toggleSelectedEvt:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.16421,
+    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.26708,
       Culture=neutral, PublicKeyToken=null
   DefaultSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf, type: 2}
 --- !u!224 &618758969 stripped
@@ -2259,24 +2298,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23a820a3450c6194199adc5d8fb06eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AgentTest: {fileID: 0}
-  moveEvent: {fileID: 0}
-  eventSystem: {fileID: 0}
-  mainbase: {fileID: 0}
-  military: {fileID: 0}
-  trainningCost: {fileID: 0}
-  events: {fileID: 0}
-  loginEvent: {fileID: 0}
-  rss_table1: {fileID: 0}
-  rss_table2: {fileID: 0}
-  rss_table3: {fileID: 0}
-  ThreadHelper: {fileID: 0}
-  prefabLabelv2: {fileID: 0}
-  canvas: {fileID: 0}
-  headPoint: {fileID: 0}
-  PositionTable: {fileID: 0}
-  CameraBinding: {fileID: 0}
-  path: 
 --- !u!65 &1010543705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2667,12 +2688,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1405292893}
   m_CullTransparentMesh: 0
---- !u!4 &1460220142 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3952365730068608545, guid: 758295eb99f9fc341a7a612674933ffe,
-    type: 3}
-  m_PrefabInstance: {fileID: 1955486473}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1535326718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2818,18 +2833,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3899417707939709937}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1556557048 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3899417706794479369, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-    type: 3}
-  m_PrefabInstance: {fileID: 3899417707939709937}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 816f589c8b64984449aab4b75d6ebc2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1583524501 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4285583235511089894, guid: 8b252d30f0cadaa45bba646af7def1c6,
@@ -3736,26 +3739,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Label
       objectReference: {fileID: 0}
-    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_havePropertiesChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
-        type: 3}
-      propertyPath: m_isInputParsingRequired
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3899417706794479366, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3860,6 +3843,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707785086049, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899417707799422712, guid: d131ffe9b4aa1e444a2af94a9b8975ad,
+        type: 3}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d131ffe9b4aa1e444a2af94a9b8975ad, type: 3}

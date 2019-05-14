@@ -24,7 +24,7 @@ public class QuadGizmos : MonoBehaviour
     {
         allQuadNode = new List<QuadNode>();
 
-        RootNode = new QuadNode(0,0,
+        RootNode = new QuadNode(0,0,null,
             new Vector3Int(5, 5, 0),
             new Vector3Int(517, 517, 0));
 

@@ -22,7 +22,7 @@ namespace DataTable
                 return observers ?? (observers = new List<Observer_Unit>());
             }
         }
-        private Pooling<Observer_Unit> ObserverPooling
+        public Pooling<Observer_Unit> ObserverPooling
         {
             get
             {
@@ -30,6 +30,7 @@ namespace DataTable
                     (observerPooling = new Pooling<Observer_Unit>(CreateObserver));
             }
         }
+
         private Observer_Unit CreateObserver(int id)
         {
             Observer_Unit observer = new Observer_Unit();

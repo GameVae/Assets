@@ -15,15 +15,6 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
 {
 
     [SerializeField] private Camera mainCamera;
-    public Camera MainCamera
-    {
-        get
-        {
-            return mainCamera ?? (mainCamera = Camera.main);
-        }
-    }
-
-    public AgentPooling AgentPooling;
     public MyAgentRemoteManager MyAgentRemoteManager;
 
     public Sync SyncData;
@@ -34,12 +25,28 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
     public LightweightLabel LabelPrefab;
     public RectTransform LabelContainer;
 
+    private AgentPooling agentPooling;
     private Pooling<LightweightLabel> labelPooling;
     private JSONTable_Unit UnitTable;
     private JSONTable_UserInfo Users;
     private EventListenersController Events;
 
     private Dictionary<int, AgentRemote> allAgents;
+
+    public Camera MainCamera
+    {
+        get
+        {
+            return mainCamera ?? (mainCamera = Camera.main);
+        }
+    }
+    public AgentPooling AgentPooling
+    {
+        get
+        {
+            return agentPooling ?? (agentPooling = Singleton.Instance<AgentPooling>());
+        }
+    }
     public Dictionary<int, AgentRemote> AllAgents
     {
         get
@@ -47,7 +54,6 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
             return allAgents ?? (allAgents = new Dictionary<int, AgentRemote>());
         }
     }
-
 
     protected override void Awake()
     {
@@ -122,7 +128,7 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
             agentRemote.gameObject.SetActive(true);
         }
     }
-
+   
     private IEnumerator StartCreateAgents()
     {
         AJPHelper.Operation oper = UnitTable.Operation;
@@ -148,9 +154,9 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
 
     }
 
-    public bool IsOwnerAgent(int id)
+    private bool RemoveAgent(int id)
     {
-        return MyAgentRemoteManager.IsOwnerAgent(id);
+        return AllAgents.Remove(id);
     }
 
     private bool AddAgent(int id,AgentRemote remote)
@@ -161,17 +167,17 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
             return true;
         }
         return false;
+    }   
+
+    public bool IsOwnerAgent(int id)
+    {
+        return MyAgentRemoteManager.IsOwnerAgent(id);
     }
 
     public AgentRemote GetAgentRemote(int id)
     {
         AllAgents.TryGetValue(id, out AgentRemote value);
         return value;
-    }
-
-    private bool RemoveAgent(int id)
-    {
-        return AllAgents.Remove(id);
     }
 
 }

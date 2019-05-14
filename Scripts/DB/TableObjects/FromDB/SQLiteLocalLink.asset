@@ -18,4 +18,4 @@ MonoBehaviour:
   - LocalLink: 2
     DBPath: DB/Infantry.sqlite
   - LocalLink: 3
-    DBPath: DecisionMaking/AgentDecisionTree.config
+    DBPath: Xml/AgentDecisionTree.config

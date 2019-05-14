@@ -55,7 +55,7 @@ public sealed class DecisionTreeLoader : ISingleton
         try
         {
             // TODO:
-            Debugger.Log(info.XmlLocalPath);
+            //Debugger.Log(info.XmlLocalPath);
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(info.XmlLocalPath);
@@ -63,8 +63,8 @@ public sealed class DecisionTreeLoader : ISingleton
             DecisionTreeNode tree = CreateNode(xmlDoc.FirstChild, info.MethodContainer);
 
             // TODO:
-            Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
-            Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
+            //Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
+            //Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
 
             info.ResultHanlder.Invoke(tree);
         }
@@ -72,6 +72,11 @@ public sealed class DecisionTreeLoader : ISingleton
         {
             Debugger.Log(e);
         }
+    }
+
+    public void AsyncCreateNode(TreeInfo info)
+    {
+        MultiThreadHelper.ThreadInvoke(Callback, info);
     }
 
     public DecisionTreeNode CreateNode(XmlNode node, object target)
@@ -96,18 +101,13 @@ public sealed class DecisionTreeLoader : ISingleton
         }
         return null;
     }
-
-    public void AsyncCreateNode(TreeInfo info)
-    {
-        MultiThreadHelper.ThreadInvoke(Callback, info);
-    }
-
+   
     public DecisionTreeNode CreateNode(string xmlPath,object target)
     {
         try
         {
             // TODO:
-            Debugger.Log(xmlPath);
+            //Debugger.Log(xmlPath);
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(xmlPath);
@@ -115,8 +115,8 @@ public sealed class DecisionTreeLoader : ISingleton
             DecisionTreeNode tree = CreateNode(xmlDoc.FirstChild,target);
 
             // TODO:
-            Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
-            Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
+            //Debugger.Log("first node: " + xmlDoc.FirstChild.LocalName);
+            //Debugger.Log("Loaded bh tree: " + tree + " - doc: " + xmlDoc);
             return tree;
         }
         catch (Exception e)
