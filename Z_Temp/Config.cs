@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using Generic.Contants;
 using Generic.Singleton;
 using UnityEngine;
@@ -9,17 +10,9 @@ public class Config : MonoSingle<Config>, IGameTask
 {
     private const string localPathKey = "ConfigPath";
     private FileConfig fileConfig;
-    public XmlEncoder XmlEncoder;
-    public string ConfigPath;
-    public CopyAssetsAndroid CopyAssets;
 
-    FileConfig FileConfig
-    {
-        get
-        {
-            return fileConfig ?? (fileConfig = LoadConfigFile());
-        }
-    }
+    public XmlEncoder XmlEncoder;
+    public CopyAssetsAndroid CopyAssets;
 
     public bool IsDone
     {
@@ -31,11 +24,25 @@ public class Config : MonoSingle<Config>, IGameTask
         get;
         private set;
     }
+    public FileConfig FileConfig
+    {
+        get
+        {
+            return fileConfig ?? (fileConfig = LoadConfigFile());
+        }
+    }
 
     private FileConfig LoadConfigFile()
     {
         string configFilePath = PlayerPrefs.GetString(localPathKey);
-        return XmlEncoder.Deserialize<FileConfig>(configFilePath);
+        FileConfig config = XmlEncoder.Deserialize<FileConfig>(configFilePath);
+
+        if(config.FirstSetup)
+        {
+            SetupConfig(ref config);
+        }
+
+        return config;
     }
 
     public IEnumerator Action()
@@ -46,7 +53,6 @@ public class Config : MonoSingle<Config>, IGameTask
         string configFilePath = PlayerPrefs.GetString(localPathKey);
         if (string.IsNullOrEmpty(configFilePath))
         {
-
             string streamingPath = UnityPath.Combinate(Constants.ConfigFilePath, UnityPath.AssetPath.StreamingAsset);
             string localConfigPath =
                 UnityPath.GetDirectory(Constants.ConfigFilePath) + @"\" +
@@ -59,5 +65,30 @@ public class Config : MonoSingle<Config>, IGameTask
         }
         IsDone = true;
         Progress = 1.0f;
+    }
+
+    private void SetupConfig(ref FileConfig config)
+    {
+        FileLink[] links = config.Links;
+        for (int i = 0; i < links.Length; i++)
+        {
+            links[i].Local = Guid.NewGuid().ToString() + UnityPath.GetExtension(links[i].Streaming);
+        }
+
+        config.Links = links;
+        config.FirstSetup = false;
+
+        SerializeConfigFile(config);
+    }
+
+    private void SerializeConfigFile(FileConfig config)
+    {
+        string configFilePath = PlayerPrefs.GetString(localPathKey);
+        string tempXml = UnityPath.Combinate("temp.xml",UnityPath.AssetPath.Persistent);
+
+        XmlEncoder.Serialize<FileConfig>(tempXml, config);
+        XmlEncoder.Encode(tempXml, configFilePath);
+
+        File.Delete(tempXml);
     }
 }

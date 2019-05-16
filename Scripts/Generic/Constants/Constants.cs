@@ -10,7 +10,7 @@ namespace Generic.Contants
         /// <summary>
         /// Streaming Assets path for config file
         /// </summary>
-        public const string ConfigFilePath = "/Config/.config";
+        public const string ConfigFilePath = "/Config/game.config";
         /// <summary>
         /// Length base on cell
         /// </summary>

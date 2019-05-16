@@ -10,19 +10,19 @@ using UnityEngine;
 
 public class XmlEncoder : MonoBehaviour
 {
-    public FileConfig links;
-    public FileConfig deserLinks;
+    //public FileConfig links;
+    //public FileConfig deserLinks;
 
-    public void Start()
-    {
-        string path = Application.persistentDataPath + @"/xmlFile.xml";
-        string binaryPath = Application.persistentDataPath + @"/biFile.xml";
+    //public void Start()
+    //{
+    //    string path = Application.persistentDataPath + @"/xmlFile.xml";
+    //    string binaryPath = Application.persistentDataPath + @"/biFile.xml";
 
-        //Serialize<Config>(path, links);
-        //Encode(path, binaryPath);
-        //deserLinks = Deserialize<Config>(binaryPath) as Config;
-        CreateConfigFile(path, binaryPath);
-    }
+    //    //Serialize<FileConfig>(path, links);
+    //    //Encode(path, binaryPath);
+    //    //deserLinks = Deserialize<FileConfig>(binaryPath) as FileConfig;
+    //    //CreateConfigFile(path, binaryPath);
+    //}
 
     public void Encode(string xmlPath, string location)
     {
@@ -75,17 +75,17 @@ public class XmlEncoder : MonoBehaviour
         }
     }
 
-    public void CreateConfigFile(string path,string binaryPath)
-    {
-        FileConfig config = Deserialize<FileConfig>(binaryPath) as FileConfig;
-        for (int i = 0; i < config.Links.Length; i++)
-        {
-            config.Links[i].Local = Guid.NewGuid().ToString() 
-                + UnityPath.GetExtension(config.Links[i].Persistent);
-        }
+    //public void CreateConfigFile(string path,string binaryPath)
+    //{
+    //    FileConfig config = Deserialize<FileConfig>(binaryPath) as FileConfig;
+    //    for (int i = 0; i < config.Links.Length; i++)
+    //    {
+    //        config.Links[i].Local = Guid.NewGuid().ToString() 
+    //            + UnityPath.GetExtension(config.Links[i].Streaming);
+    //    }
 
-        Serialize<FileConfig>(path, config);
-        deserLinks = Deserialize<FileConfig>(binaryPath) as FileConfig;
-    }
+    //    Serialize<FileConfig>(path, config);
+    //    deserLinks = Deserialize<FileConfig>(binaryPath) as FileConfig;
+    //}
        
 }

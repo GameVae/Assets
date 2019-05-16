@@ -186,8 +186,8 @@ namespace Entities.Navigation
             }
             else
             {
-                SetLabel();
                 CheckAttack();
+                SetLabel();
             }
 
         }

@@ -1437,17 +1437,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   links:
+    FirstSetup: 1
     Links:
-    - Persistent: DB/Infantry.sqlite
+    - Streaming: DB/Infantry.sqlite
       Local: 
       Type: 0
-    - Persistent: DB/Task.sqlite
+    - Streaming: DB/Task.sqlite
       Local: 
       Type: 0
-    - Persistent: Xml/AgentDecisionTree.config
+    - Streaming: Xml/AgentDecisionTree.config
       Local: 
       Type: 1
   deserLinks:
+    FirstSetup: 0
     Links: []
 --- !u!224 &411400777 stripped
 RectTransform:
@@ -1915,7 +1917,7 @@ MonoBehaviour:
   toggleSelectedEvt:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.26708,
+    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.31076,
       Culture=neutral, PublicKeyToken=null
   DefaultSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf, type: 2}
 --- !u!224 &618758969 stripped

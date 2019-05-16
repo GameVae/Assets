@@ -9,7 +9,7 @@ public class FileLink
         Xml,
     }
 
-    public string Persistent;
+    public string Streaming;
     public string Local;
     public FileType Type;
 }

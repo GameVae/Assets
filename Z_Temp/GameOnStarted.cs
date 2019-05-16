@@ -9,9 +9,11 @@ public class GameOnStarted : MonoBehaviour
     public SIO_LoginListener LoginListener;
     public LoadingPanel LoadingPanel;
     public SceneLoader SceneLoader;
+    public Config Config;
 
     private void Start()
     {
+        //LoadingPanel.Add(Config, "Setup config ...");
         LoadingPanel.Add(new Task_CheckDatabase(SQLiteLocalLink), "Checking data ...");
         LoadingPanel.Add(new Task_CheckVersion(TableLoader), "Checking version ...");
         LoadingPanel.Open();
