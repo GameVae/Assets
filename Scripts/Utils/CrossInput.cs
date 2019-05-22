@@ -48,11 +48,11 @@ namespace Generic.CustomInput
         {
             get
             {
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
                 return TouchCount == 1 &&
                     (GetTouch(0).phase == TouchPhase.Ended || GetTouch(0).phase == TouchPhase.Canceled);
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
+
+#else
                 return pointerState == PointerState.Up;
 #endif
             }
@@ -62,15 +62,16 @@ namespace Generic.CustomInput
         {
             get
             {
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
                 if (TouchCount == 1)
                 {
-                    axises = GetTouch(0).deltaPosition;                    
-                } else axises = Vector2.zero;
+                    axises = GetTouch(0).deltaPosition;
+                }
+                else axises = Vector2.zero;
                 return axises * Constants.PixelDependencyDevice;
 #endif
 
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if !UNITY_REMOTE  || UNITY_STANDALONE
                 return axises * Constants.PixelDependencyDevice;
 #endif
             }
@@ -88,12 +89,11 @@ namespace Generic.CustomInput
         {
             get
             {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
                 if (TouchCount > 0)
                     return GetTouch(0).position;
                 return Vector3.zero;
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
+#else
                 return Input.mousePosition;
 #endif
             }
@@ -101,29 +101,26 @@ namespace Generic.CustomInput
 #region Touch Properties
         public int TouchCount
         {
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
             get { return Input.touchCount; }
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
+#else
             get { return Input.GetMouseButton(0) ? 1 : 0; }
 #endif
         }
 
         public Touch GetTouch(int index)
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
-            Debugger.WarningLog("Editor not support touch");
-            return default(Touch);
-#endif
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
             if (TouchCount > index)
                 return Input.GetTouch(index);
 
             Debugger.ErrorLog("Out of Range of Touching");
             return default(Touch);
+#else
+            Debugger.WarningLog("Editor not support touch");
+            return default(Touch);
 #endif
         }
-
 #endregion
 
         protected override void Awake()
@@ -134,12 +131,11 @@ namespace Generic.CustomInput
 
         private void LateUpdate()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if (UNITY_REMOTE && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
+            pointerState = MobilePointerState(pointerState);
+#else
             RecordMouseState();
             pointerState = EditorPointerState(pointerState);
-#endif
-#if !UNITY_EDITOR && UNITY_ANDROID
-            pointerState = MobilePointerState(pointerState);
 #endif
         }
 
@@ -226,25 +222,24 @@ namespace Generic.CustomInput
 
         public float ZoomValue()
         {
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if (UNITY_REMOTE && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
             return GetMobileZoomValue();
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
+#else
             return Input.mouseScrollDelta.y;
 #endif
         }
 
 
-#region Editor
+        #region Editor
         private void RecordMouseState()
         {
             axises = Input.mousePosition - lastPosition;
             lastPosition = Input.mousePosition;
         }
 
-#endregion
+        #endregion
 
-#region  Mobile
+        #region  Mobile
 
         private float GetMobileZoomValue()
         {
@@ -264,6 +259,6 @@ namespace Generic.CustomInput
             }
             return (zoomValue * Constants.PixelDependencyDevice) / Time.deltaTime;
         }
-#endregion
+        #endregion
     }
 }

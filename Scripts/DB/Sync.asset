@@ -22,8 +22,8 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 12022
-    Killed: 0
+    Might: 11794
+    Killed: 116
   RSS_Position: {fileID: 11400000, guid: ce647cdbb1aa518498a95d114425a455, type: 2}
   Position: {fileID: 11400000, guid: 3a7a7582f5be8d24a9c795572c169ec6, type: 2}
   UserInfos: {fileID: 11400000, guid: 30c8655fc391a2d42b3e389ce1501a41, type: 2}
@@ -38,3 +38,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9fbdff15c26170d41b1a0ffbdf8f1bc0, type: 2}
   UnitTable: {fileID: 11400000, guid: b0dd89b392b294d4190d5b0284cfb94f, type: 2}
   BasePlayerTable: {fileID: 11400000, guid: c19df3ad781dab04892bd802baa9b2ca, type: 2}
+  FriendTable: {fileID: 11400000, guid: 4e0fe94a54549fc4c8f223a8dce4d039, type: 2}

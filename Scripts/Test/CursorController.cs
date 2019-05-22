@@ -87,7 +87,7 @@ public class CursorController : MonoBehaviour
     {
         get
         {
-            return towerPositions ?? (towerPositions = 
+            return towerPositions ?? (towerPositions =
                 NodeManagerFactory.GetManager<ConstructWayPoint>(NodeType.Range) as RangeWayPointManager);
         }
     }
@@ -114,22 +114,25 @@ public class CursorController : MonoBehaviour
     {
         if (selectConditions.Evaluate())
         {
-            Vector3 mousePos = Input.mousePosition;
-
-            bool raycastHitted = Physics.Raycast(
-                CameraRaycaster.ScreenPointToRay(mousePos),
-                out RaycastHit hitInfo,
-                CameraRaycaster.farClipPlane);
-
-            if (raycastHitted)
+            try
             {
-                SelectedPosition = MapIns.WorldToCell(hitInfo.point).ZToZero();
+                Vector3 mousePos = CrossInput.Position;
+                bool raycastHitted = Physics.Raycast(
+                    CameraRaycaster.ScreenPointToRay(mousePos),
+                    out RaycastHit hitInfo,
+                    CameraRaycaster.farClipPlane);
 
-                DetermineSelectedOnTower();
-                // DetermineSelectedOnRSS(hitInfo);
+                if (raycastHitted)
+                {
+                    SelectedPosition = MapIns.WorldToCell(hitInfo.point).ZToZero();
 
-                selectedCallback?.Invoke(SelectedPosition);
+                    DetermineSelectedOnTower();
+                    // DetermineSelectedOnRSS(hitInfo);
+
+                    selectedCallback?.Invoke(SelectedPosition);
+                }
             }
+            catch { Debugger.Log(Input.mousePosition); }
         }
     }
 

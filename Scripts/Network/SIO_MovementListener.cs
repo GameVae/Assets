@@ -162,8 +162,7 @@ public class SIO_MovementListener : Listener
             if (i < count - 1) result += ",";
             curPos = path[i].ToPositionString();
             lastTime += times[i];
-        }
-
+        }              
         return string.Format("[{0}]", result);
     }
 

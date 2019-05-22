@@ -5,7 +5,7 @@ using Extensions.BinarySearch;
 namespace DataTable
 {
     [CreateAssetMenu(fileName = "New UserInfo Table", menuName = "DataTable/JsonTable/UserInfo JSONTable", order = 9)]
-    public sealed class JSONTable_UserInfo : JSONTable<UserInfoRow>, 
+    public sealed class JSONTable_UserInfo : JSONTable<UserInfoRow>,
         ISearchByFakeCompare<UserInfoRow>
     {
         private UserInfoRow searchObject;
@@ -20,6 +20,17 @@ namespace DataTable
         public UserInfoRow GetUserById(int id)
         {
             return Rows.FirstOrDefault_R(GetSearchObject(id));
+        }
+
+        public UserInfoRow GetUserByName(string userName)
+        {
+            int count = Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (Rows[i].NameInGame.Equals(userName))
+                    return Rows[i];
+            }
+            return null;
         }
 
         /// <summary>

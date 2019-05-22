@@ -29,6 +29,7 @@ namespace Network.Data
         public void AddEmiter(string ev, System.Func<JSONObject> getData)
         {
             Emitter[ev] = getData;
+            Debugger.Log("add emmiter " + ev);
         }
 
         public void Emit(string ev)

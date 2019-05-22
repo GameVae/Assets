@@ -79,6 +79,13 @@ public sealed class SIO_StartupListener : Listener
         SyncData.BasePlayerTable.LoadTable(obj.data["R_BASE_PLAYER"]);
     }
 
+    private void R_FRIEND_INFO(SocketIOEvent obj)
+    {
+
+        Debugger.Log(obj.data["R_FRIEND_INFO"]);
+        SyncData.FriendTable.AsyncLoadTable(obj.data["R_FRIEND_INFO"]);
+    }
+
     public override void RegisterCallback()
     {
         On("R_GET_RSS", R_GET_RSS);
@@ -93,8 +100,8 @@ public sealed class SIO_StartupListener : Listener
         On("R_UNIT", R_UNIT);
         On("R_PLAYER_INFO", R_PLAYER_INFO);
         On("R_BASE_PLAYER", R_BASE_PLAYER);
-
-        if(MovementListener)
+        On("R_FRIEND_INFO", R_FRIEND_INFO);
+        if (MovementListener)
             On("R_MOVE", MovementListener.R_MOVE);
     }
 }

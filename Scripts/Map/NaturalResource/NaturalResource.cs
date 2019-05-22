@@ -4,9 +4,11 @@ using UnityEngine;
 
 public enum Flag
 {
+    None = 0,
     Owner = 4,
-    Enemy = 5,
+    Friend = 5,
     Guild = 6,
+    Enemy = 7,
 }
 
 public enum RssType
@@ -65,7 +67,8 @@ public class NaturalResource : MonoBehaviour, IPoolable
             rss = transform.GetChild(Data.RssType - 1).gameObject;
             rss?.SetActive(true);
 
-            flag = transform.GetChild((int)group).gameObject;
+            if (group != Flag.None)
+                flag = transform.GetChild((int)group).gameObject;
             flag?.SetActive(true);
 
             // parse position

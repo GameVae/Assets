@@ -51,6 +51,8 @@ namespace Network.Sync
         public JSONTable_Unit UnitTable;
         public JSONTable_BasePlayer BasePlayerTable;
 
+        public JSONTable_Friends FriendTable;
+
         public void SyncUpdate()
         {
             for (int i = 0; i < BaseInfos.Count; i++)

@@ -24,5 +24,10 @@ using Extensions.Xml;
 
 public class TestObj : MonoBehaviour
 {
-   
+    public void Awake()
+    {
+#if UNITY_DEBUG
+        Debug.Log("test");
+#endif
+    }
 }

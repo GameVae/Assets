@@ -184,7 +184,6 @@ public class SIO_ServerHelperListener : Listener
             curPos = path[i].ToPositionString();
             lastTime += times[i];
         }
-
         return string.Format("[{0}]", result);
     }
     #endregion

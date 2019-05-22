@@ -1,45 +1,43 @@
-﻿using Generic.Pooling;
-using System.Collections.Generic;
-using UI.Widget;
+﻿using DataTable;
+using DataTable.Row;
 
-public class FriendListFunc : ToggleWindow
+public class FriendListFunc : BaseFriendFunc
 {
-    public FriendTag FriendTagPrefab;
-    public GUIScrollView ScrollView;
-
-    private Queue<FriendTag> tags;
-    private Pooling<FriendTag> tagsPooling;
-
-    public override void Load(params object[] input)
-    {
-        for (int i = 0; i < 20; i++)
-        {
-            FriendTag tag = tagsPooling.GetItem();
-            tag.UserName.text = ("User Test" + i);
-            tags.Enqueue(tag);
-        }
-    }
-
-    protected override void Init()
-    {
-        tags = new Queue<FriendTag>();
-        tagsPooling = new Pooling<FriendTag>(TagCreator);
-    }
-
     public override void Close()
     {
         base.Close();
+        Release();
+    }
 
-        while (tags.Count > 0)
+    public override void Load(params object[] input)
+    {
+        JSONTable_Friends friends = SyncData.FriendTable;
+        JSONTable_UserInfo users = SyncData.UserInfos;
+
+        UserInfoRow user = null;
+
+        for (int i = 0; i < friends.Count; i++)
         {
-            tagsPooling.Release(tags.Dequeue());
+            FriendRow friendInfo = friends.ReadOnlyRows[i];
+
+            if (IsAlreadyFriend(friendInfo))
+            {
+                user = users.GetUserById(friendInfo.ID_Player);
+
+                FriendTag tag = GetFriendTag(friendInfo);
+
+                tag.UserName.text = user.NameInGame;
+
+                tag.RemoveButton.OnClickEvents += delegate
+                {
+                    OnUnfriendButton(friendInfo);
+                    ReleaseTag(tag);
+                };
+
+                tag.gameObject.SetActive(true);
+            }
         }
     }
 
-    private FriendTag TagCreator(int insId)
-    {
-        FriendTag tag = Instantiate(FriendTagPrefab, ScrollView.Content);
-        tag.FirstSetup(insId);
-        return tag;
-    }
+    protected override void Init() { }
 }

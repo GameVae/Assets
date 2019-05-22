@@ -66,9 +66,8 @@ public partial class Task_SynchronousClient
             IsDone = true;
 
             manager.Complete(this);
+            Debugger.Log(identify + " received");
             //listener.Off(identify, Received);
         }
-
-        
     }
 }

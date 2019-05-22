@@ -76,10 +76,9 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-#if !UNITY_EDITOR && UNITY_ANDROID
+#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
         CameraGestureHandle();
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE
+#else
         StanaloneGestureHandle();
 #endif
         ValueUpdate();

@@ -446,4 +446,29 @@ namespace DataTable.Row
             return ID_User.CompareTo(other.ID_User);
         }
     }
+
+    [System.Serializable]
+    public class FriendRow : ITableData
+    {
+        public int ID_Player;
+        public float AcceptTime;
+        public float RemoveTime;
+        public bool RequestBool;
+
+        public int CompareTo(object obj)
+        {
+            FriendRow other = obj as FriendRow;
+            return ID_Player.CompareTo(other.ID_Player);
+        }
+
+        public string AcceptTimeString()
+        {
+            return System.TimeSpan.FromSeconds((int)AcceptTime).ToString();
+        }
+
+        public string RemoveTimeString()
+        {
+            return System.TimeSpan.FromSeconds((int)RemoveTime).ToString();
+        }
+    }
 }
