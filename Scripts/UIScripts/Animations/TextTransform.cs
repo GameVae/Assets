@@ -6,9 +6,11 @@ namespace UI.Animation
 {
     public class TextTransform : MonoBehaviour
     {
+#pragma warning disable IDE0044
         [SerializeField] private TextMeshProUGUI textDisplay;
         [SerializeField] private List<string> sentences;
         [SerializeField] private float delayTime;
+#pragma warning restore IDE0044
 
         private bool isPlaying;
         private float timmer;

@@ -14,9 +14,11 @@ namespace Entities.Navigation
     [RequireComponent(typeof(AgentWayPoint))]
     public sealed class AgentRemote : MonoBehaviour, IPoolable
     {
+#pragma warning disable IDE0044
         [SerializeField] private ListUpgrade type;
         [SerializeField] private NavOffset offset;
         [SerializeField] private Transform headPoint;
+#pragma warning restore IDE0044
 
         [SerializeField] // TODO:[TEST] for show in inspector
         private AgentInfo agentInfo;

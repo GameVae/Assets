@@ -6,7 +6,7 @@ using System;
 
 public sealed class AndroidToast : MonoSingle<AndroidToast>
 {
-    private AndroidJavaObject toast;
+    private AndroidJavaClass toast;
     private AndroidJavaObject activityContext;
 
     private void Start()
@@ -16,11 +16,12 @@ public sealed class AndroidToast : MonoSingle<AndroidToast>
             using (AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
             {
                 activityContext = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-                using (AndroidJavaClass toastClass = new AndroidJavaClass("com.unity3d.unity3dtoast.Unity3dToast"))
-                {
-                    toast = toastClass.CallStatic<AndroidJavaObject>("GetInstance");
-                    toast.Call("SetContext", activityContext);
-                }
+                //using (AndroidJavaClass toastClass = new AndroidJavaClass("com.unity.u3dplugins.ToastPlugin"))
+                //{
+                //    //toast = toastClass.CallStatic<AndroidJavaObject>("GetInstance");
+                //    //toast.Call("SetContext", activityContext);
+                //}
+                toast = new AndroidJavaClass("com.unity.u3dplugins.ToastPlugin");
             }
 
         }
@@ -34,7 +35,7 @@ public sealed class AndroidToast : MonoSingle<AndroidToast>
     {
         try
         {
-            toast.Call("ShowPopup", "This is a message call from plugin");
+            toast.CallStatic("showToast", activityContext, "This is a message call from plugin");
             Debugger.Log("toast.show called: toast " + toast + " - activityContext " + activityContext);
         }
         catch (Exception e)

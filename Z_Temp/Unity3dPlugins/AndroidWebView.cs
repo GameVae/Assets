@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 public class AndroidWebView : MonoBehaviour
@@ -8,6 +7,7 @@ public class AndroidWebView : MonoBehaviour
     private AndroidJavaObject activityContext;
 
     public int value;
+
     private void Start()
     {
         try
@@ -15,10 +15,13 @@ public class AndroidWebView : MonoBehaviour
             using (AndroidJavaClass activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
             {
                 activityContext = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
-                using (AndroidJavaClass unity3dWv = new AndroidJavaClass("com.unity3d.unity3dtoast.Unity3dWebView"))
+                using (AndroidJavaClass webViewClass = new AndroidJavaClass("com.unity.u3dplugins.WebViewPlugin"))
                 {
-                    intent = unity3dWv.CallStatic<AndroidJavaObject>("GetIntent", activityContext);
-                    Debugger.Log(intent == null ? "intent null" : intent.ToString());
+                    intent = webViewClass.CallStatic<AndroidJavaObject>("getIntent", activityContext);
+
+                    Debugger.Log("webViewClass " + webViewClass);
+                    Debugger.Log("activityContext " + activityContext);
+                    Debugger.Log("intent " + intent);
                 }
             }
 
@@ -27,15 +30,15 @@ public class AndroidWebView : MonoBehaviour
         {
             Debugger.Log(e.ToString());
         }
-
-        StartCoroutine(FibonacciLog(value));
     }
 
     public void LoadWeb()
     {
         try
         {
+            intent.Call<AndroidJavaObject>("putExtra", "url", "https://www.google.com/");
             activityContext.Call("startActivity", intent);
+            
         }
         catch (Exception e)
         {
@@ -48,16 +51,5 @@ public class AndroidWebView : MonoBehaviour
         if (index < 0) return 0;
         if (index == 0 || index == 1) return 1;
         return Fibonacci(index - 1) + Fibonacci(index - 2);
-    }
-
-    private IEnumerator FibonacciLog(int maxIndex)
-    {
-        int index = 0;
-        while (index < maxIndex)
-        {
-            Debugger.Log(index + ": " + Fibonacci(index));
-            index++;
-            yield return null;
-        }
     }
 }

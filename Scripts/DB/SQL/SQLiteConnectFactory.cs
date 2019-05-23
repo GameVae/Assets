@@ -18,8 +18,9 @@ public class SQLiteConnectFactory : MonoSingle<SQLiteConnectFactory>
         Infantry,
         XML
     }
-
+#pragma warning disable IDE0044
     [SerializeField] private SQLiteLocalLink links;
+#pragma warning restore IDE0044
 
     private Dictionary<SQLiteLinkType, SQLiteManualConnection> connections;
     private Dictionary<SQLiteLinkType, SQLiteManualConnection> Connections

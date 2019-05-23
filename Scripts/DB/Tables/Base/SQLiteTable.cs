@@ -13,7 +13,9 @@ namespace DataTable
         where T : ISQLiteData
     {
         public string TableName;
+#pragma warning disable IDE0044
         [SerializeField] private SQLiteLinkType linkType;
+#pragma warning restore IDE0044
 
         [SerializeField] private List<T> rows;
         [SerializeField] private System.Type rowType;
