@@ -16,7 +16,7 @@ public class AgentDecisionTree : DecisionTreeNode
     public AgentDecisionTree(SIO_AttackListener attackListener)
     {
         isLoaded = false;
-        xmlPath = Application.persistentDataPath + @"/DecisionMaking/AgentDecisionTree.config";
+        xmlPath = Application.persistentDataPath + @"/Xml/AgentDecisionTree.config";
 
         TreeLoader = Singleton.Instance<DecisionTreeLoader>();
         NavAgentController = Singleton.Instance<NavAgentController>();
@@ -74,6 +74,7 @@ public class AgentDecisionTree : DecisionTreeNode
 
     private void Move_Action()
     {
+        Debugger.Log("move");
         NavAgentController.Move_Action();
     }
 

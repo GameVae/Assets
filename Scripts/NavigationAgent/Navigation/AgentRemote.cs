@@ -248,6 +248,13 @@ namespace Entities.Navigation
             unitSubject.Remove(observer);
             deathEvents?.Invoke(this);
             deathEvents = null;
+
+
+            FixedMove.Stop();
+            NavAgent?.Stop();
+            Unbinding();
+            unitSubject.Remove(observer);
+            unitSubject.ObserverPooling.Release(observer);
         }
 
         // IPoolable.Interface
@@ -258,11 +265,7 @@ namespace Entities.Navigation
 
         public void Dispose()
         {
-            Unbinding();
-
-            unitSubject.Remove(observer);
-            unitSubject.ObserverPooling.Release(observer);
-            
+          
             gameObject.SetActive(false);
         }
     }

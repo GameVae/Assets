@@ -24,18 +24,19 @@ namespace UI
             CrossInput = Singleton.Instance<CrossInput>();
         }
 
-        private void Update()
-        {
-            if (CrossInput.CurrentState == CrossInput.PointerState.Down)
-            {
-                PointerDown();
-            }
-        }
+        //private void Update()
+        //{
+        //    if (CrossInput.CurrentState == CrossInput.PointerState.Down)
+        //    {
+        //        PointerDown();
+        //    }
+        //}
 
-        private void PointerDown()
+        public void PointerDown()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
             IsPointerDownOverUI = EventSystem.IsPointerOverGameObject(CrossInput.GetTouch(0).fingerId);
+            AndroidAdbLog.LogInfo("Is over UI: " + IsPointerDownOverUI);
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE
             IsPointerDownOverUI = EventSystem.IsPointerOverGameObject();

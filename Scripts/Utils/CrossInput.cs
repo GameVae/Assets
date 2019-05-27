@@ -1,5 +1,6 @@
 ﻿using Generic.Contants;
 using Generic.Singleton;
+using UI;
 using UnityEngine;
 
 namespace Generic.CustomInput
@@ -14,6 +15,7 @@ namespace Generic.CustomInput
         private PointerState pointerState = PointerState.Free;
         private PointerState lastPointerState = PointerState.Free;
 
+        private UnityEventSystem unityEvent;
         private Vector3 lastPosition;
         private Vector2 axises;
 
@@ -23,6 +25,14 @@ namespace Generic.CustomInput
             get
             {
                 return constants ?? (constants = Singleton.Singleton.Instance<Constants>());
+            }
+        }
+
+        public UnityEventSystem UnityEventSystem
+        {
+            get
+            {
+                return unityEvent ?? (unityEvent = Singleton.Singleton.Instance<UnityEventSystem>());
             }
         }
 
@@ -48,7 +58,7 @@ namespace Generic.CustomInput
         {
             get
             {
-#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
+#if  (UNITY_ANDROID && !UNITY_EDITOR) 
                 return TouchCount == 1 &&
                     (GetTouch(0).phase == TouchPhase.Ended || GetTouch(0).phase == TouchPhase.Canceled);
 
@@ -62,16 +72,14 @@ namespace Generic.CustomInput
         {
             get
             {
-#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
+#if  (UNITY_ANDROID && !UNITY_EDITOR) 
                 if (TouchCount == 1)
                 {
                     axises = GetTouch(0).deltaPosition;
                 }
                 else axises = Vector2.zero;
                 return axises * Constants.PixelDependencyDevice;
-#endif
-
-#if !UNITY_REMOTE  || UNITY_STANDALONE
+#else
                 return axises * Constants.PixelDependencyDevice;
 #endif
             }
@@ -89,19 +97,19 @@ namespace Generic.CustomInput
         {
             get
             {
-#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
+#if (UNITY_ANDROID && !UNITY_EDITOR) 
                 if (TouchCount > 0)
                     return GetTouch(0).position;
-                return Vector3.zero;
+                return lastPosition;
 #else
                 return Input.mousePosition;
 #endif
             }
         }
-#region Touch Properties
+        #region Touch Properties
         public int TouchCount
         {
-#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR) 
+#if (UNITY_ANDROID && !UNITY_EDITOR) 
             get { return Input.touchCount; }
 #else
             get { return Input.GetMouseButton(0) ? 1 : 0; }
@@ -110,7 +118,7 @@ namespace Generic.CustomInput
 
         public Touch GetTouch(int index)
         {
-#if ( UNITY_REMOTE  && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
+#if (UNITY_ANDROID && !UNITY_EDITOR)
             if (TouchCount > index)
                 return Input.GetTouch(index);
 
@@ -121,7 +129,7 @@ namespace Generic.CustomInput
             return default(Touch);
 #endif
         }
-#endregion
+        #endregion
 
         protected override void Awake()
         {
@@ -131,7 +139,8 @@ namespace Generic.CustomInput
 
         private void LateUpdate()
         {
-#if (UNITY_REMOTE && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
+#if  (UNITY_ANDROID && !UNITY_EDITOR)
+            RecordPosition();
             pointerState = MobilePointerState(pointerState);
 #else
             RecordMouseState();
@@ -147,7 +156,10 @@ namespace Generic.CustomInput
                 case PointerState.Free:
                     {
                         if (Input.GetMouseButtonDown(0))
+                        {
+                            UnityEventSystem.PointerDown();
                             return PointerState.Down;
+                        }
                         return PointerState.Free;
                     }
                 case PointerState.Down:
@@ -186,7 +198,10 @@ namespace Generic.CustomInput
                 case PointerState.Free:
                     {
                         if (TouchCount == 1)
+                        {
+                            UnityEventSystem.PointerDown();
                             return PointerState.Down;
+                        }
                         return PointerState.Free;
                     }
                 case PointerState.Down:
@@ -222,7 +237,7 @@ namespace Generic.CustomInput
 
         public float ZoomValue()
         {
-#if (UNITY_REMOTE && UNITY_EDITOR) || (UNITY_ANDROID && !UNITY_EDITOR)
+#if  (UNITY_ANDROID && !UNITY_EDITOR)
             return GetMobileZoomValue();
 #else
             return Input.mouseScrollDelta.y;
@@ -240,6 +255,12 @@ namespace Generic.CustomInput
         #endregion
 
         #region  Mobile
+
+        private void RecordPosition()
+        {
+            if (TouchCount > 0)
+                lastPosition = GetTouch(0).position;
+        }
 
         private float GetMobileZoomValue()
         {

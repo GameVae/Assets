@@ -117,6 +117,12 @@ public class CursorController : MonoBehaviour
             try
             {
                 Vector3 mousePos = CrossInput.Position;
+#if UNITY_ANDROID && !UNITY_EDITOR
+                AndroidAdbLog.LogInfo(mousePos);
+                //AndroidAdbLog.LogInfo(Input.GetTouch(0).position);                
+#endif
+
+
                 bool raycastHitted = Physics.Raycast(
                     CameraRaycaster.ScreenPointToRay(mousePos),
                     out RaycastHit hitInfo,
@@ -132,7 +138,14 @@ public class CursorController : MonoBehaviour
                     selectedCallback?.Invoke(SelectedPosition);
                 }
             }
-            catch { Debugger.Log(Input.mousePosition); }
+            catch(System.Exception e)
+            {
+#if UNITY_ANDROID && !UNITY_EDITOR
+                AndroidAdbLog.LogInfo(e.ToString());
+#endif
+                Debugger.Log(e.ToString());
+                Debugger.Log(Input.mousePosition);
+            }
         }
     }
 

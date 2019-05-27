@@ -14,5 +14,8 @@ public class AgentDecisionBehavior : MonoBehaviour
     {
         DecisionTreeNode action = agentDecisionMaking.MakeDecision();
         //Debugger.Log(action);
+#if UNITY_ANDROID && !UNITY_EDITOR
+        AndroidAdbLog.LogInfo(action);
+#endif
     }
 }

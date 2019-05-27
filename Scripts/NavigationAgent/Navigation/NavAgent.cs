@@ -213,7 +213,7 @@ namespace Entities.Navigation
 
         #endregion
 
-        private void Stop()
+        public void Stop()
         {
             Animator.Stop(state: AnimState.Walking);
             IsMoving = false;

@@ -127,7 +127,7 @@ namespace Entities.Navigation
                 Vector3Int selected = position;
 
                 if (!ShouldHandleSelect(position))
-                {
+                {                    
                     return;
                 }
 

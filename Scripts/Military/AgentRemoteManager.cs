@@ -94,6 +94,7 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
             return;
         else
         {
+            agentRemote.Dispose();
             this.AddAgent(unitData.ID, agentRemote);
 
             LightweightLabel label = labelPooling.GetItem();
