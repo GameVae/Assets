@@ -19,10 +19,14 @@ public class DeployMilitaryWindow : BaseWindow
     public SelectAgentPanel SelectAgentPanel;
 
     private DBReference dbRef;
+
     private DeployMilitaryTag refTag;
     private List<DeployMilitaryTag> tags;
     private AgentRemoteManager unitDataReference;
     private EventListenersController events;
+
+    private NodeManagerFactory wayPointFactory;
+    private SingleWayPointManager agentWayPointManager;
 
     private void Awake()
     {
@@ -41,6 +45,9 @@ public class DeployMilitaryWindow : BaseWindow
 
         dbRef = Singleton.Instance<DBReference>();
         unitDataReference = Singleton.Instance<AgentRemoteManager>();
+
+        wayPointFactory = Singleton.Instance<NodeManagerFactory>();
+        agentWayPointManager = (SingleWayPointManager)wayPointFactory.GetManager<AgentWayPoint>(NodeManagerFactory.NodeType.Single);
     }
 
     private void R_DEPLOY(SocketIOEvent obj)
@@ -55,11 +62,19 @@ public class DeployMilitaryWindow : BaseWindow
         JSONTable_Unit units = SyncData.UnitTable;
         units.Insert(unit);
         //SelectAgentPanel.Add(unit);
-        Debugger.Log("added " + unit.ID);
+        //Debugger.Log("added " + unit.ID);
     }
 
     private void OnDeployButton()
     {
+        if(agentWayPointManager.IsHolding
+            (SyncData.CurrentMainBase.Position.Parse3Int().ToClientPosition()))
+        {
+
+            MessagePopup.Open("Has a agent on base");
+            return;
+        }
+        
         if (refTag != null && refTag.Slider.Value > 0)
         {
             Singleton.Instance<EventListenersController>().Emit("S_DEPLOY");
@@ -83,7 +98,7 @@ public class DeployMilitaryWindow : BaseWindow
             { "BaseNumber"  ,baseInfo.BaseNumber.ToString()}
         };
         JSONObject packet = new JSONObject(data);
-        Debugger.Log(packet);
+        //Debugger.Log(packet);
         return packet;
     }
 

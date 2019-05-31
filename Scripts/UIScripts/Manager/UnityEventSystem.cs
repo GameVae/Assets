@@ -36,7 +36,7 @@ namespace UI
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
             IsPointerDownOverUI = EventSystem.IsPointerOverGameObject(CrossInput.GetTouch(0).fingerId);
-            AndroidAdbLog.LogInfo("Is over UI: " + IsPointerDownOverUI);
+            //AndroidAdbLog.LogInfo("Is over UI: " + IsPointerDownOverUI);
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE
             IsPointerDownOverUI = EventSystem.IsPointerOverGameObject();

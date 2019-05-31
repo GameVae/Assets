@@ -168,7 +168,7 @@ public class SIO_MovementListener : Listener
 
     public void R_MOVE(SocketIOEvent obj)
     {
-        // Debugger.Log(obj.ToString().Substring(0,150));
+        //Debugger.Log(obj.ToString().Substring(0,150));
         JSONObject r_move = obj.data["R_MOVE"];
         int id = -1;
         r_move.GetField(ref id, "ID");
