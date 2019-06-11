@@ -230,11 +230,12 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
 
         isCreateComplete = false;
         int count = WaitForCreate.Count;
-        int i = count - 1;
+        //int i = count - 1;
 
-        while (i >= 0 && !isCreateComplete)
+        while (WaitForCreate.Count >= 0 && !isCreateComplete)
         {
-            RSS_PositionRow rssData = RSSPositionTable.GetRssAt(WaitForCreate[i].ToSerPosition());
+            Vector3Int pos = WaitForCreate[WaitForCreate.Count - 1].ToSerPosition();
+            RSS_PositionRow rssData = RSSPositionTable.GetRssAt(pos);
             if (rssData != null &&
                 !Resources.ContainsKey(rssData.ID))
             {
@@ -251,8 +252,8 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
                 //Debugger.Log("Created " + rssData.ID);
             }
 
-            WaitForCreate.RemoveAt(i);
-            i--;
+            WaitForCreate.RemoveAt(WaitForCreate.Count - 1);
+            //i--;
             yield return null;
         }
         isCreateComplete = true;

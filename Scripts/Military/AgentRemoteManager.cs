@@ -116,9 +116,10 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
 
             if (isOwner)
             {
-                if(agentRemote.NavAgent == null)
+                if (agentRemote.NavAgent == null)
+                {
                     agentRemote.gameObject.AddComponent<NavAgent>();
-
+                }
                 MyAgentRemoteManager.Add(agentRemote);
                 agentRemote.name = "Owner " + unitData.ID;
             }

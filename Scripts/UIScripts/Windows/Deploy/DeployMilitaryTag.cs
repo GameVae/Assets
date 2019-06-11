@@ -1,4 +1,5 @@
 ﻿using EnumCollect;
+using UI.Composites;
 using UI.Widget;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class DeployMilitaryTag : MonoBehaviour
     public GUIInteractableIcon Icon;
     public GUIProgressSlider Slider;
     public CustomInputField InputField;
+    public PlaceholderComp RemainInfo;
     public ListUpgrade Type;
 
     public DeployMilitaryWindow deployWind;
@@ -33,7 +35,7 @@ public class DeployMilitaryTag : MonoBehaviour
 
     private void OnSliderValueChaned(float v)
     {
-        InputField.SetContent(((int)v).ToString());
+        SetContent(((int)v));
         FocusThisField();
     }
 
@@ -43,10 +45,17 @@ public class DeployMilitaryTag : MonoBehaviour
 
         iValue = Mathf.Clamp(iValue, 0, (int)MaxQuality);
 
-        InputField.SetContent(iValue.ToString());
+        SetContent(iValue);
 
         Slider.Value = iValue;
         FocusThisField();
+    }
+
+    private void SetContent(int c)
+    {
+        InputField.SetContent(c.ToString());
+        if (RemainInfo != null)
+            RemainInfo.Text = string.Format("/{0}", Slider.MaxValue);
     }
 
     private void FocusThisField()

@@ -17,6 +17,8 @@ public class DeployMilitaryWindow : BaseWindow
     public GUIInteractableIcon DeployButton;
     public GUIInteractableIcon OpenButton;
     public SelectAgentPanel SelectAgentPanel;
+    [Header("for test")]
+    public DeployAgentForTest forTest;
 
     private DBReference dbRef;
 
@@ -38,7 +40,13 @@ public class DeployMilitaryWindow : BaseWindow
     {
         base.Start();
         events.AddEmiter("S_DEPLOY", S_DEPLOY);
-        events.On("R_DEPLOY", R_DEPLOY);
+        //events.On("R_DEPLOY", R_DEPLOY);
+        events.On("R_DEPLOY",
+            delegate(SocketIOEvent obj)
+            {
+                R_DEPLOY(obj);
+                forTest.R_DEPLOY(obj);
+            });
 
         DeployButton.OnClickEvents += OnDeployButton;
 
@@ -70,7 +78,7 @@ public class DeployMilitaryWindow : BaseWindow
         if(agentWayPointManager.IsHolding
             (SyncData.CurrentMainBase.Position.Parse3Int().ToClientPosition()))
         {
-
+            //Debugger.Log("Has a agent on base");
             MessagePopup.Open("Has a agent on base");
             return;
         }

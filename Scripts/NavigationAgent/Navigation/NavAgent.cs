@@ -46,6 +46,14 @@ namespace Entities.Navigation
             get { return currentEnemy; }
         }
 
+        private AStarAlgorithm AStar
+        {
+            get
+            {
+                return aStar ?? (aStar = new AStarAlgorithm(MapIns, maxSearchLevel));
+            }
+        }
+
         #region Initalize
         private void Awake()
         {
@@ -60,11 +68,6 @@ namespace Entities.Navigation
             maxSpeed = offset.MaxSpeed;
             maxMoveStep = offset.MaxMoveStep;
             maxSearchLevel = offset.MaxSearchLevel;
-        }
-
-        private void Start()
-        {
-            aStar = new AStarAlgorithm(MapIns, maxSearchLevel);
         }
         #endregion
 
@@ -151,8 +154,8 @@ namespace Entities.Navigation
             }
 
             bool foundPath = false;
-            foundPath = aStar.FindPath(StartPosition.ZToZero(), EndPosition.ZToZero());
-            path = aStar.Path;
+            foundPath = AStar.FindPath(StartPosition.ZToZero(), EndPosition.ZToZero());
+            path = AStar.Path;
 
             pathRenderer.LineRendererGenPath(
                 foundPath: foundPath,
@@ -208,7 +211,7 @@ namespace Entities.Navigation
                 EndPosition = end,
                 DoneCallback = FindPathDone_Callback
             };
-            aStar.FindPath(info);
+            AStar.FindPath(info);
         }
 
         #endregion
@@ -291,7 +294,7 @@ namespace Entities.Navigation
 
         public List<Vector3Int> GetMovePath()
         {
-            return aStar.Truncate(path, maxMoveStep);
+            return AStar.Truncate(path, maxMoveStep);
         }
 
         private void OnDestroy()

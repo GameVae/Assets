@@ -1,4 +1,7 @@
-﻿using Entities.Navigation;
+﻿#define CUSTOM_PREPROCESSOR
+//#undef CUSTOM_PREPROCESSOR
+
+using Entities.Navigation;
 using Generic.Singleton;
 using DataTable;
 using DataTable.Row;
@@ -26,8 +29,6 @@ public class TestObj : MonoBehaviour
 {
     public void Awake()
     {
-#if UNITY_DEBUG
-        Debug.Log("test");
-#endif
+
     }
 }

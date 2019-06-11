@@ -95,7 +95,8 @@ namespace DataTable
         public RSS_PositionRow GetRssAt(Vector3Int serPosition)
         {
             int key = UniqueId(serPosition);
-            if (PositionDict.TryGetValue(key, out int id))
+            PositionDict.TryGetValue(key, out int id);
+            if(id > 0 && id < Rows.Count)
             {
                 return Rows[id - 1];
             }
