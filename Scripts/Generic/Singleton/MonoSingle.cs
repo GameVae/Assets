@@ -4,7 +4,7 @@ using Utils;
 namespace Generic.Singleton
 {
     public abstract class MonoSingle<T> : UnityEngine.MonoBehaviour, ISingleton 
-        where T : UnityEngine.Component
+        where T : UnityEngine.Component 
     {
         private static ISingleton instance;
         public static ISingleton Instance
@@ -26,11 +26,13 @@ namespace Generic.Singleton
         private void GuaranteeOnlyIns()
         {
             T[] insts = FindObjectsOfType<T>();
+            //UnityEngine.Debug.Log("ins: "  + instance + " - " + Instance);
             for (int i = 0; i < insts.Length; i++)
             {
                 if (i == 0) instance = (ISingleton)insts[i];
                 else Destroy(insts[i].gameObject);
             }
+
         }
 
         protected virtual void Awake()

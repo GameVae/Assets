@@ -58,7 +58,7 @@ namespace UI.Keyboard
         private void OnNumber(int capture)
         {
             if (InputString == null || InputString.Length <= maxLenght)
-            {
+            {                
                 InputString += capture.ToString();
                 RefreshNumpadDisplay();
             }
@@ -75,7 +75,8 @@ namespace UI.Keyboard
 
         protected void RefreshNumpadDisplay()
         {
-            InputString = string.IsNullOrEmpty(InputString) ? "0" : InputString;
+            InputString = string.IsNullOrEmpty(InputString) ? 
+                "0" : Convert.ToInt32(InputString).ToString();
             textField.text = InputString;
         }
 

@@ -42,7 +42,7 @@ public class DeployMilitaryWindow : BaseWindow
         events.AddEmiter("S_DEPLOY", S_DEPLOY);
         //events.On("R_DEPLOY", R_DEPLOY);
         events.On("R_DEPLOY",
-            delegate(SocketIOEvent obj)
+            delegate (SocketIOEvent obj)
             {
                 R_DEPLOY(obj);
                 forTest.R_DEPLOY(obj);
@@ -75,14 +75,14 @@ public class DeployMilitaryWindow : BaseWindow
 
     private void OnDeployButton()
     {
-        if(agentWayPointManager.IsHolding
+        if (agentWayPointManager.IsHolding
             (SyncData.CurrentMainBase.Position.Parse3Int().ToClientPosition()))
         {
             //Debugger.Log("Has a agent on base");
             MessagePopup.Open("Has a agent on base");
             return;
         }
-        
+
         if (refTag != null && refTag.Slider.Value > 0)
         {
             Singleton.Instance<EventListenersController>().Emit("S_DEPLOY");
@@ -110,17 +110,23 @@ public class DeployMilitaryWindow : BaseWindow
         return packet;
     }
 
-    public void TagSelected(DeployMilitaryTag deployMilitaryTag)
+    public void TagSelected(DeployMilitaryTag deployMilitaryTag, bool isInput)
     {
         if (refTag != deployMilitaryTag)
         {
-            if (refTag != null && refTag.Slider.Value > 0)
+            if (refTag != null)
             {
-                deployMilitaryTag.Refresh();
+                refTag.Refresh();
+                refTag = deployMilitaryTag;
             }
             else
             {
-                refTag = deployMilitaryTag;
+                refTag = deployMilitaryTag;              
+            }
+            if (isInput)
+            {
+                refTag.InputField.Active(true);
+                refTag.InputField.OpenKeyboard();
             }
         }
     }

@@ -135,7 +135,7 @@ public partial class CustomInputField : MonoBehaviour
         }
     }
 
-    private void OpenKeyboard()
+    public void OpenKeyboard()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         if (keyboardType == Keyboard.KeyboardType.Standalone)

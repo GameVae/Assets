@@ -21,7 +21,6 @@ namespace MultiThread
         protected override void Awake()
         {
             base.Awake();
-
             locker = new object();
             actions = new Queue<Action>();
 

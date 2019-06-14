@@ -22,8 +22,9 @@ public class DeployMilitaryTag : MonoBehaviour
         set { Slider.MaxValue = value; }
     }
 
-    private void Awake()
+    private void Start()
     {
+        InputField.OnSelected += () => FocusThisField(true);
         InputField.OnValueChanged += OnInputValueChanged;
         Slider.OnValueChanged.AddListener(OnSliderValueChaned);
     }
@@ -31,24 +32,24 @@ public class DeployMilitaryTag : MonoBehaviour
     public void Refresh()
     {
         Slider.Value = 0;
+        InputField.Keyboard?.Close();
+        InputField.Active(false);
     }
 
     private void OnSliderValueChaned(float v)
     {
+        FocusThisField(false);
         SetContent(((int)v));
-        FocusThisField();
     }
 
     private void OnInputValueChanged(string value)
     {
+        FocusThisField(true);
         int.TryParse(value, out int iValue);
-
         iValue = Mathf.Clamp(iValue, 0, (int)MaxQuality);
+        Slider.Value = iValue;
 
         SetContent(iValue);
-
-        Slider.Value = iValue;
-        FocusThisField();
     }
 
     private void SetContent(int c)
@@ -58,8 +59,8 @@ public class DeployMilitaryTag : MonoBehaviour
             RemainInfo.Text = string.Format("/{0}", Slider.MaxValue);
     }
 
-    private void FocusThisField()
+    private void FocusThisField(bool isInput)
     {
-        deployWind.TagSelected(this);
+        deployWind.TagSelected(this,isInput);
     }
 }
