@@ -10,7 +10,7 @@ public sealed class AudioManager : MonoSingle<AudioManager>
 
     private float musicVolume = -1;
     private float effectVolume = -1;
-    private List<AudioSource> effectSoundsCatcher;
+    private List<EffectSource> effectSoundsCatcher;
 
     public float MusicVolume
     {
@@ -26,11 +26,11 @@ public sealed class AudioManager : MonoSingle<AudioManager>
             return effectVolume;
         }
     }
-    public List<AudioSource> EffectSoundsCatcher
+    public List<EffectSource> EffectSoundsCatcher
     {
         get
         {
-            return effectSoundsCatcher ?? (effectSoundsCatcher = new List<AudioSource>());
+            return effectSoundsCatcher ?? (effectSoundsCatcher = new List<EffectSource>());
         }
     }
 
@@ -90,8 +90,7 @@ public sealed class AudioManager : MonoSingle<AudioManager>
 
         for (int i = 0; i < EffectSoundsCatcher.Count; i++)
         {
-            // TODO: for test
-            EffectSoundsCatcher[i].volume = value;
+            EffectSoundsCatcher[i].SetVolume(value);
         }
     }
 
@@ -101,11 +100,10 @@ public sealed class AudioManager : MonoSingle<AudioManager>
 
         if(sound != null)
         {
-            AudioSource source = go.AddComponentNotExist<AudioSource>();
+            EffectSource source = go.AddComponentNotExist<EffectSource>();
 
-            source.pitch = sound.Pitch;
-            source.clip = sound.AudioClip;
-            source.volume = sound.DefaultVolume * effectVolume;
+            source.SetSound(sound);
+            source.SetVolume(EffectVolume);
             EffectSoundsCatcher.Add(source);
         }
     }
