@@ -251,7 +251,7 @@ namespace Generic.Contants
 
         private void Start()
         {
-            // Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
+             Debugger.Log("DPI: " + Screen.dpi + " - Dependency Device: " + PixelDependencyDevice + " ratio: " + ScreenRatio);
             // TODO:[TEST]
             //System.Threading.ThreadPool.GetMaxThreads(out int maxWorkerNum, out int maxCompletionPort);
             //System.Threading.ThreadPool.GetMinThreads(out int minWorkerNum, out int minCompletionPort);

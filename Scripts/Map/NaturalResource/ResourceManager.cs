@@ -224,15 +224,17 @@ public sealed class ResourceManager : MonoSingle<ResourceManager>
         if (!treeInited)
         {
             rssPositionTree.AsyncCreateTree(GetRssPositionEnumerable());
-            while (rssPositionTree.IsAsyncCreateComplete) { yield return null; }
+            while (!rssPositionTree.IsAsyncCreateComplete)
+                yield return null; 
             treeInited = true;
+            Debugger.Log("quad tree inited");
         }
 
         isCreateComplete = false;
         int count = WaitForCreate.Count;
         //int i = count - 1;
 
-        while (WaitForCreate.Count >= 0 && !isCreateComplete)
+        while (WaitForCreate.Count > 0 && !isCreateComplete)
         {
             Vector3Int pos = WaitForCreate[WaitForCreate.Count - 1].ToSerPosition();
             RSS_PositionRow rssData = RSSPositionTable.GetRssAt(pos);

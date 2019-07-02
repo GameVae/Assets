@@ -178,5 +178,14 @@ public class SIO_MovementListener : Listener
             agent?.FixedMove.StartMove(r_move);
         }
     }
+
+    public void R_TESTMOVE(SocketIOEvent obj)
+    {
+        JSONObject test = obj.data["R_TESTMOVE"];
+        if (test != null)
+        {
+            Debugger.Log(test);
+        }
+    }
 }
 

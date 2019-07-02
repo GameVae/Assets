@@ -74,7 +74,7 @@ public class AgentDecisionTree : DecisionTreeNode
 
     private void Move_Action()
     {
-        Debugger.Log("move");
+        //Debugger.Log("move");
         NavAgentController.Move_Action();
     }
 
@@ -90,7 +90,7 @@ public class AgentDecisionTree : DecisionTreeNode
 
     private void LoadTreeComplete(DecisionTreeNode tree)
     {
-        Debugger.Log("Load decision tree done");
+        //Debugger.Log("Load decision tree done");
         isLoaded = true;
         root = tree;
     }

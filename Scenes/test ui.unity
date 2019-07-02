@@ -1902,7 +1902,7 @@ MonoBehaviour:
   toggleSelectedEvt:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.30278,
+    m_TypeName: UI.Composites.ToggleGroupComp+ToggleGroupEvent, Assembly-CSharp, Version=1.0.2.19008,
       Culture=neutral, PublicKeyToken=null
   DefaultSpriteState: {fileID: 11400000, guid: aca46ba602defc14dbbfb09c4d5457cf, type: 2}
 --- !u!224 &618758969 stripped
@@ -2417,7 +2417,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1084699073
 Transform:
   m_ObjectHideFlags: 0
@@ -2444,7 +2444,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e3976a048fa514f92070d2b863e9a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sounds: []
+  Musics: []
+  EffectSounds: []
 --- !u!1001 &1273267423
 PrefabInstance:
   m_ObjectHideFlags: 0

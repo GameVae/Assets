@@ -101,7 +101,8 @@ public sealed class SIO_StartupListener : Listener
         On("R_PLAYER_INFO", R_PLAYER_INFO);
         On("R_BASE_PLAYER", R_BASE_PLAYER);
         On("R_FRIEND_INFO", R_FRIEND_INFO);
-        if (MovementListener)
-            On("R_MOVE", MovementListener.R_MOVE);
+        On("R_MOVE", MovementListener.R_MOVE);
+        On("R_TESTMOVE", MovementListener.R_TESTMOVE);
+
     }
 }
