@@ -7,7 +7,21 @@ public class SelectableAgentElement : MonoBehaviour, IPoolable
     public SelectableComp SelectableComp;
     public PlaceholderComp PlaceholderComp;
 
-    public int ManagedId { get; private set; }
+    private RectTransform rectTrans;
+
+    public RectTransform RectTransform
+    {
+        get
+        {
+            return rectTrans ?? (rectTrans = (RectTransform)transform);
+        }
+    }
+
+    public int ManagedId
+    {
+        get;
+        private set;
+    }
 
     public void Dispose()
     {

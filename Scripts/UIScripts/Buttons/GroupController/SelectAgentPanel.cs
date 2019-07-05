@@ -135,6 +135,7 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
         };
 
         el.gameObject.SetActive(true);
+        el.RectTransform.SetAsLastSibling();
         Catcher.Add(el);
     }
 
