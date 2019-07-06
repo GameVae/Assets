@@ -6,6 +6,7 @@ using UnityEngine;
 using Generic.Pooling;
 using Generic.Observer;
 using System.Collections.Generic;
+using Extensions.BinarySearch;
 
 public class SelectAgentPanel : MonoBehaviour, IObserver
 {
@@ -44,7 +45,7 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
 
         ResizeAnimation.CloseDoneEvt += delegate { ActiveContent(false); };
         OpenButton.OnClickEvents += OnOpenButton;
-        UnSelectAgentButton.OnClickEvents += TurnOffUnselectButton;
+        UnSelectAgentButton.OnClickEvents += InvisableCancelButton;
     }
 
     private void Start()
@@ -66,9 +67,16 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
     private void CreateSelecables()
     {
         Dictionary<int, AgentRemote> agentRemotes = MyAgentManager.MyAgentRemotes;
-        foreach (var agent in agentRemotes)
+        List<int> sortedList = new List<int>();
+
+        foreach (int id in agentRemotes.Keys)
         {
-            Add(agent.Value);
+            sortedList.Insert_R(id);
+            //Add(agent.Value);
+        }
+        for (int i = 0; i < sortedList.Count; i++)
+        {
+            Add(agentRemotes[sortedList[i]]);
         }
         FitSize(selectablePooling.ActiveCount);
     }
@@ -80,7 +88,7 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
 
         Vector3Int position = remote.CurrentPosition;
         CameraGroup.CameraMoveToAgent(position);
-        TurnOnUnselectButton();
+        VisiableCancelButton();
 
         selectedId = remote.AgentID;
     }
@@ -106,12 +114,12 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
         }
     }
 
-    private void TurnOnUnselectButton()
+    private void VisiableCancelButton()
     {
         UnSelectAgentButton.gameObject.SetActive(true);
     }
 
-    private void TurnOffUnselectButton()
+    private void InvisableCancelButton()
     {
         selectedId = -1;
         MyAgentManager.UnActiveNav();
@@ -133,9 +141,10 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
         {
             OnSelected(remote);
         };
-
+                
         el.gameObject.SetActive(true);
         el.RectTransform.SetAsLastSibling();
+
         Catcher.Add(el);
     }
 
@@ -145,7 +154,7 @@ public class SelectAgentPanel : MonoBehaviour, IObserver
         if(!MyAgentManager.IsOwnerAgent(selectedId))
         {
             selectedId = -1;
-            TurnOffUnselectButton();
+            InvisableCancelButton();
         }
         Refresh();
     }
