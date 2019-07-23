@@ -1,4 +1,5 @@
-﻿using SocketIO;
+﻿using Generic.Singleton;
+using SocketIO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class SIO_LoginListener : Listener
 {
     private string userName;
     private string password;
+    private bool isWaiting;
 
     public GameOnStarted GameOnStarted;
 
@@ -17,24 +19,30 @@ public class SIO_LoginListener : Listener
 
     public void Login(string UserName, string Password)
     {
-        GameOnStarted.LoginTask();
+        if (!isWaiting)
+        {
+            userName = UserName;
+            password = Password;
+            Emit("S_LOGIN");
 
-        userName = UserName;
-        password = Password;
-        Emit("S_LOGIN");
+            isWaiting = true;
+        }
     }
 
     private void R_LOGIN(SocketIOEvent obj)
     {
         //Debug.Log("R_LOGIN: " + obj);
         int successBool = int.Parse(obj.data["LoginBool"].ToString());
+        isWaiting = false;
         switch (successBool)
         {
             case 0:
                 Debugger.Log("Login fail");
+                Singleton.Instance<MessagePopup>().OpenMessage("Password or User was wrong !");
                 break;
             case 1:
                 Debugger.Log("Login success");
+                GameOnStarted.LoginTask();
                 break;
         }
     }
@@ -70,5 +78,5 @@ public class SIO_LoginListener : Listener
         return hashString.PadLeft(32, '0');
     }
     #endregion
- 
+
 }

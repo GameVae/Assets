@@ -206,7 +206,7 @@ public class UpgResWindow : BaseWindow, IWindowGroup
         MaterialRequireTag material = OrderMaterialElements[index];
         material.SelectableComp.gameObject.SetActive(cur < need);
         if (cur >= need)
-            material.Placeholder.Text = string.Format("{0}/{1}", cur, need);
+            material.Placeholder.Text = string.Format("{0}/{1}", need, cur);
         else
             material.Placeholder.Text = string.Format("<color=red>{0}</color>/{1}", cur, need);
     }

@@ -13,7 +13,191 @@ MonoBehaviour:
   m_Name: Base Upgrade 1
   m_EditorClassIdentifier: 
   rows:
-  - ID: 0
-    Name_Upgrade: 
+  - ID: 1
+    Name_Upgrade: MainBase
+    Level: 1
+    UpgradeType: 1
+  - ID: 2
+    Name_Upgrade: Farm
     Level: 0
-    UpgradeType: 0
+    UpgradeType: 1
+  - ID: 3
+    Name_Upgrade: FarmHarvesting
+    Level: 0
+    UpgradeType: 2
+  - ID: 4
+    Name_Upgrade: FarmGathering
+    Level: 0
+    UpgradeType: 2
+  - ID: 5
+    Name_Upgrade: Wood
+    Level: 0
+    UpgradeType: 1
+  - ID: 6
+    Name_Upgrade: WoodHarvesting
+    Level: 0
+    UpgradeType: 2
+  - ID: 7
+    Name_Upgrade: WoodGathering
+    Level: 0
+    UpgradeType: 2
+  - ID: 8
+    Name_Upgrade: Stone
+    Level: 0
+    UpgradeType: 1
+  - ID: 9
+    Name_Upgrade: StoneHarvesting
+    Level: 0
+    UpgradeType: 2
+  - ID: 10
+    Name_Upgrade: StoneGathering
+    Level: 0
+    UpgradeType: 2
+  - ID: 11
+    Name_Upgrade: Metal
+    Level: 0
+    UpgradeType: 1
+  - ID: 12
+    Name_Upgrade: MetalHarvesting
+    Level: 0
+    UpgradeType: 2
+  - ID: 13
+    Name_Upgrade: MetalGathering
+    Level: 0
+    UpgradeType: 2
+  - ID: 14
+    Name_Upgrade: Storage
+    Level: 0
+    UpgradeType: 1
+  - ID: 15
+    Name_Upgrade: Infantry
+    Level: 1
+    UpgradeType: 1
+  - ID: 16
+    Name_Upgrade: Solider
+    Level: 1
+    UpgradeType: 1
+  - ID: 17
+    Name_Upgrade: TraninedSolider
+    Level: 0
+    UpgradeType: 1
+  - ID: 18
+    Name_Upgrade: ForbiddenGuard
+    Level: 0
+    UpgradeType: 1
+  - ID: 19
+    Name_Upgrade: Heroic
+    Level: 0
+    UpgradeType: 1
+  - ID: 20
+    Name_Upgrade: Ranged
+    Level: 0
+    UpgradeType: 1
+  - ID: 21
+    Name_Upgrade: Slingshot
+    Level: 0
+    UpgradeType: 1
+  - ID: 22
+    Name_Upgrade: Sharpshooter
+    Level: 0
+    UpgradeType: 1
+  - ID: 23
+    Name_Upgrade: Crossbow
+    Level: 0
+    UpgradeType: 1
+  - ID: 24
+    Name_Upgrade: Bomber
+    Level: 0
+    UpgradeType: 1
+  - ID: 25
+    Name_Upgrade: Mounted
+    Level: 0
+    UpgradeType: 1
+  - ID: 26
+    Name_Upgrade: Buffaloman
+    Level: 0
+    UpgradeType: 1
+  - ID: 27
+    Name_Upgrade: Horseman
+    Level: 0
+    UpgradeType: 1
+  - ID: 28
+    Name_Upgrade: WarElephant
+    Level: 0
+    UpgradeType: 1
+  - ID: 29
+    Name_Upgrade: WarStormer
+    Level: 0
+    UpgradeType: 1
+  - ID: 30
+    Name_Upgrade: SiegeEngine
+    Level: 0
+    UpgradeType: 1
+  - ID: 31
+    Name_Upgrade: Ballista
+    Level: 0
+    UpgradeType: 1
+  - ID: 32
+    Name_Upgrade: JavalinBallista
+    Level: 0
+    UpgradeType: 1
+  - ID: 33
+    Name_Upgrade: StoneThrower
+    Level: 0
+    UpgradeType: 1
+  - ID: 34
+    Name_Upgrade: WarDestroyer
+    Level: 0
+    UpgradeType: 1
+  - ID: 35
+    Name_Upgrade: Market
+    Level: 0
+    UpgradeType: 1
+  - ID: 36
+    Name_Upgrade: MarketTime
+    Level: 0
+    UpgradeType: 2
+  - ID: 37
+    Name_Upgrade: MarketCost
+    Level: 0
+    UpgradeType: 2
+  - ID: 38
+    Name_Upgrade: MarketTransport
+    Level: 0
+    UpgradeType: 2
+  - ID: 39
+    Name_Upgrade: MarketQuality
+    Level: 0
+    UpgradeType: 2
+  - ID: 40
+    Name_Upgrade: PhoHienShip
+    Level: 0
+    UpgradeType: 1
+  - ID: 41
+    Name_Upgrade: RefreshTime
+    Level: 0
+    UpgradeType: 2
+  - ID: 42
+    Name_Upgrade: SpecialTrade
+    Level: 0
+    UpgradeType: 2
+  - ID: 43
+    Name_Upgrade: Embassy
+    Level: 0
+    UpgradeType: 1
+  - ID: 44
+    Name_Upgrade: Infirmary
+    Level: 0
+    UpgradeType: 1
+  - ID: 45
+    Name_Upgrade: Shelter
+    Level: 0
+    UpgradeType: 1
+  - ID: 46
+    Name_Upgrade: ArrowTower
+    Level: 0
+    UpgradeType: 1
+  - ID: 47
+    Name_Upgrade: BaseWall
+    Level: 0
+    UpgradeType: 1

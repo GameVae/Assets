@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Base Info
   m_EditorClassIdentifier: 
   rows:
-  - ID_User: 0
-    BaseNumber: 0
-    Position: 
-    Farm: 0
-    Wood: 0
-    Stone: 0
-    Metal: 0
+  - ID_User: 44
+    BaseNumber: 1
+    Position: 295,10,0
+    Farm: 10000
+    Wood: 10000
+    Stone: 10000
+    Metal: 10000
     UpgradeWait_ID: 0
     UpgradeWait_Might: 0
     UpgradeTime: 0
