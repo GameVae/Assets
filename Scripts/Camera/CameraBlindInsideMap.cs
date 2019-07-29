@@ -24,10 +24,12 @@ public class CameraBlindInsideMap : MonoBehaviour
             return conners;
         }
     }
-
-    private void Update()
+    public Vector3 Center
     {
-        // ClampCameraPosition();
+        get
+        {
+            return center;
+        }
     }
 
     private void ClampCameraPosition()
@@ -54,8 +56,13 @@ public class CameraBlindInsideMap : MonoBehaviour
 #if  UNITY_EDITOR
     public void OnDrawGizmos()
     {
+        if(conners == null)
+        {
+            conners = new Vector3[4];
+        }
         if (conners != null)
         {
+            CalculateBound();
             Gizmos.color = Color.blue;
 
             for (int i = 0; i < conners.Length; i++)
@@ -71,8 +78,9 @@ public class CameraBlindInsideMap : MonoBehaviour
         CalculateBound();
         for (int i = 0; i < conners.Length; i++)
         {
-            Debug.Log(Singleton.Instance<HexMap>().WorldToCell(conners[i]));
+            Debug.Log(Singleton.Instance<HexMap>().WorldToCell(conners[i]) +  " - " + conners[i]);
         }
+        Debug.Log("center " + center);
     }
 #endif
 }

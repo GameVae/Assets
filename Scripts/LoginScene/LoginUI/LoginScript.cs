@@ -110,6 +110,7 @@ public class LoginScript : MonoBehaviour
     {
         string UserName = PlayerPrefs.GetString("UserName");
         string Password = PlayerPrefs.GetString("Password");
+        //string Password = "12345679";
         //S_LOGIN(UserName, Password);
         SIO_LoginListener.Login(UserName, Password);
     }

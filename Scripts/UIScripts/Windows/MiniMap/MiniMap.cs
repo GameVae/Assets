@@ -115,7 +115,7 @@ public class MiniMap : BaseWindow
         if (!TrySetIconOnConstruct(local))
         {
             selectedPosition = To3IntFrom(local);
-          
+
             if (SetIconPosition(selectedPosition))
             {
                 StartClose();
@@ -129,6 +129,8 @@ public class MiniMap : BaseWindow
 
     private void MoveCameraToCell(Vector3Int cell)
     {
+        cell.x = Mathf.Clamp(cell.x, 0, Constants.TOTAL_COL - 5);
+        cell.y = Mathf.Clamp(cell.y, 0, Constants.TOTAL_ROW - 5);
         CameraCtrl.Set(cell);
     }
 
@@ -180,8 +182,8 @@ public class MiniMap : BaseWindow
     private Vector3Int To3IntFrom(Vector2 local)
     {
         Vector3Int result = Vector3Int.zero;
-        result.x = (int)(local.x / pxPerNode.x);
-        result.y = (int)(local.y / pxPerNode.y);
+        result.x = Mathf.Clamp((int)(local.x / pxPerNode.x), 0, Constants.TOTAL_COL - 5);
+        result.y = Mathf.Clamp((int)(local.y / pxPerNode.y), 0, Constants.TOTAL_ROW - 5);
         return result;
     }
 
@@ -191,7 +193,7 @@ public class MiniMap : BaseWindow
     /// <param name="serPos">server position</param>
     /// <returns></returns>
     private bool SetIconPosition(Vector3Int serPos)
-    {
+    {     
         Vector3Int clientPos = serPos.ToClientPosition();
         if (Constants.IsValidCell(clientPos.x, clientPos.y))
         {
@@ -225,7 +227,7 @@ public class MiniMap : BaseWindow
     private void InitSelectCondition()
     {
         selectCondition = new NestedCondition();
-        selectCondition.Conditions += delegate 
+        selectCondition.Conditions += delegate
         {
             return CrossInput.IsPointerUp;
         };

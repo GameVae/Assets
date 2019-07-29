@@ -68,8 +68,8 @@ public class QuadNode
         botLeft = argBotLeft;
         topRight = argTopRight;
 
-        int centerX = Mathf.Abs(argBotLeft.x + argTopRight.x) / 2;
-        int centerY = Mathf.Abs(argBotLeft.y + argTopRight.y) / 2;
+        int centerX = (argBotLeft.x + argTopRight.x) / 2;
+        int centerY = (argBotLeft.y + argTopRight.y) / 2;
 
         center = new Vector3Int(centerX, centerY, 0);
         points = new List<Vector3Int>();

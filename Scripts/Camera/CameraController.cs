@@ -99,14 +99,12 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="cell">Cell in Real map 522 - 522</param>
     public void Set(Vector3Int cell)
-    {
+    {       
         Vector3 worldPoint = Singleton.Instance<HexMap>().CellToWorld(cell);
         worldPoint.y = option.Height;         // const height
         TargetCamera.transform.position = worldPoint;
-        //CameraBinding.CalculateBound();
         AlignCamera(worldPoint);
-
-        //cameraChanged?.Invoke();
+        cameraChanged?.Invoke();
     }
 
     private void SetStartupPosition()
