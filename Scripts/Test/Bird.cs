@@ -14,7 +14,7 @@ public class Bird : MonoBehaviour, IPoolable
     private bool isAlive;
     private Vector3 direction;
 
-    private QuadInfo quad;
+    private QuadInfo info;
     private Pooling<Bird> pool;
 
     public SpriteRenderer SpriteRenderer;
@@ -23,7 +23,7 @@ public class Bird : MonoBehaviour, IPoolable
     {
         if (isAlive)
         {
-            if (quad.IsOutside(this))
+            if (info.IsOutside(this))
             {
                 pool.Release(this);
             }
@@ -34,23 +34,27 @@ public class Bird : MonoBehaviour, IPoolable
         }
     }
 
-    public void LetStart(QuadInfo quad)
+    public void LetStart(QuadInfo quadInfo)
     {
-        this.quad = quad;
+        info = quadInfo;
 
-        Vector3 pos = quad.Quad.transform.position;
+        bool startAtLeft = Random.Range(0, 2) != 0;
+        float height = Random.Range(0.2f, 5f);
 
-        pos.y = Random.Range(0.2f, 4.0f);
-        pos.z -= 20;
-
-        transform.position = pos;
-
+        Vector3 position = startAtLeft ? quadInfo.EndOfLeft.position : quadInfo.EndOfRight.position;
+        position.y = height;
+      
         isAlive = true;
         direction = Vector3.zero;
 
-        if ((quad.Side & QuadInfo.Left) != 0)
+        if ((quadInfo.Side & QuadInfo.Left) != 0)
         {           
             direction.z = 1;
+        }
+
+        if (!startAtLeft)
+        {
+            Flip();
         }
 
         gameObject.SetActive(true);

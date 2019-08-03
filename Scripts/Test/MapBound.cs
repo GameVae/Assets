@@ -6,28 +6,29 @@ using UnityEngine;
 
 public class MapBound : MonoBehaviour
 {
+    [Serializable]
     public class QuadInfo
     {
         public const int Left = 0x0001;
         public const int Top =  0x0010;
 
-        public readonly int Side;
+        public int Side;
         public GameObject Quad;
         public MeshFilter QuadMesh;
+        public Transform EndOfLeft;
+        public Transform EndOfRight;
 
-        public QuadInfo(GameObject quad,int side)
+        public void Init(int side)
         {
             Side = side;
-            Quad = quad;
-            QuadMesh = quad.GetComponent<MeshFilter>();
-            Debugger.Log(Size());
+            QuadMesh = Quad.GetComponent<MeshFilter>();
         }
 
         public bool IsOutside(Bird bird)
         {
-            Vector3 position = bird.transform.position;
+            Vector3 birdPos = bird.transform.position;
 
-            return false;
+            return birdPos.z < EndOfLeft.position.z || birdPos.z > EndOfRight.position.z;
         }
 
         public Vector2 Size()
@@ -36,7 +37,7 @@ public class MapBound : MonoBehaviour
         }
     }
 
-    private QuadInfo leftInfo;
+    [SerializeField] private QuadInfo leftInfo;
 
     private Pooling<Bird> birdPool;
 
@@ -50,8 +51,6 @@ public class MapBound : MonoBehaviour
 
     public Bird Prefab;
 
-    public GameObject QuadLeft;
-
     public CameraController CameraController;
     
     public CameraBlindInsideMap CameraBlind
@@ -62,14 +61,14 @@ public class MapBound : MonoBehaviour
         }
     }
 
-    public void Start()
+    private void Start()
     {
         CameraController.CameraChanged += CameraChanged;
 
-        leftInfo = new QuadInfo(QuadLeft,QuadInfo.Left);
+        leftInfo.Init(QuadInfo.Left);
     }
 
-    public void Update()
+    private void Update()
     {
         if(Input.GetMouseButtonDown(1))
         {
@@ -80,10 +79,10 @@ public class MapBound : MonoBehaviour
     private void CameraChanged()
     {
         //Vector3[] conners = CameraBlind.Conners;
-        Vector3 left = QuadLeft.transform.position;
+        Vector3 left = leftInfo.Quad.transform.position;
         left.z = CameraBlind.Center.z;
 
-        QuadLeft.transform.position = left;
+        leftInfo.Quad.transform.position = left;
 
     }
 

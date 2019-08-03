@@ -12,12 +12,14 @@ public class AgentDecisionTree : DecisionTreeNode
     public readonly DecisionTreeLoader TreeLoader;
     public readonly NavAgentController NavAgentController;
     public readonly SIO_AttackListener SIO_AttackListener;
+    public readonly FriendSys FriendSys;
 
     public AgentDecisionTree(SIO_AttackListener attackListener)
     {
         isLoaded = false;
         xmlPath = Application.persistentDataPath + @"/Xml/AgentDecisionTree.config";
 
+        FriendSys = Singleton.Instance<FriendSys>();
         TreeLoader = Singleton.Instance<DecisionTreeLoader>();
         NavAgentController = Singleton.Instance<NavAgentController>();
         SIO_AttackListener = attackListener;
@@ -68,8 +70,10 @@ public class AgentDecisionTree : DecisionTreeNode
     {
         AgentRemote owner = NavAgentController.CurrentAgent.Remote;
         AgentRemote enemy = NavAgentController.GetEnemyAt(NavAgentController.CursorController.SelectedPosition);
-
-        SIO_AttackListener.S_ATTACK(owner, enemy);
+        if (!FriendSys.IsMyFriend(enemy.UserInfo.ID_User))
+        {
+            SIO_AttackListener.S_ATTACK(owner, enemy);
+        }
     }
 
     private void Move_Action()

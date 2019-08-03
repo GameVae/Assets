@@ -165,13 +165,21 @@ namespace Entities.Navigation
 
             IsOwner = isOwner;
 
-            string format = IsOwner ? "{0}" : "<color=red>{0}</color>";
+            string format = IsOwner ? "{0}" : "<color=red>{0}</color>"; // not friend
+
+            if (!IsOwner)
+            {
+                bool isFriend = Singleton.Instance<FriendSys>().IsMyFriend(user.ID_User);
+                format = isFriend ? "<color=green>{0}</color>" : format; // friend
+            }
+
+
             Label.NameInGame = string.Format(format, "Id " + unitData.ID + ": " + user.NameInGame);
             Label.SetHP(unitData.Hea_cur, unitData.Health);
             Label.Quality = unitData.Quality;
+            Label.gameObject.SetActive(true);
 
-            observer= subject.ObserverPooling.GetItem();
-            //observer = new Observer_Unit(unitData);
+            observer = subject.ObserverPooling.GetItem();            
             observer.RefreshSubject(unitData);
             observer.OnSubjectUpdated += SubjectChanged;
             subject.Register(observer);
@@ -218,7 +226,7 @@ namespace Entities.Navigation
             else
             {
                 AnimatorController.StateInfo attackState = Animator.GetStateInfo(AnimState.Attack1);
-                if(attackState != null && attackState.IsPlaying)
+                if (attackState != null && attackState.IsPlaying)
                 {
                     attackState.Stop();
                 }
@@ -265,7 +273,7 @@ namespace Entities.Navigation
 
         public void Dispose()
         {
-          
+
             gameObject.SetActive(false);
         }
     }

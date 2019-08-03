@@ -85,6 +85,6 @@ public class LightweightLabel : MonoBehaviour,IPoolable
         canvasCamera = cam;
         navRemote = remote;
         active = true;
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
     }
 }
