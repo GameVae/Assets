@@ -165,13 +165,15 @@ namespace Entities.Navigation
 
             IsOwner = isOwner;
 
-            string format = IsOwner ? "{0}" : "<color=red>{0}</color>"; // not friend
+            //string format = IsOwner ? "{0}" : "<color=red>{0}</color>"; // not friend
 
-            if (!IsOwner)
-            {
-                bool isFriend = Singleton.Instance<FriendSys>().IsMyFriend(user.ID_User);
-                format = isFriend ? "<color=green>{0}</color>" : format; // friend
-            }
+            //if (!IsOwner)
+            //{
+            //    bool isFriend = Singleton.Instance<FriendSys>().IsMyFriend(user.ID_User);
+            //    format = isFriend ? "<color=green>{0}</color>" : format; // friend
+            //}
+
+            string format = GetLabelFormat();
 
 
             Label.NameInGame = string.Format(format, "Id " + unitData.ID + ": " + user.NameInGame);
@@ -192,6 +194,7 @@ namespace Entities.Navigation
             if (UnitInfo.Quality <= 0)
             {
                 // Dead();
+                NavAgent.Stop();
                 Animator.Play(AnimState.Dead);
             }
             else
@@ -200,6 +203,25 @@ namespace Entities.Navigation
                 SetLabel();
             }
 
+        }
+
+        private string GetLabelFormat()
+        {
+            string format = IsOwner ? "{0}" : "<color=red>{0}</color>"; // not friend
+
+            if (!IsOwner)
+            {
+                bool isFriend = Singleton.Instance<FriendSys>().IsMyFriend(UserInfo.ID_User);
+                format = isFriend ? "<color=green>{0}</color>" : format; // friend
+            }
+
+            return format;
+        }
+
+        public void RefreshNameLable()
+        {
+            string lableFormat = GetLabelFormat();
+            Label.NameInGame = string.Format(lableFormat, "Id " + UnitInfo.ID + ": " + UserInfo.NameInGame);
         }
 
         private void SetLabel()

@@ -10,8 +10,9 @@ using UnityEngine;
 using Generic.Pooling;
 using Json;
 using System.Collections.Generic;
+using Generic.Observer;
 
-public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
+public class AgentRemoteManager : MonoSingle<AgentRemoteManager>,IObserver
 {
 
     [SerializeField] private Camera mainCamera;
@@ -25,6 +26,7 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
     public LightweightLabel LabelPrefab;
     public RectTransform LabelContainer;
 
+    private FriendSys friendSys;
     private AgentPooling agentPooling;
     private Pooling<LightweightLabel> labelPooling;
     private JSONTable_Unit UnitTable;
@@ -32,6 +34,14 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
     private EventListenersController Events;
 
     private Dictionary<int, AgentRemote> allAgents;
+
+    public FriendSys FriendSystem
+    {
+        get
+        {
+            return friendSys ?? (friendSys = Singleton.Instance<FriendSys>());
+        }
+    }
 
     public Camera MainCamera
     {
@@ -73,6 +83,7 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
     private void Start()
     {
         Events.Emit("S_UNIT");
+        FriendSystem.Register(this);
     }
 
     private void R_UNIT_CREATE_UNIT(SocketIOEvent evt)
@@ -182,4 +193,16 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>
         return value;
     }
 
+    public void SubjectUpdated(object dataPacked)
+    {
+        foreach (var item in AllAgents)
+        {
+            item.Value.RefreshNameLable();
+        }
+    }
+
+    public void Dispose()
+    {
+        FriendSystem.Remove(this);
+    }
 }
