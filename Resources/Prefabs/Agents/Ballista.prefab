@@ -703,7 +703,7 @@ Animator:
   m_GameObject: {fileID: 5596763035309873855}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 376d3cf0afd87ed4d8367e46daab1e6e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -893,6 +893,7 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
+    Diamond: 0
     Might: 0
     Killed: 0
   UnitInfo:

@@ -347,6 +347,7 @@ namespace DataTable.Row
         public string Guild_ID;
         public string Guild_Name;
         public string LastGuildID;
+        public int Diamond;
         public int Might;
         public int Killed;
 
