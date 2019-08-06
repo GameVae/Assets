@@ -30,7 +30,8 @@ public sealed class FriendSys : MonoSingle<FriendSys>, ISubject
     }
 
     private void Start()
-    {
+    {        
+        EventControl.On("R_UNFRIEND", R_UNFRIEND);
         EventControl.On("R_ACCEPT_FRIEND", R_ACCEPT_FRIEND);
     }
 
@@ -62,6 +63,17 @@ public sealed class FriendSys : MonoSingle<FriendSys>, ISubject
                 
             };
             friends.UpdateFriendInfo(info);
+            NotifyAll();
+        }
+    }
+
+    private void R_UNFRIEND(SocketIOEvent obj)
+    {
+        int idRemoved = -1;
+        obj.data.GetField(ref idRemoved, "R_UNFRIEND");
+        if (idRemoved != -1)
+        {
+            friends.RemoveById(idRemoved);
             NotifyAll();
         }
     }
