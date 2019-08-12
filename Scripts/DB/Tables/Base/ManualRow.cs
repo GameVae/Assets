@@ -472,4 +472,19 @@ namespace DataTable.Row
             return System.TimeSpan.FromSeconds((int)RemoveTime).ToString();
         }
     }
+
+    [System.Serializable]
+    public class GuildRow : ITableData
+    {
+        public string GuildTag;
+        public string GuildName;
+        public int ID_User;
+        public int Server_ID;
+
+        public int CompareTo(object obj)
+        {
+            GuildRow other = obj as GuildRow;
+            return ID_User.CompareTo(other.ID_User);
+        }
+    }
 }

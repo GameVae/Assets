@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ff29f3b25cefe749ace1aec64dccb42, type: 3}
   m_Name: UserInfo Table
   m_EditorClassIdentifier: 
-  Rows:
+  rows:
   - ID_User: 9
     Server_ID: 
     NameInGame: Mquan
@@ -20,8 +20,9 @@ MonoBehaviour:
     Guild_ID: 13
     Guild_Name: 
     LastGuildID: 
-    Might: 402
-    Killed: 0
+    Diamond: 0
+    Might: 400
+    Killed: 7
   - ID_User: 42
     Server_ID: 1
     NameInGame: ndinhtoan45
@@ -29,8 +30,9 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 12022
-    Killed: 0
+    Diamond: 500
+    Might: 16918
+    Killed: 148
   - ID_User: 43
     Server_ID: 
     NameInGame: ndinhtoan44
@@ -38,8 +40,9 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 1242
-    Killed: 0
+    Diamond: 0
+    Might: 796
+    Killed: 327
   - ID_User: 44
     Server_ID: 
     NameInGame: ndinhtoan46
@@ -47,5 +50,6 @@ MonoBehaviour:
     Guild_ID: 
     Guild_Name: 
     LastGuildID: 
-    Might: 0
-    Killed: 0
+    Diamond: 0
+    Might: -134
+    Killed: 136

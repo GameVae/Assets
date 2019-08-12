@@ -30,11 +30,17 @@ public class WindowToggleGroup : BaseWindow
     {
         int index = toggles.Toggles.IndexOf(toggle);
         activeWindow?.Close();
+        //Debugger.Log("toggle index " + index + " " + windows.Length);
         if (index >= 0 && index < windows.Length)
         {
             activeWindow = windows[index];
             activeWindow.Open();
         }
+    }
+
+    public void Active(int index)
+    {
+        toggles.Active(index);
     }
 
 #if UNITY_EDITOR
