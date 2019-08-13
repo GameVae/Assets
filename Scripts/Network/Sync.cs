@@ -52,6 +52,7 @@ namespace Network.Sync
         public JSONTable_BasePlayer BasePlayerTable;
 
         public JSONTable_Friends FriendTable;
+        public JSONTable_GuildInfo GuildTable;
 
         public void SyncUpdate()
         {

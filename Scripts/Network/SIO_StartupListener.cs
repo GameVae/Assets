@@ -82,8 +82,14 @@ public sealed class SIO_StartupListener : Listener
     private void R_FRIEND_INFO(SocketIOEvent obj)
     {
 
-        Debugger.Log(obj.data["R_FRIEND_INFO"]);
+        //Debugger.Log(obj.data["R_FRIEND_INFO"]);
         SyncData.FriendTable.AsyncLoadTable(obj.data["R_FRIEND_INFO"]);
+    }
+
+    private void R_USER_GUILD(SocketIOEvent obj)
+    {
+        //Debugger.Log(obj);
+        SyncData.GuildTable.AsyncLoadTable(obj.data["R_USER_GUILD"]);
     }
 
     public override void RegisterCallback()
@@ -92,6 +98,7 @@ public sealed class SIO_StartupListener : Listener
         On("R_BASE_INFO", R_BASE_INFO);
         On("R_USER_INFO", R_USER_INFO);
         On("R_GET_POSITION", R_GET_POSITION);
+        On("R_USER_GUILD", R_USER_GUILD);
 
         On("R_TRAINING", R_TRAINNING);
         On("R_BASE_DEFEND", R_BASE_DEFEND);

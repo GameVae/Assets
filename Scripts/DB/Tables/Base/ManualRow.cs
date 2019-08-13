@@ -474,16 +474,20 @@ namespace DataTable.Row
     }
 
     [System.Serializable]
-    public class GuildRow : ITableData
+    public class GuildMemberRow : ITableData
     {
-        public string GuildTag;
-        public string GuildName;
         public int ID_User;
-        public int Server_ID;
+        public string NameInGame;
+        public int Might;
+        public int Killed;
+        public GuildPosition GuildPosition;
+        public float AcceptTime;
+        public float RemoveTime;
+        public float LogOutTime;
 
         public int CompareTo(object obj)
         {
-            GuildRow other = obj as GuildRow;
+            GuildMemberRow other = obj as GuildMemberRow;
             return ID_User.CompareTo(other.ID_User);
         }
     }

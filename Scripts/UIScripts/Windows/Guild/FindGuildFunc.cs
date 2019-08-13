@@ -35,7 +35,7 @@ public class FindGuildFunc : ToggleWindow
         string gName = InputField.Text;
         if(!string.IsNullOrEmpty(gName))
         {
-            GuildRow g = GuildSys.FindGuildByName(gName);
+            GuildMemberRow g = GuildSys.FindGuildByName(gName);
             if (g != null)
             {
                 GuildTag.GuildName.text = gName;

@@ -95,4 +95,13 @@ namespace EnumCollect
         Gathering,
         Standby
     }
+
+    public enum GuildPosition
+    {
+        Member1 = 1,
+        Member2 = 2,
+        Member3 = 3,
+        Admin = 4,
+        Master = 5,
+    }
 }

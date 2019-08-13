@@ -2,6 +2,7 @@
 using DataTable.Row;
 using Generic.Singleton;
 using Network.Data;
+using SocketIO;
 using UnityEngine;
 
 public class GuildSys : MonoBehaviour
@@ -18,9 +19,18 @@ public class GuildSys : MonoBehaviour
         }
     }
 
-    public GuildRow FindGuildByName(string gName)
+    public GuildMemberRow FindGuildByName(string gName)
     {
         return guildInfos.FindByName(gName);
     }
-    
+
+    private void Start()
+    {
+        EventController.On("R_CREATE_GUILD", R_CREATE_GUILD);
+    }
+
+    private void R_CREATE_GUILD(SocketIOEvent obj)
+    {
+        Debugger.Log(obj);
+    }
 }
