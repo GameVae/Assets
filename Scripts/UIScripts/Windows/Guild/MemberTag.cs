@@ -29,6 +29,10 @@ public sealed class MemberTag : MonoBehaviour,IPoolable
         DecreaseGradeBtn.RemoveAllListener();
         KickBtn.RemoveAllListener();
 
+        IncreaseGradeBtn.gameObject.SetActive(true);
+        DecreaseGradeBtn.gameObject.SetActive(true);
+        KickBtn.gameObject.SetActive(true);
+
         gameObject.SetActive(false);
     }
 

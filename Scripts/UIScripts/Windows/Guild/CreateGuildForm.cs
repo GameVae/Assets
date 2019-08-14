@@ -101,11 +101,10 @@ public class CreateGuildForm : BaseWindow
                 {"Server_ID"    ,"1"}
             };
 
-            PlayerInfo.Info.Diamond -= 500;
-
             JSONObject data = new JSONObject(createGuildInfo);
 
             MyGuildWindow.S_CREATE_GUILD(data);
+
             Close();
         }
     }

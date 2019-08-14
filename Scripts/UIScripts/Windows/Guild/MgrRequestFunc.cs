@@ -1,6 +1,10 @@
-﻿using Generic.Pooling;
+﻿using DataTable;
+using DataTable.Row;
+using EnumCollect;
+using Generic.Pooling;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UI.Widget;
 using UnityEngine;
 
@@ -27,20 +31,46 @@ public class MgrRequestFunc : ToggleWindow
             return catchingTags ?? (catchingTags = new Queue<ApplyTag>());
         }
     }
-
+    
     public override void Load(params object[] input)
     {
-        
+        int myId = guildSys.PlayerInfo.Info.ID_User;
+        GuildMemberRow own = guildSys.GuildTable.FindMember(myId);
+        if(own != null && own.GuildPosition >= GuildPosition.Admin)
+        {
+            LoadAllRequest();
+        }
     }
 
     protected override void Init()
     {
 
     }
+
     public override void Close()
     {
         Release();
         base.Close();
+    }
+
+    private void LoadAllRequest()
+    {
+        ReadOnlyCollection<GuildMemberRow> members = guildSys.GuildTable.ReadOnlyRows;
+
+        int count = members.Count;
+
+        for(int i = 0; i < count; i++)
+        {
+            int capture = i;
+            ApplyTag tag = PoolTag.GetItem();
+
+            tag.UserName.text = members[capture].NameInGame;
+            tag.AcceptBtn.OnClickEvents += () => S_ACCEPT_APPLY(members[capture]);
+            tag.RejectBtn.OnClickEvents += () => S_REJECT_APPLY(members[capture]);
+
+            CatchingTags.Enqueue(tag);
+            tag.gameObject.SetActive(true);
+        }
     }
 
     private void Release()
@@ -59,7 +89,7 @@ public class MgrRequestFunc : ToggleWindow
         return tag;
     }
 
-    private void S_ACCEPT_APPLY(ApplyTag tag)
+    private void S_ACCEPT_APPLY(GuildMemberRow tag)
     {
         Dictionary<string, string> acceptInfo = new Dictionary<string, string>()
         {
@@ -68,7 +98,7 @@ public class MgrRequestFunc : ToggleWindow
         guildSys.EventController.Emit("S_ACCEPT_APPLY", new JSONObject(acceptInfo));
     }
 
-    private void S_REJECT_APPLY(ApplyTag tag)
+    private void S_REJECT_APPLY(GuildMemberRow tag)
     {
         Dictionary<string, string> rejectInfo = new Dictionary<string, string>()
         {

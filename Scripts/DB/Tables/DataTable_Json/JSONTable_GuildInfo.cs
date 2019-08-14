@@ -8,10 +8,9 @@ namespace DataTable
     [CreateAssetMenu(fileName = "New Guild Table", menuName = "DataTable/JsonTable/Guild JSONTable", order = 11)]
     public class JSONTable_GuildInfo : JSONTable<GuildMemberRow>
     {
-        public GuildMemberRow FindByName(string gName)
+        public GuildMemberRow FindMember(int userId)
         {
-            //return ReadOnlyRows.FirstOrDefault(g => g.GuildName == gName);
-            return null;
+            return ReadOnlyRows.FirstOrDefault(m => m.ID_User == userId);          
         }
 
         private GuildMemberRow master;

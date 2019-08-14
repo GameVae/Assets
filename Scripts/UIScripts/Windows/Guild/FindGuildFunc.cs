@@ -1,6 +1,4 @@
-﻿using DataTable.Row;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UI.Composites;
 using UnityEngine;
 
@@ -8,7 +6,9 @@ public class FindGuildFunc : ToggleWindow
 {
     public GuildSys GuildSys;
     public SelectableComp FindBtn;
-    public CustomInputField InputField;
+
+    public CustomInputField GuildTagInput;
+    public CustomInputField GuildNameInput;
 
     public GuildTag GuildTag;
     public GameObject NotFoundPanel;
@@ -32,22 +32,7 @@ public class FindGuildFunc : ToggleWindow
 
     protected void OnFindGuidlButton()
     {
-        string gName = InputField.Text;
-        if(!string.IsNullOrEmpty(gName))
-        {
-            GuildMemberRow g = GuildSys.FindGuildByName(gName);
-            if (g != null)
-            {
-                GuildTag.GuildName.text = gName;
 
-                GuildTag.gameObject.SetActive(true);
-            }
-            else
-            {
-                GuildTag.gameObject.SetActive(false);
-                NotFoundPanel.gameObject.SetActive(true);
-            }
-        }
     }
 
     protected void S_APPLY_GUILD()

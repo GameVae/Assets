@@ -7,10 +7,9 @@ using UnityEngine;
 
 public class GuildSys : MonoBehaviour
 {
-    [SerializeField] private JSONTable_GuildInfo guildInfos;
+    public JSONTable_GuildInfo GuildTable;
 
     private EventListenersController eventController;
-
     public EventListenersController EventController
     {
         get
@@ -19,9 +18,21 @@ public class GuildSys : MonoBehaviour
         }
     }
 
-    public GuildMemberRow FindGuildByName(string gName)
+    private PlayerInfo playerInfo;
+    public PlayerInfo PlayerInfo
     {
-        return guildInfos.FindByName(gName);
+        get
+        {
+            return playerInfo ?? (playerInfo = Singleton.Instance<PlayerInfo>());
+        }
+    }
+
+    public GuildMemberRow Master
+    {
+        get
+        {
+            return GuildTable.Master;
+        }
     }
 
     private void Start()
@@ -32,5 +43,18 @@ public class GuildSys : MonoBehaviour
     private void R_CREATE_GUILD(SocketIOEvent obj)
     {
         Debugger.Log(obj);
-    }
+        int success = -1;
+        obj.data["R_CREATE_GUILD"].GetField(ref success, "Enum");
+        if (success == 1)
+        {
+            int cost = 500;
+            PlayerInfo.Info.Diamond -= cost;
+        }
+        else
+        {
+            string msg = "";
+            obj.data["R_CREATE_GUILD"].GetField(ref msg, "Message");
+            MessagePopup.Open(msg);
+        }
+    }    
 }

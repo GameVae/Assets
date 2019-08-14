@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ce644527ec365641b025b15d88f1040, type: 3}
-  m_Name: SoldierOffset
+  m_Name: Soldier
   m_EditorClassIdentifier: 
   maxMoveStep: 20
   maxSearchLevel: 250
