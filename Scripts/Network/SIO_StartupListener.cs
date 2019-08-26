@@ -88,7 +88,7 @@ public sealed class SIO_StartupListener : Listener
 
     private void R_USER_GUILD(SocketIOEvent obj)
     {
-        //Debugger.Log(obj);
+        Debugger.Log(obj);
         SyncData.GuildTable.AsyncLoadTable(obj.data["R_USER_GUILD"]);
     }
 

@@ -18,6 +18,7 @@ namespace Entities.Navigation
         [SerializeField] private ListUpgrade type;
         [SerializeField] private NavOffset offset;
         [SerializeField] private Transform headPoint;
+        [SerializeField] private VFXArcher effect;
 #pragma warning restore IDE0044
 
         [SerializeField] // TODO:[TEST] for show in inspector
@@ -128,7 +129,11 @@ namespace Entities.Navigation
         {
             get; private set;
         }
-
+        public Transform AttackTarget
+        {
+            get;
+            private set;
+        }
 
         private void Start()
         {
@@ -181,7 +186,7 @@ namespace Entities.Navigation
             Label.Quality = unitData.Quality;
             Label.gameObject.SetActive(true);
 
-            observer = subject.ObserverPooling.GetItem();            
+            observer = subject.ObserverPooling.GetItem();
             observer.RefreshSubject(unitData);
             observer.OnSubjectUpdated += SubjectChanged;
             subject.Register(observer);
@@ -202,7 +207,7 @@ namespace Entities.Navigation
                 CheckAttack();
                 SetLabel();
             }
-
+            CheckEffect();
         }
 
         private string GetLabelFormat()
@@ -230,6 +235,17 @@ namespace Entities.Navigation
             Label.Quality = UnitInfo.Quality;
         }
 
+        private void CheckEffect()
+        {
+            Debugger.Log("status " + UnitInfo.AgentStatus);
+            if (UnitInfo.AgentStatus != AgentStatus.Attack_Base &&
+                UnitInfo.AgentStatus != AgentStatus.Attack_Unit)
+            {
+                if (effect != null)
+                    effect.Stop();
+            }
+        }
+
         private void CheckAttack()
         {
             if (!string.IsNullOrEmpty(UnitInfo.Attack_Unit_ID) &&
@@ -243,6 +259,13 @@ namespace Entities.Navigation
                 {
                     transform.forward = (other.transform.position - transform.position).normalized;
                     Animator.Play(AnimState.Attack1);
+
+                    AttackTarget = other.transform;
+                    if (effect != null)
+                    {
+                        Debugger.Log("call attack effect");
+                        effect.Attack(AttackTarget);
+                    }
                 }
             }
             else
@@ -251,6 +274,8 @@ namespace Entities.Navigation
                 if (attackState != null && attackState.IsPlaying)
                 {
                     attackState.Stop();
+                    if (effect != null)
+                        effect.Stop();
                 }
             }
         }
