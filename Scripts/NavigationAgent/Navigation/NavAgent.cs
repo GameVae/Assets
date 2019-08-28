@@ -248,6 +248,7 @@ namespace Entities.Navigation
         {
             if (foundPath)
             {
+                Remote.StopAttackEffect();
                 if (IsMoving == false)
                 {
                     IsMoving = true;

@@ -68,16 +68,16 @@ public class AgentRemoteManager : MonoSingle<AgentRemoteManager>,IObserver
     protected override void Awake()
     {
         base.Awake();
-        UnitTable = SyncData.UnitTable;
-        Users = SyncData.UserInfos;
+
+        UnitTable = SyncData?.UnitTable;
+        Users = SyncData?.UserInfos;
 
         PlayerInfo = Singleton.Instance<PlayerInfo>();
         MyAgentRemoteManager = Singleton.Instance<MyAgentRemoteManager>();
         Events = Singleton.Instance<EventListenersController>();
 
-        labelPooling = new Pooling<LightweightLabel>(CreateLabel, 10);      
+        labelPooling = new Pooling<LightweightLabel>(CreateLabel, 10);
         Events.On("R_UNIT", R_UNIT_CREATE_UNIT);
-
     }
 
     private void Start()

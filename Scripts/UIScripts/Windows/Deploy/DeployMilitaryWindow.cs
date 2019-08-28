@@ -106,7 +106,7 @@ public class DeployMilitaryWindow : BaseWindow
             { "BaseNumber"  ,baseInfo.BaseNumber.ToString()}
         };
         JSONObject packet = new JSONObject(data);
-        //Debugger.Log(packet);
+        Debugger.Log(packet);
         return packet;
     }
 

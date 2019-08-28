@@ -8,6 +8,7 @@ using Animation;
 using Generic.Singleton;
 using System;
 using DataTable;
+using Generic.Contants;
 
 namespace Entities.Navigation
 {
@@ -18,7 +19,6 @@ namespace Entities.Navigation
         [SerializeField] private ListUpgrade type;
         [SerializeField] private NavOffset offset;
         [SerializeField] private Transform headPoint;
-        [SerializeField] private VFXArcher effect;
 #pragma warning restore IDE0044
 
         [SerializeField] // TODO:[TEST] for show in inspector
@@ -39,6 +39,19 @@ namespace Entities.Navigation
         private AgentWayPoint waypoint;
         private AnimatorController animator;
         private AgentRemoteManager agentRemoteManager;
+
+        private AgentRemote targetAgent;
+
+        private VFXArcher effect;
+        private VFXPooling vfxPooling;
+
+        private VFXPooling VfxPooling
+        {
+            get
+            {
+                return vfxPooling ?? (vfxPooling = FindObjectOfType<VFXPooling>());
+            }
+        }
 
         public AnimatorController Animator
         {
@@ -140,6 +153,21 @@ namespace Entities.Navigation
             SyncPosition();
         }
 
+        private void Update()
+        {
+            if(targetAgent != null)
+            {
+                if(targetAgent.UnitInfo.Quality <= 0)
+                {
+                    StopAttackEffect();
+                }
+                else if(!Constants.IsTargetInRange(CurrentPosition,targetAgent.CurrentPosition,Offset.AttackRange))
+                {
+                    StopAttackEffect();
+                }
+            }
+        }
+
         private void SyncPosition()
         {
             if (UnitInfo.AgentStatus == AgentStatus.Move)
@@ -199,7 +227,7 @@ namespace Entities.Navigation
             if (UnitInfo.Quality <= 0)
             {
                 // Dead();
-                NavAgent.Stop();
+                //NavAgent?.Stop();
                 Animator.Play(AnimState.Dead);
             }
             else
@@ -207,7 +235,6 @@ namespace Entities.Navigation
                 CheckAttack();
                 SetLabel();
             }
-            CheckEffect();
         }
 
         private string GetLabelFormat()
@@ -235,17 +262,6 @@ namespace Entities.Navigation
             Label.Quality = UnitInfo.Quality;
         }
 
-        private void CheckEffect()
-        {
-            Debugger.Log("status " + UnitInfo.AgentStatus);
-            if (UnitInfo.AgentStatus != AgentStatus.Attack_Base &&
-                UnitInfo.AgentStatus != AgentStatus.Attack_Unit)
-            {
-                if (effect != null)
-                    effect.Stop();
-            }
-        }
-
         private void CheckAttack()
         {
             if (!string.IsNullOrEmpty(UnitInfo.Attack_Unit_ID) &&
@@ -255,15 +271,24 @@ namespace Entities.Navigation
                 int otherID = int.Parse(strs[3]);
 
                 AgentRemote other = AgentRemoteManager.GetAgentRemote(otherID);
+                targetAgent = other;
+
                 if (other != null && !IsMoving())
                 {
                     transform.forward = (other.transform.position - transform.position).normalized;
                     Animator.Play(AnimState.Attack1);
 
                     AttackTarget = other.transform;
-                    if (effect != null)
+                    if (effect == null)
                     {
                         Debugger.Log("call attack effect");
+                        effect = VfxPooling.GetItem(Type);
+                        effect.transform.position = transform.position;
+
+                        effect?.Attack(AttackTarget);
+                    }
+                    else
+                    {
                         effect.Attack(AttackTarget);
                     }
                 }
@@ -274,8 +299,7 @@ namespace Entities.Navigation
                 if (attackState != null && attackState.IsPlaying)
                 {
                     attackState.Stop();
-                    if (effect != null)
-                        effect.Stop();
+                    StopAttackEffect();
                 }
             }
         }
@@ -310,6 +334,17 @@ namespace Entities.Navigation
             Unbinding();
             unitSubject.Remove(observer);
             unitSubject.ObserverPooling.Release(observer);
+        }
+
+        public void StopAttackEffect()
+        {
+            if (effect != null)
+            {
+                VfxPooling.Release(Type,effect);
+
+                targetAgent = null;
+                effect = null;
+            }
         }
 
         // IPoolable.Interface

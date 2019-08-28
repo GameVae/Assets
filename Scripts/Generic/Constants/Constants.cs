@@ -160,6 +160,12 @@ namespace Generic.Contants
             
         }
         
+        public static bool IsTargetInRange(Vector3Int cur,Vector3Int tar,int range)
+        {
+            Vector3Int[] pattern = GetNeighboursRange(cur, range);
+            return pattern.IsContaint(tar);
+        }
+
         /// <summary>
         /// determine client position is valid or not
         /// </summary>

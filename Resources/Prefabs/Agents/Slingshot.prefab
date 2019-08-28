@@ -1045,6 +1045,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6947817779951294196, guid: 410c22fb88bad3b47af234a29d684970,
+        type: 3}
+      propertyPath: CollisionModule.type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6947817780881873291, guid: 410c22fb88bad3b47af234a29d684970,
         type: 3}
       propertyPath: m_Enabled

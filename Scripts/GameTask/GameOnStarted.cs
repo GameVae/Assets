@@ -26,7 +26,7 @@ public class GameOnStarted : MonoBehaviour
         syncServerData.AddGameTask("R_USER_INFO");
         syncServerData.AddGameTask("R_GET_POSITION");
         syncServerData.AddGameTask("R_FRIEND_INFO");
-        syncServerData.AddGameTask("R_USER_GUILD");
+        // syncServerData.AddGameTask("R_USER_GUILD");
 
 
         LoadingPanel.Add(syncServerData,"Synchronous ...");
